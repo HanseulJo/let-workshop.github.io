@@ -1,0 +1,108 @@
+title: Travel Info
+title_ko: 오시는 길
+
+name: POSCO International Center
+name_ko: 포스코국제관
+campus: POSTECH campus, Pohang
+address: 77 Cheongam-ro, Nam-gu, Pohang, Gyeongsangbuk-do, South Korea
+address_ko: 경상북도 포항시 남구 청암로 77
+
+# Booked rooms. `detail` is shown under the name.
+#
+# Floors and seat counts are POSTECH's own, from the 시설 현황 table at
+# postech.ac.kr/kor/college-life/posco_international_hall.do and corroborated
+# by the 복지회 listing at dining.postech.ac.kr/store/. Note 98 seats, not the
+# round 100 this used to say — 98석 is the published figure.
+rooms:
+  - label: Sessions
+    name: Grand Conference Room · 대회의실
+    detail: 1F · 98 seats · Oct 7, 10:00–18:00 · Oct 8, 09:00–17:00
+  - label: Banquet
+    name: Banquet Hall · 연회장
+    detail: 2F · 200 seats · Oct 7, from 18:00
+
+# Building centre from OpenStreetMap (Overpass): 포스코국제관 / POSCO
+# International Center, 36.0139836, 129.3209046.
+lat: 36.01398
+lon: 129.32090
+
+# Which map to embed. Tried in this order, falling back as each turns out to
+# be unconfigured, so the section is never blank.
+#
+#   google          Google Maps. Uses the official Maps Embed API when
+#                   `google_api_key` is set — that is the variant most sites
+#                   use, and the Embed API is free with no usage cap. Without a
+#                   key it falls back to the keyless embed URL, which works
+#                   because The trick is to use
+#                   the URL Google's own redirect lands on — the intermediate
+#                   301 carries x-frame-options: SAMEORIGIN, the final
+#                   /maps/embed does not, so framing it directly works. build.py
+#                   assembles it from lat/lon, nothing to paste.
+#   kakao_roughmap  Kakao's "지도 퍼가기" embed. NO developer account needed:
+#                   map.kakao.com -> search 포스코국제관 -> 공유 -> 퍼가기 ->
+#                   copy the `timestamp` and `key` out of the snippet it gives
+#                   you and paste them below. Takes about 30 seconds.
+#   kakao           Kakao Maps JS SDK. Needs a JavaScript key from
+#                   developers.kakao.com, with every domain the site is served
+#                   from registered under Platform -> Web
+#                   registered under Platform -> Web. Domain-restricted, so
+#                   publishing the key is expected. Pans and zooms properly.
+#   leaflet         Fallback. CARTO tiles, self-hosted Leaflet, no key at all.
+#
+# Naver only offers the equivalent through NCP (console.ncloud.com), which
+# wants billing registered even on the free tier — Kakao is the lighter route.
+map:
+  provider: kakao
+  zoom: 16 # Leaflet zoom level; higher = closer
+  google_api_key: ""
+  # Or paste the pb value out of Google Maps -> Share -> Embed a map. That
+  # route needs no API key and gives the full interactive widget; the short pb
+  # build.py can assemble from coordinates alone is only a static preview.
+  google_embed_pb: ""
+  kakao_app_key: "5803d6308bc4104171643ea0cf1d9377"
+  kakao_level: 3 # Kakao level; lower = closer
+  kakao_roughmap:
+    timestamp: ""
+    key: ""
+  tiles:
+    # CARTO Voyager: modern styling that still labels buildings and roads.
+    url: https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png
+    subdomains: abcd
+    max_zoom: 20
+    attribution: >-
+      &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+      contributors &copy; <a href="https://carto.com/attributions">CARTO</a>
+
+# Small links under the venue name. `{lat}`/`{lon}` are substituted in.
+map_links:
+  - label: Naver Map
+    icon: naver
+    url: https://map.naver.com/p/search/포스코국제관
+  - label: Kakao Map
+    icon: kakao
+    url: https://map.kakao.com/link/map/포스코국제관,{lat},{lon}
+  # TMAP has no public web map, only the app — but this landing page needs no
+  # developer key and does the right thing on both: it opens the app on a
+  # phone, and on a desktop it explains itself and offers the stores, rather
+  # than a bare tmap:// link that fails silently. goalx is the longitude.
+  - label: TMAP
+    icon: tmap
+    url: https://www.tmap.co.kr/tmap2/mobile/route.jsp?goalname=포스코국제관&goalx={lon}&goaly={lat}
+
+# Each entry becomes a row under the map. Add rail/bus/air details here once
+# they are settled — leave the list empty and the block disappears.
+#
+# On parking: POSTECH began charging for parking campus-wide on 1 September
+# 2026, so the workshop falls under the paid scheme. The rate reported when it
+# was announced was 30 minutes free, then 200 won per 10 minutes, capped at
+# 10,000 won a day — but that came from the student paper paraphrasing 총무팀
+# three months before it took effect, there is no public official notice, and
+# nothing anywhere documents whether a visitor has to register the car first.
+# So this line says the scheme exists and points at the desk rather than
+# printing a figure that could be wrong on the day. Call 054-279-8500 to
+# confirm the rate and the registration procedure, then say so here.
+getting_here:
+  - mode: Parking
+    mode_ko: 주차
+    detail: TBD
+    detail_ko: 미정

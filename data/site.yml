@@ -1,0 +1,164 @@
+# ─────────────────────────────────────────────────────────────
+# Site-wide facts. Everything here feeds <head>, the hero, the
+# info bar and the footer. Change it here, never in main.html.
+# ─────────────────────────────────────────────────────────────
+
+name: KOLT 2026
+full_name: Korean workshop On Learning Theory
+year: 2026
+edition: 1st
+theme: Bandits & Deep Learning Theory
+dates: October 7–8, 2026
+venue: POSTECH
+city: Pohang
+country: South Korea
+# Fallback for local builds only. In CI the deployed URL is derived from
+# GITHUB_REPOSITORY, so the same commit is correct on every target — the live
+# repo and the staging repo do not need separate histories.
+#   live     https://kolt-workshop.github.io/2026/
+#   staging  https://dongyeoplee2.github.io/kolt-page-test-private/2026/
+url: https://kolt-workshop.github.io/2026/
+
+# One-liners reused across <meta> tags (search results, link previews).
+description: >-
+  KOLT 2026 — the 1st Korean workshop On Learning Theory. A meetup for the
+  machine learning theory community in Korea. POSTECH, Pohang · October 7–8, 2026.
+tagline: 1st Korean workshop On Learning Theory · POSTECH, Pohang · October 7–8, 2026
+blurb: A meetup for the machine learning theory community in Korea.
+
+analytics_id: G-DN4LGBW9YN
+
+
+# Buttons at the foot of the hero. An entry with no `href` renders disabled —
+# present, so people know it is coming, but plainly not yet clickable.
+#
+# `primary` is the filled pill; everything else is an outline. Registration
+# keeps the fill even while it is disabled — it is what people came for, and
+# the "opens soon" note under it carries the fact that it is not live yet.
+# When the URL exists, put it in `href` and drop the two `note` lines.
+hero_actions:
+  - label: Registration
+    label_ko: 참가 신청
+    href: ""
+    note: Opens soon
+    note_ko: 곧 열립니다
+    primary: true
+  - label: See speakers
+    label_ko: 연사 보기
+    href: "#speakers"
+
+# Sticky top bar. Each href is a section id on the page; the link highlights
+# itself as you scroll past its section.
+# Order must match the order the sections appear on the page — the links
+# highlight on scroll, so a nav out of step reads as jumping backwards.
+nav:
+  - { label: About, label_ko: 소개, href: "#about" }
+  - { label: Speakers, label_ko: 연사, href: "#speakers" }
+  - { label: Program, label_ko: 프로그램, href: "#program" }
+  - { label: Organizers, label_ko: 조직위원회, href: "#organizers" }
+  - { label: Travel Info, label_ko: 오시는 길, href: "#venue" }
+
+# Institution logos, shown greyscale in a strip under the organisers.
+#
+# The files are NOT in this repo — download the official assets and drop them
+# into static/logos/. Both universities publish brand kits with usage rules,
+# and neither logo is ours to redistribute:
+#   POSTECH  https://www.postech.ac.kr/symbol-mark/
+#   KAIST    https://www.kaist.ac.kr/kr/html/kaist/010801.html
+# Prefer SVG, or a PNG at least 200px tall with a transparent background.
+# Delete this whole block and the strip disappears.
+hosts:
+  label: Host and participating institutions
+  logos:
+    - { name: POSTECH, file: postech.png, url: https://www.postech.ac.kr/eng/ }
+    - { name: KAIST, file: kaist.png, url: https://www.kaist.ac.kr/en/ }
+
+# The particulars under the hero title. `icon` names a symbol in the inline
+# sprite: cal, pin, globe, mic. `mono` sets the value in the monospace face —
+# every cell here is a fact rather than prose, so they all take it and read as
+# one row of data. `href` makes the value a link.
+infobar:
+  - key: Date
+    icon: cal
+    mono: true
+    value: October 7–8, 2026
+    countdown: true # appends (D-xx), counted from the programme's first day
+    note: 2 days (Wed–Thu)
+  - key: Location
+    icon: pin
+    mono: true
+    value: POSCO International Center
+    href: "#venue" # the section that says how to get there
+    note: POSTECH, Pohang
+  - key: Language
+    icon: globe
+    mono: true
+    value: Korean
+  - key: Format
+    icon: mic
+    mono: true
+    value: Talks · Tutorials · Posters
+    note: No formal peer review
+
+# Korean names for the affiliations used in program.yml and organizers.yml.
+# A lookup rather than an `affil_ko` on each person: six institutions cover
+# seventeen people, and a typo in one place is easier to find than in ten.
+# An affiliation missing from here simply shows its romanised form in both
+# languages, which is the right fallback for a foreign institution.
+affiliations:
+  KAIST: 한국과학기술원
+  POSTECH: 포항공과대학교
+  UNIST: 울산과학기술원
+  SNU: 서울대학교
+  Yonsei: 연세대학교
+  CAU: 중앙대학교
+
+footer_note: program subject to change.
+
+# ─────────────────────────────────────────────────────────────
+# Build variants. Paths are relative to the build directory
+# (_site/ by default). `python3 build.py` writes every one of
+# them; `python3 build.py public` writes just one — and that is
+# what CI deploys, so `invite` and `internal` never go live.
+# ─────────────────────────────────────────────────────────────
+variants:
+  # The page that goes out to participants. Deployed.
+  public:
+    output: 2026/index.html
+    anonymize: false # show speaker names in the programme
+    candidates: false # hide the "potential speakers" shortlist
+    analytics: true
+    noindex: true # drop this once the page should be searchable
+
+  # The page linked from speaker invitations. Same programme as the
+  # public page, names and all — it differs only in carrying no
+  # analytics. The anonymised variant it used to be is still
+  # available: set `anonymize: true` to hide every speaker name and
+  # replace each block with "N talks · M min each".
+  invite:
+    output: 2026/invite.html
+    anonymize: false
+    candidates: false
+    analytics: false
+    noindex: true
+
+  # Organisers' working copy. Never deployed — it carries the
+  # candidate shortlist.
+  internal:
+    output: 2026/internal.html
+    anonymize: false
+    candidates: true
+    analytics: false
+    noindex: true
+
+# ─────────────────────────────────────────────────────────────
+# Redirect stubs, written on every build. GitHub Pages has no
+# server-side redirects, so these are meta-refresh + canonical
+# pages. Point `index.html` at the newest edition each year.
+# ─────────────────────────────────────────────────────────────
+redirects:
+  # Relative, so the stub works whether the site sits at a domain root or under
+  # a project path like /kolt-page-test-private/.
+  - output: index.html
+    to: 2026/
+    label: KOLT 2026

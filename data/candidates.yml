@@ -1,0 +1,29 @@
+# Shortlist for the remaining slots. Only rendered in builds whose variant
+# sets `candidates: true` (i.e. internal.html) — never on the public page.
+
+title: Potential Additional Speakers
+subtitle: Under consideration to fill remaining slots (35-min talks).
+
+people:
+  - { name: Jongyeong Lee, affil: KIST, topic: Follow-the-Perturbed-Leader }
+  - { name: Sungyoon Lee, affil: Hanyang, topic: TBD }
+  - { name: Kyungjae Lee, affil: Korea, topic: Heavy-tailed bandits }
+  - { name: Sanghack Lee, affil: SNU, topic: Causality }
+  - { name: Kwangho Kim, affil: Korea, topic: TBD }
+  - { name: Ilmun Kim, affil: KAIST, topic: TBD }
+  - { name: Albert No, affil: Yonsei, topic: Masked diffusion }
+  - { name: Minwoo Chae, affil: POSTECH, topic: One-pass Bayesian online learning }
+  - { name: Donghwan Kim, affil: KAIST, topic: Minimax optimization }
+  - { name: Dohyun Kwon, affil: Yonsei, topic: Bilevel optimization }
+  - { name: Dabeen Lee, affil: SNU, topic: contextual queueing bandits }
+  - { name: Hyung-Chan An, affil: Yonsei, topic: Learning-augmented algorithms }
+  - { name: Wooseok Ha, affil: KAIST, topic: Domain adaptation }
+  - { name: Dong-Jun Han, affil: Yonsei, topic: "FL? Reparametrization in optimization?" }
+  - { name: Namhoon Lee, affil: POSTECH, topic: Distributed optimization }
+  - { name: Dong-Young Lim, affil: UNIST, topic: Flatness-aware Langevin dynamics }
+  - { name: Yeachan Park, affil: Sejong, topic: Grokking / fixed-point universal approx }
+  - { name: Geonho Hwang, affil: GIST, topic: Fixed-point universal approx }
+  - { name: Insu Han, affil: KAIST, topic: Theoretical foundation of quantization }
+  - { name: Donghun Lee, affil: Korea, topic: Loss landscapes }
+  - { name: Donghwan Lee, affil: KAIST, topic: Control-theoretic foundation of Q-learning }
+  - { name: Jaewoong Choi, affil: SKKU, topic: Theoretical foundation of Neural OT }

@@ -1,0 +1,92 @@
+# ─────────────────────────────────────────────────────────────
+# The formulas that drift across the hero.
+#
+# A flat list of LaTeX, nothing else — order is irrelevant, the
+# hero shuffles them. tools/prep-formulas.py renders each one to
+# an SVG in static/formulas/ at build time, so the page ships no
+# maths renderer and no webfont for this.
+#
+# Adding one: write the LaTeX, re-run the tool, rebuild. Keep them
+# SHORT — a long expression at this size reads as a grey smear.
+# They are rendered by matplotlib's mathtext, which covers most of
+# amsmath but not everything; the tool tells you if one fails.
+#
+# The set spans the three parts of learning theory the way Telegarsky's
+# notes divide them — approximation, optimization, generalization —
+# plus the topics KOLT lists and the subjects this year's speakers
+# are actually talking about.
+# ─────────────────────────────────────────────────────────────
+
+formulas:
+  # ---- Setup: networks, risk, and the error decomposition
+  - 'x \mapsto \sum_{j=1}^m a_j \sigma(w_j^\top x + b_j)'
+  - 'f(x;w) = \sigma_L(W_L \cdots \sigma_1(W_1 x + b_1) \cdots)'
+  - '\widehat{\mathcal{R}}(f) = \frac{1}{n}\sum_i \ell(f(x_i), y_i)'
+  - '\mathcal{R}(f) = \mathbb{E}\,\ell(f(x), y)'
+  - '\mathcal{R}(\hat f) - \mathcal{R}(\bar f) \leq \varepsilon'
+  - '\sigma(z) = \max\{0, z\}'
+  - '\ell(z) = \ln(1 + e^{-z})'
+  - '\|f - g\|_u = \sup_{x \in S} |f(x) - g(x)|'
+
+  # ---- Approximation
+  - '\inf_{f \in \mathcal{F}} \mathcal{R}(f)'
+  - '\|f\|_{\mathcal{B}} = \int \|w\|\,|\hat f(w)|\,dw'
+  - 'f(x) = \int e^{i\langle w, x\rangle} \hat f(w)\, dw'
+  - '\Delta^k(x) \approx x^2'
+  - '\Theta(x, x'') = \langle \nabla_w f(x), \nabla_w f(x'') \rangle'
+  - 'f(x; w) \approx f(x; w_0) + \langle \nabla f(x; w_0), w - w_0 \rangle'
+
+  # ---- Optimization
+  - 'w_{t+1} = w_t - \eta \nabla \mathcal{R}(w_t)'
+  - '\mathbb{E}\|\nabla \mathcal{R}(w_t)\|^2 \leq \frac{2\beta}{T}'
+  - '\mathcal{R}(w) - \mathcal{R}^\star \leq \frac{\|w_0 - w^\star\|^2}{2\eta T}'
+  - '\|\nabla \mathcal{R}(u) - \nabla \mathcal{R}(v)\| \leq \beta \|u - v\|'
+  - '\mathcal{R}(v) \geq \mathcal{R}(u) + \langle \nabla \mathcal{R}(u), v-u\rangle + \frac{\lambda}{2}\|v-u\|^2'
+  - '\dot w(t) = -\nabla \mathcal{R}(w(t))'
+  - '\partial f(w) = \mathrm{conv}\{\lim \nabla f(w_i)\}'
+  - 'f(cw) = c^L f(w)'
+  - '\gamma(w) = \min_i \frac{y_i f(x_i; w)}{\|w\|^L}'
+
+  # ---- Generalization
+  - '\mathfrak{R}(\mathcal{F}) = \mathbb{E}_\epsilon \sup_{f} \frac{1}{n}\sum_i \epsilon_i f(x_i)'
+  - '\Pr[|\bar X - \mu| \geq t] \leq 2e^{-2nt^2}'
+  - '\mathbb{E}\,e^{\lambda(X-\mu)} \leq e^{\lambda^2\sigma^2/2}'
+  - '\mathcal{R}(f) \leq \widehat{\mathcal{R}}(f) + 2\mathfrak{R}(\mathcal{F}) + \sqrt{\frac{\ln(1/\delta)}{2n}}'
+  - '\mathfrak{R}(\mathcal{F}) \leq \inf_\alpha \left(4\alpha + 12\int_\alpha^\infty \sqrt{\frac{\ln N(\epsilon)}{n}}\,d\epsilon\right)'
+  - '\mathrm{VC}(\mathcal{H}) = O(WL\log W)'
+  - 'N(\mathcal{F}, \epsilon, \|\cdot\|)'
+
+  # ---- Bandits, RL, decision-making
+  - '\mathrm{Reg}(T) = \sum_{t=1}^T (\mu^\star - \mu_{a_t})'
+  - 'a_t = \arg\max_a \left(\hat\mu_a + \sqrt{\frac{2\ln t}{n_a}}\right)'
+  - 'Q^\star(s,a) = r(s,a) + \gamma \mathbb{E}\max_{a''} Q^\star(s'',a'')'
+  - 'V^\pi(s) = \mathbb{E}\left[\sum_t \gamma^t r_t \mid s_0 = s\right]'
+  - '\mathrm{Reg}(T) = \tilde O(\sqrt{dT})'
+
+  # ---- High-dimensional and non-parametric statistics
+  - '\hat\beta = \arg\min_\beta \|y - X\beta\|^2 + \lambda\|\beta\|_1'
+  - '\|\hat\beta - \beta^\star\|_2 \lesssim \sigma\sqrt{\frac{s\log d}{n}}'
+  - '\mathbb{E}|X|^p < \infty, \quad p \in (1, 2]'
+
+  # ---- Bayesian methods, sampling, inference
+  - 'p(\theta \mid x) \propto p(x \mid \theta)\, p(\theta)'
+  - '\mathbb{E}[\theta_{n+1} \mid \mathcal{F}_n] = \theta_n'
+  - 'dX_t = -\nabla U(X_t)\,dt + \sqrt{2}\,dB_t'
+  - '\mathrm{KL}(q \,\|\, p) = \int q \ln \frac{q}{p}'
+
+  # ---- Conformal and selective prediction
+  - '\Pr[y \in C(x)] \geq 1 - \alpha'
+  - 'C(x) = \{y : s(x,y) \leq \hat q_{1-\alpha}\}'
+
+  # ---- Causality
+  - '\mathbb{E}[Y \mid do(X = x)]'
+  - 'Y = f(X, U), \quad X \perp\!\!\!\perp U'
+
+  # ---- Learning under constraints
+  - '\Pr[M(D) \in S] \leq e^{\varepsilon}\Pr[M(D'') \in S]'
+
+  # ---- Empirical phenomena: flatness, distillation, in-context learning
+  - '\nabla^2 \mathcal{R}(w^\star) \succeq 0'
+  - '\min_w \max_{\|\epsilon\| \leq \rho} \mathcal{R}(w + \epsilon)'
+  - '\mathcal{L} = \tau^2\, \mathrm{KL}(p_T^\tau \,\|\, p_S^\tau)'
+  - '\lambda_{\max}(\nabla^2 \mathcal{R}) \leq 2/\eta'

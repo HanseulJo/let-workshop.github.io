@@ -1,0 +1,2825 @@
+/* Self-hosted, all three under the SIL OFL so they can live in the repo.
+   Inter Tight sets headings, Inter the body, JetBrains Mono every label and
+   eyebrow — the mono is what gives the page its technical register without
+   reaching for a serif. Latin subsets only; licence in fonts/OFL.txt. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/inter-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("fonts/inter-tight-latin.woff2") format("woff2");
+}
+/* Jost, the wordmark face. Futura itself is Bauer's and cannot ship with the
+   page; Jost is the OFL geometric sans drawn after it, and it is what the KOLT
+   logo and favicon were already cut from — so the title now matches the mark
+   instead of being set in the body face. Variable, 100–900. */
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/jost-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212;
+}
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/jost-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("fonts/jetbrains-mono-latin.woff2") format("woff2");
+}
+
+:root {
+  --ink: #1a2233;
+  --accent: #1a3a6b; /* accent as text, rule or swatch */
+  --accent-solid: #1a3a6b; /* accent as a filled block behind light text */
+  --muted: #6b7480;
+  --line: #e6e9ef;
+  --band: #fff;
+  --band-alt: #f5f5f7;
+  --face: #fff; /* behind a portrait while it loads, and the initials tile */
+  --initials: #c2c9d3;
+  --shadow: rgba(20, 30, 50, 0.09);
+  --radius: 18px;
+
+  /* Hero sits on a near-black navy, so it needs its own palette — the ink
+     accent disappears against it, and white at full strength is too harsh for
+     anything but the title. */
+  --hero-bg: #0f1826;
+  --hero-bg2: #16233a;
+  --hero-title: #f5f5f7;
+  --hero-body: #b9c7da;
+  --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
+  --hero-rule: rgba(255, 255, 255, 0.12);
+  --hero-accent: #ff8a75;
+
+  /* Body. Korean has no coverage in Inter, so Hangul falls through to the
+     platform's UI face and keeps its own metrics. */
+  --sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
+
+  /* Every label, eyebrow and clock reading. The mono is what gives the page a
+     technical register without reaching for a serif. */
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+
+  /* Headings. Inter Tight is Inter drawn narrower — it holds a large title
+     together at tight tracking where Inter alone goes airy. */
+  --display: "Inter Tight", "Inter", -apple-system, "Apple SD Gothic Neo", sans-serif;
+
+  /* The wordmark only — the name, wherever it is set as the name. Section
+     headings stay on --display; Jost is a display face and goes airy at
+     paragraph sizes. */
+  --wordmark: "Jost", "Futura", "Century Gothic", var(--display);
+
+
+  /* Roles pulled out of the rules below so one dark block can flip them. */
+  --text: #2b2b2b;
+  --prose: #3a4250;
+  --who: #2f3a4a;
+  --label: #8a93a3;
+  --faint: #9aa3b0;
+  --wash: #eef1f5;
+  --control-line: #cfd6e0;
+  --control-ink: #46506b;
+  --meta: #67707e;
+  --meta-em: #7a838f;
+  --footer-link: #7a8699;
+  --grid-line: #ccc;
+  --grid-bg: #e0e0e0;
+  --axis-bg: #fafbfc;
+  --axis-ink: #99a;
+  --axis-line: #eee;
+  --event-title: #111;
+  --event-time: #667;
+  --legend-ink: #555;
+  --break-ink: #888;
+  --modal-nav-bg: #fbfcfd;
+  --topbar-line: #e3e8ef;
+  --topbar-bg: rgba(255, 255, 255, 0.9);
+  --logo-filter: grayscale(1);
+  --logo-filter-hover: none;
+  --map-filter: none;
+  --surface: #fff; /* a card or control raised off the band */
+  --hatch-line: rgba(88, 100, 124, 0.3);
+  --hatch-wash: rgba(10, 16, 28, 0.05);
+  --countdown: #c9412a;
+
+  /* Scrollbars, form controls and the canvas behind the page follow this. */
+  color-scheme: light;
+}
+
+/* ---------- Dark ----------
+   Anchored on Apple's own pair rather than invented. Their tokens invert
+   exactly: --sk-fill is rgb(255,255,255) light and rgb(0,0,0) dark, and
+   --sk-fill-tertiary — the off-white their alternating bands use — is
+   rgb(245,245,247) light and rgb(29,29,31) dark. Our --band / --band-alt is
+   that same pair, so it swaps to #000 / #1d1d1f. Their text mirrors it: body
+   #1d1d1f on white becomes #f5f5f7 on black, secondary #6e6e73 becomes
+   #86868b. The greys in between are their elevated fills, #161617 and #2c2c2e.
+
+   Declared once, applied twice: `[data-theme="dark"]` for an explicit choice,
+   and the media query only when no choice has been stored, so the toggle wins
+   over the OS in both directions. */
+[data-theme="dark"] {
+  --ink: #f5f5f7;
+  --text: #f5f5f7;
+  --prose: #d2d2d7;
+  --who: #e8e8ed;
+  /* The two part company in dark. As text on black the navy is invisible and
+     has to lift; as a filled block it must stay dark, or a header that was a
+     deep navy slab in light becomes a glaring pale one. */
+  --accent: #6f9be0;
+  --accent-solid: #1f3b66;
+  --muted: #86868b;
+  --label: #86868b;
+  --faint: #6e6e73;
+  --line: #2c2c2e;
+  --wash: #2c2c2e;
+  --band: #000;
+  --band-alt: #1d1d1f;
+  --face: #2c2c2e;
+  --initials: #6e6e73;
+  --shadow: rgba(0, 0, 0, 0.55);
+  --control-line: #3a3a3c;
+  --control-ink: #d2d2d7;
+  --meta: #a1a1a6;
+  --meta-em: #86868b;
+  --footer-link: #a1a1a6;
+  --grid-line: #3a3a3c;
+  --grid-bg: #2c2c2e;
+  --axis-bg: #161617;
+  --axis-ink: #86868b;
+  --axis-line: #2c2c2e;
+  --event-title: #f5f5f7;
+  --event-time: #86868b;
+  --legend-ink: #a1a1a6;
+  --break-ink: #86868b;
+  --modal-nav-bg: #161617;
+  --topbar-line: #2c2c2e;
+  --topbar-bg: rgba(0, 0, 0, 0.72);
+  --logo-filter: grayscale(1) invert(1);
+  --logo-filter-hover: grayscale(1) invert(1) brightness(1.3);
+  /* Neither map provider ships a dark basemap through the JS SDK, so the
+     tiles are turned rather than swapped: inverting flips land and water,
+     and rotating the hue a half turn puts the greens and blues back where
+     they were instead of leaving a photo-negative. */
+  --map-filter: invert(0.92) hue-rotate(180deg) saturate(0.72) brightness(0.94);
+  --surface: #1d1d1f;
+  --hatch-line: rgba(190, 200, 220, 0.22);
+  --hatch-wash: rgba(0, 0, 0, 0.28);
+  --countdown: #ff8a75;
+  color-scheme: dark;
+}
+/* Only when nothing is stored — an explicit light choice must beat the OS,
+   and it would not if this were an unguarded media query. */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Switching programme views swaps display:none for block, which restarts the
+   animation — so the new view settles in rather than snapping. Kept short and
+   small; a long or bouncy move would read as decoration. */
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+#view-grid,
+#view-list,
+#view-abstracts,
+#view-now,
+.about {
+  animation: settle 0.24s ease both;
+}
+
+/* Scroll reveal, two ways.
+
+   Where the browser has scroll-driven animations, progress is the scroll
+   position itself: the block is part-way faded at part-way through its
+   entrance, holds if you stop, and runs backwards if you scroll back. It is
+   driven off the compositor, so scrolling stays smooth.
+
+   Where it does not, an IntersectionObserver plays the same movement once as a
+   transition. Either way the hidden state is applied by script, never by the
+   stylesheet — if neither path runs, the page is simply visible. */
+/* The floor is high on purpose. A scrubbed animation holds wherever you stop
+   scrolling, so any element parked mid-range sits at whatever opacity that
+   point implies — and on a photograph a partial opacity does not read as a
+   transition in progress, it reads as a washed-out, greyish picture. Movement
+   carries the effect; the fade only takes the edge off the arrival. */
+@keyframes revealScrub {
+  from {
+    opacity: 0.55;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .scrub .reveal {
+    opacity: 1;
+    transform: none;
+    animation: revealScrub both;
+    animation-timeline: view();
+    /* Both ends stay inside `entry`, which always completes: the phase closes
+       the moment the element is fully on screen. The previous end, `cover 30%`,
+       needed scroll that the bottom of the page does not have — measured, the
+       footer logo row came up 142–352px short at every window height tried and
+       so never finished, sitting permanently faded. The organiser cards were
+       fine except on very tall windows. */
+    animation-range: entry 0% entry 100%;
+    /* Left linear, a scrub tracks the scrollbar with no shape. Easing out puts
+       most of the change early, so it settles into place. */
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* Cards in a row start at slightly different points, so a grid arrives in
+     sequence instead of moving as one slab. They all still end at entry 100%
+     — staggering the end as well is what would leave the late ones short. */
+  .scrub .org-card:nth-child(3n + 2),
+  .scrub .spk-card:nth-child(3n + 2) {
+    animation-range: entry 10% entry 100%;
+  }
+  .scrub .org-card:nth-child(3n),
+  .scrub .spk-card:nth-child(3n) {
+    animation-range: entry 20% entry 100%;
+  }
+  /* Headings lead their section rather than travelling with it. */
+  .scrub .band h2 {
+    animation-range: entry 0% entry 90%;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.5s ease,
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* ---------- Sticky section nav ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--topbar-line);
+  background: var(--topbar-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.topbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 60px;
+  padding: 10px 0;
+}
+/* The name in the sticky bar is the same wordmark, so it takes the same face —
+   two different cuts of "KOLT 2026" on one screen is the kind of thing you
+   notice without being able to say why. */
+.brand {
+  font-family: var(--wordmark);
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 1.05em;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.tabs {
+  flex: 1;
+  min-width: 0;
+}
+.tabs ul,
+.tabs-mobile ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tabs ul {
+  justify-content: center;
+  gap: 28px;
+  min-width: max-content;
+}
+.tabs a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95em;
+  white-space: nowrap;
+}
+.tabs a:hover,
+.tabs a.current {
+  color: var(--ink);
+  font-weight: 600;
+}
+.topbar-cta {
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 0.86em;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-cta:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Mobile: the links become a horizontally scrollable pill strip. */
+.tabs-mobile {
+  display: none;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: none;
+}
+.tabs-mobile::-webkit-scrollbar {
+  display: none;
+}
+.tabs-mobile ul {
+  gap: 8px;
+  min-width: max-content;
+  scroll-snap-type: x mandatory;
+}
+.tabs-mobile a {
+  display: block;
+  scroll-snap-align: start;
+  border: 1px solid var(--control-line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 0.85em;
+  color: var(--control-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.tabs-mobile a.current {
+  border-color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+
+body {
+  font-family: var(--sans);
+  background-color: var(--band);
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* The gutter, and so how far the heading's accent bar sits from the edge of
+   the screen. Widened rather than indenting the heading on its own: the bar
+   lines up with the left edge of the cards below it, and breaking that
+   alignment to give the title room reads as a mistake rather than as spacing. */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ---------- Hero ---------- */
+/* The campus, reduced to the hero's own two tones by tools/prep-hero.py, with
+   the original gradient laid over it as a scrim. The photograph is a texture
+   here, not a picture: the title and the info bar have to stay readable, so the
+   scrim is opaque enough to carry them and the plate shows through it.
+   The gradient is listed first because CSS stacks the first layer on top.
+
+   45% down the frame puts the buildings and the courtyard in a wide crop and
+   leaves the empty sky above the fold line. */
+/* Three layers and the content on top:
+     the base gradient   — the ground, and what shows if the photo 404s
+     ::before            — the campus, blurred
+     ::after             — the scrim that makes the type readable
+     .hero-math          — formulas drifting across, blended
+   The photo is blurred and the formulas are not, which is the whole point of
+   the effect: the maths reads as a clear window onto an out-of-focus ground. */
+.hero {
+  position: relative;
+  isolation: isolate; /* keep the blend inside the hero */
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--hero-bg) 0%, var(--hero-bg2) 100%);
+  color: var(--hero-title);
+  padding: 76px 0 68px;
+}
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: -12px; /* past the edges, or the blur feathers the hero's own border */
+  pointer-events: none;
+}
+.hero::before {
+  z-index: 0;
+  background: url("hero.jpg") 50% 45% / cover no-repeat;
+  filter: blur(2px);
+}
+.hero::after {
+  z-index: 1;
+  /* Weighted to the bottom rather than even. The campus is worth seeing, but
+     the info bar sits at the foot of the hero and its small grey type needs a
+     dark ground — so the scrim thins towards the top, where there is nothing
+     but sky and the title's own large white letters. */
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 24, 38, 0.3) 0%,
+    rgba(15, 24, 38, 0.42) 30%,
+    rgba(13, 20, 33, 0.82) 58%,
+    rgba(11, 17, 28, 0.95) 100%
+  );
+}
+.hero > .wrap {
+  position: relative;
+  z-index: 3;
+}
+/* soft-light rather than plain opacity: it lifts the ground where a formula
+   passes instead of painting grey on top, so the glyphs read as the scrim
+   thinning rather than as ink. */
+.hero-math {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  /* Faded out over the lower half. soft-light lifts whatever it covers, and the
+     info bar's small grey type needs a dark ground — measured, the formulas
+     alone were taking it from readable to 2:1. They belong in the open space
+     above the text, not behind it. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 72%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 72%);
+}
+/* Tilt and drift are separate elements on purpose: the rotation belongs to the
+   field, the movement has to happen along the field's own axis. Nested, a
+   single translate follows the tilt for free. */
+/* Size comes from script — it is derived from the hero's own dimensions, so the
+   field covers whatever window it is given. Centred on the hero and rotated
+   about its middle. */
+.fx-tilt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+/* The tilt is unchanged; the travel is along its -X axis, which reads as
+   down-and-to-the-left on screen. Rows slide sideways in their own frame
+   rather than the whole field sliding down, because -X is the direction that
+   lands where we want and X is the axis the row repeats along. */
+.fx-row {
+  display: flex;
+  align-items: center;
+  gap: 46px;
+  white-space: nowrap;
+  /* No will-change: the field is dozens of rows, and pinning a compositor
+     layer to each of them costs more memory than the hint saves. A transform
+     animation gets promoted on its own when it actually needs to be. */
+  animation-name: fxDrift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+/* --shift is exactly the width of one row's worth of cells, so the duplicate
+   arrives precisely where the original started and the loop has no seam. */
+@keyframes fxDrift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--shift));
+  }
+}
+.hero-math .fx {
+  flex: none;
+  /* height follows from the viewBox, so a tall formula stays tall — the glyphs
+     are what match, not the boxes */
+  height: auto;
+  fill: #fff;
+  opacity: 0.95;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-math {
+    display: none;
+  }
+}
+/* Each line arrives a beat after the one above it. Short, and eased out hard,
+   so it reads as the page settling rather than as an entrance. */
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero .eyebrow,
+.hero h1,
+.hero .theme,
+.hero-meta {
+  animation: heroReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hero h1 {
+  animation-delay: 0.09s;
+}
+.hero .theme {
+  animation-delay: 0.24s;
+}
+.hero-meta {
+  animation-delay: 0.34s;
+}
+/* The eyebrow is a mono pill: small, wide-tracked, uppercase. It reads as a
+   tag on the event rather than a line of prose. */
+.hero .eyebrow {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hero-body);
+  border: 1px solid var(--hero-rule);
+  border-radius: 999px;
+  padding: 6px 14px;
+  margin: 0 0 24px;
+}
+/* Size by viewport rather than a fixed em, so the title fills a phone and a
+   desktop equally instead of being tuned for one of them. */
+.hero h1 {
+  margin: 0;
+  font-family: var(--display);
+  /* The floor is what a phone actually gets — 5.8vw is only 23px at 390px, so
+     the clamp's minimum is the mobile size and the maximum is the desktop one.
+     Raised more at the bottom than the top, since the title was carrying the
+     hero less well on a phone than on a laptop. */
+  font-size: clamp(46px, 6.2vw, 76px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+}
+/* Jost is a geometric face: round bowls, a single-storey a, wide caps. It
+   needs its tracking opened and a lower weight than Inter Tight to read the
+   same — set at Inter Tight's 600 it looks heavy and cramped, which is what
+   the title was doing wrong before. */
+.wordmark {
+  display: block;
+  font-family: var(--wordmark);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+/* The name takes the weight; the year stays where it was, so the two read as
+   one lockup with an emphasis rather than as two sizes of the same thing. */
+.wordmark b {
+  font-weight: 700;
+}
+.wordmark .year {
+  /* Light against the name's bold — a wider gap than 700/500 gave, so the
+     year clearly sits behind the name rather than next to it. */
+  font-weight: 300;
+}
+.hero h1 .acronym {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: var(--hero-body);
+  margin-top: 18px;
+}
+.hero .theme {
+  margin: 20px 0 0;
+  font-size: 0.95em;
+  color: var(--hero-mute);
+}
+.hero .theme b {
+  font-weight: 600;
+  color: var(--hero-body);
+}
+
+/* Particulars, under a hairline. Label quiet, fact loud — the first label
+   takes the warm accent because the date is the one people came for. */
+.hero-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 22px 34px;
+  margin: 34px 0 0;
+  padding-top: 26px;
+  border-top: 1px solid var(--hero-rule);
+  max-width: 900px;
+}
+.hero-meta dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hero-mute);
+  margin-bottom: 8px;
+}
+.hero-meta dt svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  flex: none;
+}
+.hero-meta dt.is-key {
+  color: var(--hero-accent);
+}
+.hero-meta dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--hero-title);
+}
+.hero-meta dd.is-mono {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+/* The countdown is one token, not three — left to wrap it splits as
+   "(D-" / "54)". Given the accent because it is the only value in the row that
+   changes on its own. */
+.hero-meta .dday {
+  white-space: nowrap;
+  color: var(--hero-accent);
+}
+/* A cell that goes somewhere. Underlined only on hover, so the row still reads
+   as four facts rather than one fact and three links. */
+.hero-meta dd a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--hero-rule);
+  transition: border-color 0.15s ease;
+}
+.hero-meta dd a:hover {
+  border-bottom-color: var(--hero-accent);
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 34px;
+  animation: heroReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.44s;
+}
+/* Apple's pair: a full pill either way, filled for the action you want taken
+   and a hairline outline for the other — both in the same hue, so they read as
+   one control with two weights rather than two unrelated buttons. Ours takes
+   the warm accent instead of Apple's blue. */
+.btn {
+  display: inline-block;
+  border: 1px solid var(--hero-accent);
+  background: none;
+  border-radius: 999px;
+  padding: 10px 21px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--hero-accent);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+/* The outline fills on hover rather than tinting — the same move the filled
+   one makes, so hovering either gives the same kind of answer. */
+.btn:hover {
+  background: var(--hero-accent);
+  border-color: var(--hero-accent);
+  color: #24160f;
+}
+.btn-primary {
+  background: var(--hero-accent);
+  border-color: var(--hero-accent);
+  color: #24160f;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: #ff9d8b;
+  border-color: #ff9d8b;
+}
+/* Registration has nowhere to go yet. Disabled rather than hidden, so the
+   thing people are looking for is visibly coming — with the reason next to it,
+   since a dead button with no explanation reads as broken. */
+.btn-wait {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* Barely dimmed. A filled pill dropped much below this stops reading as coral
+   at all — the accent sinks into the navy behind it and goes grey-brown — so
+   the "opens soon" note below carries the fact that it is not live, not the
+   colour. */
+.btn-wait .btn {
+  cursor: not-allowed;
+  opacity: 0.88;
+}
+/* A dead button that lights up on hover is a lie about being clickable, so the
+   hover state is cancelled back to the resting look. */
+.btn-wait .btn:hover {
+  background: none;
+  border-color: var(--hero-accent);
+  color: var(--hero-accent);
+}
+.btn-wait .btn-primary:hover {
+  background: var(--hero-accent);
+  color: #24160f;
+}
+.btn-wait small {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hero-mute);
+  text-align: center;
+}
+
+.hero-meta small {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--hero-mute);
+}
+
+
+/* ---------- Sections ----------
+   Full-width bands alternating white and grey. A card then takes whichever of
+   the two its band is not, so it reads as raised without any border. */
+section {
+  padding: 44px 0 8px;
+  scroll-margin-top: 76px; /* clear the sticky bar when jumping to an anchor */
+}
+.band {
+  background: var(--band);
+  padding: 64px 0 72px;
+}
+.band-alt {
+  background: var(--band-alt);
+}
+.band .card,
+.band .about-block,
+.band .agenda,
+.band .abs,
+.band .venue-info,
+.band .view-panel,
+.band .org-card,
+.band .spk-card,
+.band .cand,
+.band .now-lead {
+  background: var(--band-alt);
+}
+.band-alt .card,
+.band-alt .about-block,
+.band-alt .agenda,
+.band-alt .abs,
+.band-alt .venue-info,
+.band-alt .view-panel,
+.band-alt .org-card,
+.band-alt .spk-card,
+.band-alt .cand,
+.band-alt .now-lead {
+  background: var(--band);
+}
+h2 {
+  font-family: var(--display);
+  font-size: 1.55em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+h2::before {
+  content: "";
+  width: 6px;
+  height: 26px;
+  background: var(--accent-solid);
+  border-radius: 3px;
+}
+.sub {
+  color: var(--muted);
+  margin: 0 0 22px;
+  font-size: 0.96em;
+}
+.sub a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* One global language switch, in the top bar. Both languages sit in the DOM;
+   the root data-lang attribute decides which shows, so nothing is re-rendered
+   and any string without a translation simply appears in both. */
+[data-lang="en"] .t-ko,
+[data-lang="ko"] .t-en {
+  display: none;
+}
+/* Language and theme, the same shape: a glyph saying what the control is and a
+   word saying what pressing it gives you. Sitting side by side they have to
+   match, or they read as two unrelated widgets crammed into a corner. */
+.prefs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  padding: 6px 9px;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+.icon-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  flex: none;
+}
+.icon-btn:hover {
+  color: var(--ink);
+  background: var(--band-alt);
+}
+
+/* Segmented control — used by the language switch and both programme filters,
+   so they read as one family of controls instead of three shapes. */
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--control-line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.seg button {
+  border: 0;
+  background: var(--surface);
+  color: var(--control-ink);
+  padding: 7px 18px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.87em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.seg button + button {
+  border-left: 1px solid var(--wash);
+}
+.seg button.active {
+  background: var(--accent-solid);
+  color: #fff;
+}
+.lang-seg button {
+  padding: 5px 12px;
+  font-size: 0.8em;
+}
+#day-pills.hidden {
+  display: none;
+}
+/* ---------- About: a lead, then one card per idea ---------- */
+.about-lead {
+  border-left: 3px solid var(--accent);
+  padding-left: 20px;
+  margin-bottom: 30px;
+}
+.about-lead p {
+  font-size: 1.6em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.34;
+  color: var(--ink);
+  margin: 0;
+  max-width: 30ch;
+}
+
+/* One card per original heading — Purpose, Scope. The weight comes from the
+   layout, not from re-headlining the text. */
+.about-block {
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius);
+  padding: 28px 30px;
+  margin-bottom: 16px;
+}
+.about-block h3 {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+.about-block p {
+  margin: 0 0 16px;
+  color: var(--prose);
+  text-align: justify;
+  /* No keep-all. Holding each 어절 together is what forces the ragged spacing
+     justification then has to absorb — the line loses a whole word and stretches
+     every space to cover it. Letting a line break between syllables is how
+     Korean has always been set, and it is what keeps the gaps even. English
+     gets the same treatment through hyphenation. */
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.about-block p:last-of-type {
+  margin-bottom: 0;
+}
+.about-block .chips {
+  margin-top: 16px;
+}
+/* Topics: pills of wildly different widths wrapped into a ragged block. An
+   aligned two-column list keeps all of them but gives the eye a left edge. */
+/* Still a grid of equal columns, so the topics stay in tidy rows rather than
+   ragging like a tag cloud — but each cell is now a pill instead of a ruled
+   line. min() so the track can never be wider than what holds it: a bare 320px
+   minimum overflows a 320px phone, which has ~256px of content. */
+.chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+/* A tint of the accent rather than a colour of its own, so a dozen of these
+   read as one quiet family and not as a dozen buttons asking to be pressed. */
+.chip {
+  display: flex;
+  align-items: center;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  font-family: var(--mono);
+  font-size: 0.72em;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  color: var(--prose);
+}
+.about a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26, 58, 107, 0.35);
+}
+.about a:hover {
+  border-bottom-color: var(--accent);
+}
+/* A utility that means "not displayed" has to outrank layout rules, or it is
+   not a utility. The phone stylesheet turns .agenda into display: block so the
+   table can reflow, and at equal specificity that beat this — so filtering to
+   Day 1 hid nothing on a phone while working fine on a desktop. */
+.hidden {
+  display: none !important;
+}
+
+/* Shares its definition with .spk-grid below. Two grids of portrait cards a
+   screen apart looked mismatched because their minimums differed by 16px,
+   which is enough to change the column count: 5 columns of 218px against 6 of
+   179px at a 1200px window. One rule, so they cannot drift again. */
+.org-grid,
+.spk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+.org-card {
+  transition: box-shadow 0.2s ease;
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius);
+  padding: 15px 16px 17px;
+}
+/* Shadow only — no lift. The speaker card is a <button> and rises because the
+   whole of it is clickable; here only the five icons are links, and a card
+   that lifts under the cursor promises a click that isn't there. */
+.org-card:hover {
+  box-shadow: 0 6px 20px var(--shadow);
+}
+/* Fills the card rather than sitting in a corner of it. At 60px the photo was
+   a third of the card's width and the rest was the dead space that made these
+   look padded out. */
+.org-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  /* Rounded square, on the same radius ratio as the logo mark */
+  border-radius: 14px;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 11px;
+  background: var(--face);
+}
+/* Same placeholder as the speaker card's — these two frames are the same size
+   and sit a screen apart, so a different weight and scale in each reads as an
+   inconsistency rather than a distinction. */
+.org-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--initials);
+}
+/* Beside the name now, not above it: English reads "Professor Chulhee Yun",
+   Korean reads "윤철희 교수". Same size and colour as before — inline instead
+   of a block, and it must not take the name's weight. */
+.spk-card .role,
+.org-card .role {
+  font-size: 0.74em;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--label);
+  white-space: nowrap;
+}
+.org-card .name {
+  font-weight: 600;
+  color: var(--ink);
+}
+/* .affil, not any span: the name itself is two spans when it carries a
+   Korean form, and an unqualified `span` handed those the affiliation's
+   styling — the name came out small, grey and on its own line. */
+.org-card .name .affil {
+  display: block;
+  font-weight: 400;
+  font-size: 0.85em;
+  color: var(--muted);
+}
+
+/* Every programme view sits in one panel, the same slab the Now view used to
+   be alone in having. The colour comes from the band lists above, so it flips
+   with the section like every other card. */
+.view-panel {
+  border-radius: var(--radius);
+  padding: 22px 24px;
+}
+/* The grid keeps its own frame — the grey between cells is what draws the
+   timetable — so it only loses the outer border and corner. */
+.view-panel.schedule-scroll {
+  padding: 16px;
+}
+.view-panel .schedule-container {
+  border: 0;
+}
+
+/* The mark before a session title. Sized down and nudged off the baseline so
+   it reads as a bookmark rather than as a character in the title, and hidden
+   from screen readers — "coffee cup Coffee Break" helps nobody. */
+.emoji {
+  margin-right: 6px;
+  font-size: 0.92em;
+  line-height: 1;
+  font-style: normal;
+}
+
+/* Programme toolbar: one row — view segment, day segment, quiet links */
+.sched-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+.sched-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+.linkish {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 0.87em;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26, 58, 107, 0.3);
+}
+.linkish:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* Day pills, Now, calendar link */
+.sched-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--control-line);
+  background: var(--surface);
+  color: var(--control-ink);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.pill:hover {
+  border-color: var(--accent);
+}
+.pill.active {
+  background: var(--accent-solid);
+  border-color: var(--accent);
+  color: #fff;
+}
+.pill span {
+  font-weight: 400;
+  opacity: 0.7;
+  margin-left: 4px;
+  font-size: 0.9em;
+}
+.tz-note {
+  margin-left: auto;
+  font-size: 0.82em;
+  color: var(--label);
+}
+
+/* The session "Now" landed on */
+.is-now {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* Abstracts */
+/* ---------- Session detail modal ---------- */
+.agenda-row {
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+.agenda-row:hover {
+  filter: brightness(0.975);
+}
+.agenda-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.event {
+  cursor: pointer;
+}
+.talk-title {
+  color: var(--ink);
+  margin-top: 1px;
+}
+
+/* Bottom-anchored on every screen, the way the phone sheet already was. A
+   centred dialog re-centres itself every time the content height changes, so
+   stepping through sessions slid the ribbon and the arrows up and down under
+   the cursor. Pinning the bottom edge holds the footer still and lets the top
+   edge do the moving, which is the half nobody is aiming at. */
+#event-modal {
+  width: min(660px, calc(100% - 32px));
+  max-height: min(86vh, 760px);
+  margin: auto auto 0;
+  border: 0;
+  border-radius: 14px 14px 0 0;
+  padding: 0;
+  color: var(--prose);
+  box-shadow: 0 -12px 60px rgba(20, 33, 61, 0.28);
+  overflow: hidden;
+}
+#event-modal::backdrop {
+  background: rgba(20, 33, 61, 0.45);
+}
+/* The two-day ribbon above the dialog's head. Sits flush to the top edge and
+   spans the full width, so it reads as a rule belonging to the window rather
+   than as another element inside it. */
+/* The ribbon itself, wherever it appears. */
+.day-strip {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+/* In the dialog it is part of the footer block, not the header: same ground as
+   the arrows beneath it, and it carries the rule that used to sit on
+   .modal-nav so the two read as one strip rather than two. */
+.modal-strip {
+  padding: 11px 20px 3px;
+  border-top: 1px solid var(--line);
+  background: var(--modal-nav-bg);
+}
+/* In the Now card it closes the card off, under the facts. */
+.now-strip {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.modal-strip + .modal-nav {
+  border-top: 0;
+  padding-top: 6px;
+}
+.strip-day {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+.strip-day b {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.strip-bar {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  height: 7px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.strip-slice {
+  display: block;
+  min-width: 1px; /* a five-minute item is still worth a mark */
+  opacity: 0.42;
+  transition: opacity 0.15s ease;
+}
+/* The one you are reading: full strength, and lifted out of the bar with a
+   ring so it reads as a window onto the ribbon rather than a brighter slice. */
+.strip-slice.is-current {
+  opacity: 1;
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 3.5px var(--ink);
+  border-radius: 2px;
+  z-index: 1;
+}
+.strip-bar:has(.is-current) {
+  overflow: visible; /* or the ring is clipped by the bar's own rounding */
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px 0;
+}
+#modal-when {
+  margin-left: 10px;
+  color: var(--muted);
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+}
+.modal-x {
+  border: 0;
+  background: none;
+  font-size: 1.6em;
+  line-height: 1;
+  color: var(--faint);
+  cursor: pointer;
+  padding: 0 4px;
+}
+.modal-x:hover {
+  color: var(--ink);
+}
+#modal-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1.3em;
+  color: var(--ink);
+  margin: 6px 20px 2px;
+}
+#modal-body {
+  padding: 4px 20px 6px;
+  overflow-y: auto;
+  max-height: 52vh;
+}
+.sp {
+  display: flex;
+  gap: 12px;
+  /* Was 14px against a 56px portrait, so a one-line row came to 84px of which
+     28 was padding. The row is a name and a topic; it should not be as tall as
+     a card. */
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+.sp:first-child {
+  border-top: 0;
+}
+.sp-photo {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex: 0 0 46px;
+  background: var(--wash);
+}
+.sp-blank {
+  background: var(--wash);
+}
+.sp-name {
+  font-weight: 600;
+  color: var(--ink);
+}
+.sp-name a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26, 58, 107, 0.3);
+}
+.sp-name a:hover {
+  color: var(--accent);
+}
+.sp-name em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 4px;
+}
+.sp-talk {
+  margin-top: 2px;
+  color: var(--prose);
+}
+.sp-abstract {
+  margin-top: 8px;
+  font-size: 0.93em;
+  color: var(--prose);
+}
+.sp-abstract p {
+  margin: 0 0 8px;
+}
+.sp-note {
+  color: var(--muted);
+  font-style: italic;
+  margin: 8px 0;
+}
+.modal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 20px 14px;
+  border-top: 1px solid var(--line);
+  background: var(--modal-nav-bg);
+}
+#modal-count {
+  color: var(--muted);
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+}
+.modal-nav .pill:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------- Organiser link icons ---------- */
+.org-links {
+  display: flex;
+  flex-wrap: wrap; /* five icons wrap to a second line rather than widen the card */
+  gap: 8px;
+  margin-top: 10px;
+}
+.org-links a {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+}
+.org-links a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.org-links svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* ---------- Host / partner logos ---------- */
+
+/* ---------- Agenda (list view) ---------- */
+.agenda {
+  width: 100%;
+  border-collapse: collapse;
+  background: none; /* the view panel around it supplies the surface */
+  border: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: 0.94em;
+}
+.agenda:last-child {
+  margin-bottom: 0;
+}
+.agenda caption {
+  caption-side: top;
+  text-align: left;
+  background: var(--accent-solid);
+  color: #fff;
+  font-weight: 700;
+  padding: 11px 16px;
+}
+.agenda caption span {
+  font-weight: 400;
+  opacity: 0.85;
+  margin-left: 8px;
+}
+.agenda tr + tr {
+  border-top: 1px solid var(--wash);
+}
+.agenda th,
+.agenda td {
+  padding: 11px 16px;
+  vertical-align: top;
+  text-align: left;
+}
+.agenda .when {
+  width: 8.5em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--meta);
+  font-size: 0.92em;
+}
+.agenda .what strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.agenda .who {
+  color: var(--who);
+  margin-top: 3px;
+}
+.agenda .who a,
+.abs-who a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26, 58, 107, 0.3);
+}
+.agenda .who a:hover,
+.abs-who a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.agenda .who b {
+  font-weight: 600;
+}
+.agenda .who em {
+  font-style: normal;
+  color: var(--meta-em);
+}
+.agenda .tag {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+/* Abstracts and the session modal stack on a phone */
+
+/* The programme toolbar is the tightest thing on a phone: four view buttons
+   plus a day filter plus two links. Give each control the full width and let
+   its buttons share it, rather than letting a fixed-width segment overflow its
+   own rounded border. */
+
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 4px 0 18px;
+  font-size: 0.85em;
+  color: var(--legend-ink);
+}
+.legend .item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.legend .swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  /* Width and style only. The `border-left: 4px solid` shorthand that used to
+     be here also reset border-left-color to currentColor, and since this
+     selector outranks the generated .sw-<type> rule that supplies the colour,
+     every swatch drew its edge in the legend's own grey — the fills matched
+     the timetable, the edges did not. */
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+
+/* ---------- Schedule grid ---------- */
+.schedule-container {
+  display: grid;
+  grid-auto-rows: 6.5px; /* 1 row = 5 min; height(min)=1.7·min−2, identical to the old 10-min/15px grid */
+  gap: 2px;
+  background: var(--grid-bg);
+  border: 1px solid var(--grid-line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.schedule-scroll {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.header {
+  background: var(--accent-solid);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.header .theme {
+  font-size: 0.78em;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.time-axis {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  background: var(--axis-bg);
+  border-right: 1px solid var(--axis-line);
+  text-align: right;
+  padding: 4px 8px 0 0;
+  font-size: 0.78em;
+  color: var(--axis-ink);
+}
+
+.event {
+  background: var(--surface);
+  padding: 6px 8px;
+  font-size: 0.8em;
+  border-left: 4px solid var(--grid-line);
+  overflow: hidden;
+  line-height: 1.28;
+}
+.event .title {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+  color: var(--event-title);
+}
+.event .chair {
+  font-weight: 500;
+  color: var(--meta);
+}
+.event .time {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85em;
+  color: var(--event-time);
+  display: block;
+  margin-bottom: 3px;
+}
+.event .spk {
+  display: block;
+  color: var(--who);
+  font-size: 0.95em;
+}
+.event .spk b {
+  font-weight: 600;
+}
+.event .spk em {
+  font-style: normal;
+  color: var(--meta-em);
+}
+
+/* Short slots: shrink so the text still fits the box. */
+.event.compact {
+  font-size: 0.72em;
+  padding: 2px 8px;
+}
+.event.compact .title {
+  margin: 0 0 1px;
+}
+.event.compact .time {
+  margin: 0;
+}
+.event.tiny {
+  font-size: 0.72em;
+  padding: 1px 8px;
+  line-height: 13px;
+}
+.event.tiny .title {
+  margin: 0;
+}
+
+.bg-break {
+  text-align: center;
+  color: var(--break-ink);
+}
+
+/* Candidates */
+.cand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.cand {
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius);
+  padding: 13px 16px;
+  font-size: 0.9em;
+}
+.cand .name {
+  font-weight: 600;
+  color: var(--ink);
+}
+.cand .topic {
+  color: var(--muted);
+}
+
+/* ---------- Now view ----------
+   One slab answers "what is on"; the rest is a thin queue beneath it. Surfaces
+   are separated by elevation rather than an outline — no border colour, just a
+   soft shadow that deepens on hover. */
+.now-note {
+  color: var(--muted);
+  margin: 0;
+}
+.now-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: var(--muted);
+}
+.now-lead {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none; /* the view panel is the surface now */
+  border: 0;
+  border-radius: var(--radius);
+  padding: 0 0 4px;
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.now-lead:hover {
+  transform: translateY(-1px);
+}
+.now-lead.is-live .now-label {
+  color: var(--accent);
+}
+
+/* Start and end anchor the two ends; the track between them carries how far
+   into the session we are, and the duration sits on it. */
+.now-rail {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 14px 0 4px;
+}
+.now-time {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 2.4em;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.now-track {
+  position: relative;
+  flex: 1;
+  min-width: 60px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(20, 33, 61, 0.08);
+}
+.now-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 999px;
+  background: var(--accent-solid);
+  transition: width 0.6s ease;
+}
+/* Nothing is running yet — a flat rule rather than an empty progress bar,
+   which would read as a broken one. */
+.now-dash {
+  flex: 1;
+  min-width: 60px;
+  height: 1px;
+  background: rgba(20, 33, 61, 0.12);
+}
+
+/* Label over value, the way a ticket states its particulars. */
+.now-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+  gap: 14px 18px;
+  margin-top: 20px;
+  padding-top: 18px;
+  box-shadow: inset 0 1px 0 rgba(20, 33, 61, 0.08);
+  font-size: 0.95em;
+  color: var(--ink);
+}
+.now-facts span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.now-lead h4 {
+  margin: 16px 0 8px;
+  font-size: 1.3em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.now-lead .who {
+  color: var(--who);
+  font-size: 0.95em;
+}
+.now-lead .who b {
+  font-weight: 600;
+}
+.now-lead .who em {
+  font-style: normal;
+  color: var(--muted);
+}
+
+.now-queue {
+  margin-top: 26px;
+}
+.now-queue .now-label {
+  margin-bottom: 6px;
+}
+.now-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 13px 4px;
+  font: inherit;
+  font-size: 0.95em;
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 8px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.now-row + .now-row {
+  box-shadow: inset 0 1px 0 rgba(20, 33, 61, 0.07);
+}
+.now-row:hover {
+  background: rgba(20, 33, 61, 0.04);
+  color: var(--accent);
+}
+.now-row span {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 0.9em;
+  min-width: 3.8em;
+}
+
+/* ---------- Abstracts view ---------- */
+.abs-day > h3 {
+  font-size: 1.05em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 26px 0 12px;
+}
+.abs-day:first-child > h3 {
+  margin-top: 0;
+}
+.abs-day > h3 span {
+  font-weight: 400;
+  font-size: 0.78em;
+  color: var(--muted);
+  margin-left: 8px;
+}
+/* Rows in one panel, not a stack of cards: separated by a rule rather than by
+   a gap and a border each. */
+.abs {
+  display: grid;
+  grid-template-columns: 10em minmax(0, 1fr);
+  gap: 20px;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  padding: 16px 0;
+  margin-bottom: 0;
+}
+.abs:first-of-type {
+  border-top: 0;
+  padding-top: 4px;
+}
+.abs-when {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 0.9em;
+}
+.abs-when .badge {
+  display: block;
+  margin-top: 8px;
+  width: fit-content;
+}
+.abs-who {
+  color: var(--who);
+}
+.abs-who b {
+  font-weight: 600;
+}
+.abs-who em {
+  font-style: normal;
+  color: var(--muted);
+}
+.abs-main h4 {
+  font-size: 1.02em;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 4px 0 10px;
+}
+.abs-body p {
+  margin: 0 0 10px;
+  color: var(--prose);
+}
+.abs-none {
+  color: var(--faint);
+  font-style: italic;
+  margin: 4px 0 0;
+}
+.abs-pdf {
+  display: inline-block;
+  margin-top: 12px;
+}
+
+/* ---------- Speakers ----------
+   Same card as an organiser — photo, role, name over affiliation — so the two
+   rosters read as one family. Derived from the programme, and a card is a link
+   into its session rather than a second copy of the schedule. */
+/* Footnote, Apple's kind: small and grey, there for anyone who wonders without
+   competing with the content. */
+.note {
+  margin: 18px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+/* Beside a heading it drops the top margin and the heading's display face, and
+   sits low against the cap height rather than centred on it — level with a
+   1.55em title it would read as part of the title. */
+h2 .note {
+  margin: 0;
+  align-self: flex-end;
+  padding-bottom: 0.28em;
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+/* A <button>, so the UA styles it as one unless told otherwise. Without this
+   it took `buttonface` for its background — a heavier grey than the card token
+   and one that ignored which band it sat on — and `buttontext` for its colour. */
+.spk-card {
+  /* A column, so the field tag can be pushed to the foot of the card. Grid
+     rows are equal height but names wrap to one line or two, and left in flow
+     the tag would sit at a different height on every card in a row. */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  appearance: none;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 15px 16px 17px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    translate 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s ease;
+}
+/* Lifts via `translate`, not `transform`. The reveal animation holds transform
+   at its final value for as long as it is filled, and an animated value beats
+   a plain declaration — so a hover written as transform simply never applied.
+   `translate` is its own property and composes with the animation instead of
+   losing to it. */
+.spk-card:hover {
+  translate: 0 -3px;
+  box-shadow: 0 6px 20px var(--shadow);
+}
+.spk-face {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  object-fit: cover;
+  display: block;
+  margin-bottom: 11px;
+  background: var(--face);
+}
+/* Most speakers have no photo yet, so this placeholder is on screen fourteen
+   times. Scaled up with the frame, or a full-width white square reads as a
+   hole in the card rather than a portrait that is still coming. */
+.spk-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--initials);
+}
+/* English sets the standing on its own line above the name, Korean puts it
+   after the name. Scoped under [data-lang="en"] so it cannot fight the language
+   switch: a bare `display: block` here would un-hide the English wrapper while
+   the page is in Korean. */
+[data-lang="en"] .role-above {
+  display: block;
+}
+
+.spk-name {
+  font-weight: 600;
+  color: var(--ink);
+}
+/* Hangul has no coverage in Inter, so a Korean name falls through to the
+   platform's UI face — and Apple SD Gothic Neo at 600 sits visibly lighter
+   than Inter at 600 beside it. Half a step up evens them out. */
+.spk-name .t-ko,
+.org-card .name .t-ko {
+  font-weight: 700;
+}
+.spk-name .affil {
+  display: block;
+  font-weight: 400;
+  font-size: 0.85em;
+  color: var(--muted);
+}
+/* The field, on a rule at the foot of the card. Mono and uppercase so it reads
+   as a tag rather than a second line of the name. Only some speakers have one,
+   so it must look deliberate on the cards that do and leave no gap on the
+   cards that don't. */
+.spk-topic {
+  margin-top: auto;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Before the workshop opens, the Now view is showing you what *will* happen,
+   not what is happening. The hatch says so without a banner: it is the
+   convention for "not in service yet", and it reads as inactive at a glance
+   while leaving every word legible underneath. */
+#view-now.is-pending {
+  position: relative;
+}
+#view-now.is-pending::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none; /* the card underneath is still clickable */
+  border-radius: var(--radius);
+  /* Two layers: the stripes, then a faint wash over everything.
+     The stripes used to be the ink colour at 6%, which is invisible on top of
+     ink-coloured text — 6% of a colour over itself is that colour, so the
+     hatch stopped dead at every glyph. A mid grey at a real alpha darkens the
+     card and lightens the type, so it crosses both. */
+  background:
+    repeating-linear-gradient(45deg, var(--hatch-line) 0 1.5px, transparent 1.5px 6px),
+    var(--hatch-wash);
+}
+/* Centred on the card, not on the view — the view also holds the up-next
+   queue, and the middle of that is not the middle of anything. */
+/* The plate hangs off this wrapper, not off the card. The card lifts on hover,
+   and a transform makes an element a stacking context — which trapped the
+   plate's z-index inside the card, dropping it under the hatch for as long as
+   the pointer was there and lifting it back out afterwards. The wrapper never
+   transforms, so the plate's z-index always means what it says. */
+.now-card {
+  position: relative;
+}
+/* And no lift while the card is hatched out: something marked inactive should
+   not rise to meet the cursor. */
+#view-now.is-pending .now-lead:hover {
+  transform: none;
+}
+#view-now.is-pending .now-pending {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 20px;
+  border-radius: 0; /* square corners: a stamp, not a chip */
+  background: var(--band);
+  box-shadow: 0 2px 10px var(--shadow);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--muted);
+}
+#view-now.is-pending .now-pending b {
+  font-weight: 600;
+  color: var(--ink);
+}
+/* The hero's warm accent. On the dark hero #ff8a75 reads at 7.3:1, but on this
+   white plate it drops to 2.3:1 — the same hue carried down until it clears
+   4.5:1, rather than a different colour. The dark theme's plate is dark, so it
+   takes the hero value unchanged. */
+#view-now.is-pending #now-countdown {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--countdown);
+}
+/* Speakers inside the Now slab: the modal's block, so the bio and the slide
+   link come along, on a rule between people rather than a card each. */
+.now-people {
+  margin-top: 12px;
+}
+.now-people .sp {
+  padding: 10px 0;
+}
+.now-people .sp:first-child {
+  padding-top: 0;
+}
+
+/* Placeholders. Dashed and quiet, so the shape of a filled-in session is
+   visible without a half-empty card pretending to be finished. */
+.is-todo {
+  color: var(--muted);
+  font-style: italic;
+}
+.sp-slides.is-todo {
+  font-style: normal;
+  border-style: dashed;
+  opacity: 0.7;
+  cursor: default;
+  pointer-events: none;
+}
+.now-track.is-todo .now-fill {
+  display: none;
+}
+
+/* ---------- Venue ---------- */
+.venue {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+.venue-map {
+  filter: var(--map-filter);
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--wash);
+  min-height: 420px;
+  line-height: 0; /* no baseline gap under the iframe */
+}
+/* Pinned to the box rather than sized at 100% of it. A percentage height needs
+   the parent to have a definite height, and this parent only has a min-height
+   — Chrome resolves that anyway, Safari does not, and there the map fell back
+   to its own min-height and left the box's grey showing underneath. */
+.venue-map #map {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: var(--wash);
+}
+
+/* Leaflet chrome, restyled to match the rest of the page */
+.leaflet-container {
+  font: inherit;
+  background: var(--wash);
+}
+.leaflet-control-zoom a {
+  color: var(--ink);
+  border-radius: 6px;
+}
+.leaflet-control-attribution {
+  font-size: 0.68em;
+  background: rgba(255, 255, 255, 0.85);
+}
+.leaflet-control-attribution a {
+  color: var(--accent);
+}
+
+/* Marker and label, drawn in CSS so no icon images ship */
+.venue-pin {
+  border-radius: 50%;
+  background: var(--accent-solid);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(20, 33, 61, 0.45);
+}
+.leaflet-tooltip.venue-tip {
+  background: var(--accent-solid);
+  border: 0;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.78em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(20, 33, 61, 0.3);
+}
+.leaflet-tooltip.venue-tip::before {
+  border-right-color: var(--accent);
+}
+.venue-info {
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius);
+  padding: 22px 24px;
+}
+.venue-name {
+  font-family: var(--display);
+  font-size: 1.3em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.venue-name span {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.8em;
+  margin-left: 4px;
+}
+.venue-room {
+  color: var(--label);
+  font-size: 0.9em;
+  margin-top: 2px;
+}
+/* Small monotone links out to the Korean map apps, for directions the embed
+   cannot give. Deliberately quiet — the map itself is the main event. */
+.map-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.map-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px 4px 9px;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+}
+.map-links a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.map-links svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+}
+
+.venue-rooms {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.venue-rooms li {
+  padding: 10px 0;
+  border-top: 1px solid var(--wash);
+}
+.room-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  opacity: 0.72;
+  margin-bottom: 5px;
+}
+.room-name {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.room-detail {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--muted);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.venue-info address {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 0.9em;
+  margin: 18px 0 0;
+  line-height: 1.65;
+}
+.venue-info address span {
+  color: var(--muted);
+}
+.venue-travel {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  color: var(--prose);
+  font-size: 0.94em;
+}
+.venue-travel li {
+  padding: 7px 0;
+  border-top: 1px solid var(--wash);
+}
+.venue-travel b {
+  color: var(--ink);
+  margin-right: 6px;
+}
+
+
+/* Organiser-only annotations — internal build only, never public */
+.staff-note {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.86em;
+  color: #8a4b00;
+  background: #fff6e5;
+  border-left: 3px solid #f57c00;
+  padding: 3px 8px;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Footer: credit line on the left, institution logos on the right. Logos are
+   greyed and lifted to full colour on hover, so a row of different brand
+   palettes does not shout louder than the page. */
+.footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+.footer-text {
+  text-align: left;
+  line-height: 1.7;
+}
+.hosts-row {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.hosts-row img {
+  /* POSTECH is a 6.9:1 wordmark, KAIST 3.5:1 — matching them on height alone
+     makes the wider one dominate, so cap the width too and let object-fit
+     scale down rather than squash. */
+  height: 20px;
+  max-width: 140px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: var(--logo-filter);
+  opacity: 0.55;
+  transition:
+    filter 0.15s,
+    opacity 0.15s;
+}
+/* Hovering shows the mark as its owner drew it — except on black, where the
+   dark artwork would vanish, so there the inversion has to stay. */
+.hosts-row a:hover img {
+  filter: var(--logo-filter-hover);
+  opacity: 1;
+}
+
+footer {
+  text-align: center;
+  color: var(--faint);
+  font-size: 0.85em;
+  padding: 40px 20px 60px;
+}
+footer a {
+  color: var(--footer-link);
+}
+
+/* ---------- Mobile ---------- */
+
+
+
+/* Last in the sheet on purpose. The base `body { padding: 0 }` is declared
+   after the 780px block above and at the same specificity, so a padding set
+   there never applied and the fixed tab bar sat over the end of the footer. */
+
+/* ---------- Responsive ----------
+   Every media block lives here, at the end. They used to sit among the
+   base rules, and a media rule declared before its base rule loses to it
+   at equal specificity — ten of them were doing nothing at all, including
+   the whole phone treatment of the Now card. Keeping them last means a
+   media rule always wins, which is what writing one implies. */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #f5f5f7;
+    --text: #f5f5f7;
+    --prose: #d2d2d7;
+    --who: #e8e8ed;
+    /* The two part company in dark. As text on black the navy is invisible and
+     has to lift; as a filled block it must stay dark, or a header that was a
+     deep navy slab in light becomes a glaring pale one. */
+  --accent: #6f9be0;
+  --accent-solid: #1f3b66;
+    --muted: #86868b;
+    --label: #86868b;
+    --faint: #6e6e73;
+    --line: #2c2c2e;
+    --wash: #2c2c2e;
+    --band: #000;
+    --band-alt: #1d1d1f;
+    --face: #2c2c2e;
+    --initials: #6e6e73;
+    --shadow: rgba(0, 0, 0, 0.55);
+    --control-line: #3a3a3c;
+    --control-ink: #d2d2d7;
+    --meta: #a1a1a6;
+    --meta-em: #86868b;
+    --footer-link: #a1a1a6;
+    --grid-line: #3a3a3c;
+    --grid-bg: #2c2c2e;
+    --axis-bg: #161617;
+    --axis-ink: #86868b;
+    --axis-line: #2c2c2e;
+    --event-title: #f5f5f7;
+    --event-time: #86868b;
+    --legend-ink: #a1a1a6;
+    --break-ink: #86868b;
+    --modal-nav-bg: #161617;
+    --topbar-line: #2c2c2e;
+    --topbar-bg: rgba(0, 0, 0, 0.72);
+    --logo-filter: grayscale(1) invert(1);
+    --logo-filter-hover: grayscale(1) invert(1) brightness(1.3);
+    --map-filter: invert(0.92) hue-rotate(180deg) saturate(0.72) brightness(0.94);
+    --surface: #1d1d1f;
+    --hatch-line: rgba(190, 200, 220, 0.22);
+    --hatch-wash: rgba(0, 0, 0, 0.28);
+    --countdown: #ff8a75;
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 780px) {
+  .tabs {
+    display: none;
+  }
+  /* Pinned to the bottom, where a thumb is. The top bar keeps the name and the
+     two preference controls; section navigation is the thing you reach for
+     repeatedly, so it goes to the reachable edge. */
+  .tabs-mobile {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    padding: 9px 0 calc(9px + env(safe-area-inset-bottom));
+    background: var(--topbar-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--topbar-line);
+  }
+  .tabs-mobile ul {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 720px) {
+  .abs {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 16px 18px;
+  }
+  .abs-when .badge {
+    display: inline-block;
+    margin: 0 0 0 10px;
+  }
+  #event-modal {
+    padding: 20px 18px 18px;
+    max-height: 88vh;
+  }
+  .modal-nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .sp {
+    grid-template-columns: 1fr;
+  }
+  .sp-photo {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (max-width: 620px) {
+  .sched-bar {
+    gap: 8px;
+  }
+  .seg {
+    width: 100%;
+  }
+  .seg button {
+    flex: 1;
+    padding: 9px 4px;
+    font-size: 0.8em;
+  }
+  .sched-links {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .linkish {
+    white-space: nowrap;
+  }
+  .tz-note {
+    font-size: 0.72em;
+    text-align: right;
+  }
+
+  /* The Now slab is the one screen a phone reads standing in a corridor, so it
+     gets the most room and the least around it. */
+  .now-lead {
+    padding: 22px 20px 24px;
+  }
+  .now-rail {
+    gap: 12px;
+  }
+  /* Scales with the screen instead of stepping once. The two times never
+     shrink (they are the point of the rail), so at a fixed size they plus the
+     dash's 60px floor ran past the panel — narrower once the view gained its
+     own padding. */
+  .now-time {
+    font-size: clamp(1.4rem, 7.5vw, 2.1em);
+  }
+  .now-dash,
+  .now-track {
+    min-width: 16px;
+  }
+  .now-lead h4 {
+    font-size: 1.15em;
+  }
+  .now-facts {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 16px;
+  }
+  .footer-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .hosts-row {
+    gap: 20px;
+  }
+  .hosts-row img {
+    height: 16px;
+    max-width: 110px;
+  }
+  .venue-map,
+  .venue-map iframe {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 620px) {
+  .agenda,
+  .agenda tbody,
+  .agenda tr,
+  .agenda th,
+  .agenda td {
+    display: block;
+  }
+  /* The day heading is a <caption>. Once the table stops being a table it is
+     still display: table-caption, which lays out against a table box that no
+     longer exists and drifts off to one side. */
+  .agenda caption {
+    display: block;
+    width: 100%;
+  }
+  .agenda .when {
+    width: auto;
+    padding-bottom: 0;
+  }
+  .agenda .what {
+    padding-top: 4px;
+  }
+  .agenda .tag {
+    text-align: left;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 780px) {
+  .venue {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .venue {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .wrap {
+    padding: 0 20px;
+  }
+
+  /* Two up, told rather than derived. auto-fill with a 164px minimum gives two
+     columns at 390px but only one at 375 and below — an iPhone SE or mini
+     would get a single file of cards while a slightly wider phone got a grid. */
+  .org-grid,
+  .spk-grid {
+    /* minmax(0, …), not 1fr: 1fr floors each track at the item's min-content,
+       and the organiser card's row of five link icons makes that 174px — two
+       of which will not fit a 375px phone, so the grid overflowed instead of
+       shrinking. */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .hero {
+    padding: 40px 16px 40px;
+  }
+  /* No size here: the clamp on .hero h1 already states the phone size as its
+     minimum, and this em value (31px against the clamp's 46px floor) was
+     quietly overriding it — the title was smaller on a phone than the base
+     rule asked for. */
+  .hero h1 .acronym {
+    font-size: 0.46em;
+  }
+  .hero .cfp {
+    font-size: 0.85em;
+    padding: 6px 16px;
+  }
+  section {
+    padding: 32px 0 4px;
+    scroll-margin-top: 108px; /* the mobile bar is two rows tall */
+  }
+  h2 {
+    font-size: 1.32em;
+    flex-wrap: wrap;
+  }
+  /* Under the title rather than beside it. On a phone the heading and the note
+     together are wider than the screen, so side by side the note either
+     squeezes the title or runs off the edge. Indented past the accent bar so
+     it lines up with the title's first letter, not with the bar. */
+  h2 .note {
+    flex-basis: 100%;
+    align-self: auto;
+    margin-left: 16px; /* the 6px bar plus the heading's 10px gap */
+    padding-bottom: 0;
+  }
+
+    
+  .about-lead {
+    padding-left: 14px;
+  }
+  .about-lead p {
+    font-size: 1.28em;
+  }
+  .about-block {
+    padding: 18px 18px;
+  }
+
+  /* The programme toolbar stacks instead of squeezing */
+  .sched-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .view-toggle {
+    margin: 0;
+    align-self: flex-start;
+  }
+  .sched-tools {
+    gap: 6px;
+  }
+  .tz-note {
+    margin-left: 0;
+    width: 100%;
+  }
+  .legend {
+    gap: 10px;
+    font-size: 0.78em;
+  }
+
+  .org-card {
+    padding: 14px;
+  }
+
+  .venue-info {
+    padding: 18px 18px;
+  }
+  /* On .venue-map, not on #map, and in this block rather than the 620px one
+     above: the base `.venue-map { min-height: 420px }` is declared after that
+     block and at the same specificity, so the override there never won and
+     phones kept the desktop height. */
+  .venue-map {
+    min-height: 300px;
+  }
+
+  #event-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+  }
+  #modal-body {
+    max-height: 58vh;
+  }
+  .modal-nav .pill {
+    padding: 8px 12px;
+  }
+  .sp-photo {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Organisers stay two-up even on the narrowest phones — five one-up cards
+     is a lot of scrolling for what is really a contact list. The photo and
+     type shrink instead. */
+  .org-card {
+    padding: 12px 12px 14px;
+  }
+  /* The photo now scales with the card, so only the corner needs easing off
+     at this width — pinning a pixel size here would shrink it back. */
+  .org-photo,
+  .spk-face {
+    border-radius: 12px;
+    margin-bottom: 9px;
+  }
+  .spk-blank {
+    font-size: 1.25rem;
+  }
+  .org-card .role {
+    font-size: 0.68em;
+    letter-spacing: 0.6px;
+    margin-bottom: 5px;
+  }
+  .org-card .name {
+    font-size: 0.92em;
+    overflow-wrap: anywhere;
+  }
+  .org-links {
+    gap: 5px;
+  }
+  }
+
+@media (max-width: 780px) {
+  /* Clearance for the fixed tab bar. The footer's own 60px bottom padding was
+     designed for a page that ended at the footer; with this added on top it
+     came to 118px of nothing under the last line, which reads as the page
+     scrolling past its own end. The footer gives most of it back. */
+  body {
+    padding-bottom: calc(58px + env(safe-area-inset-bottom));
+  }
+  footer {
+    padding-bottom: 14px;
+  }
+}

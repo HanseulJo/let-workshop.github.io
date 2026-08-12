@@ -1,0 +1,68 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Only `public` is built here, so the invite and internal pages never ship.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and never kill one that is already running.
+#
+# This used to be `cancel-in-progress: true`, to supersede rather than queue.
+# That is wrong for Pages: cancelling a run part-way through `deploy-pages`
+# leaves the deployment it had already created stuck as "in progress" on
+# GitHub's side, and every later deployment is then refused — the exact failure
+# we kept hitting. GitHub's own Pages workflow sets false for this reason.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python3 build.py public
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url || steps.retry.outputs.page_url || steps.retry2.outputs.page_url }}
+    steps:
+      # create-deployment fails intermittently: sometimes a transient
+      # "self-signed certificate" on the API path, sometimes a previous
+      # deployment that finished but is still held as in-flight. Both clear on
+      # their own, so retry with a wait rather than failing the run. The old
+      # version retried immediately, which never helped the second case — the
+      # lock takes minutes and the retry took seconds.
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - if: steps.deployment.outcome == 'failure'
+        run: sleep 90
+      - id: retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - if: steps.deployment.outcome == 'failure' && steps.retry.outcome == 'failure'
+        run: sleep 240
+      - id: retry2
+        if: steps.deployment.outcome == 'failure' && steps.retry.outcome == 'failure'
+        uses: actions/deploy-pages@v4

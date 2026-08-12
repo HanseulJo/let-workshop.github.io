@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KOLT">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#14213d"/>
+  <!-- Baked outlines — no font needed. Regenerate: tools/make-wordmark.py -->
+  <g transform="translate(14.067 46.665) scale(0.04190)" fill="#ffffff">
+    <path d="M70 -700V0H300V-700ZM515 -700 237 -365 520 0H786L498 -372L771 -700Z"/>
+  </g>
+</svg>

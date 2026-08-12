@@ -1,0 +1,345 @@
+# ─────────────────────────────────────────────────────────────
+# The programme. Every event is placed on the grid purely from its
+# `start`/`end` — build.py computes the CSS grid rows, so you never
+# touch a row number again. Just edit the times.
+#
+# event keys
+#   type      a key from `types:` below — picks the colour and the legend row
+#   title     bold first line
+#   chair     appended as "(Chair: …)"
+#   start/end "HH:MM", 5-minute resolution
+#   time_label  overrides the "09:30 – 10:50" line (e.g. "from 18:00")
+#   time_in_title  render as "Title · 09:20" with no separate time line
+#   bare      render the title as plain centred text (coffee breaks)
+#   density   normal (default) | compact | tiny — for short slots
+#   speakers  list of {name, affil, topic, talk, abstract, note}
+#             `talk` is the full title and `abstract` the text behind the
+#             Abstract button in the list view — both optional, and neither is
+#             emitted in the anonymised build. `note` records availability and
+#             confirmation status and is only rendered in the internal build,
+#             never on the public page.
+#   notes     extra italic lines under the speakers
+#   anon_note what replaces speakers/notes in the anonymised build;
+#             blocks fall back to "N talks · M min each"
+#   calendar  set false to keep an event out of the .ics export
+# ─────────────────────────────────────────────────────────────
+
+title: Program (tentative)
+title_ko: 프로그램 (잠정)
+
+# Public page shows no subtitle. The invite build keeps `subtitle_anon`, which
+# has to explain the session shape to someone being asked to speak.
+subtitle: ~
+
+# Shown instead of `subtitle` when the build is anonymised.
+subtitle_anon: >-
+  October 7–8 (Wed–Thu), 2026 · POSTECH. Each session holds two 40-minute
+  talks; the tutorial is 60 minutes. Speakers are being confirmed.
+
+# All clock times in this file are local to the venue. The offset is what makes
+# the "Now" button and the .ics export correct for a reader in another zone.
+timezone: Asia/Seoul
+utc_offset: "+09:00"
+
+# Grid geometry. slot = one CSS grid row.
+grid:
+  slot_minutes: 5
+  header_rows: 8
+  day_start: "09:00"
+  day_end: "20:30"
+  axis_from: "09:00"
+  axis_to: "20:00"
+  axis_step_minutes: 60
+  time_column_width: 64px
+  min_width: 560px
+
+# Event types. `color` is the accent — left border and legend swatch — and the
+# pale fill behind the box is derived from it, so one hex per type is all you
+# set. Adding a type here gives it a CSS rule and a legend row automatically;
+# leave `color` out and build.py picks an unused hue for it. Using a `type:` in
+# an event that is not listed here fails the build.
+# `label` is the legend text; `short` is the badge in the list view and falls
+# back to `label` when you leave it out.
+# `emoji` is the default mark for the type; an event can override it with its
+# own `emoji:` where the type's is wrong — a lunch break is not a coffee break.
+types:
+  tutorial: { label: Tutorial, color: "#3f51b5", emoji: "📘" }
+  block: { label: Talk block, color: "#00796b", short: Talks, emoji: "🎤" }
+  keynote: { label: Ceremony (opening / closing), color: "#c2185b", short: Ceremony, emoji: "🎉" }
+  poster: { label: Poster session, color: "#f57c00", short: Poster, emoji: "📌" }
+  social: { label: Social / Meals, color: "#1976d2", short: Social, emoji: "🥂" }
+  break: { label: Break, color: "#9e9e9e", emoji: "☕" }
+
+days:
+  # ═══════════════ DAY 1 ═══════════════
+  - label: Day 1 · Oct 7 (Wed)
+    short: Day 1
+    date: 2026-10-07
+    theme: Deep Learning Theory & UQ
+    events:
+      - type: break
+        title: Registration & Welcome Coffee
+        emoji: "📝"
+        start: "09:00"
+        end: "09:20"
+        density: compact
+
+      - type: keynote
+        title: Opening Remarks
+        emoji: "🎬"
+        start: "09:20"
+        end: "09:30"
+        density: tiny
+        time_in_title: true
+
+      - type: block
+        title: DL Theory I
+        chair: TBD
+        start: "09:30"
+        end: "10:50"
+        speakers:
+          - name: Jaeho Lee
+            role: Prof.
+            role_ko: 교수
+            name_ko: 이재호
+            photo: jaeho-lee.jpg
+            affil: POSTECH
+            topic: theory of KD
+            home: https://jaeho-lee.github.io/
+          - name: Sung Whan Yoon
+            role: Prof.
+            role_ko: 교수
+            name_ko: 윤성환
+            photo: sung-whan-yoon.jpg
+            affil: UNIST
+            topic: flatness
+            note: >-
+              Childcare — Wed only after 14:00–15:00, or any time Thu. CLASHES
+              with this slot (Wed 09:30); needs moving.
+            home: https://sites.google.com/view/swyoon89
+
+      - type: break
+        title: Coffee Break (20 min)
+        start: "10:50"
+        end: "11:10"
+        bare: true
+
+      - type: block
+        title: DL Theory II
+        chair: TBD
+        start: "11:10"
+        end: "12:30"
+        speakers:
+          - name: Chulhee Yun
+            role: Prof.
+            role_ko: 교수
+            name_ko: 윤철희
+            photo: chulhee-yun.jpg
+            affil: KAIST
+            topic: "river valley, Muon"
+            home: https://chulheeyun.github.io/
+          - name: Namhoon Lee
+            role: Prof.
+            role_ko: 교수
+            name_ko: 이남훈
+            photo: namhoon-lee.jpg
+            affil: POSTECH
+            note: replaced Sejun Park (Korea)
+            home: https://namhoonlee.github.io/
+
+      - type: break
+        title: Lunch Break [On Your Own]
+        emoji: "🍽"
+        start: "12:30"
+        end: "13:30"
+
+      - type: block
+        title: DL Theory III
+        chair: TBD
+        start: "13:30"
+        end: "14:50"
+        speakers:
+          - name: Jy-Yong Sohn
+            role: Prof.
+            role_ko: 교수
+            name_ko: 손지용
+            photo: jy-yong-sohn.jpg
+            affil: Yonsei
+            topic: in-context learning
+            note: Prefers Day 1 afternoon (not strict) — satisfied here.
+            home: https://sites.google.com/view/jsohn
+          - name: Seong Joon Oh
+            role: Prof.
+            role_ko: 교수
+            name_ko: 오성준
+            photo: seong-joon-oh.jpg
+            affil: KAIST
+            topic: linear propagation
+            note: Verbal yes via Chulhee Yun; no formal confirmation yet.
+            home: https://coallaoh.github.io/
+
+      - type: break
+        title: Coffee Break (20 min)
+        start: "14:50"
+        end: "15:10"
+        bare: true
+
+      - type: block
+        title: UQ in LLMs
+        chair: TBD
+        start: "15:10"
+        end: "16:30"
+        speakers:
+          - name: Juho Lee
+            role: Prof.
+            role_ko: 교수
+            name_ko: 이주호
+            photo: juho-lee.jpg
+            affil: KAIST
+            topic: martingale posterior
+            home: https://juho-lee.github.io/
+          - name: Sangdon Park
+            role: Prof.
+            role_ko: 교수
+            name_ko: 박상돈
+            photo: sangdon-park.jpg
+            affil: POSTECH
+            topic: conformal/selective
+            note: Wednesday only — satisfied here.
+            home: https://sangdon.github.io/
+
+      - type: poster
+        title: Poster Session
+        start: "16:30"
+        end: "18:00"
+
+      - type: social
+        title: Grand Banquet [Provided]
+        start: "18:00"
+        end: "20:30"
+        time_label: from 18:00
+
+  # ═══════════════ DAY 2 ═══════════════
+  - label: Day 2 · Oct 8 (Thu)
+    short: Day 2
+    date: 2026-10-08
+    theme: RL · Bandits · Offline RL
+    events:
+      - type: break
+        title: Arrival & Morning Coffee
+        emoji: "☕"
+        start: "09:00"
+        end: "09:50"
+        density: compact
+
+      - type: tutorial
+        title: Tutorial
+        chair: TBD
+        start: "09:50"
+        end: "10:50"
+        speakers:
+          - name: Se-Young Yun
+            role: Prof.
+            role_ko: 교수
+            name_ko: 윤세영
+            photo: se-young-yun.jpg
+            affil: KAIST
+            home: https://fbsqkd.github.io/
+        notes:
+          - RL · LLMs
+        anon_note: 1 tutorial · 60 min
+
+      - type: break
+        title: Coffee Break (20 min)
+        start: "10:50"
+        end: "11:10"
+        bare: true
+
+      - type: block
+        title: Bandits I
+        chair: TBD
+        start: "11:10"
+        end: "12:30"
+        speakers:
+          - name: Kwang-Sung Jun
+            role: Prof.
+            role_ko: 교수
+            name_ko: 전광성
+            photo: kwang-sung-jun.jpg
+            affil: POSTECH
+            home: https://kwangsungjun.github.io/
+          - name: Min-hwan Oh
+            role: Prof.
+            role_ko: 교수
+            name_ko: 오민환
+            photo: min-hwan-oh.jpg
+            affil: SNU
+            home: https://minoh.io/
+
+      - type: break
+        title: Lunch Break [Provided]
+        emoji: "🍽"
+        start: "12:30"
+        end: "13:30"
+
+      - type: block
+        title: Bandits II
+        chair: TBD
+        start: "13:30"
+        end: "14:50"
+        speakers:
+          - name: TBD
+            note: >-
+              Seungki Min (SNU) withdrew — scheduling conflict. Candidates
+              raised: Kyungjae Lee (Korea), Jongyeong Lee (KIST).
+          - name: Gi-Soo Kim
+            role: Prof.
+            role_ko: 교수
+            name_ko: 김지수
+            photo: gi-soo-kim.jpg
+            affil: UNIST
+            topic: heavy-tailed
+            home: https://sdm.unist.ac.kr/professor/
+
+      - type: break
+        title: Coffee Break (20 min)
+        start: "14:50"
+        end: "15:10"
+        bare: true
+
+      - type: block
+        title: Offline RL
+        chair: TBD
+        start: "15:10"
+        end: "16:30"
+        speakers:
+          - name: Kyoungseok Jang
+            role: Prof.
+            role_ko: 교수
+            name_ko: 장경석
+            photo: kyoungseok-jang.jpg
+            affil: CAU
+            home: https://jajajang.github.io/
+          - name: Kihyuk Hong
+            role: Prof.
+            role_ko: 교수
+            name_ko: 홍기혁
+            photo: kihyuk-hong.jpg
+            affil: KAIST
+            home: https://www.kihyukhong.com
+            topic: offline RL
+            note: Thursday only (teaching) — satisfied here.
+
+      - type: social
+        title: Free Discussion (TBD)
+        emoji: "💬"
+        start: "16:30"
+        end: "17:05"
+
+      - type: keynote
+        title: Closing & Awards
+        emoji: "🏆"
+        start: "17:05"
+        end: "17:15"
+        density: tiny
+        time_in_title: true

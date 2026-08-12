@@ -1,0 +1,10 @@
+# Shared link registry for the About prose. Both content/about.en.md and
+# content/about.ko.md refer to these by key, e.g. [COLT][colt], so a URL
+# that moves only has to be fixed once.
+
+prev_workshop: https://nick-jhlee.github.io/theory-workshop/
+ita: https://ita.ucsd.edu/
+colt: https://learningtheory.org/
+alt: https://algorithmiclearningtheory.org/
+aistats: https://virtual.aistats.org/
+simons: https://simons.berkeley.edu/homepage

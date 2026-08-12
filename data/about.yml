@@ -1,0 +1,13 @@
+title: About
+title_ko: 소개
+
+# One tab per language. `file` is resolved under content/ and rendered as
+# Markdown; the first paragraph is styled as the lead. Add a third language
+# by dropping a file in content/ and adding a row here.
+languages:
+  - code: en
+    label: English
+    file: about.en.md
+  - code: ko
+    label: 한국어
+    file: about.ko.md

@@ -1,0 +1,1398 @@
+<html lang="en" data-lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ site.name }} — {{ site.full_name }}</title>
+    {% if variant.noindex %}
+    <!-- Keep this page out of search results for now (still shareable via direct link) -->
+    <meta name="robots" content="noindex, follow" />
+    {% endif %}
+    <meta name="description" content="{{ site.description }}" />
+    <link rel="canonical" href="{{ site.url }}" />
+    {% if venue.map.resolved == 'leaflet' %}
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+    {% endif %}
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png" />
+    <meta name="theme-color" content="#1a3a6b" />
+    <script>
+      // Before first paint, or the page renders light and then snaps to dark.
+      // "auto" stores nothing on the element so prefers-color-scheme decides.
+      (function () {
+        try {
+          var t = localStorage.getItem("kolt-theme");
+          if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {
+          /* private browsing — the choice just doesn't persist */
+        }
+      })();
+    </script>
+    <!-- Open Graph (Facebook, Slack, KakaoTalk, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ site.url }}" />
+    <meta property="og:title" content="{{ site.name }} — {{ site.full_name }}" />
+    <meta property="og:description" content="{{ site.tagline }}. {{ site.blurb }}" />
+    <meta property="og:site_name" content="{{ site.name }}" />
+    <meta property="og:locale" content="en_US" />
+    <!-- The card is the page's own hero, rendered by tools/make-og.py, so the
+         preview cannot drift from the site. Absolute URL because a scraper has
+         no page to resolve a relative one against; site.url is derived per
+         deployment target, so each host advertises its own copy. -->
+    <meta property="og:image" content="{{ site.url }}og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="{{ site.name }} — {{ site.tagline }}" />
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ site.name }} — {{ site.full_name }}" />
+    <meta name="twitter:description" content="{{ site.tagline }}." />
+    <meta name="twitter:image" content="{{ site.url }}og.jpg" />
+    <!-- Legacy, and still what some Korean scrapers read first. Without any of
+         these a scraper falls back to the first <img> in the document, which
+         here is whichever speaker sorts first alphabetically — a stranger's
+         face as the card for the workshop. -->
+    <link rel="image_src" href="{{ site.url }}og.jpg" />
+    {% if variant.analytics %}
+    <!-- Google tag (gtag.js) — this page is served statically, outside Hugo, so GA is added directly -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "{{ site.analytics_id }}");
+    </script>
+    {% endif %}
+    <style>
+{% filter indent(6, true) %}{% include "style.css" %}{% endfilter %}
+
+      /* Event colours — generated from `types` in data/program.yml. Each type
+         resolves to a custom property so the dark theme restates four values
+         per type instead of repeating every rule that consumes them. */
+      {% for key, t in types.items() %}
+      .bg-{{ key }},
+      .sw-{{ key }} {
+        background: var(--t-{{ key }}-fill);
+        border-left-color: {{ t.color }};
+      }
+      .badge-{{ key }} {
+        background: var(--t-{{ key }}-badge);
+        color: var(--t-{{ key }}-deep);
+      }
+      .wash-{{ key }} {
+        background: var(--t-{{ key }}-wash);
+      }
+      .strip-{{ key }} {
+        background: {{ t.color }};
+      }
+      {% endfor %}
+      :root {
+        {% for key, t in types.items() %}
+        --t-{{ key }}-fill: {{ t.fill }};
+        --t-{{ key }}-wash: {{ t.wash }};
+        --t-{{ key }}-badge: {{ t.badge }};
+        --t-{{ key }}-deep: {{ t.deep }};
+        {% endfor %}
+      }
+      {% set dark %}
+        {% for key, t in types.items() %}
+        --t-{{ key }}-fill: {{ t.fill_dark }};
+        --t-{{ key }}-wash: {{ t.wash_dark }};
+        --t-{{ key }}-badge: {{ t.badge_dark }};
+        --t-{{ key }}-deep: {{ t.deep_dark }};
+        {% endfor %}
+      {% endset %}
+      [data-theme="dark"] { {{ dark }} }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) { {{ dark }} }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Icon sprite: inline so no icon files or icon-font requests ship -->
+    <svg style="display: none" aria-hidden="true">
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 9h-3a15.7 15.7 0 00-1.4-5.7A8 8 0 0118.9 11zM12 4c.8 1.2 1.7 3.5 1.9 7h-3.8c.2-3.5 1.1-5.8 1.9-7zM4.3 13h3c.2 2.2.7 4.1 1.4 5.7A8 8 0 014.3 13zm3-2h-3a8 8 0 014.4-5.7A15.7 15.7 0 007.3 11zM12 20c-.8-1.2-1.7-3.5-1.9-7h3.8c-.2 3.5-1.1 5.8-1.9 7zm3.3-1.3c.7-1.6 1.2-3.5 1.4-5.7h3a8 8 0 01-4.4 5.7z" />
+      </symbol>
+      <symbol id="i-scholar" viewBox="0 0 24 24">
+        <path d="M12 2L1 8l11 6 9-4.9V17h2V8L12 2zM5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8z" />
+      </symbol>
+      <symbol id="i-github" viewBox="0 0 24 24">
+        <path d="M12 .5a11.5 11.5 0 00-3.6 22.4c.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.8 2.7 1.3 3.4 1 .1-.7.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 015.8 0C17.1 4.8 18 5.1 18 5.1c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0012 .5z" />
+      </symbol>
+      <symbol id="i-mic" viewBox="0 0 24 24">
+        <path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.9V21h2v-3.1A7 7 0 0019 11z" />
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 9h-3a15.7 15.7 0 00-1.4-5.7A8 8 0 0118.9 11zM12 4c.8 1.2 1.7 3.5 1.9 7h-3.8c.2-3.5 1.1-5.8 1.9-7zM4.3 13h3c.2 2.2.7 4.1 1.4 5.7A8 8 0 014.3 13zm3-2h-3a8 8 0 014.4-5.7A15.7 15.7 0 007.3 11zM12 20c-.8-1.2-1.7-3.5-1.9-7h3.8c-.2 3.5-1.1 5.8-1.9 7zm3.3-1.3c.7-1.6 1.2-3.5 1.4-5.7h3a8 8 0 01-4.4 5.7z" />
+      </symbol>
+      <symbol id="i-cal" viewBox="0 0 24 24">
+        <path d="M7 2v2H5.5A2.5 2.5 0 003 6.5v13A2.5 2.5 0 005.5 22h13a2.5 2.5 0 002.5-2.5v-13A2.5 2.5 0 0018.5 4H17V2h-2v2H9V2zm12 8v9.5a.5.5 0 01-.5.5h-13a.5.5 0 01-.5-.5V10z" />
+      </symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24">
+        <path d="M12 2a7 7 0 00-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 00-7-7zm0 9.6A2.6 2.6 0 1112 6.4a2.6 2.6 0 010 5.2z" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24">
+        <path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.76-1.95C21.3 8.75 22 11.1 22 14.2V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4z" />
+      </symbol>
+      <symbol id="i-naver" viewBox="0 0 24 24">
+        <path d="M3.5 3.5h6l4.6 6.9V3.5h6.4v17h-6l-4.6-6.9v6.9H3.5z" />
+      </symbol>
+      <symbol id="i-tmap" viewBox="0 0 24 24">
+        <path fill-rule="evenodd" d="M4.2 3h15.6A1.2 1.2 0 0121 4.2v15.6a1.2 1.2 0 01-1.2 1.2H4.2A1.2 1.2 0 013 19.8V4.2A1.2 1.2 0 014.2 3zm2.9 4v2.6h3.5V17h2.8V9.6h3.5V7z" />
+      </symbol>
+      <symbol id="i-kakao" viewBox="0 0 24 24">
+        <path d="M12 3C6.8 3 2.6 6.3 2.6 10.4c0 2.6 1.7 4.9 4.3 6.2l-1.1 4c-.1.4.3.7.7.5l4.8-3.2c.2 0 .5.1.7.1 5.2 0 9.4-3.3 9.4-7.6S17.2 3 12 3z" />
+      </symbol>
+      <symbol id="i-theme-auto" viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 2v16a8 8 0 010-16z" />
+      </symbol>
+      <symbol id="i-theme-light" viewBox="0 0 24 24">
+        <path d="M12 17a5 5 0 110-10 5 5 0 010 10zm0-14a1 1 0 011 1v1.5a1 1 0 01-2 0V4a1 1 0 011-1zm0 15.5a1 1 0 011 1V21a1 1 0 01-2 0v-1.5a1 1 0 011-1zM3 12a1 1 0 011-1h1.5a1 1 0 010 2H4a1 1 0 01-1-1zm15.5 0a1 1 0 011-1H21a1 1 0 010 2h-1.5a1 1 0 01-1-1zM5.6 5.6a1 1 0 011.4 0l1.1 1.1a1 1 0 01-1.4 1.4L5.6 7a1 1 0 010-1.4zm10.3 10.3a1 1 0 011.4 0l1.1 1.1a1 1 0 01-1.4 1.4l-1.1-1.1a1 1 0 010-1.4zm2.5-10.3a1 1 0 010 1.4L17.3 8.1a1 1 0 01-1.4-1.4L17 5.6a1 1 0 011.4 0zM8.1 15.9a1 1 0 010 1.4L7 18.4A1 1 0 015.6 17l1.1-1.1a1 1 0 011.4 0z" />
+      </symbol>
+      <symbol id="i-theme-dark" viewBox="0 0 24 24">
+        <path d="M21 13.3A9 9 0 1110.7 3a7 7 0 1010.3 10.3z" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="M18.9 2H22l-7.1 8.1L23 22h-6.6l-5.2-6.7L5.2 22H2l7.6-8.7L1.5 2h6.8l4.7 6.2L18.9 2zm-1.1 18h1.8L7.3 3.8H5.4L17.8 20z" />
+      </symbol>
+    </svg>
+
+    <!-- ===== TOP NAV ===== -->
+    <header class="topbar">
+      <div class="wrap">
+        <div class="topbar-row">
+          <a class="brand" href="#top">{{ site.name }}</a>
+          <nav class="tabs" aria-label="Section navigation">
+            <ul>
+              {% for item in site.nav %}
+              <li><a href="{{ item.href }}">{{ t(item.label, item.label_ko) }}</a></li>
+              {% endfor %}
+            </ul>
+          </nav>
+          <!-- Two languages, so the control is one button naming the other one
+               rather than a segment where half is always inert. -->
+          <div class="prefs">
+            <!-- The globe says what the control is; the code says where it
+                 goes. Each span is shown only in the *other* language, so the
+                 button always names the language you would switch to. -->
+            <button class="icon-btn" onclick="toggleLang()" aria-label="Change language">
+              <svg aria-hidden="true"><use href="#i-globe"></use></svg>
+              {% for code in about.codes %}
+              <span class="t-{{ about.codes[0] if not loop.first else about.codes[1] }}">{{ code | upper }}</span>
+              {% endfor %}
+            </button>
+            <!-- Three states, so "follow the system" stays reachable — a plain
+                 light/dark switch strands anyone whose OS changes at dusk. -->
+            <button class="icon-btn" onclick="cycleTheme()" id="theme-btn">
+              <svg aria-hidden="true"><use id="theme-icon" href="#i-theme-auto"></use></svg>
+              <span class="t-en" id="theme-en">Auto</span>
+              <span class="t-ko" id="theme-ko">자동</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Outside the header on purpose. On a phone this is pinned to the bottom
+         of the screen, and .topbar carries a backdrop-filter, which makes it a
+         containing block for fixed children — nested here it would pin to the
+         header instead of to the viewport. -->
+    <nav class="tabs-mobile" aria-label="Section navigation">
+      <ul>
+        {% for item in site.nav %}
+        <li><a href="{{ item.href }}">{{ t(item.label, item.label_ko) }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <header class="hero" id="top">
+      <!-- Filled in after load, once the formula sprite has been fetched. It is
+           decoration: if the fetch fails, or the reader asked for less motion,
+           the hero is simply the photograph. -->
+      <div class="hero-math" aria-hidden="true"></div>
+      <div class="wrap">
+        <p class="eyebrow">{{ site.edition }}</p>
+        <h1>
+          <!-- Split on the last space so the name carries the weight and the
+               year sits back from it. A name with no space just renders whole. -->
+          {% set mark = site.name.rsplit(" ", 1) if " " in site.name else [site.name] %}
+          <span class="wordmark"
+            ><b>{{ mark[0] }}</b>{% if mark|length > 1 %} <span class="year">{{ mark[1] }}</span>{% endif %}</span
+          >
+          <span class="acronym">{{ site.full_name }}</span>
+        </h1>
+        <p class="theme">{{ site.year }} Theme · <b>{{ site.theme }}</b></p>
+
+        <!-- The particulars sit on the hero itself, under a hairline, rather
+             than in a card that floats over it. -->
+        <dl class="hero-meta">
+          {% for cell in site.infobar %}
+          <div>
+            <dt{{ ' class="is-key"' | safe if loop.first }}>
+              {% if cell.icon %}<svg aria-hidden="true"><use href="#i-{{ cell.icon }}"></use></svg>{% endif %}{{ cell.key }}
+            </dt>
+            <dd class="{{ 'is-mono' if cell.mono }}">
+              {% if cell.href %}<a href="{{ cell.href }}">{{ cell.value }}</a>{% else %}{{ cell.value }}{% endif %}{% if
+              cell.countdown %}<span class="dday" data-from="{{ program.days[0].date }}"></span>{% endif %}{% if
+              cell.note %}<small>{{ cell.note }}</small>{% endif %}
+            </dd>
+          </div>
+          {% endfor %}
+        </dl>
+
+        {% if site.hero_actions %}
+        <div class="hero-actions">
+          {% for a in site.hero_actions %}
+          {% if a.href %}
+          <a class="btn{{ ' btn-primary' if a.primary }}" href="{{ a.href }}">{{ t(a.label, a.label_ko) }}</a>
+          {% else %}
+          <span class="btn-wait{{ ' is-primary' if a.primary }}">
+            <button class="btn{{ ' btn-primary' if a.primary }}" disabled>{{ t(a.label, a.label_ko) }}</button>
+            {% if a.note %}<small>{{ t(a.note, a.note_ko) }}</small>{% endif %}
+          </span>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about" class="band">
+      <div class="wrap">
+        <h2>{{ t(about.title, about.title_ko) }}</h2>
+        {% if about.subtitle %}
+        <p class="sub">{{ t(about.subtitle, about.subtitle_ko) }}</p>
+        {% endif %}
+
+        {% for lang in about.languages %}
+        <div id="about-{{ lang.code }}" class="about{{ '' if loop.first else ' hidden' }}">
+          {% if lang.lead %}
+          <div class="about-lead">
+{% filter indent(12, true) %}{{ lang.lead }}{% endfilter %}
+          </div>
+          {% endif %}
+
+          {% for block in lang.pillars %}
+          <div class="about-block">
+            <h3>{{ block.heading }}</h3>
+{% filter indent(12, true) %}{{ block.html }}{% endfilter %}
+          </div>
+          {% endfor %}
+
+          {% for block in lang.wide %}
+          <div class="about-block">
+            <h3>{{ block.heading }}</h3>
+{% filter indent(12, true) %}{{ block.html }}{% endfilter %}
+            <div class="chips">
+              {% for chip in block.chips %}
+              <span class="chip">{{ chip }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% if roster %}
+    <!-- ===== SPEAKERS (derived from the programme) ===== -->
+    <section id="speakers" class="band band-alt">
+      <div class="wrap">
+        <!-- The order is by surname, not by billing. Said beside the heading so
+             it is read before the grid rather than after it. -->
+        <!-- "(not final)" belongs in the title: the roster is drawn from the
+             programme, so it is exactly as provisional as the programme is,
+             and the programme already says so in its own heading. -->
+        <h2>
+          <span class="t-en">Speakers (not final)</span><span class="t-ko">연사 (확정 아님)</span>
+          <span class="note">
+            <span class="t-en">Alphabetical by surname</span>
+            <span class="t-ko">성 기준 알파벳순</span>
+          </span>
+        </h2>
+        <div class="spk-grid">
+          {% for s in roster %}
+          <!-- Name, affiliation and field. The session, day and time are the
+               schedule's job, and the card links there. -->
+          <button class="spk-card" onclick="openEvent('{{ s.event_id }}')">
+            {% if s.photo %}
+            <img class="spk-face" src="{{ s.photo }}" alt="" loading="lazy" width="256" height="256" />
+            {% else %}
+            <div class="spk-face spk-blank" aria-hidden="true">{{ s.initials }}</div>
+            {% endif %}
+            <div class="spk-name">
+              {%- if s.role %}<span class="t-en role-above"><span class="role">{{ s.role }}</span></span>{% endif -%}
+              {{ t(s.name, s.name_ko) }}
+              {%- if s.role %}<span class="t-ko role-beside"> <span class="role">{{ s.role_ko or s.role }}</span></span>{% endif -%}
+              <span class="affil">{{ t(s.affil, s.affil_ko) }}</span>
+            </div>
+            <!-- The session's subject, not the talk's — "Bandits" rather than
+                 "heavy-tailed". The fine topic belongs to the talk and is in
+                 the schedule; here it is what field the speaker is here for. -->
+            <div class="spk-topic">{{ s.track }}</div>
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+    <!-- ===== PROGRAM ===== -->
+    <section id="program" class="band">
+      <div class="wrap">
+        <h2>{{ t(program.title, program.title_ko) }}</h2>
+        {% set sub = program.subtitle_anon if variant.anonymize else program.subtitle %}
+        {% if sub %}
+        <p class="sub">{{ sub }}</p>
+        {% endif %}
+
+        <div class="legend">
+          {% for key, t in types.items() %}
+          <span class="item"><span class="swatch sw-{{ key }}"></span> {{ t.label }}</span>
+          {% endfor %}
+        </div>
+
+        <!-- One row, two segmented controls of the same shape: what to show,
+             and which day. The day filter only means anything in the linear
+             views, so it hides itself in Grid. -->
+        <div class="sched-bar">
+          <div class="seg" role="group" aria-label="Programme view">
+            <button id="view-btn-grid" class="active" onclick="setView('grid')">Grid</button>
+            <button id="view-btn-list" onclick="setView('list')">List</button>
+            <button id="view-btn-abstracts" onclick="setView('abstracts')">Abstracts</button>
+            <button id="view-btn-now" onclick="setView('now')">Now</button>
+          </div>
+
+          <div class="seg" id="day-pills" role="group" aria-label="Day">
+            <button class="active" data-day="all" onclick="setDay('all')">All</button>
+            {% for day in program.days %}
+            <button data-day="{{ loop.index0 }}" data-date="{{ day.date }}" onclick="setDay('{{ loop.index0 }}')">{{ day.short }}</button>
+            {% endfor %}
+          </div>
+
+          <div class="sched-links">
+            <a class="linkish" href="{{ ics_file }}" download>Add to calendar</a>
+            <span class="tz-note">{{ program.timezone }} · UTC{{ program.utc_offset }}</span>
+          </div>
+        </div>
+
+        <!-- List view: the same events as a plain table, and the only view that
+             works without horizontal scrolling on a phone. -->
+        <div id="view-list" class="view-panel hidden">
+          {% for day in program.days %}
+          <table class="agenda" data-day="{{ loop.index0 }}">
+            <caption>
+              {{ day.label }}{% if day.theme %}<span>{{ day.theme }}</span>{% endif %}
+            </caption>
+            <tbody>
+              {% for e in day.events %}
+              <tr id="row-{{ e.id }}" class="agenda-row wash-{{ e.type }}" data-begins="{{ e.begins_iso }}" data-ends="{{ e.ends_iso }}" onclick="openEvent('{{ e.id }}')" tabindex="0" onkeydown="if(event.key==='Enter'){openEvent('{{ e.id }}')}">
+                <th scope="row" class="when">{{ e.start }} – {{ e.end }}</th>
+                <td class="what">
+                  {% if e.emoji %}<span class="emoji" aria-hidden="true">{{ e.emoji }}</span>{% endif %}<strong>{{ e.title }}</strong>{% if e.chair %} <span class="chair">(Chair: {{ e.chair }})</span>{% endif %}
+                  {% if e.talks %}
+                  {% for t in e.talks %}
+                  <div class="who">
+                    {{ t.line }}
+                    {% if t.talk %}<div class="talk-title">{{ t.talk }}</div>{% endif %}
+                    {% if t.note %}<span class="staff-note">{{ t.note }}</span>{% endif %}
+                  </div>
+                  {% endfor %}
+                  {% for n in e.notes %}
+                  <div class="who"><em>{{ n }}</em></div>
+                  {% endfor %}
+                  {% else %}
+                  {% for s in e.lines %}
+                  <div class="who">{{ s }}</div>
+                  {% endfor %}
+                  {% endif %}
+                </td>
+                <td class="tag"><span class="badge badge-{{ e.type }}">{{ types[e.type].short }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endfor %}
+        </div>
+
+        <!-- What is on right now, and what follows. Filled in from EVENTS. -->
+        <div id="view-now" class="view-panel hidden"></div>
+
+        <!-- Abstracts view: every talk in order, with its abstract and slides. -->
+        <div id="view-abstracts" class="view-panel hidden">
+          {% for day in program.days %}
+          <div class="abs-day" data-day="{{ loop.index0 }}">
+            <h3>{{ day.label }}{% if day.theme %} <span>{{ day.theme }}</span>{% endif %}</h3>
+            {% for e in day.events %}
+            {% for t in e.talks %}
+            <article class="abs">
+              <div class="abs-when">{{ e.start }} – {{ e.end }}<span class="badge badge-{{ e.type }}">{{ types[e.type].short }}</span></div>
+              <div class="abs-main">
+                <div class="abs-who">{{ t.line }}</div>
+                {% if t.talk %}<h4>{{ t.talk }}</h4>{% endif %}
+                {% if t.abstract %}
+                <div class="abs-body">{{ t.abstract }}</div>
+                {% else %}
+                <p class="abs-none">Abstract to be announced.</p>
+                {% endif %}
+                {% if t.slides %}
+                <a class="pill abs-pdf" href="{{ t.slides }}" target="_blank" rel="noopener">Slides (PDF)</a>
+                {% endif %}
+              </div>
+            </article>
+            {% endfor %}
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <div id="view-grid" class="view-panel schedule-scroll">
+          <div
+            class="schedule-container"
+            style="grid-template-columns: {{ grid.time_column_width }} repeat({{ program.days | length }}, 1fr); min-width: {{ grid.min_width }}"
+          >
+            <!-- Column headers -->
+            <div class="header" style="grid-column: 1; grid-row: 1 / span {{ grid.header_rows }}">Time</div>
+            {% for day in program.days %}
+            <div class="header" style="grid-column: {{ loop.index + 1 }}; grid-row: 1 / span {{ grid.header_rows }}">
+              {{ day.label }}{% if day.theme %}<span class="theme">{{ day.theme }}</span>{% endif %}
+            </div>
+            {% endfor %}
+
+            <!-- Time axis (row {{ grid.header_rows + 1 }} = {{ grid.day_start }}; 1 row = {{ grid.slot_minutes }} min) -->
+            {% for tick in axis %}
+            <div class="time-axis" style="grid-column: 1; grid-row: {{ tick.row }} / span {{ tick.span }}">{{ tick.label }}</div>
+            {% endfor %}
+            {% for day in program.days %}
+
+            <!-- ===== {{ day.label }} — {{ day.theme }} ===== -->
+            {% set col = loop.index + 1 %}
+            {% for e in day.events %}
+            <div id="cell-{{ e.id }}" class="event bg-{{ e.type }}{{ ' ' ~ e.density if e.density }}" data-begins="{{ e.begins_iso }}" data-ends="{{ e.ends_iso }}" style="grid-column: {{ col }}; grid-row: {{ e.row }} / span {{ e.span }}" onclick="openEvent('{{ e.id }}')">
+              {% if e.bare %}
+              {% if e.emoji %}<span class="emoji" aria-hidden="true">{{ e.emoji }}</span>{% endif %}{{ e.title }}
+              {% else %}
+              <span class="title">{% if e.emoji %}<span class="emoji" aria-hidden="true">{{ e.emoji }}</span>{% endif %}{{ e.title }}{% if e.time_in_title %} · {{ e.start }}{% endif %}{% if e.chair %} <span class="chair">(Chair: {{ e.chair }})</span>{% endif %}</span>
+              {% if not e.time_in_title %}
+              <span class="time">{{ e.time_label }}</span>
+              {% endif %}
+              {% for s in e.lines %}
+              <span class="spk">{{ s }}</span>
+              {% endfor %}
+              {% endif %}
+            </div>
+            {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===== ORGANIZERS ===== -->
+    <section id="organizers" class="band band-alt">
+      <div class="wrap">
+        <h2><span class="t-en">Organizers</span><span class="t-ko">조직위원회</span></h2>
+        <div class="org-grid">
+          {% for m in organizers.members %}
+          <div class="org-card">
+            {% if m.photo %}
+            <img class="org-photo" src="organizers/{{ m.photo }}" alt="{{ m.name }}" loading="lazy" width="256" height="256" />
+            {% else %}
+            <div class="org-photo org-initials" aria-hidden="true">{{ m.initials }}</div>
+            {% endif %}
+            <div class="name">
+              {%- if m.role %}<span class="t-en role-above"><span class="role">{{ m.role }}</span></span>{% endif -%}
+              {{ t(m.name, m.name_ko) }}
+              {%- if m.role %}<span class="t-ko role-beside"> <span class="role">{{ m.role_ko or m.role }}</span></span>{% endif -%}
+              <span class="affil">{{ t(m.affil, m.affil_ko) }}</span>
+            </div>
+            {% if m.links %}
+            <div class="org-links">
+              {% for kind, url in m.links.items() %}
+              <a href="{{ url }}" target="_blank" rel="noopener" title="{{ kind }}" aria-label="{{ m.name }} — {{ kind }}">
+                <svg aria-hidden="true"><use href="#i-{{ kind }}"></use></svg>
+              </a>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <!-- ===== VENUE ===== -->
+    <section id="venue" class="band">
+      <div class="wrap">
+        <h2>{{ t(venue.title, venue.title_ko) }}</h2>
+        {% if venue.subtitle %}
+        <p class="sub">{{ t(venue.subtitle, venue.subtitle_ko) }}</p>
+        {% endif %}
+
+        <div class="venue">
+          <div class="venue-map">
+            {% if venue.map.resolved == 'google' %}
+            <iframe
+              title="Map showing {{ venue.name }}, {{ venue.address }}"
+              src="{{ venue.map.google_url }}"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+            ></iframe>
+            {% elif venue.map.resolved == 'kakao_roughmap' %}
+            <div id="daumRoughmapContainer{{ venue.map.kakao_roughmap.timestamp }}"
+                 class="root_daum_roughmap root_daum_roughmap_landing"></div>
+            {% else %}
+            <div id="map" role="img" aria-label="Map showing {{ venue.name }}, {{ venue.address }}"></div>
+            {% endif %}
+          </div>
+          <div class="venue-info">
+            <div class="venue-name">{{ venue.name }} <span lang="ko">{{ venue.name_ko }}</span></div>
+            <div class="venue-room">{{ venue.campus }}</div>
+            <div class="map-links">
+              {% for link in venue.map_links %}
+              <a href="{{ link.url }}" target="_blank" rel="noopener">
+                <svg aria-hidden="true"><use href="#i-{{ link.icon }}" /></svg>{{ link.label }}</a>
+              {% endfor %}
+            </div>
+            <ul class="venue-rooms">
+              {% for room in venue.rooms %}
+              <li>
+                <span class="room-label">{{ room.label }}</span>
+                <span class="room-name">{{ room.name }}</span>
+                <span class="room-detail">{{ room.detail }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+            <address>
+              {{ venue.address }}<br />
+              <span lang="ko">{{ venue.address_ko }}</span>
+            </address>
+            {% if venue.getting_here %}
+            <ul class="venue-travel">
+              {% for row in venue.getting_here %}
+              <li><b>{{ t(row.mode, row.mode_ko) }}</b> {{ t(row.detail, row.detail_ko) }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+    {% if variant.candidates %}
+
+    <!-- ===== CANDIDATES (internal build only) ===== -->
+    <section class="band">
+      <div class="wrap">
+        <h2>{{ candidates.title }}</h2>
+        <p class="sub">{{ candidates.subtitle }}</p>
+        <div class="cand-grid">
+          {% for p in candidates.people %}
+          <div class="cand">
+            <div class="name">{{ p.name }} <em>{{ p.affil }}</em></div>
+            <div class="topic">{{ p.topic }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if venue.map.resolved == 'kakao_roughmap' %}
+    <script charset="UTF-8" class="daum_roughmap_loader_script"
+            src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+    <script charset="UTF-8">
+      new daum.roughmap.Lander({
+        timestamp: {{ venue.map.kakao_roughmap.timestamp | tojson }},
+        key: {{ venue.map.kakao_roughmap.key | tojson }},
+        mapWidth: "100%",
+        mapHeight: "340",
+      }).render();
+    </script>
+    {% elif venue.map.resolved == 'kakao' %}
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{ venue.map.kakao_app_key }}"></script>
+    <script>
+      // Both map libraries measure their container once, at construction, and
+      // keep drawing tiles for that size. The box changes height at the 720px
+      // breakpoint and on any rotate, which would otherwise leave tiles short
+      // of one edge. Watch the box and let the map re-measure itself.
+      function keepMapSized(remeasure) {
+        var box = document.querySelector(".venue-map");
+        if (!box || typeof ResizeObserver === "undefined") {
+          window.addEventListener("resize", remeasure);
+          return;
+        }
+        var pending = false;
+        new ResizeObserver(function () {
+          if (pending) return;
+          pending = true;
+          requestAnimationFrame(function () {
+            pending = false;
+            remeasure();
+          });
+        }).observe(box);
+      }
+
+      // Kakao rejects the SDK unless the app has this domain registered, and a
+      // credential we cannot check from here should not leave a blank box on
+      // the page. Fall back to the map that needs no credential at all.
+      function mapFallback() {
+        var css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = "vendor/leaflet/leaflet.css";
+        document.head.appendChild(css);
+        var js = document.createElement("script");
+        js.src = "vendor/leaflet/leaflet.js";
+        js.onload = function () {
+        var at = [{{ venue.lat }}, {{ venue.lon }}];
+        var map = L.map("map", {
+          center: at,
+          zoom: {{ venue.map.zoom }},
+          scrollWheelZoom: false, // don't hijack the page scroll
+        });
+        L.tileLayer({{ venue.map.tiles.url | tojson }}, {
+          subdomains: {{ venue.map.tiles.subdomains | tojson }},
+          maxZoom: {{ venue.map.tiles.max_zoom }},
+          attribution: {{ venue.map.tiles.attribution | tojson }},
+        }).addTo(map);
+        L.marker(at, {
+          icon: L.divIcon({ className: "venue-pin", iconSize: [22, 22], iconAnchor: [11, 11] }),
+          keyboard: false,
+        })
+          .addTo(map)
+          .bindTooltip({{ (venue.name_ko ~ ' · ' ~ venue.name) | tojson }}, {
+            permanent: true, direction: "right", offset: [12, 0], className: "venue-tip",
+          });
+        map.on("click", function () { map.scrollWheelZoom.enable(); });
+        keepMapSized(function () { map.invalidateSize(); });
+        };
+        document.body.appendChild(js);
+      }
+
+      (function () {
+        if (typeof kakao === "undefined" || !kakao.maps) return mapFallback();
+        var at = new kakao.maps.LatLng({{ venue.lat }}, {{ venue.lon }});
+        var map = new kakao.maps.Map(document.getElementById("map"), {
+          center: at,
+          level: {{ venue.map.kakao_level }},
+        });
+        new kakao.maps.Marker({ map: map, position: at });
+        map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+        // relayout() alone re-measures but drifts the centre off the venue.
+        keepMapSized(function () { map.relayout(); map.setCenter(at); });
+      })();
+    </script>
+    {% else %}
+    <script src="vendor/leaflet/leaflet.js"></script>
+    <script>
+      (function () {
+        if (typeof L === "undefined") return;
+        var at = [{{ venue.lat }}, {{ venue.lon }}];
+        var map = L.map("map", {
+          center: at,
+          zoom: {{ venue.map.zoom }},
+          scrollWheelZoom: false, // don't hijack the page scroll
+        });
+        L.tileLayer({{ venue.map.tiles.url | tojson }}, {
+          subdomains: {{ venue.map.tiles.subdomains | tojson }},
+          maxZoom: {{ venue.map.tiles.max_zoom }},
+          attribution: {{ venue.map.tiles.attribution | tojson }},
+        }).addTo(map);
+
+        // A marker drawn in CSS, so no icon images have to be shipped.
+        L.marker(at, {
+          icon: L.divIcon({
+            className: "venue-pin",
+            iconSize: [22, 22],
+            iconAnchor: [11, 11],
+          }),
+          keyboard: false,
+        })
+          .addTo(map)
+          .bindTooltip({{ (venue.name_ko ~ ' · ' ~ venue.name) | tojson }}, {
+            permanent: true,
+            direction: "right",
+            offset: [12, 0],
+            className: "venue-tip",
+          });
+
+        map.on("click", function () {
+          map.scrollWheelZoom.enable();
+        });
+      })();
+    </script>
+    {% endif %}
+
+    <dialog id="event-modal" aria-label="Session detail">
+      <div class="modal-head">
+        <div>
+          <span id="modal-badge" class="badge"></span>
+          <span id="modal-when"></span>
+        </div>
+        <form method="dialog"><button class="modal-x" aria-label="Close">&times;</button></form>
+      </div>
+      <h3 id="modal-title"></h3>
+      <div id="modal-body"></div>
+      <!-- Both days as one ribbon, each session a slice as wide as it is long,
+           with the one you are reading framed. It sits directly above the arrows
+           rather than at the top of the dialog: the dialog's height changes
+           with each session, so anything above the body moves under the cursor
+           as you step through, while the footer stays where your hand is. -->
+      <div id="modal-strip" class="day-strip modal-strip" aria-hidden="true"></div>
+      <div class="modal-nav">
+        <button class="pill" id="modal-prev" onclick="stepEvent(-1)">&larr; Previous</button>
+        <span id="modal-count"></span>
+        <button class="pill" id="modal-next" onclick="stepEvent(1)">Next &rarr;</button>
+      </div>
+    </dialog>
+
+    <footer>
+      <div class="wrap footer-row">
+        <div class="footer-text">
+          {{ site.name }} · {{ site.full_name }}<br />
+          {{ site.venue }}, {{ site.city }} · {{ site.dates }} — {{ site.footer_note }}<br />
+          {{ organizers.contact.name }} ·
+          <a href="mailto:{{ organizers.contact.email }}">{{ organizers.contact.email }}</a>
+        </div>
+        {% if site.hosts %}
+        <div class="hosts-row">
+          {% for h in site.hosts.logos %}
+          <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
+            <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
+          </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </footer>
+
+    <script>
+      var LANGS = {{ about.codes | tojson }};
+      function setLang(lang) {
+        // Drives the whole page, not just the prose: the root attribute hides
+        // the other language's chrome via CSS.
+        document.documentElement.setAttribute("data-lang", lang);
+        LANGS.forEach(function (code) {
+          document.getElementById("about-" + code).classList.toggle("hidden", code !== lang);
+        });
+        try {
+          localStorage.setItem("kolt-lang", lang);
+        } catch (e) {
+          /* private browsing — the choice just doesn't persist */
+        }
+      }
+
+      function toggleLang() {
+        var now = document.documentElement.getAttribute("data-lang");
+        setLang(LANGS[(LANGS.indexOf(now) + 1) % LANGS.length]);
+      }
+
+      // auto -> light -> dark -> auto. "auto" removes the attribute rather
+      // than writing a value, so prefers-color-scheme is what answers.
+      var THEMES = [
+        { id: "auto", en: "Auto", ko: "자동" },
+        { id: "light", en: "Light", ko: "밝게" },
+        { id: "dark", en: "Dark", ko: "어둡게" },
+      ];
+      function setTheme(id) {
+        var t = THEMES.filter(function (x) { return x.id === id; })[0] || THEMES[0];
+        var root = document.documentElement;
+        if (t.id === "auto") root.removeAttribute("data-theme");
+        else root.setAttribute("data-theme", t.id);
+        document.getElementById("theme-icon").setAttribute("href", "#i-theme-" + t.id);
+        document.getElementById("theme-en").textContent = t.en;
+        document.getElementById("theme-ko").textContent = t.ko;
+        document.getElementById("theme-btn").setAttribute("aria-label", "Colour theme: " + t.en);
+        try {
+          localStorage.setItem("kolt-theme", t.id);
+        } catch (e) {
+          /* ignore */
+        }
+      }
+      function cycleTheme() {
+        var now = document.documentElement.getAttribute("data-theme") || "auto";
+        var i = THEMES.map(function (x) { return x.id; }).indexOf(now);
+        setTheme(THEMES[(i + 1) % THEMES.length].id);
+      }
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("kolt-theme");
+        } catch (e) {
+          /* ignore */
+        }
+        setTheme(saved || "auto");
+      })();
+
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("kolt-lang");
+        } catch (e) {
+          /* ignore */
+        }
+        var wanted = saved || (navigator.language || "").slice(0, 2);
+        setLang(LANGS.indexOf(wanted) >= 0 ? wanted : LANGS[0]);
+      })();
+
+      // ---- Formulas tiled across the hero
+      //
+      // A tight grid, tilted to the same angle as the hatch, drifting along its
+      // own diagonal. Two identical halves stacked, translated by exactly half
+      // the field per cycle, so the loop has no seam.
+      //
+      // The sprite is ~65 KB gzipped — more than the page — so it is fetched
+      // after load rather than inlined, and the hero is complete without it.
+      (function () {
+        var FORMULAS = {{ formulas | tojson }};
+        var box = document.querySelector(".hero-math");
+        if (!box || !FORMULAS.length) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        // ~130 KB gzipped of vector outlines, for decoration. Skipped only when
+        // the reader has actually asked to save data — a small screen is not on
+        // its own a reason to withhold it.
+        var link = navigator.connection;
+        if (link && (link.saveData || /2g/.test(link.effectiveType || ""))) return;
+
+        fetch("formulas.svg")
+          .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
+          .then(function (svg) {
+            document.body.insertAdjacentHTML("beforeend", svg);
+
+            var pool = FORMULAS.slice().sort(function () { return Math.random() - 0.5; });
+            var n = 0;
+            function next() { return pool[n++ % pool.length]; }
+
+            // The field is rotated, so it has to be far larger than the hero to
+            // cover the corners; these counts fill that oversized box.
+            //
+            // Each row slides along the tilt's own -X axis, which lands as
+            // down-and-left on screen. Every cell is the same width, so one
+            // shift distance serves every row and they all travel at the same
+            // speed — a shower, not a race.
+            var SCALE = 0.66;  // path units -> px; one constant for every formula
+            var GAP = 46;      // matches .fx-row's gap
+            var ROW_GAP = 16;  // matches .fx-tilt's gap
+            var SPEED = 26;    // px per second, the same in every row
+
+            var builtW = 0, builtH = 0;
+            function build() {
+              // The field is rotated 45°, so covering a W x H hero needs a
+              // square of side (W + H) / sqrt(2) — the diagonal extent of the
+              // area, measured along the tilted axes. Everything below is sized
+              // from that, so the field fills whatever window it is given.
+              var W = box.offsetWidth, H = box.offsetHeight;
+              // Rebuilding rewrites every node, which restarts every animation
+              // — the field visibly jumps. So only do it when the hero's box has
+              // actually changed. Browsers fire resize for things that are not
+              // resizes (a scrollbar appearing, a phone's URL bar sliding away),
+              // and without this guard those looked like the page reloading.
+              if (W === builtW && H === builtH) return;
+              builtW = W;
+              builtH = H;
+
+              // Overscan on every side. Without it a wrapping formula reappears
+              // exactly at the field's edge, which is the hero's edge — so it
+              // pops into existence instead of drifting in. One widest-formula
+              // of margin means the wrap always happens out of sight.
+              var widest = FORMULAS.reduce(function (m, f) { return Math.max(m, f.w * SCALE); }, 0);
+              var overscan = widest + 120;
+              var side = (W + H) / Math.SQRT2 + overscan * 2;
+
+              var heights = FORMULAS.map(function (f) { return f.h * SCALE; }).sort(function (a, b) { return a - b; });
+              var stride = heights[Math.floor(heights.length / 2)] + ROW_GAP;
+              var rowCount = Math.ceil(side / stride) + 2;   // +2 so the edges are never bare
+
+              var rows = "";
+              for (var r = 0; r < rowCount; r++) {
+                // Fill one half of the row until it spans the field, then repeat
+                // it: the copy is what covers the gap the first leaves behind.
+                var picks = [], halfWidth = 0;
+                while (halfWidth < side) {
+                  var f = next();
+                  picks.push(f);
+                  halfWidth += f.w * SCALE + GAP;
+                }
+                var cells = "";
+                for (var pass = 0; pass < 2; pass++) {
+                  for (var i = 0; i < picks.length; i++) {
+                    var g = picks[i];
+                    cells +=
+                      '<svg class="fx" style="width:' + (g.w * SCALE).toFixed(1) + 'px" viewBox="0 0 ' +
+                      g.w + " " + g.h + '"><use href="#' + g.id + '" width="' + g.w +
+                      '" height="' + g.h + '"/></svg>';
+                  }
+                }
+                // Rows differ in width now that every formula keeps its own size,
+                // so the duration is derived from the distance — same pixels per
+                // second everywhere, which is what makes it read as one field.
+                rows +=
+                  '<div class="fx-row" style="--shift:' + (-halfWidth).toFixed(1) +
+                  "px;animation-duration:" + (halfWidth / SPEED).toFixed(1) +
+                  "s;animation-delay:" + (-r * 2.3).toFixed(1) + 's">' + cells + "</div>";
+              }
+
+              box.innerHTML =
+                '<div class="fx-tilt" style="width:' + side.toFixed(0) + "px;height:" +
+                side.toFixed(0) + 'px">' + rows + "</div>";
+            }
+
+            build();
+            // Watch the hero itself rather than the window: a ResizeObserver
+            // reports the element's own box, so it stays quiet during scrolling.
+            // Still debounced — dragging a window edge fires continuously.
+            var pending;
+            var rerun = function () {
+              clearTimeout(pending);
+              pending = setTimeout(build, 250);
+            };
+            if (window.ResizeObserver) new ResizeObserver(rerun).observe(box);
+            else window.addEventListener("resize", rerun);
+          })
+          .catch(function () { /* decoration only — leave the hero as it is */ });
+      })();
+
+      // D-day, Korean convention: the day itself is D-DAY, the day before D-1.
+      // Computed from calendar dates in the reader's own zone, not from a
+      // millisecond difference, so it does not tick over at the wrong hour.
+      (function () {
+        var el = document.querySelector(".dday");
+        if (!el || !el.dataset.from) return;
+        var p = el.dataset.from.split("-");
+        var start = new Date(+p[0], +p[1] - 1, +p[2]);
+        var now = new Date();
+        var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var days = Math.round((start - today) / 86400000);
+        el.textContent = days > 0 ? " (D-" + days + ")" : days === 0 ? " (D-DAY)" : " (D+" + -days + ")";
+      })();
+
+      var VIEWS = ["grid", "list", "abstracts", "now"];
+      function setView(view) {
+        VIEWS.forEach(function (name) {
+          var on = name === view;
+          document.getElementById("view-" + name).classList.toggle("hidden", !on);
+          document.getElementById("view-btn-" + name).classList.toggle("active", on);
+        });
+        document.getElementById("day-pills").classList.toggle("hidden", view === "grid" || view === "now");
+        if (view === "now") renderNow();
+        try {
+          localStorage.setItem("kolt-view", view);
+        } catch (e) {
+          /* private browsing — the choice just doesn't persist */
+        }
+      }
+
+      // ---- Reveal blocks as they scroll into view
+      (function () {
+        var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (still || !window.IntersectionObserver) return;
+
+        // Skip anything inside a container that can be display:none — the
+        // programme views and the inactive language block. The observer never
+        // fires for a hidden element, so it would still be at opacity 0 when
+        // the reader switched to it. Those containers animate on switch anyway.
+        var targets = Array.prototype.slice
+          .call(
+            document.querySelectorAll(
+              // .hosts-row is deliberately absent. It is the last thing on the page, and
+              // a reveal holds it 12px lower than its layout position until it fires —
+              // a transform does not move the layout box but it does extend the
+              // scrollable area, so the page scrolled past its own end by exactly that
+              // much. A logo strip is not worth it.
+              ".band h2, .about-block, .venue, .org-card, .spk-card"
+            )
+          )
+          .filter(function (el) {
+            return !el.closest("#view-grid, #view-list, #view-abstracts, #view-now, .about");
+          });
+
+        targets.forEach(function (el) {
+          el.classList.add("reveal");
+        });
+
+        // Scroll-driven animation, where it exists, ties progress to scroll
+        // position and runs off the compositor. The observer is then not just
+        // redundant but wrong — it would latch the block visible at the first
+        // intersection and the scrub would have nothing left to do.
+        if (window.CSS && CSS.supports && CSS.supports("animation-timeline", "view()")) {
+          document.documentElement.classList.add("scrub");
+          return;
+        }
+
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              var el = entry.target;
+              // Stagger within a row of siblings so a grid arrives in sequence
+              // rather than all at once, capped so nothing waits noticeably.
+              var peers = Array.prototype.slice.call(el.parentElement.children);
+              var i = Math.min(peers.indexOf(el), 4);
+              el.style.transitionDelay = i * 60 + "ms";
+              el.classList.add("in");
+              io.unobserve(el);
+              seen.set(el, true);
+            });
+          },
+          { rootMargin: "0px 0px -12% 0px", threshold: 0.05 }
+        );
+        targets.forEach(function (el) {
+          io.observe(el);
+        });
+      })();
+
+      // ---- Highlight the section the reader is currently in
+      (function () {
+        // The phone bar scrolls sideways and holds more tabs than fit, so the
+        // highlighted one can sit off-screen — reaching the bottom of the page
+        // marks "Travel Info" current while it is still past the right edge.
+        // scrollLeft is set directly rather than using scrollIntoView, which
+        // would also move the page vertically and fight the scroll that
+        // triggered it.
+        function revealCurrentTab() {
+          var bar = document.querySelector(".tabs-mobile");
+          if (!bar || bar.scrollWidth <= bar.clientWidth) return;
+          var link = bar.querySelector("a.current");
+          if (!link) return;
+          var pad = 20; // keep the pill clear of the edge rather than flush to it
+          var left = link.offsetLeft - pad;
+          var right = link.offsetLeft + link.offsetWidth + pad;
+          if (left < bar.scrollLeft) bar.scrollTo({ left: left, behavior: "smooth" });
+          else if (right > bar.scrollLeft + bar.clientWidth)
+            bar.scrollTo({ left: right - bar.clientWidth, behavior: "smooth" });
+        }
+
+        var links = Array.prototype.slice.call(document.querySelectorAll(".tabs a, .tabs-mobile a"));
+        var sections = links
+          .map(function (a) {
+            return document.querySelector(a.getAttribute("href"));
+          })
+          .filter(Boolean);
+        if (!sections.length || !window.IntersectionObserver) return;
+
+        var visible = new Set();
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) visible.add(entry.target.id);
+              else visible.delete(entry.target.id);
+            });
+            var top = sections.filter(function (s) {
+              return visible.has(s.id);
+            })[0];
+            links.forEach(function (a) {
+              a.classList.toggle("current", !!top && a.getAttribute("href") === "#" + top.id);
+            });
+            if (top) revealCurrentTab();
+          },
+          { rootMargin: "-76px 0px -55% 0px" }
+        );
+        sections.forEach(function (s) {
+          observer.observe(s);
+        });
+      })();
+
+      // ---- Day filter (list view; the grid always shows every day side by side)
+      function setDay(day) {
+        document.querySelectorAll("#day-pills button").forEach(function (b) {
+          b.classList.toggle("active", b.dataset.day === day);
+        });
+        // Both linear views carry the same data-day, and the pills are shown
+        // for both — filtering only the list left the abstracts ignoring them.
+        document.querySelectorAll(".agenda, .abs-day").forEach(function (block) {
+          block.classList.toggle("hidden", day !== "all" && block.dataset.day !== day);
+        });
+      }
+
+      // On the day itself, start filtered to that day — that is the only day
+      // anyone standing in the room cares about. Before and after, show both.
+      (function () {
+        var now = new Date();
+        var today = [
+          now.getFullYear(),
+          ("0" + (now.getMonth() + 1)).slice(-2),
+          ("0" + now.getDate()).slice(-2),
+        ].join("-");
+        var match = null;
+        document.querySelectorAll("#day-pills button[data-date]").forEach(function (b) {
+          if (b.dataset.date === today) match = b.dataset.day;
+        });
+        if (match !== null) setDay(match);
+      })();
+
+      // ---- "Now" is a view: one slab for what is on, a thin queue for the rest.
+      function nowSlices() {
+        var t = Date.now();
+        var live = null, next = [];
+        EVENTS.forEach(function (e) {
+          var from = Date.parse(e.begins), to = Date.parse(e.ends);
+          if (!live && t >= from && t < to) live = e;
+          else if (t < from) next.push(e);
+        });
+        // Hand the clock back too — the progress bar has to measure against the
+        // same instant this was decided on, not a second reading of the clock.
+        return { t: t, live: live, lead: live || next.shift() || null, next: next.slice(0, 3) };
+      }
+
+      function renderNow() {
+        var s = nowSlices();
+        var box = document.getElementById("view-now");
+        if (!s.lead) {
+          box.innerHTML = '<p class="now-note">The programme has finished — see you at the next edition.</p>';
+          box.classList.remove("is-pending");
+          return;
+        }
+
+        var e = s.lead;
+        var span = e.time.split(" – ");
+        // The full block, not the one-liner: whoever is on stage right now is
+        // exactly who you want a bio and a slide link for, without having to
+        // open the session first.
+        var who = '<div class="now-people">' +
+          e.speakers.map(function (sp) { return speakerHtml(sp, true); }).join("") + "</div>";
+
+        // How far into the session we are — the one number a "now" view owes
+        // you that the programme itself cannot show.
+        var from = Date.parse(e.begins), to = Date.parse(e.ends);
+        var pct = s.live ? Math.min(100, Math.max(0, ((s.t - from) / (to - from)) * 100)) : 0;
+
+        var facts = [["Day", e.dayShort], ["Duration", e.duration], ["Session", e.typeLabel]];
+        if (e.chair) facts.push(["Chair", e.chair]);
+
+        // Before the first session, say so plainly and count down to it. The
+        // hatch alone tells you the view is inactive; this tells you for how
+        // much longer.
+        var head = !s.live
+          ? '<div class="now-pending">' +
+            '<b><span class="t-en">Not started yet</span><span class="t-ko">아직 시작 전</span></b>' +
+            '<span id="now-countdown" data-begins="' + esc(e.begins) + '"></span>' +
+            "</div>"
+          : "";
+
+        var out =
+          '<div class="now-card">' + head +
+          '<article class="now-lead' + (s.live ? " is-live" : "") + '" onclick="openEvent(\'' + e.id + "')\">" +
+          '<span class="now-label">' + (s.live ? "Happening now" : "Opens the programme") + "</span>" +
+          '<div class="now-rail">' +
+          '<div class="now-time">' + esc(span[0]) + "</div>" +
+          // The empty track, not a hairline: the bar is part of the layout
+          // whether or not it has progress to report yet.
+          '<div class="now-track' + (s.live ? "" : " is-todo") + '">' +
+          '<div class="now-fill" style="width:' + pct.toFixed(1) + '%"></div></div>' +
+          '<div class="now-time">' + esc(span[1] || "") + "</div>" +
+          "</div>" +
+          "<h4>" + mark(e) + esc(e.title) + "</h4>" +
+          who +
+          '<div class="now-facts">' +
+          facts
+            .map(function (f) {
+              return "<div><span>" + esc(f[0]) + "</span>" + esc(f[1]) + "</div>";
+            })
+            .join("") +
+          "</div>" +
+          // The same ribbon the session dialog carries, so "where in the two
+          // days" reads the same way wherever you are looking at it.
+          '<div class="day-strip now-strip" aria-hidden="true">' + stripHtml(e) + "</div>" +
+          "</article></div>";
+
+        if (s.next.length) {
+          out +=
+            '<div class="now-queue"><span class="now-label">Up next</span>' +
+            s.next
+              .map(function (n) {
+                return (
+                  '<button class="now-row" onclick="openEvent(\'' + n.id + "')\">" +
+                  "<span>" + esc(n.time.split(" – ")[0]) + "</span>" + mark(n) + esc(n.title) + "</button>"
+                );
+              })
+              .join("") +
+            "</div>";
+        }
+        box.innerHTML = out;
+        box.classList.toggle("is-pending", !s.live);
+        tickCountdown();
+      }
+
+      // Ticks once a second while the pending badge is on screen, and stops
+      // itself the moment it isn't — no timer left running behind a view you
+      // are not looking at.
+      var countdownTimer = null;
+      function tickCountdown() {
+        var el = document.getElementById("now-countdown");
+        // Switching views leaves the markup in place, just hidden — so the
+        // element still exists and checking for it alone is not enough to know
+        // anyone is looking.
+        var showing = el && !document.getElementById("view-now").classList.contains("hidden");
+        if (!showing) {
+          if (countdownTimer) countdownTimer = clearInterval(countdownTimer);
+          return;
+        }
+        var left = Date.parse(el.dataset.begins) - Date.now();
+        if (left <= 0) return renderNow(); // it started while we were watching
+        var d = Math.floor(left / 86400000);
+        var h = Math.floor(left / 3600000) % 24;
+        var m = Math.floor(left / 60000) % 60;
+        var sec = Math.floor(left / 1000) % 60;
+        var pad = function (n) { return n < 10 ? "0" + n : String(n); };
+        // One form for both languages — a clock reading needs no translating,
+        // and the D-number is read the same way either side.
+        el.textContent = "D-" + d + " " + pad(h) + ":" + pad(m) + ":" + pad(sec);
+        if (!countdownTimer) countdownTimer = setInterval(tickCountdown, 1000);
+      }
+
+      // ---- Session detail, walkable with the arrows or the arrow keys
+      var EVENTS = {{ detail | tojson }};
+
+      // Restoring the view has to come after EVENTS is assigned. It used to run
+      // above: `var EVENTS` is hoisted but still undefined that early, so
+      // reloading with Now selected threw inside renderNow and left the panel
+      // blank — the card simply vanished.
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("kolt-view");
+        } catch (e) {
+          /* ignore */
+        }
+        // The grid needs {{ grid.min_width }} to be readable, so narrow screens start on the list.
+        var narrow = window.matchMedia("(max-width: 720px)").matches;
+        setView(saved || (narrow ? "list" : "grid"));
+      })();
+      var MODAL = document.getElementById("event-modal");
+      var at = 0;
+
+      function esc(s) {
+        var d = document.createElement("div");
+        d.textContent = s == null ? "" : s;
+        return d.innerHTML;
+      }
+
+      function speakerLine(s) {
+        var name = s.home
+          ? '<a href="' + esc(s.home) + '" target="_blank" rel="noopener">' + s.nameHtml + "</a>"
+          : s.nameHtml;
+        var line = "<b>" + name + "</b>";
+        if (s.affil) line += " <em>" + s.affilHtml + "</em>";
+        if (s.topic) line += " · " + esc(s.topic);
+        return line;
+      }
+
+      function mark(e) {
+        return e.emoji ? '<span class="emoji" aria-hidden="true">' + esc(e.emoji) + "</span>" : "";
+      }
+
+      // Both languages, switched by CSS like everything else on the page.
+      function tbd(en, ko) {
+        return '<span class="t-en">' + esc(en) + '</span><span class="t-ko">' + esc(ko) + "</span>";
+      }
+
+      function speakerHtml(s, compact) {
+        var head = s.photo
+          ? '<img class="sp-photo" src="' + esc(s.photo) + '" alt="" loading="lazy" />'
+          : '<div class="sp-photo sp-blank" aria-hidden="true"></div>';
+        var name = s.home
+          ? '<a href="' + esc(s.home) + '" target="_blank" rel="noopener">' + s.nameHtml + "</a>"
+          : s.nameHtml;
+        var bits = '<div class="sp-name">' + name;
+        if (s.affil) bits += " <em>" + s.affilHtml + "</em>";
+        bits += "</div>";
+        if (s.talk) bits += '<div class="sp-talk">' + esc(s.talk) + "</div>";
+        else if (s.topic) bits += '<div class="sp-talk">' + esc(s.topic) + "</div>";
+        else bits += '<div class="sp-talk is-todo">' + tbd("Talk title to be announced", "발표 제목 미정") + "</div>";
+
+        bits += s.bio
+          ? '<div class="sp-bio">' + s.bio + "</div>"
+          : '<div class="sp-bio is-todo">' + tbd("Speaker bio to be added", "연사 소개 준비 중") + "</div>";
+
+        if (!compact)
+          bits += s.abstract
+            ? '<div class="sp-abstract">' + s.abstract + "</div>"
+            : '<div class="sp-abstract is-todo">' + tbd("Abstract to be announced", "초록 준비 중") + "</div>";
+
+        bits += s.slides
+          ? '<a class="sp-slides" href="' + esc(s.slides) + '" target="_blank" rel="noopener">' +
+            tbd("Slides (PDF)", "발표자료 (PDF)") + "</a>"
+          : '<span class="sp-slides is-todo">' + tbd("Slides after the talk", "발표 후 자료 공개") + "</span>";
+        return '<div class="sp">' + head + "<div>" + bits + "</div></div>";
+      }
+
+      // Each day is its own flex row, and a slice grows in proportion to its
+      // own minutes — so the ribbon is a true scale drawing of the timetable,
+      // not a row of equal chips.
+      function stripHtml(current) {
+        var days = [];
+        EVENTS.forEach(function (ev) {
+          var d = days.filter(function (x) { return x.name === ev.dayShort; })[0];
+          if (!d) days.push((d = { name: ev.dayShort, events: [] }));
+          d.events.push(ev);
+        });
+        return days
+          .map(function (d) {
+            var slices = d.events
+              .map(function (ev) {
+                var mins = (Date.parse(ev.ends) - Date.parse(ev.begins)) / 60000;
+                return (
+                  '<i class="strip-slice strip-' + ev.type + (ev.id === current.id ? " is-current" : "") +
+                  '" style="flex-grow:' + mins + '"></i>'
+                );
+              })
+              .join("");
+            return '<span class="strip-day"><b>' + esc(d.name) + "</b>" +
+                   '<span class="strip-bar">' + slices + "</span></span>";
+          })
+          .join("");
+      }
+
+      function renderEvent() {
+        var e = EVENTS[at];
+        document.getElementById("modal-strip").innerHTML = stripHtml(e);
+        var badge = document.getElementById("modal-badge");
+        badge.textContent = e.typeLabel;
+        badge.className = "badge badge-" + e.type;
+        document.getElementById("modal-when").textContent =
+          e.day + " · " + e.time + " · " + e.duration;
+        document.getElementById("modal-title").innerHTML =
+          mark(e) + esc(e.title) + (e.chair ? "  (Chair: " + esc(e.chair) + ")" : "");
+
+        var body = e.speakers.map(speakerHtml).join("");
+        body += e.notes.map(function (n) {
+          return '<p class="sp-note">' + esc(n) + "</p>";
+        }).join("");
+        document.getElementById("modal-body").innerHTML =
+          body || '<p class="sp-note">No further detail yet.</p>';
+
+        document.getElementById("modal-count").textContent = at + 1 + " / " + EVENTS.length;
+        document.getElementById("modal-prev").disabled = at === 0;
+        document.getElementById("modal-next").disabled = at === EVENTS.length - 1;
+      }
+
+      function stepEvent(by) {
+        var next = at + by;
+        if (next < 0 || next >= EVENTS.length) return;
+        at = next;
+        renderEvent();
+      }
+
+      function openEvent(id) {
+        var found = EVENTS.findIndex(function (e) {
+          return e.id === id;
+        });
+        if (found < 0) return;
+        at = found;
+        renderEvent();
+        MODAL.showModal();
+      }
+
+      MODAL.addEventListener("keydown", function (ev) {
+        if (ev.key === "ArrowLeft") stepEvent(-1);
+        if (ev.key === "ArrowRight") stepEvent(1);
+      });
+      // Clicking the backdrop closes it.
+      MODAL.addEventListener("click", function (ev) {
+        if (ev.target === MODAL) MODAL.close();
+      });
+    </script>
+  </body>
+</html>

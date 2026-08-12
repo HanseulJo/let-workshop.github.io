@@ -1,0 +1,11 @@
+# Build output. Regenerate with `python3 build.py`; CI builds it for deploy.
+# Deliberately untracked: _site/2026/internal.html carries the unpublished
+# candidate shortlist and must never be committed.
+_site/
+
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+.DS_Store
