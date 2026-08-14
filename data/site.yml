@@ -17,8 +17,13 @@ edition: 1st
 # "inaugural" for a first-time event, which avoids both "1st workshop" (the word
 # is already in the line below) and "1st edition" (an edition is a printing).
 # Korean has no such trouble: 제1회 is simply what this is.
-eyebrow: Inaugural · POSTECH
-eyebrow_ko: 제1회 · 포항공과대학교
+#
+# The second half says what kind of thing it is rather than where it is — the
+# host is already on the info bar, and "annual" is the part a first edition
+# cannot say for itself. Read together the pill states the intent: this is the
+# first of something meant to keep happening.
+eyebrow: Inaugural · Annual Gathering
+eyebrow_ko: 제1회 · 연례 모임
 theme: Bandits & Deep Learning Theory
 dates: October 7–8, 2026
 venue: POSTECH
