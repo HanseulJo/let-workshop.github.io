@@ -290,6 +290,9 @@ def fill_defaults(bundle: dict) -> None:
     bundle["venue"].setdefault("subtitle", None)
     bundle["venue"].setdefault("subtitle_ko", None)
     bundle["program"].setdefault("title_ko", None)
+    # No eyebrow at all is a legitimate hero — the pill simply disappears.
+    bundle["site"].setdefault("eyebrow", None)
+    bundle["site"].setdefault("eyebrow_ko", None)
     if bundle["site"].get("nav_cta"):
         bundle["site"]["nav_cta"].setdefault("label_ko", None)
     for item in bundle["site"]["nav"]:

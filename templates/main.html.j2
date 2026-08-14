@@ -1,3 +1,11 @@
+{#- The name, split on its last space so the year can sit back from it. Used by
+    both the hero title and the sticky bar: two different cuts of "KOLT 2026" on
+    one screen is the kind of thing you notice without being able to say why. A
+    name with no space just renders whole. -#}
+{%- macro wordmark(name) -%}
+  {%- set parts = name.rsplit(" ", 1) if " " in name else [name] -%}
+  <b>{{ parts[0] }}</b>{% if parts|length > 1 %} <span class="year">{{ parts[1] }}</span>{% endif %}
+{%- endmacro -%}
 <html lang="en" data-lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -164,7 +172,7 @@
     <header class="topbar">
       <div class="wrap">
         <div class="topbar-row">
-          <a class="brand" href="#top">{{ site.name }}</a>
+          <a class="brand" href="#top">{{ wordmark(site.name) }}</a>
           <nav class="tabs" aria-label="Section navigation">
             <ul>
               {% for item in site.nav %}
@@ -215,14 +223,9 @@
            the hero is simply the photograph. -->
       <div class="hero-math" aria-hidden="true"></div>
       <div class="wrap">
-        <p class="eyebrow">{{ site.edition }}</p>
+        {% if site.eyebrow %}<p class="eyebrow">{{ t(site.eyebrow, site.eyebrow_ko) }}</p>{% endif %}
         <h1>
-          <!-- Split on the last space so the name carries the weight and the
-               year sits back from it. A name with no space just renders whole. -->
-          {% set mark = site.name.rsplit(" ", 1) if " " in site.name else [site.name] %}
-          <span class="wordmark"
-            ><b>{{ mark[0] }}</b>{% if mark|length > 1 %} <span class="year">{{ mark[1] }}</span>{% endif %}</span
-          >
+          <span class="wordmark">{{ wordmark(site.name) }}</span>
           <span class="acronym">{{ site.full_name }}</span>
         </h1>
         <p class="theme">{{ site.year }} Theme · <b>{{ site.theme }}</b></p>

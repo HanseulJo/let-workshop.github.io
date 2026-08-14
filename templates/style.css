@@ -321,6 +321,15 @@ html {
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
+/* Same emphasis as the title — the name carries the weight, the year sits back
+   from it. Not the .wordmark class itself: that is tuned for 76px, and its
+   negative tracking closes the letters up at this size. */
+.brand b {
+  font-weight: 700;
+}
+.brand .year {
+  font-weight: 300;
+}
 .tabs {
   flex: 1;
   min-width: 0;
@@ -2732,12 +2741,15 @@ footer a {
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 84%);
     mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 84%);
   }
-  /* No size here: the clamp on .hero h1 already states the phone size as its
-     minimum, and this em value (31px against the clamp's 46px floor) was
-     quietly overriding it — the title was smaller on a phone than the base
-     rule asked for. */
+  /* rem, not em. As an em it was measured against the title, which the clamp
+     holds at its 46px floor on a phone — so 0.46em came out at 21px against the
+     desktop line's 13.6px, and the subtitle was half again as large on the
+     smaller screen. A phone gets a hair less than the desktop size, which is
+     also what puts it back on one line. */
   .hero h1 .acronym {
-    font-size: 0.46em;
+    font-size: 0.78rem;
+    letter-spacing: 0.13em;
+    margin-top: 14px;
   }
   .hero .cfp {
     font-size: 0.85em;

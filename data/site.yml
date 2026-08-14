@@ -7,6 +7,18 @@ name: KOLT 2026
 full_name: Korean workshop On Learning Theory
 year: 2026
 edition: 1st
+
+# The mono pill above the title. Its job is to be the one fact the hero does not
+# otherwise state — the acronym line under the title already spells the name out
+# and the info bar carries the date and the room, so repeating either is what
+# makes this line read as filler.
+#
+# "1st" alone was three characters in a pill built for a phrase. English says
+# "inaugural" for a first-time event, which avoids both "1st workshop" (the word
+# is already in the line below) and "1st edition" (an edition is a printing).
+# Korean has no such trouble: 제1회 is simply what this is.
+eyebrow: Inaugural · POSTECH
+eyebrow_ko: 제1회 · 포항공과대학교
 theme: Bandits & Deep Learning Theory
 dates: October 7–8, 2026
 venue: POSTECH
