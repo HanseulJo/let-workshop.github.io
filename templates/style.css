@@ -838,7 +838,12 @@ body {
    the two its band is not, so it reads as raised without any border. */
 section {
   padding: 44px 0 8px;
-  scroll-margin-top: 76px; /* clear the sticky bar when jumping to an anchor */
+  /* What an anchor jump should land on is the heading, not the section box —
+     and the section's own top padding sits between the two. So this is not the
+     bar's height: it is the bar plus a gap, less that padding. Script restates
+     it from the measured bar and the actual padding (see fitAnchors); this
+     value is the no-JS fallback, and assumes the 64px band padding. */
+  scroll-margin-top: 16px;
 }
 .band {
   background: var(--band);
@@ -1317,6 +1322,12 @@ h2::before {
   padding: 11px 20px 3px;
   border-top: 1px solid var(--line);
   background: var(--modal-nav-bg);
+  /* Draggable: the whole padded row is the target, not the 7px bar. touch-action
+     keeps a drag along it from being taken for a scroll of the sheet. */
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 /* In the Now card it closes the card off, under the facts. */
 .now-strip {
@@ -2579,7 +2590,11 @@ footer a {
     margin: 0 0 0 10px;
   }
   #event-modal {
-    padding: 20px 18px 18px;
+    /* No padding. It is a leftover from when the dialog laid its own content
+       out; the head, the body and the footer each carry their own padding now,
+       and 18px here inset all three from the card edge — so the day ribbon
+       stopped short of both sides and the footer's rule and ground floated in
+       the middle of the sheet instead of spanning it. */
     max-height: 88vh;
   }
   .modal-nav {
@@ -2776,7 +2791,9 @@ footer a {
   }
   section {
     padding: 32px 0 4px;
-    scroll-margin-top: 108px; /* the mobile bar is two rows tall */
+    /* No scroll-margin override. It used to add for a two-row bar, which is no
+       longer what a phone gets — the tabs moved to the bottom of the screen and
+       the top bar is one row, the same height as on a laptop. */
   }
   h2 {
     font-size: 1.32em;

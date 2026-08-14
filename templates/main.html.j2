@@ -1123,6 +1123,56 @@
         });
       })();
 
+      // ---- Where an anchor jump lands
+      // Separate from the highlighting above on purpose: which tab lights up is
+      // a question about what you are reading, and this is a question about
+      // where a click puts you. They should not be able to drift apart.
+      //
+      // scroll-margin-top positions the section's *box*, and the section's own
+      // top padding then sits between that edge and the heading — 64px of it —
+      // so a jump left the title a third of the way down the screen under a
+      // bar that is only 61px tall. Measured rather than assumed: the bar has
+      // no fixed height, it changes with the language and the breakpoint.
+      (function () {
+        var bar = document.querySelector(".topbar");
+        var sections = document.querySelectorAll("section[id]");
+        if (!bar || !sections.length) return;
+        var GAP = 18; // between the bottom of the bar and the top of the heading
+
+        // Layout position, walking offsetParents. A client rect would do the
+        // same job in one call, but every band heading is a reveal target and
+        // an unfired reveal holds it 12px below where it will settle — so a
+        // rect measures the animation, not the layout, and which sections were
+        // already revealed when this ran would decide where the anchor landed.
+        // offsetTop ignores transforms.
+        function layoutTop(el) {
+          var y = 0;
+          while (el) {
+            y += el.offsetTop;
+            el = el.offsetParent;
+          }
+          return y;
+        }
+
+        function fitAnchors() {
+          var barH = bar.getBoundingClientRect().height;
+          sections.forEach(function (s) {
+            // The heading's own offset inside the section, not the section's
+            // padding: headings carry a top margin on top of it.
+            var h = s.querySelector("h2");
+            var lead = h ? layoutTop(h) - layoutTop(s) : 0;
+            s.style.scrollMarginTop = Math.round(barH + GAP - lead) + "px";
+          });
+        }
+
+        fitAnchors();
+        // The bar's height changes with the language toggle and at breakpoints;
+        // the padding changes at breakpoints too, which a bar observer alone
+        // would miss.
+        addEventListener("resize", fitAnchors);
+        if (window.ResizeObserver) new ResizeObserver(fitAnchors).observe(bar);
+      })();
+
       // ---- Day filter (list view; the grid always shows every day side by side)
       function setDay(day) {
         document.querySelectorAll("#day-pills button").forEach(function (b) {
@@ -1352,19 +1402,22 @@
       // not a row of equal chips.
       function stripHtml(current) {
         var days = [];
-        EVENTS.forEach(function (ev) {
+        // Carry each slice's index in EVENTS, so the ribbon can be scrubbed
+        // without matching back by id on every pointer move.
+        EVENTS.forEach(function (ev, i) {
           var d = days.filter(function (x) { return x.name === ev.dayShort; })[0];
           if (!d) days.push((d = { name: ev.dayShort, events: [] }));
-          d.events.push(ev);
+          d.events.push({ ev: ev, i: i });
         });
         return days
           .map(function (d) {
             var slices = d.events
-              .map(function (ev) {
+              .map(function (item) {
+                var ev = item.ev;
                 var mins = (Date.parse(ev.ends) - Date.parse(ev.begins)) / 60000;
                 return (
                   '<i class="strip-slice strip-' + ev.type + (ev.id === current.id ? " is-current" : "") +
-                  '" style="flex-grow:' + mins + '"></i>'
+                  '" data-i="' + item.i + '" style="flex-grow:' + mins + '"></i>'
                 );
               })
               .join("");
@@ -1403,6 +1456,85 @@
         at = next;
         renderEvent();
       }
+
+      // ---- Scrub the ribbon
+      // The two-day ribbon already says where you are in the programme; this
+      // lets you say it back. Press anywhere along it and the dialog goes to
+      // that session; keep the finger down and drag, and it follows.
+      //
+      // It stays aria-hidden and unfocusable: this is a pointer shortcut laid
+      // over the arrows and the ArrowLeft/ArrowRight keys, which remain the
+      // accessible path through the programme.
+      (function () {
+        var strip = document.getElementById("modal-strip");
+        if (!strip) return;
+        var spans = null,
+          dragging = false;
+
+        // Measured once per press. renderEvent() rewrites the ribbon on every
+        // step, but the current slice is marked with a box-shadow rather than a
+        // size, so the geometry underneath the finger does not move.
+        function measure() {
+          spans = [].map.call(strip.querySelectorAll(".strip-slice"), function (el) {
+            var r = el.getBoundingClientRect();
+            return { i: +el.dataset.i, left: r.left, right: r.right };
+          });
+        }
+
+        // x alone decides it: both days sit on one row. Falling back to the
+        // nearest slice means the gap around the DAY 2 label, and any overshoot
+        // past either end, still lands somewhere sensible rather than nowhere.
+        function pick(x) {
+          var best = -1,
+            bestGap = Infinity;
+          for (var k = 0; k < spans.length; k++) {
+            var s = spans[k];
+            if (x >= s.left && x < s.right) return s.i;
+            var gap = x < s.left ? s.left - x : x - s.right;
+            if (gap < bestGap) {
+              bestGap = gap;
+              best = s.i;
+            }
+          }
+          return best;
+        }
+
+        function scrubTo(x) {
+          if (!spans || !spans.length) return;
+          var i = pick(x);
+          if (i < 0 || i === at) return;
+          at = i;
+          renderEvent();
+        }
+
+        strip.addEventListener("pointerdown", function (ev) {
+          measure();
+          dragging = true;
+          // Captured on the ribbon itself, not the slice: the slices are
+          // replaced on every step, and a capture held by one of them would die
+          // with it on the first move.
+          try {
+            strip.setPointerCapture(ev.pointerId);
+          } catch (e) {
+            /* older pointer implementations */
+          }
+          scrubTo(ev.clientX);
+          ev.preventDefault();
+        });
+        strip.addEventListener("pointermove", function (ev) {
+          if (dragging) scrubTo(ev.clientX);
+        });
+        ["pointerup", "pointercancel"].forEach(function (type) {
+          strip.addEventListener(type, function (ev) {
+            dragging = false;
+            try {
+              strip.releasePointerCapture(ev.pointerId);
+            } catch (e) {
+              /* already released */
+            }
+          });
+        });
+      })();
 
       // Hold either arrow to keep going. Twenty-odd sessions is far enough that
       // reaching the other end of the programme should not be twenty taps.
