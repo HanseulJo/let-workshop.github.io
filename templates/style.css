@@ -501,8 +501,8 @@ body {
      info bar's small grey type needs a dark ground — measured, the formulas
      alone were taking it from readable to 2:1. They belong in the open space
      above the text, not behind it. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 72%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 72%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%);
 }
 /* Tilt and drift are separate elements on purpose: the rotation belongs to the
    field, the movement has to happen along the field's own axis. Nested, a
@@ -517,7 +517,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 16px;
+  gap: 10px;
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 /* The tilt is unchanged; the travel is along its -X axis, which reads as
@@ -527,8 +527,10 @@ body {
 .fx-row {
   display: flex;
   align-items: center;
-  gap: 46px;
+  gap: 26px;
   white-space: nowrap;
+  /* Height is set inline, from the formulas' own height distribution, and the
+     tall ones are meant to spill out of it — so no overflow rule here. */
   /* No will-change: the field is dozens of rows, and pinning a compositor
      layer to each of them costs more memory than the hint saves. A transform
      animation gets promoted on its own when it actually needs to be. */
@@ -2716,13 +2718,14 @@ footer a {
       rgba(11, 17, 28, 0.95) 100%
     );
   }
-  /* And the formulas clear out sooner. The mask is a percentage of the hero,
-     which on a phone is a much taller box holding the same words — so the same
-     32%/72% fade that sits above the text on a laptop sits right behind it
-     here. */
+  /* The formulas run further down than on a laptop, not less far. The mask is a
+     percentage of the hero, and a phone's hero is a much taller box holding the
+     same words, so the desktop fade would clear out around the title and leave
+     the whole lower half of the frame bare. The heavier scrim above is what
+     pays for it. */
   .hero-math {
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 46%);
-    mask-image: linear-gradient(to bottom, #000 0%, #000 16%, transparent 46%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 84%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 84%);
   }
   /* No size here: the clamp on .hero h1 already states the phone size as its
      minimum, and this em value (31px against the clamp's 46px floor) was

@@ -872,10 +872,26 @@
             // down-and-left on screen. Every cell is the same width, so one
             // shift distance serves every row and they all travel at the same
             // speed — a shower, not a race.
-            var SCALE = 0.66;  // path units -> px; one constant for every formula
-            var GAP = 46;      // matches .fx-row's gap
-            var ROW_GAP = 16;  // matches .fx-tilt's gap
+            var SCALE = 0.5;   // path units -> px; one constant for every formula
+            var GAP = 26;      // matches .fx-row's gap
+            var ROW_GAP = 10;  // matches .fx-tilt's gap
             var SPEED = 26;    // px per second, the same in every row
+
+            // A row is as tall as its tallest cell, and with a hundred formulas
+            // in the pool every row draws at least one fraction or integral — so
+            // left alone, every row is as tall as the tallest formula in the set
+            // and the field reads as widely spaced lines of mostly short maths.
+            //
+            // So rows get a fixed height instead, set here from the distribution
+            // of the formulas themselves. The tall minority overflows it and
+            // laps a little into its neighbours, which is what a tight comb of
+            // maths actually looks like — the alternative is spacing every row
+            // for a formula that is not in it.
+            var ROW_H = (function () {
+              var hs = FORMULAS.map(function (f) { return f.h * SCALE; })
+                               .sort(function (a, b) { return a - b; });
+              return Math.round(hs[Math.floor(hs.length * 0.55)]);
+            })();
 
             var builtW = 0, builtH = 0;
             function build() {
@@ -901,8 +917,7 @@
               var overscan = widest + 120;
               var side = (W + H) / Math.SQRT2 + overscan * 2;
 
-              var heights = FORMULAS.map(function (f) { return f.h * SCALE; }).sort(function (a, b) { return a - b; });
-              var stride = heights[Math.floor(heights.length / 2)] + ROW_GAP;
+              var stride = ROW_H + ROW_GAP;
               var rowCount = Math.ceil(side / stride) + 2;   // +2 so the edges are never bare
 
               var rows = "";
@@ -929,7 +944,8 @@
                 // so the duration is derived from the distance — same pixels per
                 // second everywhere, which is what makes it read as one field.
                 rows +=
-                  '<div class="fx-row" style="--shift:' + (-halfWidth).toFixed(1) +
+                  '<div class="fx-row" style="height:' + ROW_H +
+                  "px;--shift:" + (-halfWidth).toFixed(1) +
                   "px;animation-duration:" + (halfWidth / SPEED).toFixed(1) +
                   "s;animation-delay:" + (-r * 2.3).toFixed(1) + 's">' + cells + "</div>";
               }
