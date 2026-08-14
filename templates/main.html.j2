@@ -745,9 +745,11 @@
            as you step through, while the footer stays where your hand is. -->
       <div id="modal-strip" class="day-strip modal-strip" aria-hidden="true"></div>
       <div class="modal-nav">
-        <button class="pill" id="modal-prev" onclick="stepEvent(-1)">&larr; Previous</button>
+        <!-- No inline onclick: both buttons are wired in script so a press and
+             hold can keep stepping. -->
+        <button class="pill" id="modal-prev">&larr; Previous</button>
         <span id="modal-count"></span>
-        <button class="pill" id="modal-next" onclick="stepEvent(1)">Next &rarr;</button>
+        <button class="pill" id="modal-next">Next &rarr;</button>
       </div>
     </dialog>
 
@@ -1098,9 +1100,17 @@
               if (entry.isIntersecting) visible.add(entry.target.id);
               else visible.delete(entry.target.id);
             });
-            var top = sections.filter(function (s) {
+            var inBand = sections.filter(function (s) {
               return visible.has(s.id);
-            })[0];
+            });
+            // The last one in the band, not the first. With the first, a
+            // section stayed current until its own tail left the band — which
+            // happens only once the next section's heading has reached the top
+            // of the screen. So the tab lit up a full screen after the section
+            // it names had taken the page over. Taking the last one hands off
+            // as soon as the incoming section crosses the band's lower edge, at
+            // which point it already fills the bottom half of the viewport.
+            var top = inBand[inBand.length - 1];
             links.forEach(function (a) {
               a.classList.toggle("current", !!top && a.getAttribute("href") === "#" + top.id);
             });
@@ -1393,6 +1403,74 @@
         at = next;
         renderEvent();
       }
+
+      // Hold either arrow to keep going. Twenty-odd sessions is far enough that
+      // reaching the other end of the programme should not be twenty taps.
+      //
+      // The first step is still the click, so a tap is exactly one step and the
+      // keyboard path (Enter/Space, which fire click with no pointer events at
+      // all) is untouched. Only once the press outlasts a tap does it start
+      // repeating, accelerating from a readable pace to a fast one — a fixed
+      // fast rate overshoots, and a fixed slow one is not worth holding.
+      (function () {
+        var HOLD_DELAY = 420; // a press longer than this is a hold, not a tap
+        // Measured against the programme's own length: this crosses all 21
+        // sessions in about three and a half seconds. Faster than that and the
+        // titles are a blur you cannot stop on.
+        var FIRST = 240,
+          FASTEST = 110,
+          RAMP = 0.86;
+        var timer = null,
+          lastRepeat = 0;
+
+        function stop() {
+          clearTimeout(timer);
+          timer = null;
+        }
+
+        function start(by, btn) {
+          var wait = FIRST;
+          (function schedule(delay) {
+            timer = setTimeout(function () {
+              var before = at;
+              stepEvent(by);
+              // Either end of the programme, or the button went disabled under
+              // the finger — stop rather than spin.
+              if (at === before || btn.disabled) return stop();
+              lastRepeat = Date.now();
+              wait = Math.max(FASTEST, wait * RAMP);
+              schedule(wait);
+            }, delay);
+          })(HOLD_DELAY);
+        }
+
+        [
+          ["modal-prev", -1],
+          ["modal-next", 1],
+        ].forEach(function (pair) {
+          var btn = document.getElementById(pair[0]),
+            by = pair[1];
+          btn.addEventListener("pointerdown", function () {
+            start(by, btn);
+          });
+          ["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) {
+            btn.addEventListener(ev, stop);
+          });
+          btn.addEventListener("click", function () {
+            // The click that ends a hold would otherwise add one more step.
+            // Timestamped rather than flagged: a flag set by a press that ended
+            // off the button never gets cleared, and swallows the next tap.
+            if (Date.now() - lastRepeat < 400) return;
+            stepEvent(by);
+          });
+        });
+
+        // Releasing outside the dialog, or closing it mid-hold, must not leave
+        // the timer running.
+        MODAL.addEventListener("close", stop);
+        addEventListener("pointerup", stop);
+        addEventListener("blur", stop);
+      })();
 
       function openEvent(id) {
         var found = EVENTS.findIndex(function (e) {

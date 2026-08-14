@@ -1485,6 +1485,15 @@ h2::before {
   opacity: 0.4;
   cursor: default;
 }
+/* Held down, these repeat. Without this a long press selects the label or
+   raises the callout menu on a phone, and the 300ms tap delay makes the first
+   step feel late. */
+.modal-nav .pill {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
 
 /* ---------- Organiser link icons ---------- */
 .org-links {
@@ -2750,6 +2759,16 @@ footer a {
     font-size: 0.78rem;
     letter-spacing: 0.13em;
     margin-top: 14px;
+  }
+  /* The pill holds a phrase now rather than three characters, and at the
+     desktop size that phrase is most of a phone's width. Tracking comes down
+     with it — 0.16em is what makes a short tag read as a tag, and what makes a
+     long one read as a gap between every letter. */
+  .hero .eyebrow {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    padding: 5px 11px;
+    margin-bottom: 18px;
   }
   .hero .cfp {
     font-size: 0.85em;
