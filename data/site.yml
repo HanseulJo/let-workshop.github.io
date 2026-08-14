@@ -96,26 +96,37 @@ hosts:
 # one row of data. `href` makes the value a link.
 infobar:
   - key: Date
+    key_ko: 날짜
     icon: cal
     mono: true
     value: October 7–8, 2026
+    value_ko: 2026년 10월 7–⁠8⁠일 # word joiners (U+2060) inside 7–8일: a line may break after an en dash and between a digit and a Hangul syllable, and both stranded the 일
     countdown: true # appends (D-xx), counted from the programme's first day
     note: 2 days (Wed–Thu)
+    note_ko: 2일간 (수–목)
   - key: Location
+    key_ko: 장소
     icon: pin
     mono: true
     value: POSCO International Center
+    value_ko: 포스코국제관 # matches venue.yml's name_ko
     href: "#venue" # the section that says how to get there
     note: POSTECH, Pohang
+    note_ko: 포항공과대학교, 포항
   - key: Language
+    key_ko: 언어
     icon: globe
     mono: true
     value: Korean
+    value_ko: 한국어
   - key: Format
+    key_ko: 형식
     icon: mic
     mono: true
     value: Talks · Tutorials · Posters
+    value_ko: 강연 · 튜토리얼 · 포스터
     note: No formal peer review
+    note_ko: 정식 논문 심사 없음
 
 # Korean names for the affiliations used in program.yml and organizers.yml.
 # A lookup rather than an `affil_ko` on each person: six institutions cover

@@ -304,6 +304,10 @@ def fill_defaults(bundle: dict) -> None:
         act.setdefault("primary", False)
     for cell in bundle["site"]["infobar"]:
         cell.setdefault("note", None)
+        # A cell with no Korean sibling shows its one form in both languages,
+        # which is right for anything that is already the same in both.
+        for key in ("key_ko", "value_ko", "note_ko"):
+            cell.setdefault(key, None)
         cell.setdefault("href", None)
         cell.setdefault("countdown", False)
         cell.setdefault("icon", None)

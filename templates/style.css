@@ -2869,6 +2869,15 @@ footer a {
   .modal-nav .pill {
     padding: 8px 12px;
   }
+  /* The Korean name on its own line. Beside the English one it had barely a
+     third of the width left and broke mid-word — 포스코 / 국제관 — which is not
+     a place a Korean name may be split. */
+  .venue-name span {
+    display: block;
+    margin-left: 0;
+    margin-top: 2px;
+    font-size: 0.86em;
+  }
   .sp-photo {
     width: 44px;
     height: 44px;

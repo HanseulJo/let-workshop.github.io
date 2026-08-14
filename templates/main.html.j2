@@ -236,12 +236,12 @@
           {% for cell in site.infobar %}
           <div>
             <dt{{ ' class="is-key"' | safe if loop.first }}>
-              {% if cell.icon %}<svg aria-hidden="true"><use href="#i-{{ cell.icon }}"></use></svg>{% endif %}{{ cell.key }}
+              {% if cell.icon %}<svg aria-hidden="true"><use href="#i-{{ cell.icon }}"></use></svg>{% endif %}{{ t(cell.key, cell.key_ko) }}
             </dt>
             <dd class="{{ 'is-mono' if cell.mono }}">
-              {% if cell.href %}<a href="{{ cell.href }}">{{ cell.value }}</a>{% else %}{{ cell.value }}{% endif %}{% if
+              {% set shown = t(cell.value, cell.value_ko) %}{% if cell.href %}<a href="{{ cell.href }}">{{ shown }}</a>{% else %}{{ shown }}{% endif %}{% if
               cell.countdown %}<span class="dday" data-from="{{ program.days[0].date }}"></span>{% endif %}{% if
-              cell.note %}<small>{{ cell.note }}</small>{% endif %}
+              cell.note %}<small>{{ t(cell.note, cell.note_ko) }}</small>{% endif %}
             </dd>
           </div>
           {% endfor %}

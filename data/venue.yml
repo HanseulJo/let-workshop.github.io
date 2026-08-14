@@ -74,11 +74,13 @@ map:
       contributors &copy; <a href="https://carto.com/attributions">CARTO</a>
 
 # Small links under the venue name. `{lat}`/`{lon}` are substituted in.
+# Just the brand: the row already sits under the map, so "Map" on each label
+# was saying the same thing three times.
 map_links:
-  - label: Naver Map
+  - label: Naver
     icon: naver
     url: https://map.naver.com/p/search/포스코국제관
-  - label: Kakao Map
+  - label: Kakao
     icon: kakao
     url: https://map.kakao.com/link/map/포스코국제관,{lat},{lon}
   # TMAP has no public web map, only the app — but this landing page needs no
