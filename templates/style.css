@@ -497,6 +497,8 @@ body {
   overflow: hidden;
   pointer-events: none;
   mix-blend-mode: soft-light;
+  /* On the layer, not the glyphs — see .hero-math .fx. */
+  opacity: 0.62;
   /* Faded out over the lower half. soft-light lifts whatever it covers, and the
      info bar's small grey type needs a dark ground — measured, the formulas
      alone were taking it from readable to 2:1. They belong in the open space
@@ -554,7 +556,10 @@ body {
      are what match, not the boxes */
   height: auto;
   fill: #fff;
-  opacity: 0.95;
+  /* Opaque here, and faded on the layer instead (see .hero-math). Rows are
+     tight enough now that a tall formula laps into its neighbours, and
+     per-glyph transparency would make those crossings read darker than the rest
+     — a grid of accidental bright spots. */
 }
 
 @media (prefers-reduced-motion: reduce) {
