@@ -9,10 +9,14 @@ carries no colour of its own — it is the hero background with the photograph's
 shading in it. A photo left in its own colours would fight the coral accent and
 put the title on an unpredictable ground.
 
-The ramp ends are deliberately close together and both dark: the title and the
-info bar sit on top of this, and contrast there matters more than seeing the
-building. Needs Pillow, a local tool dependency only — the site build doesn't
-touch images.
+The ramp is wide enough for the campus to actually read as a photograph. It
+used to stop well short of that, on the reasoning that contrast for the type
+mattered more than seeing the building — but the type only occupies the left
+column, so style.css buys its contrast back with a scrim weighted to that side
+instead of taking the range away from the whole frame.
+
+Needs Pillow, a local tool dependency only — the site build doesn't touch
+images.
 """
 
 import argparse
@@ -23,10 +27,11 @@ from PIL import Image, ImageEnhance, ImageOps
 OUT = Path(__file__).resolve().parent.parent / "static" / "hero.jpg"
 
 # Shadow and highlight of the ramp. --hero-bg is #0f1826 and --hero-bg2
-# #16233a; this reaches a little darker and a little lighter than that pair so
-# the photograph has somewhere to put its range, without leaving the family.
+# #16233a; the shadow sits just under that pair and the highlight well above
+# it, which is what gives the buildings their shape. Both are on the same blue,
+# so the plate still belongs to the hero rather than reading as a pasted photo.
 SHADOW = "#0a111d"
-HIGHLIGHT = "#27405f"
+HIGHLIGHT = "#5c7ea8"
 
 WIDTH = 2000  # wide enough for a 2x hero on a laptop; it is only a backdrop
 

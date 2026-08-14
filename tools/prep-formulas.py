@@ -44,25 +44,42 @@ MANIFEST = ROOT / "static" / "formulas.json"
 FONTSIZE = 48  # path coordinate scale only; rounded to integers, so keep it large
 
 
-def _r(pt):
-    return (round(pt[0]), round(pt[1]))
-
-
 def to_path_data(vertices, codes) -> str:
-    """MplPath vertices/codes -> an SVG `d` string."""
+    """MplPath vertices/codes -> an SVG `d` string.
+
+    Relative commands, and every number rounded to an integer first so the
+    deltas are exact. Absolute coordinates run to three and four digits at this
+    font size; the step from one control point to the next is usually one or
+    two, and on a sheet of ~100 formulas that difference is most of the file.
+    Rounding before differencing matters — rounding the deltas instead lets the
+    error accumulate along a contour until the glyph visibly drifts.
+    """
+    pts = [(round(x), round(y)) for x, y in vertices]
     out, i = [], 0
+    cx = cy = 0  # current point, in the same rounded integer space
+    start = (0, 0)
+
+    def emit(letter, idx, n):
+        # Every offset in a relative command is measured from the point the
+        # command *started* at, not from the previous control point — chaining
+        # them scatters the curves.
+        nonlocal cx, cy
+        nums = ["%d %d" % (pts[idx + k][0] - cx, pts[idx + k][1] - cy) for k in range(n)]
+        cx, cy = pts[idx + n - 1]
+        out.append(letter + ",".join(nums))
+
     while i < len(codes):
         code = codes[i]
         if code == MplPath.MOVETO:
-            out.append("M%d %d" % _r(vertices[i])); i += 1
+            emit("m", i, 1); start = (cx, cy); i += 1
         elif code == MplPath.LINETO:
-            out.append("L%d %d" % _r(vertices[i])); i += 1
+            emit("l", i, 1); i += 1
         elif code == MplPath.CURVE3:
-            out.append("Q%d %d %d %d" % (*_r(vertices[i]), *_r(vertices[i + 1]))); i += 2
+            emit("q", i, 2); i += 2
         elif code == MplPath.CURVE4:
-            out.append("C%d %d %d %d %d %d" % (*_r(vertices[i]), *_r(vertices[i + 1]), *_r(vertices[i + 2]))); i += 3
+            emit("c", i, 3); i += 3
         elif code == MplPath.CLOSEPOLY:
-            out.append("Z"); i += 1
+            out.append("z"); cx, cy = start; i += 1
         else:  # pragma: no cover
             i += 1
     return "".join(out)

@@ -63,6 +63,68 @@ formulas:
   - 'V^\pi(s) = \mathbb{E}\left[\sum_t \gamma^t r_t \mid s_0 = s\right]'
   - '\mathrm{Reg}(T) = \tilde O(\sqrt{dT})'
 
+  # ---- Logistic and generalized linear bandits
+  # Junghyun Lee''s line of work, which is where several of this year''s bandit
+  # talks sit: the self-concordance constant kappa and how to stop paying for it.
+  #   arXiv:2310.18554  regret-to-confidence-set conversion
+  #   arXiv:2506.03074  GL-LowPopArt, low-rank trace regression
+  - 'r_t \sim \mathrm{Ber}(\mu(\langle x_t, \theta_\star \rangle))'
+  - '\mu(z) = (1 + e^{-z})^{-1}'
+  - '\kappa(T) = \max_{t, x, \theta} \frac{1}{\dot{\mu}(x^\top \theta)}'
+  - '\mathcal{C}_t = \{\theta : \mathcal{L}_t(\theta) - \mathcal{L}_t(\hat\theta_t) \leq \beta_t^2\}'
+  - '\mathrm{Reg}(T) \lesssim dS\sqrt{T / \kappa_\star(T)}'
+  - 'p(i \mid x) = \frac{e^{x^\top \theta_i}}{\sum_j e^{x^\top \theta_j}}'
+  - '\mathbb{E}[y \mid X] = \mu(\langle X, \Theta_\star \rangle)'
+  - '\Theta_0 = \arg\min_\Theta \mathcal{L}_N(\Theta) + \lambda \|\Theta\|_{\mathrm{nuc}}'
+  - 'o_t \sim \mathrm{Ber}(\mu(\phi_w^\top \Theta_\star \phi_\ell))'
+  - '\mu(z) + \mu(-z) = 1'
+  - '\Pr[y_1 \succ y_2] = \sigma(r(x, y_1) - r(x, y_2))'
+  - 'w_{t+1} = \arg\min_w \eta \langle g_t, w \rangle + D_\Psi(w, w_t)'
+  - 'D_\Psi(u, v) = \Psi(u) - \Psi(v) - \langle \nabla \Psi(v), u - v \rangle'
+  - 'q_a(\tau) = \inf\{z : F_a(z) \geq \tau\}'
+
+  # ---- Optimizers beyond plain SGD
+  - '\hat m_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat v_t = \frac{v_t}{1 - \beta_2^t}'
+  - 'w_{t+1} = w_t - \eta \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}'
+  - 'w_{t+1} = (1 - \eta\lambda) w_t - \eta \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}'
+  - 'w_{t+1} = w_t - \eta \nabla f(w_t) + \beta (w_t - w_{t-1})'
+  # Muon: momentum, then the orthogonal polar factor of it
+  - 'M_t = \mu M_{t-1} + G_t, \quad W_{t+1} = W_t - \eta\, O(M_t)'
+  - 'O(M) = UV^\top = (MM^\top)^{-1/2} M'
+  - 'X \leftarrow aX + b(XX^\top)X + c(XX^\top)^2 X'
+  - '\arg\min_{\|\Delta\| \leq 1} \langle G, \Delta \rangle'
+  # Shampoo: full-matrix preconditioning, one factor per side
+  - 'L_t = L_{t-1} + G_t G_t^\top'
+  - 'W_{t+1} = W_t - \eta\, L_t^{-1/4} G_t R_t^{-1/4}'
+  - 'w_{t+1} = w_t - \eta\, \mathrm{sign}(\beta m_t + (1-\beta) g_t)'
+  - '\bar w_t = (1 - c_t) \bar w_{t-1} + c_t w_t'
+  - '\|W\|_2 = \sigma_{\max}(W)'
+
+  # ---- Distributed and federated optimization
+  - '\min_w \frac{1}{N} \sum_{i=1}^N f_i(w)'
+  - 'w_i^{t+1} = w_i^t - \eta \nabla f_i(w_i^t; \xi_i^t)'
+  - 'w^{r+1} = \sum_{i=1}^N \frac{n_i}{n} w_i^{r,K}'
+  - 'w_i^{t+1} = \sum_{j \in \mathcal{N}_i} A_{ij} w_j^t'
+  - '\rho = 1 - |\lambda_2(A)|'
+  - '\frac{1}{N} \sum_i \|w_i^t - \bar w^t\|^2'
+  - '\zeta^2 = \sup_w \frac{1}{N} \sum_i \|\nabla f_i(w) - \nabla f(w)\|^2'
+  - '\mathbb{E}\|\mathcal{C}(x) - x\|^2 \leq (1 - \delta)\|x\|^2'
+  - 'e_i^{t+1} = p_i^t - \mathcal{C}(p_i^t)'
+  - '\mathbb{E}\|\nabla f(\bar w)\|^2 = O\!\left(\frac{1}{\sqrt{NT}}\right)'
+  - '\min_{w_i} \sum_i f_i(w_i) \;\; \mathrm{s.t.} \;\; w_i = z'
+
+  # ---- Uncertainty quantification and calibration
+  - 'p(y \mid x, \mathcal{D}) = \int p(y \mid x, \theta)\, p(\theta \mid \mathcal{D})\, d\theta'
+  - '\mathrm{ECE} = \sum_b \frac{|B_b|}{n} \left| \mathrm{acc}(B_b) - \mathrm{conf}(B_b) \right|'
+  - 'H[y \mid x] = -\sum_y p(y \mid x) \ln p(y \mid x)'
+  - 'I(y; \theta \mid x) = H[\mathbb{E}_\theta\, p] - \mathbb{E}_\theta\, H[p]'
+  - 'R(f, g) = \frac{\mathbb{E}[g(x)\, \ell(f(x), y)]}{\mathbb{E}[g(x)]}'
+  - '\frac{1}{n} \sum_i \mathbf{1}[y_i \in C(x_i)] \geq 1 - \alpha'
+  - '\hat q_{1-\alpha} = s_{(\lceil (n+1)(1-\alpha) \rceil)}'
+  - '\Pr[\theta \in C \mid \mathcal{D}] = 1 - \alpha'
+  - 'p_\tau(y \mid x) = \mathrm{softmax}(z / \tau)'
+  - '\mathrm{Brier} = \frac{1}{n} \sum_i (p_i - y_i)^2'
+
   # ---- High-dimensional and non-parametric statistics
   - '\hat\beta = \arg\min_\beta \|y - X\beta\|^2 + \lambda\|\beta\|_1'
   - '\|\hat\beta - \beta^\star\|_2 \lesssim \sigma\sqrt{\frac{s\log d}{n}}'
