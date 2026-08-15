@@ -339,7 +339,7 @@ TEMPLATE = """<!doctype html>
   .qr-say b {{ display:block; font-size:5.2mm; color:{ink}; letter-spacing:.06em; }}
   .qr-say span {{ display:block; font-size:4mm; color:{cool}; margin-top:1.2mm; text-transform:none; letter-spacing:.02em; }}
 </style>
-<div class="sheet{boxed}">
+<div class="sheet">
   <div class="art">{art}</div>
   <div class="fade"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1">
@@ -443,7 +443,7 @@ LISTING = """<!doctype html>
     line-height:1.5; text-align:right; margin-top:5mm; opacity:.82;
   }}
 </style>
-<div class="sheet{boxed}"><div class="frame">
+<div class="sheet"><div class="frame">
   <div class="row">
     <div class="cell list"><ul>{listing}</ul></div>
     <div class="cell month">
@@ -493,31 +493,14 @@ FESTIVAL = """<!doctype html>
   .wrap {{ position:absolute; inset:0; padding:20mm 20mm 16mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; justify-content:space-between; align-items:flex-start; }}
   .mark {{
-    font-family:"Jost",sans-serif; font-weight:700; font-size:26mm; line-height:1;
-    color:{hot}; letter-spacing:-.02em; margin:0;
+    font-family:"Jost",sans-serif; font-weight:700; font-size:32mm; line-height:1;
+    color:{hot}; letter-spacing:-.022em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .stamps {{
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.16em;
     text-transform:uppercase; color:{hot}; text-align:right; line-height:1.7;
   }}
-  /* Boxes that hug what they hold, rather than one panel behind everything.
-     Each is only as wide as its own text, which is what makes them read as
-     labels stuck to the picture instead of as a background. */
-  .boxed .slot,
-  .boxed .longname,
-  .boxed .stamps,
-  .boxed .daymark,
-  .boxed .rail {{
-    display:inline-block; box-sizing:border-box;
-    background:rgba(9,15,26,.82); border:.3mm solid rgba(255,138,117,.45);
-    padding:3.5mm 5mm;
-  }}
-  .boxed .slot {{ text-align:right; margin-bottom:4mm; }}
-  .boxed .daymark {{ padding:2mm 4mm; margin-bottom:3mm; }}
-  .boxed .longname {{ padding:2.4mm 4mm; }}
-  .boxed .stamps {{ padding:2.4mm 4mm; }}
-  .boxed .rail {{ padding:5mm 3mm; }}
   /* Mixed case, and the four letters of the acronym in the accent — the name
      is written so that K, O, L and T fall where they do, and capitals would
      hide it. */
@@ -564,10 +547,7 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-weight:500; font-size:3.8mm;
     letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin-left:4mm;
   }}
-  .panel {{
-    margin:auto 0 0; background:rgba(9,15,26,.86); padding:9mm 10mm 8mm;
-    border-top:.3mm solid rgba(255,138,117,.5);
-  }}
+  .panel {{ margin:auto 0 0; }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; margin:0; }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
@@ -606,15 +586,15 @@ FESTIVAL = """<!doctype html>
                   text-transform:none; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
-<div class="sheet{boxed}">
+<div class="sheet">
   <div class="art">{art}</div>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="{ground}" stop-opacity=".72"/>
       <stop offset=".22" stop-color="{ground}" stop-opacity=".50"/>
       <stop offset=".52" stop-color="{ground}" stop-opacity=".62"/>
-      <stop offset=".76" stop-color="{ground}" stop-opacity=".88"/>
-      <stop offset="1" stop-color="{ground}" stop-opacity=".96"/>
+      <stop offset=".70" stop-color="{ground}" stop-opacity=".90"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity=".985"/>
     </linearGradient></defs>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
@@ -741,7 +721,7 @@ ACADEMIC = """<!doctype html>
   }}
   .site span {{ color:{cool}; font-size:4.6mm; }}
 </style>
-<div class="sheet{boxed}">
+<div class="sheet">
   <div class="art">{art}</div>
   <div class="wrap">
     <h1>{mark} {year}<br>{full_title}</h1>
@@ -829,7 +809,7 @@ CIVIC = """<!doctype html>
   .qr-plate {{ position:absolute; left:26mm; bottom:22mm; width:36mm; height:36mm; background:#fff; padding:1.8mm; box-sizing:border-box; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
-<div class="sheet{boxed}">
+<div class="sheet">
   <div class="shape"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426 600" preserveAspectRatio="none">
     <path d="M196 322 L300 246 L300 322 L404 246 L404 486 L300 486 L300 412 L196 486 Z" fill="{sky}"/>
   </svg></div>
@@ -913,7 +893,7 @@ BAUHAUS = """<!doctype html>
   .qr-plate {{ position:absolute; right:22mm; top:150mm; width:34mm; height:34mm; background:{paper}; padding:1.6mm; box-sizing:border-box; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
-<div class="sheet{boxed}">
+<div class="sheet">
   <div class="hair vline"></div>
   <div class="disc"></div>
   <div class="plate">{art}</div>
@@ -959,7 +939,7 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
-def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None, boxes=False):
+def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
@@ -1070,7 +1050,6 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         country=esc(site["country"]),
         cta_short="Register",
         acronym_name=acronym_html(site["full_name"], mark),
-        boxed=" boxed" if boxes else "",
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
         yyyy=esc(str(program["days"][0]["date"]).split("-")[0]),
@@ -1104,8 +1083,6 @@ if __name__ == "__main__":
     ap.add_argument("--art", help="the formula art SVG to inline")
     ap.add_argument("--photo", help="use a two-tone photograph instead of the formulas")
     ap.add_argument("--cutout", help="use a sky-removed PNG (see tools/cut-sky.py)")
-    ap.add_argument("--boxes", action="store_true",
-                    help="wrap each text group in a box that hugs it")
     ap.add_argument("--duotone", metavar="SHADOW,HIGHLIGHT",
                     help="two colours for the photograph, e.g. '#1b2a4a,#ff8a75'")
     ap.add_argument("-o", "--out", required=True)
@@ -1114,4 +1091,4 @@ if __name__ == "__main__":
                     default="stack",
                     help="stack, listing, festival, or academic")
     args = ap.parse_args()
-    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone, args.boxes)
+    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone)
