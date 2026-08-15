@@ -559,11 +559,11 @@ FESTIVAL = """<!doctype html>
   <div class="art">{art}</div>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="{ground}" stop-opacity=".62"/>
-      <stop offset=".26" stop-color="{ground}" stop-opacity=".26"/>
-      <stop offset=".52" stop-color="{ground}" stop-opacity=".34"/>
-      <stop offset=".74" stop-color="{ground}" stop-opacity=".80"/>
-      <stop offset="1" stop-color="{ground}" stop-opacity=".94"/>
+      <stop offset="0" stop-color="{ground}" stop-opacity=".72"/>
+      <stop offset=".22" stop-color="{ground}" stop-opacity=".50"/>
+      <stop offset=".52" stop-color="{ground}" stop-opacity=".62"/>
+      <stop offset=".76" stop-color="{ground}" stop-opacity=".88"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity=".96"/>
     </linearGradient></defs>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
@@ -577,7 +577,7 @@ FESTIVAL = """<!doctype html>
       <div class="stamps">{full_name}<br>{eyebrow}</div>
     </div>
     <div class="bill">{programme}</div>
-    <div class="dates"><span>{days}</span><span class="month">{month}</span></div>
+    <div class="dates"><span>{days_range}</span><span class="month">{month} {yyyy}</span></div>
     <div class="cols">
       <div><h4>Organisers</h4><ul>{organisers}</ul></div>
       <div class="r"><h4>Venue</h4><ul><li>{venue_name}<span> {city}, {country}</span></li></ul>
@@ -1005,6 +1005,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None):
         sessions_list=sessions_list,
         organisers=organisers,
         days=esc(days),
+        days_range=esc('–'.join(str(d['date']).split('-')[-1] for d in program['days'])),
         bill_academic=bill.replace("<sup>", "<span>(").replace("</sup>", ")</span>")
                           .replace("<li>", "<li><b>").replace("<span>(", "</b><span>("),
         dates_long=esc(site["dates"]),
