@@ -98,6 +98,24 @@ def picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct):
     return a**gamma
 
 
+def duotone_map(source, cols, rows, shadow, highlight):
+    """One colour per cell, from a two-colour ramp driven by luminance.
+
+    Different from --tint, which takes the photograph's own hue: here the hue is
+    chosen and only the *position along the ramp* comes from the picture. That
+    is what a duotone is, and it is why it holds together as one image where a
+    tinted photograph does not — every tile is on the same two-colour line.
+    """
+    im = ImageOps.exif_transpose(Image.open(source))
+    if "A" in im.getbands():
+        im = Image.alpha_composite(Image.new("RGBA", im.size, (128, 128, 128, 255)), im.convert("RGBA"))
+    grey = ImageOps.autocontrast(im.convert("L"), cutoff=(1, 2))
+    v = np.asarray(grey.resize((cols, rows), Image.BOX), dtype=np.float64)[:, :, None] / 255.0
+    a = np.array([int(shadow.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float64)
+    b = np.array([int(highlight.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float64)
+    return np.clip(a + (b - a) * v, 0, 255).astype(np.uint8)
+
+
 def tint_map(source, cols, rows, cell, row_h, base, strength, boost, lift):
     """One colour per cell, taken from the picture and pulled towards `base`.
 
@@ -214,7 +232,7 @@ def flat_target(rows, bands, cols, level, wobble, seed=7):
 
 
 def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour,
-         diffuse, flat, wobble, standalone, tint, tint_boost, flatten, tint_lift, invert):
+         diffuse, flat, wobble, standalone, tint, tint_boost, flatten, tint_lift, invert, duotone):
     if flat is None and not source:
         sys.exit("give an image, or --flat TONE for a field with no picture in it")
     lut = json.loads(LUT.read_text(encoding="utf-8"))
@@ -282,7 +300,10 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     groups = group_by_width(entries)
     holes = None if flat is not None else alpha_grid(source, cols, rows)
     tints = None
-    if tint > 0 and source:
+    if duotone and source:
+        shadow, highlight = duotone.split(",")
+        tints = duotone_map(source, cols, rows, shadow, highlight)
+    elif tint > 0 and source:
         tints = tint_map(source, cols, rows, cell, row_h, colour if colour.startswith("#") else "#ffffff",
                          tint, tint_boost, tint_lift)
 
@@ -441,6 +462,8 @@ if __name__ == "__main__":
                     help="saturation applied before tinting; 1 leaves the photograph alone")
     ap.add_argument("--tint-lift", type=float, default=0.0, metavar="0-1",
                     help="how much of the fill's brightness comes from the ink rather than the photo")
+    ap.add_argument("--duotone", metavar="SHADOW,HIGHLIGHT",
+                    help="colour each formula from a two-colour ramp, by the picture's luminance")
     ap.add_argument("--invert", action="store_true",
                     help="ink follows the shadows, for a light ground")
     ap.add_argument("--colour", default="currentColor")
@@ -448,4 +471,4 @@ if __name__ == "__main__":
     main(args.source, args.out, args.width, args.height, args.gamma,
          args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse,
          args.flat, args.wobble, args.standalone, args.tint, args.tint_boost, args.flatten,
-         args.tint_lift, args.invert)
+         args.tint_lift, args.invert, args.duotone)

@@ -339,7 +339,7 @@ TEMPLATE = """<!doctype html>
   .qr-say b {{ display:block; font-size:5.2mm; color:{ink}; letter-spacing:.06em; }}
   .qr-say span {{ display:block; font-size:4mm; color:{cool}; margin-top:1.2mm; text-transform:none; letter-spacing:.02em; }}
 </style>
-<div class="sheet">
+<div class="sheet{boxed}">
   <div class="art">{art}</div>
   <div class="fade"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1">
@@ -443,7 +443,7 @@ LISTING = """<!doctype html>
     line-height:1.5; text-align:right; margin-top:5mm; opacity:.82;
   }}
 </style>
-<div class="sheet"><div class="frame">
+<div class="sheet{boxed}"><div class="frame">
   <div class="row">
     <div class="cell list"><ul>{listing}</ul></div>
     <div class="cell month">
@@ -501,14 +501,31 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.16em;
     text-transform:uppercase; color:{hot}; text-align:right; line-height:1.7;
   }}
+  /* Boxes that hug what they hold, rather than one panel behind everything.
+     Each is only as wide as its own text, which is what makes them read as
+     labels stuck to the picture instead of as a background. */
+  .boxed .slot,
+  .boxed .longname,
+  .boxed .stamps,
+  .boxed .daymark,
+  .boxed .rail {{
+    display:inline-block; box-sizing:border-box;
+    background:rgba(9,15,26,.82); border:.3mm solid rgba(255,138,117,.45);
+    padding:3.5mm 5mm;
+  }}
+  .boxed .slot {{ text-align:right; margin-bottom:4mm; }}
+  .boxed .daymark {{ padding:2mm 4mm; margin-bottom:3mm; }}
+  .boxed .longname {{ padding:2.4mm 4mm; }}
+  .boxed .stamps {{ padding:2.4mm 4mm; }}
+  .boxed .rail {{ padding:5mm 3mm; }}
   /* Mixed case, and the four letters of the acronym in the accent — the name
      is written so that K, O, L and T fall where they do, and capitals would
      hide it. */
   .longname {{
-    font-family:"Inter Tight",sans-serif; font-weight:500; font-size:8.4mm;
-    letter-spacing:-.012em; color:{ink}; margin:3mm 0 0;
+    font-family:"JetBrains Mono",monospace; font-weight:400; font-size:5mm;
+    letter-spacing:.055em; color:{cool}; margin:3.5mm 0 0;
   }}
-  .longname b {{ color:{hot}; font-weight:700; }}
+  .longname b {{ color:{hot}; font-weight:600; }}
   /* The two rotated blocks down the left edge. */
   .rails {{ position:absolute; left:20mm; top:118mm; display:flex; gap:9mm; }}
   .rail {{
@@ -521,14 +538,7 @@ FESTIVAL = """<!doctype html>
     letter-spacing:.06em; margin-right:3mm;
   }}
   /* The programme, against one right edge. */
-  /* The programme gets a ground of its own too, the way the sheet this follows
-     sets its tables on solid blocks over the gradient. It stops short of the
-     left edge, so the picture keeps a clear half. */
-  .bill {{
-    margin:10mm 0 0 auto; text-align:right; width:252mm;
-    background:rgba(9,15,26,.74); padding:8mm 10mm 6mm; box-sizing:border-box;
-    border-left:.3mm solid rgba(255,138,117,.34);
-  }}
+  .bill {{ margin:10mm 0 0 auto; text-align:right; width:252mm; }}
   .slot {{ margin:0 0 6.5mm; }}
   .slot-head {{
     display:inline-flex; align-items:baseline; gap:5mm;
@@ -596,7 +606,7 @@ FESTIVAL = """<!doctype html>
                   text-transform:none; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
-<div class="sheet">
+<div class="sheet{boxed}">
   <div class="art">{art}</div>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
@@ -731,7 +741,7 @@ ACADEMIC = """<!doctype html>
   }}
   .site span {{ color:{cool}; font-size:4.6mm; }}
 </style>
-<div class="sheet">
+<div class="sheet{boxed}">
   <div class="art">{art}</div>
   <div class="wrap">
     <h1>{mark} {year}<br>{full_title}</h1>
@@ -819,7 +829,7 @@ CIVIC = """<!doctype html>
   .qr-plate {{ position:absolute; left:26mm; bottom:22mm; width:36mm; height:36mm; background:#fff; padding:1.8mm; box-sizing:border-box; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
-<div class="sheet">
+<div class="sheet{boxed}">
   <div class="shape"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426 600" preserveAspectRatio="none">
     <path d="M196 322 L300 246 L300 322 L404 246 L404 486 L300 486 L300 412 L196 486 Z" fill="{sky}"/>
   </svg></div>
@@ -903,7 +913,7 @@ BAUHAUS = """<!doctype html>
   .qr-plate {{ position:absolute; right:22mm; top:150mm; width:34mm; height:34mm; background:{paper}; padding:1.6mm; box-sizing:border-box; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
-<div class="sheet">
+<div class="sheet{boxed}">
   <div class="hair vline"></div>
   <div class="disc"></div>
   <div class="plate">{art}</div>
@@ -949,7 +959,7 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
-def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None):
+def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None, boxes=False):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
@@ -1060,6 +1070,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         country=esc(site["country"]),
         cta_short="Register",
         acronym_name=acronym_html(site["full_name"], mark),
+        boxed=" boxed" if boxes else "",
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
         yyyy=esc(str(program["days"][0]["date"]).split("-")[0]),
@@ -1093,6 +1104,8 @@ if __name__ == "__main__":
     ap.add_argument("--art", help="the formula art SVG to inline")
     ap.add_argument("--photo", help="use a two-tone photograph instead of the formulas")
     ap.add_argument("--cutout", help="use a sky-removed PNG (see tools/cut-sky.py)")
+    ap.add_argument("--boxes", action="store_true",
+                    help="wrap each text group in a box that hugs it")
     ap.add_argument("--duotone", metavar="SHADOW,HIGHLIGHT",
                     help="two colours for the photograph, e.g. '#1b2a4a,#ff8a75'")
     ap.add_argument("-o", "--out", required=True)
@@ -1101,4 +1114,4 @@ if __name__ == "__main__":
                     default="stack",
                     help="stack, listing, festival, or academic")
     args = ap.parse_args()
-    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone)
+    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone, args.boxes)
