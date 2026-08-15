@@ -157,7 +157,7 @@ def flat_target(rows, bands, cols, level, wobble, seed=7):
 
 
 def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour,
-         diffuse, flat, wobble):
+         diffuse, flat, wobble, standalone):
     if flat is None and not source:
         sys.exit("give an image, or --flat TONE for a field with no picture in it")
     lut = json.loads(LUT.read_text(encoding="utf-8"))
@@ -262,6 +262,37 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
             placed += 1
         prev_row = row_ids
 
+    if standalone:
+        # One <path> per placement, transform baked in, no <defs> and no <use>.
+        # Illustrator and most drawing programs will open a <use> tree, but they
+        # expand it into linked copies that are awkward to select and to outline,
+        # and some drop the stroke-width that the <use> carried. Written out
+        # flat, every formula arrives as an ordinary path with its own stroke —
+        # which is what you need if you are going to edit it by hand. The file
+        # is several times larger; that does not matter for a working file.
+        parts = []
+        for i, x, y, w, h, sw, _ in uses:
+            d, vb = paths[i]
+            vb_w, vb_h = float(vb.split()[2]), float(vb.split()[3])
+            k = w / vb_w  # the symbol's units are finer than a pixel; see prep-formulas.py
+            stroke = f' stroke-width="{sw:.3f}"' if sw > 0.005 else ' stroke="none"'
+            parts.append(
+                f'<path transform="translate({x:.1f} {y:.1f}) scale({k:.5f})" d="{d}"{stroke}/>'
+            )
+        svg = (
+            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
+            f'width="{width}" height="{height}">'
+            f'<g fill="{colour}" stroke="{colour}" stroke-linejoin="round" stroke-linecap="round">'
+            + "".join(parts)
+            + "</g></svg>"
+        )
+        out_path = Path(out_path)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(svg, encoding="utf-8")
+        print(f"  {len(parts)} paths, flattened for hand editing")
+        print(f"  -> {out_path} ({out_path.stat().st_size // 1024} KB)")
+        return
+
     used_ids = sorted({u[0] for u in uses}, key=lambda s: int(s[2:]))
     defs = "".join(
         f'<symbol id="{i}" viewBox="{paths[i][1]}" overflow="visible"><path d="{paths[i][0]}"/></symbol>'
@@ -314,8 +345,10 @@ if __name__ == "__main__":
                     help="no picture: fill with one even tone in 0-1, for a field meant to move")
     ap.add_argument("--wobble", type=float, default=0.12,
                     help="disturbance on a flat target, so the solver does not repeat one answer")
+    ap.add_argument("--standalone", action="store_true",
+                    help="flat <path> per formula, no <use> — for Illustrator and the like")
     ap.add_argument("--colour", default="currentColor")
     args = ap.parse_args()
     main(args.source, args.out, args.width, args.height, args.gamma,
          args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse,
-         args.flat, args.wobble)
+         args.flat, args.wobble, args.standalone)
