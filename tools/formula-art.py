@@ -77,7 +77,7 @@ def picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct):
     return a**gamma
 
 
-def tint_map(source, cols, rows, cell, row_h, base, strength, boost):
+def tint_map(source, cols, rows, cell, row_h, base, strength, boost, lift):
     """One colour per cell, taken from the picture and pulled towards `base`.
 
     Density alone asks the eye to read a photograph through one variable, and a
@@ -95,19 +95,21 @@ def tint_map(source, cols, rows, cell, row_h, base, strength, boost):
     if boost != 1.0:
         im = ImageEnhance.Color(im).enhance(boost)
 
-    # The photograph's own colour, untouched. `strength` is the only thing done
-    # to it, and at 1 it does nothing at all: each formula is painted exactly
-    # the colour of the picture where it stands.
-    #
-    # Note what this hands over. The density already carries the picture's light
-    # and shade, so a fill that carries them too doubles the effect — dark areas
-    # are drawn sparsely *and* in a colour close to the ground. That is a real
-    # property of the result, not a fault in it, and it is the price of the
-    # colours being the photograph's rather than an interpretation of them.
-    a = np.asarray(im, dtype=np.float64)
+    b = np.array([int(base[i:i + 2], 16) for i in (1, 3, 5)], dtype=np.float64)
+    base_v = float(np.asarray(Image.new("RGB", (1, 1), tuple(int(x) for x in b)).convert("HSV"))[0, 0, 2])
+
+    # `lift` decides how much of the picture's brightness the fill is allowed to
+    # carry. It matters because the density is already carrying it: where the
+    # formulas are sparse, painting them near the colour of the ground as well
+    # loses the area completely — which is exactly what "some parts show nothing"
+    # is. At 1 the fill keeps only hue and saturation and every tile has the
+    # same weight of ink; at 0 it is the photograph untouched.
+    hsv = np.asarray(im.convert("HSV"), dtype=np.float64)
+    hsv[:, :, 2] = hsv[:, :, 2] * (1.0 - lift) + base_v * lift
+    a = np.asarray(Image.fromarray(np.clip(hsv, 0, 255).astype(np.uint8), "HSV").convert("RGB"),
+                   dtype=np.float64)
     if strength >= 1.0:
         return np.clip(a, 0, 255).astype(np.uint8)
-    b = np.array([int(base[i:i + 2], 16) for i in (1, 3, 5)], dtype=np.float64)
     return np.clip(b + (a - b) * strength, 0, 255).astype(np.uint8)
 
 
@@ -191,7 +193,7 @@ def flat_target(rows, bands, cols, level, wobble, seed=7):
 
 
 def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour,
-         diffuse, flat, wobble, standalone, tint, tint_boost, flatten):
+         diffuse, flat, wobble, standalone, tint, tint_boost, flatten, tint_lift):
     if flat is None and not source:
         sys.exit("give an image, or --flat TONE for a field with no picture in it")
     lut = json.loads(LUT.read_text(encoding="utf-8"))
@@ -253,7 +255,7 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     tints = None
     if tint > 0 and source:
         tints = tint_map(source, cols, rows, cell, row_h, colour if colour.startswith("#") else "#ffffff",
-                         tint, tint_boost)
+                         tint, tint_boost, tint_lift)
 
     usage, uses = {}, []
     prev_row = None
@@ -405,8 +407,11 @@ if __name__ == "__main__":
                     help="pull each formula towards the picture's own colour there")
     ap.add_argument("--tint-boost", type=float, default=1.0,
                     help="saturation applied before tinting; 1 leaves the photograph alone")
+    ap.add_argument("--tint-lift", type=float, default=0.0, metavar="0-1",
+                    help="how much of the fill's brightness comes from the ink rather than the photo")
     ap.add_argument("--colour", default="currentColor")
     args = ap.parse_args()
     main(args.source, args.out, args.width, args.height, args.gamma,
          args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse,
-         args.flat, args.wobble, args.standalone, args.tint, args.tint_boost, args.flatten)
+         args.flat, args.wobble, args.standalone, args.tint, args.tint_boost, args.flatten,
+         args.tint_lift)

@@ -45,6 +45,8 @@ PALETTE = {
     "cool": "#93a2b8",
     "cool_dim": "#6d7f96",
     "hot": "#ff8a75",
+    "gold": "#f2cda0",  # the warm line an academic sheet puts its dates in
+    "band": "#0b1523",
     "rule": "rgba(255,255,255,.18)",
     "chip": "rgba(255,255,255,.34)",
 }
@@ -498,6 +500,103 @@ def listing_html(program):
     return "".join(out)
 
 
+ACADEMIC = """<!doctype html>
+<meta charset="utf-8">
+<title>{name} — A2 poster, academic</title>
+<style>
+  @page {{ size: 426mm 600mm; margin: 0; }}
+  @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; }}
+  .sheet {{
+    position:relative; width:426mm; height:600mm; overflow:hidden;
+    background:{ground}; color:{ink}; font-family:"Inter Tight",sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }}
+  /* The picture is an accent here, not a field. In the sheet this follows, a
+     wireframe surface runs down the right edge and into the corners and the
+     type sits on plain ground; the formulas do the same job, held right back
+     and masked away from the column the names occupy. */
+  .art {{ position:absolute; inset:0; overflow:hidden; opacity:.62; }}
+  .art svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  .art {{
+    -webkit-mask-image: radial-gradient(115% 78% at 108% 30%, #000 12%, transparent 62%),
+                        radial-gradient(85% 55% at -8% 88%, #000 8%, transparent 60%);
+    mask-image: radial-gradient(115% 78% at 108% 30%, #000 12%, transparent 62%),
+                radial-gradient(85% 55% at -8% 88%, #000 8%, transparent 60%);
+  }}
+  .wrap {{ position:absolute; inset:0; padding:26mm 24mm 0; display:flex; flex-direction:column; }}
+  h1 {{
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:24mm;
+    line-height:1.05; letter-spacing:-.02em; margin:0 0 10mm; color:#fff;
+  }}
+  .when {{
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:11mm;
+    line-height:1.36; color:{gold}; margin:0 0 14mm;
+  }}
+  .when span {{ display:block; }}
+  .when .thm {{ color:{ink}; font-weight:500; font-size:8.6mm; margin-top:3mm; }}
+  .bill {{ display:grid; grid-template-columns:1fr 1fr; gap:9mm 12mm; margin:0; padding:0; }}
+  .bill li {{ list-style:none; margin:0 0 9mm; }}
+  .bill b {{
+    display:block; font-size:13mm; font-weight:700; line-height:1.1;
+    letter-spacing:-.014em; color:#fff;
+  }}
+  .bill span {{
+    display:block; font-size:7.6mm; font-weight:400; line-height:1.2;
+    color:{cool}; margin-top:1.2mm;
+  }}
+  /* The strip along the foot, a shade darker than the sheet. */
+  .band {{
+    position:absolute; left:0; right:0; bottom:0; height:118mm;
+    background:{band}; border-top:.4mm solid rgba(255,255,255,.10);
+    padding:14mm 24mm; box-sizing:border-box; display:flex; gap:14mm; align-items:flex-start;
+  }}
+  .band h4 {{
+    font-family:"Inter Tight",sans-serif; font-size:7mm; font-weight:700;
+    color:{gold}; margin:0 0 4.5mm;
+  }}
+  .orgs {{ flex:1; }}
+  .orgs ul {{ margin:0; padding:0; list-style:none; }}
+  .orgs li {{ font-size:7mm; font-weight:700; color:#fff; line-height:1.52; }}
+  .orgs li span {{ font-weight:400; color:{cool}; }}
+  .cta {{ text-align:center; }}
+  .qr-plate {{ width:44mm; height:44mm; background:#fff; padding:2mm; box-sizing:border-box; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+  .cta b {{
+    display:block; font-family:"Inter Tight",sans-serif; font-size:6.4mm;
+    font-weight:700; color:{gold}; margin-top:3.5mm;
+  }}
+  .site {{
+    position:absolute; left:24mm; right:24mm; bottom:9mm;
+    font-family:"Inter Tight",sans-serif; font-size:5.6mm; font-weight:500;
+    color:#fff; display:flex; justify-content:space-between; align-items:baseline;
+  }}
+  .site span {{ color:{cool}; font-size:4.6mm; }}
+</style>
+<div class="sheet">
+  <div class="art">{art}</div>
+  <div class="wrap">
+    <h1>{mark} {year}<br>{full_title}</h1>
+    <p class="when"><span>{dates_long}</span><span>{venue_name}, {city}, {country}</span><span class="thm">{theme}</span></p>
+    <ul class="bill">{bill_academic}</ul>
+  </div>
+  <div class="band">
+    <div class="orgs">
+      <h4>Organisers</h4>
+      <ul>{organisers}</ul>
+    </div>
+    <div class="cta">
+      <div class="qr-plate">{qr}</div>
+      <b>{cta_short}</b>
+    </div>
+  </div>
+  <div class="site"><span>{hosts}</span><b>{url}</b></div>
+</div>
+"""
+
+
 def festival_bits(program, organizers, site):
     """The pieces the festival sheet needs that the others do not."""
     bill, sess = [], []
@@ -539,7 +638,7 @@ def main(art_path, out_path, layout="stack"):
             (venue["name"], f"{site['venue']}, {site['city']}"),
         ]
     )
-    tpl = {"listing": LISTING, "festival": FESTIVAL}.get(layout, TEMPLATE)
+    tpl = {"listing": LISTING, "festival": FESTIVAL, "academic": ACADEMIC}.get(layout, TEMPLATE)
     organizers = yaml.safe_load((DATA / "organizers.yml").read_text(encoding="utf-8"))
     bill, sessions_list, organisers, days = festival_bits(program, organizers, site)
     month = ["January", "February", "March", "April", "May", "June", "July",
@@ -571,6 +670,17 @@ def main(art_path, out_path, layout="stack"):
         sessions_list=sessions_list,
         organisers=organisers,
         days=esc(days),
+        bill_academic=bill.replace("<sup>", "<span>(").replace("</sup>", ")</span>")
+                          .replace("<li>", "<li><b>").replace("<span>(", "</b><span>("),
+        dates_long=esc(site["dates"]),
+        city=esc(site["city"]),
+        country=esc(site["country"]),
+        cta_short="Register",
+        full_title=esc(" ".join(
+            w if w.isupper() and len(w) > 1
+            else w.lower() if w.lower() in ("on", "of", "and", "the", "for", "in")
+            else w.capitalize()
+            for w in site["full_name"].split())),
         reg_note=esc((site["hero_actions"][0].get("note") or "Opens soon")),
         **PALETTE,
     )
@@ -586,7 +696,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--art", required=True, help="the formula art SVG to inline")
     ap.add_argument("-o", "--out", required=True)
-    ap.add_argument("--layout", choices=("stack", "listing", "festival"), default="stack",
-                    help="stack: art behind the type; listing: ruled boxes; festival: bill of names")
+    ap.add_argument("--layout", choices=("stack", "listing", "festival", "academic"), default="stack",
+                    help="stack, listing, festival, or academic")
     args = ap.parse_args()
     main(args.art, args.out, args.layout)
