@@ -17,6 +17,7 @@ rasterised on the way to PDF — measured, Chrome baked it at 863 px across a
 """
 
 import argparse
+import base64
 import html
 import io
 import re
@@ -26,6 +27,7 @@ from pathlib import Path
 try:
     import segno
     import yaml
+    from PIL import Image, ImageEnhance, ImageOps
 except ModuleNotFoundError as exc:  # pragma: no cover
     sys.exit(f"missing dependency '{exc.name}'\n  pip install pyyaml segno")
 
@@ -47,6 +49,14 @@ PALETTE = {
     "hot": "#ff8a75",
     "gold": "#f2cda0",  # the warm line an academic sheet puts its dates in
     "band": "#0b1523",
+    # The light-ground layouts. Ink on paper rather than light on a dark field,
+    # which reverses what the artwork has to do — see formula-art.py --invert.
+    "paper": "#f4f1ea",
+    "paper2": "#ffffff",
+    "carbon": "#1b1b1b",
+    "carbon2": "#5a5a5a",
+    "accent": "#e8503a",
+    "sky": "#4ec3e0",
     "rule": "rgba(255,255,255,.18)",
     "chip": "rgba(255,255,255,.34)",
 }
@@ -54,6 +64,46 @@ PALETTE = {
 
 def esc(s):
     return html.escape(str(s), quote=False)
+
+
+def photo_svg(source, shadow, highlight, width, height, contrast=0.92):
+    """The photograph itself, in two tones, wrapped so a layout can drop it in
+    wherever it would have put the formulas.
+
+    Same reduction the website's backdrop uses: luminance, stretched to its own
+    range, then mapped onto a ramp between two colours of the sheet. A poster
+    that is one ink wants its picture in that ink.
+
+    It is wrapped in an SVG because every layout here places its artwork by
+    inlining one — this way the plain-photograph variants need no separate code
+    path, only a different file.
+
+    One thing to know before printing it. The source is 1280px across; an A2
+    sheet at 300 dpi wants about 5000. Enlarged that far the photograph is
+    noticeably soft, which is the objection that made a vector picture worth
+    building in the first place. At normal viewing distance for a poster it is
+    acceptable; held at arm's length it is not.
+    """
+    im = ImageOps.exif_transpose(Image.open(source)).convert("RGB")
+    im = ImageOps.fit(im, (width, height), Image.LANCZOS, centering=(0.5, 0.45))
+    grey = ImageOps.autocontrast(ImageOps.grayscale(im), cutoff=(1, 2))
+    grey = ImageEnhance.Contrast(grey).enhance(contrast)
+    a = tuple(int(shadow.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+    b = tuple(int(highlight.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+    ramp = []
+    for ch in range(3):
+        ramp += [round(a[ch] + (b[ch] - a[ch]) * (v / 255)) for v in range(256)]
+    toned = grey.convert("RGB").point(ramp)
+    buf = io.BytesIO()
+    toned.save(buf, "JPEG", quality=88, optimize=True, progressive=True)
+    data = base64.b64encode(buf.getvalue()).decode("ascii")
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+        f'viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+        f'preserveAspectRatio="xMidYMid slice">'
+        f'<image x="0" y="0" width="{width}" height="{height}" '
+        f'preserveAspectRatio="xMidYMid slice" href="data:image/jpeg;base64,{data}"/></svg>'
+    )
 
 
 def qr_svg(url, dark, light=None):
@@ -597,6 +647,179 @@ ACADEMIC = """<!doctype html>
 """
 
 
+CIVIC = """<!doctype html>
+<meta charset="utf-8">
+<title>{name} — A2 poster, civic</title>
+<style>
+  @page {{ size: 426mm 600mm; margin: 0; }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter"; font-weight:400 700; src:url("fonts/inter-latin.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; }}
+  .sheet {{
+    position:relative; width:426mm; height:600mm; overflow:hidden;
+    background:{paper2}; color:{carbon}; font-family:"Inter",sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }}
+  /* The chevron. One flat shape, cut from the ground, that the rest of the
+     sheet is arranged around — the whole device of the poster this follows. */
+  .shape {{ position:absolute; inset:0; }}
+  .shape svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  /* And the picture as a band along the foot, in ink rather than light. */
+  .band {{ position:absolute; left:0; right:0; bottom:0; height:170mm; overflow:hidden; }}
+  .band svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  .rail {{
+    position:absolute; right:34mm; top:34mm; height:250mm;
+    border:1.2mm solid {sky}; padding:9mm 7mm; box-sizing:border-box;
+  }}
+  .rail h1 {{
+    writing-mode:vertical-rl; margin:0; font-family:"Inter Tight",sans-serif;
+    font-weight:700; font-size:19mm; letter-spacing:.06em; line-height:1;
+    text-transform:uppercase; color:{carbon};
+  }}
+  .rail2 {{
+    position:absolute; right:12mm; top:34mm;
+    writing-mode:vertical-rl; font-family:"Inter Tight",sans-serif;
+    font-weight:700; font-size:11mm; letter-spacing:.1em; text-transform:uppercase;
+    color:{carbon};
+  }}
+  .blurb {{
+    position:absolute; right:14mm; top:300mm; width:60mm;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:7mm;
+    line-height:1.3; color:{carbon};
+  }}
+  .left {{ position:absolute; left:26mm; top:104mm; width:146mm; }}
+  .kicker {{
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:6.4mm;
+    letter-spacing:.06em; text-transform:uppercase; margin:0 0 6mm; line-height:1.24;
+  }}
+  .when {{ font-family:"Inter Tight",sans-serif; font-weight:700; font-size:9mm; line-height:1.18; margin:0 0 3mm; }}
+  .where {{ font-size:4.8mm; line-height:1.4; color:{carbon2}; margin:0 0 14mm; }}
+  .grp {{ margin:0 0 9mm; }}
+  .grp h4 {{
+    font-family:"Inter Tight",sans-serif; font-weight:500; font-size:4.2mm;
+    letter-spacing:.1em; text-transform:uppercase; color:{carbon2}; margin:0 0 2.5mm;
+  }}
+  .grp ul {{ margin:0; padding:0; list-style:none; }}
+  .grp li {{ margin:0 0 3.4mm; }}
+  .grp b {{ display:block; font-family:"Inter Tight",sans-serif; font-weight:700; font-size:8mm; line-height:1.1; }}
+  .grp span {{ display:block; font-size:4.4mm; color:{carbon2}; line-height:1.34; margin-top:.8mm; }}
+  .side {{ position:absolute; right:14mm; top:336mm; width:104mm; font-size:4.8mm; line-height:1.46; color:{carbon}; }}
+  .side h4 {{
+    font-family:"Inter Tight",sans-serif; font-weight:500; font-size:4mm;
+    letter-spacing:.1em; text-transform:uppercase; color:{carbon2}; margin:0 0 2mm;
+  }}
+  .side ul {{ margin:0 0 8mm; padding:0; list-style:none; }}
+  .side a {{ color:{carbon}; font-weight:700; }}
+  .qr-plate {{ position:absolute; left:26mm; bottom:22mm; width:36mm; height:36mm; background:#fff; padding:1.8mm; box-sizing:border-box; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+</style>
+<div class="sheet">
+  <div class="shape"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426 600" preserveAspectRatio="none">
+    <path d="M196 322 L300 246 L300 322 L404 246 L404 486 L300 486 L300 412 L196 486 Z" fill="{sky}"/>
+  </svg></div>
+  <div class="band">{art}</div>
+  <div class="rail"><h1>{mark} {year}</h1></div>
+  <div class="rail2">{full_name}</div>
+  <p class="blurb">{theme}</p>
+  <div class="left">
+    <p class="kicker">{eyebrow}</p>
+    <p class="when">{dates_long}</p>
+    <p class="where">{venue_name}<br>{city}, {country}</p>
+    <div class="grp"><h4>Day 1 · {d1}</h4><ul>{day1}</ul></div>
+    <div class="grp"><h4>Day 2 · {d2}</h4><ul>{day2}</ul></div>
+  </div>
+  <div class="side">
+    <h4>Organisers</h4><ul>{organisers}</ul>
+    <p>Programme and registration<br><a>{url}</a></p>
+  </div>
+  <div class="qr-plate">{qr}</div>
+</div>
+"""
+
+
+BAUHAUS = """<!doctype html>
+<meta charset="utf-8">
+<title>{name} — A2 poster, bauhaus</title>
+<style>
+  @page {{ size: 426mm 600mm; margin: 0; }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter"; font-weight:400 700; src:url("fonts/inter-latin.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; }}
+  .sheet {{
+    position:relative; width:426mm; height:600mm; overflow:hidden;
+    background:{paper}; color:{carbon}; font-family:"Inter",sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }}
+  .hair {{ position:absolute; background:rgba(27,27,27,.22); }}
+  .vline {{ left:212mm; top:0; bottom:0; width:.25mm; }}
+  /* The disc, half behind the picture. */
+  .disc {{ position:absolute; left:96mm; top:214mm; width:150mm; height:150mm; border-radius:50%; background:{accent}; }}
+  .plate {{ position:absolute; left:212mm; top:214mm; right:0; height:290mm; overflow:hidden; }}
+  .plate svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  h1 {{
+    position:absolute; left:24mm; top:26mm; margin:0;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:78mm;
+    line-height:.86; letter-spacing:-.045em; text-transform:lowercase;
+  }}
+  .motto {{
+    position:absolute; left:24mm; top:246mm; margin:0; width:64mm;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:11mm;
+    line-height:1.18; letter-spacing:-.02em; text-transform:lowercase;
+  }}
+  .motto i {{ font-style:normal; color:{accent}; }}
+  .meta {{ position:absolute; left:228mm; top:30mm; width:110mm; font-size:6.4mm; line-height:1.44; text-transform:lowercase; }}
+  .meta .lead {{ color:{carbon2}; margin:0 0 6mm; }}
+  .meta .big {{ font-family:"Inter Tight",sans-serif; font-weight:700; font-size:8mm; line-height:1.24; margin:0 0 5mm; }}
+  .meta .red {{ color:{accent}; font-weight:700; margin:0 0 8mm; }}
+  .meta .hours {{ color:{carbon2}; margin:0; }}
+  .dates {{
+    position:absolute; right:22mm; top:26mm; text-align:right;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:19mm; line-height:1.1;
+  }}
+  .dates hr {{ border:0; border-top:.4mm solid {carbon}; margin:3mm 0; }}
+  .dates small {{ display:block; font-size:11mm; font-weight:500; }}
+  .names {{
+    position:absolute; left:24mm; top:398mm; width:172mm; margin:0; padding:0; list-style:none;
+    font-size:6.4mm; line-height:1.66; text-transform:lowercase;
+    columns:2; column-gap:10mm;
+  }}
+  .tickets {{
+    position:absolute; left:24mm; bottom:44mm; font-size:6mm; line-height:1.5; text-transform:lowercase;
+  }}
+  .tickets b {{ display:block; color:{accent}; font-weight:700; }}
+  .swatch {{ position:absolute; left:24mm; bottom:20mm; width:12mm; height:12mm; background:{accent}; }}
+  .dots {{ position:absolute; right:24mm; bottom:26mm; display:grid; grid-template-columns:repeat(5,5mm); gap:4mm; }}
+  .dots i {{ width:2.6mm; height:2.6mm; border-radius:50%; background:{paper}; display:block; }}
+  .credit {{
+    position:absolute; right:6mm; bottom:26mm; writing-mode:vertical-rl;
+    font-size:3.4mm; color:{carbon2};
+  }}
+  .qr-plate {{ position:absolute; right:22mm; top:150mm; width:34mm; height:34mm; background:{paper}; padding:1.6mm; box-sizing:border-box; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+</style>
+<div class="sheet">
+  <div class="hair vline"></div>
+  <div class="disc"></div>
+  <div class="plate">{art}</div>
+  <h1>{mark}<br>{year}</h1>
+  <p class="motto">theory<br>follows<br>practice<i>.</i></p>
+  <div class="meta">
+    <p class="lead">{eyebrow}</p>
+    <p class="big">{venue_name}<br>{city}, {country}</p>
+    <p class="red">{theme}</p>
+    <p class="hours">{full_name}<br>{days_long}</p>
+  </div>
+  <div class="dates">{d1}<hr>{d2}<small>{yyyy}</small></div>
+  <ul class="names">{names_flat}</ul>
+  <div class="qr-plate">{qr}</div>
+  <p class="tickets">programme &amp; registration<br><b>{url}</b></p>
+  <div class="swatch"></div>
+  <div class="dots">{dots}</div>
+  <div class="credit">{hosts}</div>
+</div>
+"""
+
+
 def festival_bits(program, organizers, site):
     """The pieces the festival sheet needs that the others do not."""
     bill, sess = [], []
@@ -620,14 +843,29 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
-def main(art_path, out_path, layout="stack"):
+def main(art_path, out_path, layout="stack", photo=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
 
-    art = Path(art_path).read_text(encoding="utf-8")
-    if "preserveAspectRatio" not in art.split(">", 1)[0]:
-        art = art.replace("<svg ", '<svg preserveAspectRatio="xMidYMid slice" ', 1)
+    if photo:
+        # Light grounds want ink on paper; dark ones want light on the field.
+        light_ground = layout in ("civic", "bauhaus")
+        w, h = (1700, 820) if layout == "civic" else (1700, 2398)
+        if layout == "listing":
+            w, h = 1700, 1520
+        elif layout == "bauhaus":
+            w, h = 1000, 1360
+        art = photo_svg(
+            photo,
+            PALETTE["paper"] if light_ground else "#0a111d",
+            PALETTE["carbon"] if light_ground else PALETTE["art_ink"],
+            w, h,
+        )
+    else:
+        art = Path(art_path).read_text(encoding="utf-8")
+        if "preserveAspectRatio" not in art.split(">", 1)[0]:
+            art = art.replace("<svg ", '<svg preserveAspectRatio="xMidYMid slice" ', 1)
 
     name = site["name"]
     mark, year = (name.rsplit(" ", 1) + [""])[:2] if " " in name else (name, "")
@@ -638,9 +876,20 @@ def main(art_path, out_path, layout="stack"):
             (venue["name"], f"{site['venue']}, {site['city']}"),
         ]
     )
-    tpl = {"listing": LISTING, "festival": FESTIVAL, "academic": ACADEMIC}.get(layout, TEMPLATE)
+    tpl = {"listing": LISTING, "festival": FESTIVAL, "academic": ACADEMIC,
+           "civic": CIVIC, "bauhaus": BAUHAUS}.get(layout, TEMPLATE)
     organizers = yaml.safe_load((DATA / "organizers.yml").read_text(encoding="utf-8"))
     bill, sessions_list, organisers, days = festival_bits(program, organizers, site)
+    day_people = []
+    for d in sessions(program):
+        day_people.append("".join(
+            f'<li><b>{esc(p["name"])}</b><span>{esc(p.get("affil", ""))}'
+            + (f' &middot; {esc(p["topic"])}' if p.get("topic") else "")
+            + "</span></li>"
+            for b in d["blocks"] for p in b["people"]))
+    names_flat = "".join(
+        f'<li>{esc(p["name"].lower())}</li>'
+        for d in sessions(program) for b in d["blocks"] for p in b["people"])
     month = ["January", "February", "March", "April", "May", "June", "July",
              "August", "September", "October", "November", "December"][
         int(str(program["days"][0]["date"]).split("-")[1]) - 1]
@@ -676,6 +925,14 @@ def main(art_path, out_path, layout="stack"):
         city=esc(site["city"]),
         country=esc(site["country"]),
         cta_short="Register",
+        d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
+        d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
+        yyyy=esc(str(program["days"][0]["date"]).split("-")[0]),
+        days_long=esc(site["dates"]),
+        day1=day_people[0],
+        day2=day_people[1] if len(day_people) > 1 else "",
+        names_flat=names_flat,
+        dots="<i></i>" * 15,
         full_title=esc(" ".join(
             w if w.isupper() and len(w) > 1
             else w.lower() if w.lower() in ("on", "of", "and", "the", "for", "in")
@@ -694,9 +951,12 @@ def main(art_path, out_path, layout="stack"):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--art", required=True, help="the formula art SVG to inline")
+    ap.add_argument("--art", help="the formula art SVG to inline")
+    ap.add_argument("--photo", help="use a two-tone photograph instead of the formulas")
     ap.add_argument("-o", "--out", required=True)
-    ap.add_argument("--layout", choices=("stack", "listing", "festival", "academic"), default="stack",
+    ap.add_argument("--layout",
+                    choices=("stack", "listing", "festival", "academic", "civic", "bauhaus"),
+                    default="stack",
                     help="stack, listing, festival, or academic")
     args = ap.parse_args()
-    main(args.art, args.out, args.layout)
+    main(args.art, args.out, args.layout, args.photo)

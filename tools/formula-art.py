@@ -193,7 +193,7 @@ def flat_target(rows, bands, cols, level, wobble, seed=7):
 
 
 def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour,
-         diffuse, flat, wobble, standalone, tint, tint_boost, flatten, tint_lift):
+         diffuse, flat, wobble, standalone, tint, tint_boost, flatten, tint_lift, invert):
     if flat is None and not source:
         sys.exit("give an image, or --flat TONE for a field with no picture in it")
     lut = json.loads(LUT.read_text(encoding="utf-8"))
@@ -220,6 +220,13 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
         target = flat_target(rows, bands, cols, flat, wobble)
     else:
         target = picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct)
+
+    # On white paper the sense of the picture reverses: ink is what makes a
+    # thing dark, so the density has to follow the photograph's shadows rather
+    # than its highlights. Everything downstream is unchanged — only what the
+    # solver is asked for.
+    if invert:
+        target = 1.0 - target
 
     if flatten > 0:
         target = target.mean() + (target - target.mean()) * (1.0 - flatten)
@@ -409,9 +416,11 @@ if __name__ == "__main__":
                     help="saturation applied before tinting; 1 leaves the photograph alone")
     ap.add_argument("--tint-lift", type=float, default=0.0, metavar="0-1",
                     help="how much of the fill's brightness comes from the ink rather than the photo")
+    ap.add_argument("--invert", action="store_true",
+                    help="ink follows the shadows, for a light ground")
     ap.add_argument("--colour", default="currentColor")
     args = ap.parse_args()
     main(args.source, args.out, args.width, args.height, args.gamma,
          args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse,
          args.flat, args.wobble, args.standalone, args.tint, args.tint_boost, args.flatten,
-         args.tint_lift)
+         args.tint_lift, args.invert)
