@@ -466,16 +466,29 @@ body {
   background: url("hero.jpg") 50% 45% / cover no-repeat;
   filter: blur(2px);
 }
-/* The campus written out in formulas, standing in for the photograph rather
-   than sitting on top of it — the art *is* the photograph, redrawn, so leaving
-   the original under it would only muddy both.
-   A mask over a coloured box, not an <img>: the file carries the shape and the
-   box carries the colour, so it follows the theme instead of baking one tone
-   into the asset. Same position and cover sizing the photograph had, so the
-   crop is the one the picture was made for. */
+/* The campus written out in formulas — two layers of the same photograph.
+   ::before is the picture itself, held right down: enough to say where the
+   buildings are, not enough to compete.
+   .hero-art is the picture again, this time showing only through the glyphs.
+   Masking the photograph rather than a flat colour is what makes the image
+   obvious: the formulas are already dense where the picture is bright, so
+   filling them with the picture's own tones puts the two in agreement and the
+   campus reads at a glance instead of having to be looked for.
+   Both take the crop and position the photograph had, so the two register
+   exactly on top of each other. */
 .hero.has-art::before {
-  background: var(--hero-art-ink);
   filter: none;
+  opacity: 0.34;
+}
+.hero-art {
+  position: absolute;
+  inset: -12px;
+  z-index: 0; /* above ::before, below the scrim — later sibling, same layer */
+  pointer-events: none;
+  background: url("hero.jpg") 50% 45% / cover no-repeat;
+  /* Lifted, because the glyphs are hairlines: at the photograph's own tones the
+     thin strokes disappear into the ground they are drawn on. */
+  filter: brightness(1.75) saturate(0.9);
   -webkit-mask: url("hero-art.svg") 50% 45% / cover no-repeat;
   mask: url("hero-art.svg") 50% 45% / cover no-repeat;
 }
