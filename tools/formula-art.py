@@ -136,7 +136,30 @@ def solve_row(target, groups, cols, usage, reuse_w, repeat_w, prev_row):
     return out
 
 
-def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour, diffuse):
+def flat_target(rows, bands, cols, level, wobble, seed=7):
+    """A target with no picture in it — one even tone, gently disturbed.
+
+    For a field that is going to move, the picture must not be in the field.
+    Density that encodes an image and then slides across the hero drags a ghost
+    of that image with it, and two copies of the campus at different offsets
+    read as a double exposure rather than as one photograph. So the moving layer
+    is asked for an even tone and carries only the things that make the
+    technique visible — the mixture of sizes, the weight ladder, the tight
+    partition of every row — while the picture is left to the fixed layer
+    underneath it.
+
+    The wobble is what keeps it from degenerating: an exactly flat target has
+    one cheapest answer and the solver will use it everywhere.
+    """
+    rng = np.random.default_rng(seed)
+    base = np.full((rows, bands, cols), float(level))
+    return np.clip(base + rng.normal(0.0, wobble, base.shape), 0.0, 1.0)
+
+
+def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour,
+         diffuse, flat, wobble):
+    if flat is None and not source:
+        sys.exit("give an image, or --flat TONE for a field with no picture in it")
     lut = json.loads(LUT.read_text(encoding="utf-8"))
     cell, row_h, bands = lut["cell"], lut["row_h"], lut["bands"]
     scale = lut["scale"]
@@ -152,8 +175,11 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     for e in entries:
         e["arr"] = np.asarray(e["sig"], dtype=np.float64)
 
-    flat = np.concatenate([e["arr"].ravel() for e in entries])
-    target = picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct)
+    pool = np.concatenate([e["arr"].ravel() for e in entries])
+    if flat is not None:
+        target = flat_target(rows, bands, cols, flat, wobble)
+    else:
+        target = picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct)
 
     # Then the picture is pushed through the set's own distribution of ink.
     # Linear stretching is not enough and the difference is stark: formulas are
@@ -165,7 +191,7 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     # Matching the histograms asks only for tones the set can actually make,
     # and because the mapping is monotone it costs no contrast: what was
     # lighter stays lighter.
-    order = np.sort(flat)
+    order = np.sort(pool)
     target = np.interp(target, np.linspace(0.0, 1.0, len(order)), order)
 
     # Common scale for the comparison, now that both sides live on the same
@@ -176,7 +202,7 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     # nicely varied field of formulas resembling nothing at all. Percentiles
     # rather than the extremes, so one outlier tile does not compress the rest
     # into the middle.
-    sig_lo, sig_hi = np.percentile(flat, [1, 99])
+    sig_lo, sig_hi = np.percentile(pool, [1, 99])
     span = max(sig_hi - sig_lo, 1e-6)
     for e in entries:
         e["arr"] = np.clip((e["arr"] - sig_lo) / span, 0.0, 1.0)
@@ -273,7 +299,7 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("source", help="image to spell out")
+    ap.add_argument("source", nargs="?", help="image to spell out; omit with --flat")
     ap.add_argument("-o", "--out", default="static/hero-art.svg")
     ap.add_argument("--width", type=int, default=1800)
     ap.add_argument("--height", type=int, default=620)
@@ -284,7 +310,12 @@ if __name__ == "__main__":
     ap.add_argument("--repeat", type=float, default=0.02, help="cost for the formula directly above")
     ap.add_argument("--diffuse", type=float, default=0.55,
                     help="how much of a row's shortfall is carried into the next (0 disables)")
+    ap.add_argument("--flat", type=float, default=None, metavar="TONE",
+                    help="no picture: fill with one even tone in 0-1, for a field meant to move")
+    ap.add_argument("--wobble", type=float, default=0.12,
+                    help="disturbance on a flat target, so the solver does not repeat one answer")
     ap.add_argument("--colour", default="currentColor")
     args = ap.parse_args()
     main(args.source, args.out, args.width, args.height, args.gamma,
-         args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse)
+         args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse,
+         args.flat, args.wobble)

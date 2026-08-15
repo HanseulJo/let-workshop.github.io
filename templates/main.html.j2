@@ -224,12 +224,15 @@
            image, so it takes the hero's ink colour and follows the theme; an
            <img> would have to bake one in. -->
       <div class="hero-art" aria-hidden="true"></div>
+      {%- elif site.hero_background == 'flow' %}
+      <!-- The photograph, seen only through a moving field of formulas. The
+           field carries no picture of its own — see tools/formula-art.py
+           --flat — so the campus stays put while the writing travels. -->
+      <div class="hero-flow" aria-hidden="true"></div>
       {%- else %}
       <!-- Filled in after load, once the formula sprite has been fetched. It is
            decoration: if the fetch fails, or the reader asked for less motion,
-           the hero is simply the photograph.
-           In `flow` this same drifting field is the stencil the photograph is
-           seen through: the writing moves, the picture does not. -->
+           the hero is simply the photograph. -->
       <div class="hero-math" aria-hidden="true"></div>
       {%- endif %}
       <div class="wrap">
@@ -852,7 +855,7 @@
         setLang(LANGS.indexOf(wanted) >= 0 ? wanted : LANGS[0]);
       })();
 
-      {%- if site.hero_background != 'art' %}
+      {%- if site.hero_background == 'drift' %}
       // ---- Formulas tiled across the hero
       //
       // A tight grid, tilted to the same angle as the hatch, drifting along its

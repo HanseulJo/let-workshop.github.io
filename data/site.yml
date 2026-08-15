@@ -37,7 +37,7 @@ eyebrow_ko: 제1회 · 연례 모임
 #          formulas sliding across it, drawn on top rather than cut out of it.
 # Never two of them at once: two layers of formulas over each other make
 # neither legible, and the picture disappears into the noise.
-hero_background: flow
+hero_background: art
 
 theme: Bandits & Deep Learning Theory
 dates: October 7–8, 2026
