@@ -95,20 +95,20 @@ def tint_map(source, cols, rows, cell, row_h, base, strength, boost):
     if boost != 1.0:
         im = ImageEnhance.Color(im).enhance(boost)
 
-    # Hue and saturation from the photograph, brightness from the base. This is
-    # the part that has to be said carefully: the picture's light and shade are
-    # already carried by how much ink each tile puts down, and letting the fill
-    # carry them too darkens every shadow twice — the formulas there are sparse
-    # *and* nearly the colour of the paper, so the whole lower half goes to mud.
-    # Taking only the colour leaves the tone entirely to the density, which is
-    # what the solver spent its effort on.
-    hsv = np.asarray(im.convert("HSV"), dtype=np.float64)
+    # The photograph's own colour, untouched. `strength` is the only thing done
+    # to it, and at 1 it does nothing at all: each formula is painted exactly
+    # the colour of the picture where it stands.
+    #
+    # Note what this hands over. The density already carries the picture's light
+    # and shade, so a fill that carries them too doubles the effect — dark areas
+    # are drawn sparsely *and* in a colour close to the ground. That is a real
+    # property of the result, not a fault in it, and it is the price of the
+    # colours being the photograph's rather than an interpretation of them.
+    a = np.asarray(im, dtype=np.float64)
+    if strength >= 1.0:
+        return np.clip(a, 0, 255).astype(np.uint8)
     b = np.array([int(base[i:i + 2], 16) for i in (1, 3, 5)], dtype=np.float64)
-    base_v = float(np.asarray(Image.new("RGB", (1, 1), tuple(int(x) for x in b)).convert("HSV"))[0, 0, 2])
-    hsv[:, :, 1] *= strength          # how far from grey the ink is allowed
-    hsv[:, :, 2] = base_v             # and every tile the same weight of ink
-    out = np.asarray(Image.fromarray(hsv.astype(np.uint8), "HSV").convert("RGB"), dtype=np.float64)
-    return np.clip(out, 0, 255).astype(np.uint8)
+    return np.clip(b + (a - b) * strength, 0, 255).astype(np.uint8)
 
 
 def group_by_width(entries):
@@ -191,7 +191,7 @@ def flat_target(rows, bands, cols, level, wobble, seed=7):
 
 
 def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour,
-         diffuse, flat, wobble, standalone, tint, tint_boost):
+         diffuse, flat, wobble, standalone, tint, tint_boost, flatten):
     if flat is None and not source:
         sys.exit("give an image, or --flat TONE for a field with no picture in it")
     lut = json.loads(LUT.read_text(encoding="utf-8"))
@@ -210,10 +210,17 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
         e["arr"] = np.asarray(e["sig"], dtype=np.float64)
 
     pool = np.concatenate([e["arr"].ravel() for e in entries])
+    # With the fills taking the photograph's own colour, density no longer has
+    # to carry the tone by itself — and it should not, because the two together
+    # double it and the shadows close up. Pulling the density target towards its
+    # own mean keeps formulas everywhere and lets the colour say what is dark.
     if flat is not None:
         target = flat_target(rows, bands, cols, flat, wobble)
     else:
         target = picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct)
+
+    if flatten > 0:
+        target = target.mean() + (target - target.mean()) * (1.0 - flatten)
 
     # Then the picture is pushed through the set's own distribution of ink.
     # Linear stretching is not enough and the difference is stark: formulas are
@@ -392,12 +399,14 @@ if __name__ == "__main__":
                     help="disturbance on a flat target, so the solver does not repeat one answer")
     ap.add_argument("--standalone", action="store_true",
                     help="flat <path> per formula, no <use> — for Illustrator and the like")
+    ap.add_argument("--flatten", type=float, default=0.0, metavar="0-1",
+                    help="even out the density, for when colour is carrying the tone")
     ap.add_argument("--tint", type=float, default=0.0, metavar="0-1",
                     help="pull each formula towards the picture's own colour there")
-    ap.add_argument("--tint-boost", type=float, default=1.25,
-                    help="saturation applied before tinting")
+    ap.add_argument("--tint-boost", type=float, default=1.0,
+                    help="saturation applied before tinting; 1 leaves the photograph alone")
     ap.add_argument("--colour", default="currentColor")
     args = ap.parse_args()
     main(args.source, args.out, args.width, args.height, args.gamma,
          args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse,
-         args.flat, args.wobble, args.standalone, args.tint, args.tint_boost)
+         args.flat, args.wobble, args.standalone, args.tint, args.tint_boost, args.flatten)
