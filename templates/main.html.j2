@@ -217,11 +217,19 @@
     </nav>
 
     <!-- ===== HERO ===== -->
-    <header class="hero" id="top">
+    <header class="hero{{ ' has-art' if site.hero_background == 'art' }}" id="top">
+      {%- if site.hero_background == 'art' %}
+      <!-- The campus, written out in formulas — see tools/formula-art.py. It is
+           applied as a mask over a coloured box rather than dropped in as an
+           image, so it takes the hero's ink colour and follows the theme; an
+           <img> would have to bake one in. -->
+      <div class="hero-art" aria-hidden="true"></div>
+      {%- else %}
       <!-- Filled in after load, once the formula sprite has been fetched. It is
            decoration: if the fetch fails, or the reader asked for less motion,
            the hero is simply the photograph. -->
       <div class="hero-math" aria-hidden="true"></div>
+      {%- endif %}
       <div class="wrap">
         {% if site.eyebrow %}<p class="eyebrow">{{ t(site.eyebrow, site.eyebrow_ko) }}</p>{% endif %}
         <h1>
@@ -842,6 +850,7 @@
         setLang(LANGS.indexOf(wanted) >= 0 ? wanted : LANGS[0]);
       })();
 
+      {%- if site.hero_background != 'art' %}
       // ---- Formulas tiled across the hero
       //
       // A tight grid, tilted to the same angle as the hatch, drifting along its
@@ -974,6 +983,7 @@
           })
           .catch(function () { /* decoration only — leave the hero as it is */ });
       })();
+      {%- endif %}
 
       // D-day, Korean convention: the day itself is D-DAY, the day before D-1.
       // Computed from calendar dates in the reader's own zone, not from a

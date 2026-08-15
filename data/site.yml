@@ -24,6 +24,16 @@ edition: 1st
 # first of something meant to keep happening.
 eyebrow: Inaugural · Annual Gathering
 eyebrow_ko: 제1회 · 연례 모임
+# What sits behind the hero.
+#   art    the campus written out in formulas, one glyph-block per superpixel.
+#          Regenerate with tools/formula-lut.py then tools/formula-art.py; the
+#          photograph itself is not drawn, because this *is* the photograph.
+#   drift  the earlier treatment — the blurred campus with a tilted field of
+#          formulas sliding across it. Everything for it is still here.
+# Not both: two layers of formulas over each other make neither legible, and
+# the picture disappears into the noise.
+hero_background: art
+
 theme: Bandits & Deep Learning Theory
 dates: October 7–8, 2026
 venue: POSTECH

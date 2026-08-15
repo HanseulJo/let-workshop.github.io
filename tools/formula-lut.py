@@ -98,7 +98,37 @@ def signature(cov, bands, units):
     return out
 
 
-def main(cell, row_h, bands, strokes, target_h) -> None:
+def calibrate(paths, boxes, cell, row_h, scale, levels, max_stroke, sample=18):
+    """Stroke widths that step through *coverage* evenly, not through width.
+
+    Ink does not grow linearly with the stroke: the first fraction of a pixel
+    added to a hairline outline is worth far more than the last, because heavy
+    strokes start filling counters and closing up gaps that were already dark.
+    A ladder of evenly spaced widths therefore bunches most of its rungs at the
+    dark end and leaves the midtones — where a photograph spends most of its
+    time — with almost nothing to choose between. So the curve is measured on a
+    sample of the set and then inverted: pick the widths that land on evenly
+    spaced coverages.
+    """
+    picks = [i for i, p in enumerate(paths) if p is not None]
+    picks = picks[:: max(1, len(picks) // sample)][:sample]
+    sweep = np.linspace(0.0, max_stroke, 21)
+    curve = []
+    for s in sweep:
+        vals = []
+        for i in picks:
+            w, h = boxes[i]
+            units = max(1, int(round(w * scale / cell)))
+            vals.append(raster(paths[i], w, h, units * cell, row_h, scale, s).mean())
+        curve.append(float(np.median(vals)))
+    curve = np.array(curve)
+    # The curve is monotone in principle; enforce it so the inversion is safe.
+    curve = np.maximum.accumulate(curve)
+    wanted = np.linspace(curve[0], curve[-1], levels)
+    return [round(float(x), 3) for x in np.interp(wanted, curve, sweep)]
+
+
+def main(cell, row_h, bands, strokes, target_h, levels, max_stroke) -> None:
     formulas = yaml.safe_load(SOURCE.read_text(encoding="utf-8"))["formulas"]
     prop = FontProperties(size=FONTSIZE)
 
@@ -132,6 +162,10 @@ def main(cell, row_h, bands, strokes, target_h) -> None:
     heights = sorted(b[1] for b in boxes if b)
     median_h = heights[len(heights) // 2]
     scale = target_h * row_h / median_h
+
+    if levels:
+        strokes = calibrate(paths, boxes, cell, row_h, scale, levels, max_stroke)
+        print(f"  calibrated {levels} weights: {strokes}")
 
     entries = []
     for i, (path, box) in enumerate(zip(paths, boxes)):
@@ -183,7 +217,12 @@ if __name__ == "__main__":
     ap.add_argument("--bands", type=int, default=3, help="horizontal bands per cell (default 3)")
     ap.add_argument("--target-height", type=float, default=0.5,
                     help="median formula height as a fraction of the row (default 0.5)")
+    ap.add_argument("--levels", type=int, default=12,
+                    help="number of weights, spaced evenly in coverage (0 to use --strokes)")
+    ap.add_argument("--max-stroke", type=float, default=11.0,
+                    help="heaviest outline to calibrate against, in path units")
     ap.add_argument("--strokes", type=float, nargs="+", default=[0.0, 1.2, 2.6, 4.4],
-                    help="outline widths in path units; more of them is more tones")
+                    help="explicit outline widths, used only when --levels 0")
     args = ap.parse_args()
-    main(args.cell, args.row, args.bands, args.strokes, args.target_height)
+    main(args.cell, args.row, args.bands, args.strokes, args.target_height,
+         args.levels, args.max_stroke)

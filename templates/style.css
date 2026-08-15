@@ -67,6 +67,10 @@
   --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
   --hero-rule: rgba(255, 255, 255, 0.12);
   --hero-accent: #ff8a75;
+  /* The ink the formula art is drawn in. Cool and a step off white: the glyphs
+     are tiny and packed, and at full white the field reads as glare rather
+     than as writing. */
+  --hero-art-ink: #b9cbe4;
 
   /* Body. Korean has no coverage in Inter, so Hangul falls through to the
      platform's UI face and keeps its own metrics. */
@@ -461,6 +465,19 @@ body {
   z-index: 0;
   background: url("hero.jpg") 50% 45% / cover no-repeat;
   filter: blur(2px);
+}
+/* The campus written out in formulas, standing in for the photograph rather
+   than sitting on top of it — the art *is* the photograph, redrawn, so leaving
+   the original under it would only muddy both.
+   A mask over a coloured box, not an <img>: the file carries the shape and the
+   box carries the colour, so it follows the theme instead of baking one tone
+   into the asset. Same position and cover sizing the photograph had, so the
+   crop is the one the picture was made for. */
+.hero.has-art::before {
+  background: var(--hero-art-ink);
+  filter: none;
+  -webkit-mask: url("hero-art.svg") 50% 45% / cover no-repeat;
+  mask: url("hero-art.svg") 50% 45% / cover no-repeat;
 }
 .hero::after {
   z-index: 1;

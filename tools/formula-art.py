@@ -136,7 +136,7 @@ def solve_row(target, groups, cols, usage, reuse_w, repeat_w, prev_row):
     return out
 
 
-def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour):
+def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour, diffuse):
     lut = json.loads(LUT.read_text(encoding="utf-8"))
     cell, row_h, bands = lut["cell"], lut["row_h"], lut["bands"]
     scale = lut["scale"]
@@ -187,8 +187,23 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     usage, uses = {}, []
     prev_row = None
     placed = 0
+    # What one row could not say, the next one is asked to say instead. A
+    # formula covers a dozen cells at once, so a row can only ever approximate
+    # its strip — and left alone those approximations are biased the same way
+    # everywhere, which is what turns a gradient into a flat band. Carrying the
+    # shortfall downward is the same trick that makes dithering work: the error
+    # is not removed, it is spread until it falls below what the eye resolves.
+    carry = np.zeros((bands, cols))
     for r in range(rows):
-        row = solve_row(target[r], groups, cols, usage, reuse_w, repeat_w, prev_row)
+        want = np.clip(target[r] + carry, 0.0, 1.0)
+        row = solve_row(want, groups, cols, usage, reuse_w, repeat_w, prev_row)
+        got = np.zeros((bands, cols))
+        for c, e in row:
+            n = min(e["units"], cols - c)
+            got[:, c : c + n] = e["arr"][:, :n]
+        # Capped: an area the set simply cannot reach would otherwise build up
+        # a debt it never pays off, and drag every row beneath it dark.
+        carry = np.clip((want - got) * diffuse, -0.3, 0.3)
         row_ids = [None] * cols
         for c, e in row:
             usage[e["id"]] = usage.get(e["id"], 0) + 1
@@ -264,7 +279,9 @@ if __name__ == "__main__":
     ap.add_argument("--hi", type=float, default=98.0, help="white point percentile")
     ap.add_argument("--reuse", type=float, default=0.0006, help="cost per previous use of a formula")
     ap.add_argument("--repeat", type=float, default=0.02, help="cost for the formula directly above")
+    ap.add_argument("--diffuse", type=float, default=0.55,
+                    help="how much of a row's shortfall is carried into the next (0 disables)")
     ap.add_argument("--colour", default="currentColor")
     args = ap.parse_args()
     main(args.source, args.out, args.width, args.height, args.gamma,
-         args.reuse, args.repeat, args.lo, args.hi, args.colour)
+         args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse)
