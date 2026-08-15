@@ -153,7 +153,7 @@ TEMPLATE = """<!doctype html>
   /* Only where the type actually is. */
   .fade {{ position:absolute; left:0; right:0; top:150mm; bottom:0; }}
   .fade svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
-  .wrap {{ position:absolute; inset:0; padding:24mm 24mm 20mm; display:flex; flex-direction:column; }}
+  .wrap {{ position:absolute; inset:0; padding:22mm 24mm 18mm; display:flex; flex-direction:column; }}
   .eyebrow {{
     font-family:"JetBrains Mono",monospace; font-size:3.9mm; font-weight:500;
     letter-spacing:.2em; text-transform:uppercase; color:{ink};
@@ -185,7 +185,7 @@ TEMPLATE = """<!doctype html>
   /* The programme. Four columns of small type at the foot, the way a season
      card does it — the poster has to survive being read from a metre away for
      the name and from arm's length for the schedule. */
-  .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:14mm; }}
+  .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:12mm; align-items:start; }}
   .day h3 {{
     font-family:"Inter Tight",sans-serif; font-size:10mm; font-weight:700;
     color:{ink}; margin:0 0 1.6mm;
@@ -194,7 +194,7 @@ TEMPLATE = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:4.6mm; letter-spacing:.12em;
     text-transform:uppercase; color:{hot}; margin:0 0 6.5mm;
   }}
-  .sess {{ margin:0 0 8mm; break-inside:avoid; }}
+  .sess {{ margin:0 0 6.4mm; break-inside:avoid; }}
   .sess h4 {{
     font-family:"JetBrains Mono",monospace; font-size:4.9mm; font-weight:500;
     letter-spacing:.13em; text-transform:uppercase; color:{cool};
@@ -204,7 +204,7 @@ TEMPLATE = """<!doctype html>
   .sess ul {{ margin:0; padding:0; list-style:none; }}
   .sess li {{
     font-family:"Inter Tight",sans-serif; font-size:9.4mm; color:{ink};
-    line-height:1.14; margin:0 0 3.4mm;
+    line-height:1.12; margin:0 0 2.8mm;
   }}
   .sess li b {{ font-weight:700; }}
   .aff {{ color:{cool}; font-weight:500; font-size:6.4mm; }}
@@ -213,7 +213,7 @@ TEMPLATE = """<!doctype html>
     font-size:4.6mm; letter-spacing:.06em; color:{cool_dim}; margin-top:.6mm;
   }}
   .tail {{
-    display:flex; justify-content:space-between; align-items:flex-end; margin-top:8mm;
+    display:flex; justify-content:space-between; align-items:baseline; margin-top:9mm;
     font-family:"JetBrains Mono",monospace; font-size:3.9mm; letter-spacing:.1em;
     text-transform:uppercase; color:{cool}; gap:10mm;
   }}
@@ -221,12 +221,13 @@ TEMPLATE = """<!doctype html>
   /* The QR sits on its own light patch. A code drawn light-on-dark decodes on
      most phones but not all — the quiet zone and the polarity are the two
      things cheap decoders are strict about, so both are given properly. */
+  .qr-card {{ grid-column:2; display:flex; align-items:center; gap:6mm; margin-top:2mm; }}
   .qr {{ display:flex; align-items:flex-end; gap:5mm; }}
-  .qr-plate {{ width:30mm; height:30mm; background:{art_ink}; padding:1.6mm; border-radius:1mm; }}
+  .qr-plate {{ width:34mm; height:34mm; flex:none; background:{art_ink}; padding:1.6mm; border-radius:1mm; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
-  .qr-say {{ text-align:right; }}
-  .qr-say b {{ display:block; font-size:4.6mm; color:{ink}; letter-spacing:.06em; }}
-  .qr-say span {{ display:block; font-size:3.2mm; color:{cool}; margin-top:1.2mm; text-transform:none; letter-spacing:.02em; }}
+  .qr-say {{ text-align:left; }}
+  .qr-say b {{ display:block; font-size:5.2mm; color:{ink}; letter-spacing:.06em; }}
+  .qr-say span {{ display:block; font-size:4mm; color:{cool}; margin-top:1.2mm; text-transform:none; letter-spacing:.02em; }}
 </style>
 <div class="sheet">
   <div class="art">{art}</div>
@@ -247,21 +248,280 @@ TEMPLATE = """<!doctype html>
       <p class="theme">{theme_label} · <b>{theme}</b></p>
       <div class="facts">{facts}</div>
       <div class="rule"></div>
-      <div class="prog">{prog}</div>
-      <div class="tail">
-        <span>{hosts}</span>
-        <div class="qr">
-          <div class="qr-say"><b>{cta}</b><span>{url}</span></div>
+      <div class="prog">{prog}
+        <div class="qr-card">
           <div class="qr-plate">{qr}</div>
+          <div class="qr-say"><b>{cta}</b><span>{url}</span></div>
         </div>
       </div>
+      <div class="tail"><span>{hosts}</span><span>{venue_short}</span></div>
     </div>
   </div>
 </div>
 """
 
 
-def main(art_path, out_path):
+LISTING = """<!doctype html>
+<meta charset="utf-8">
+<title>{name} — A2 poster, ruled</title>
+<style>
+  @page {{ size: 426mm 600mm; margin: 0; }}
+  @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; }}
+  /* One ink on one ground, and every division drawn as a hairline rule. The
+     layout is a stack of boxes with nothing between them, so the sheet has no
+     margins in the usual sense — the rules are the margins. */
+  .sheet {{
+    position:relative; width:426mm; height:600mm; overflow:hidden;
+    background:{ground}; color:{art_ink}; box-sizing:border-box; padding:10mm;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    font-family:"Inter Tight",sans-serif;
+  }}
+  .frame {{
+    height:100%; box-sizing:border-box; border:.45mm solid {art_ink};
+    display:flex; flex-direction:column;
+  }}
+  .row {{ display:flex; border-bottom:.45mm solid {art_ink}; }}
+  .row:last-child {{ border-bottom:0; }}
+  .cell {{ padding:7mm 8mm; box-sizing:border-box; }}
+  .cell + .cell {{ border-left:.45mm solid {art_ink}; }}
+  /* The listing. Day-of-month, then what happens, then when — the rhythm the
+     reference gets its texture from. */
+  .list {{ flex:1; }}
+  .list ul {{ margin:0; padding:0; list-style:none; }}
+  .list li {{
+    font-size:8.8mm; line-height:1.26; font-weight:500; margin:0 0 2.2mm;
+    display:flex; gap:3.5mm; align-items:baseline;
+  }}
+  .list .d {{ font-family:"JetBrains Mono",monospace; font-weight:600; flex:none; }}
+  .list .who {{ flex:1; }}
+  .list .who b {{ font-weight:700; }}
+  .list .t {{ font-family:"JetBrains Mono",monospace; font-size:6.2mm; flex:none; opacity:.72; }}
+  /* The month, big, with the diagonal above it. */
+  .month {{ width:118mm; display:flex; flex-direction:column; }}
+  .slash {{ height:52mm; }}
+  .slash svg {{ display:block; width:100%; height:100%; }}
+  .month h2 {{
+    font-family:"Jost",sans-serif; font-weight:300; font-size:26mm;
+    margin:auto 0 0; letter-spacing:-.01em; text-align:right; line-height:1;
+  }}
+  /* The picture, in its own box. */
+  .plate {{ flex:1; position:relative; overflow:hidden; border-bottom:.45mm solid {art_ink}; }}
+  .plate svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  .stamp {{
+    font-family:"Jost",sans-serif; font-weight:300; font-size:24mm;
+    letter-spacing:.01em; line-height:1; padding:6mm 8mm;
+  }}
+  .foot {{ align-items:stretch; }}
+  .name {{ flex:1; }}
+  .name h1 {{
+    font-family:"Jost",sans-serif; font-weight:400; font-size:26mm; line-height:1.02;
+    margin:0; letter-spacing:-.012em;
+  }}
+  .name h1 b {{ font-weight:600; }}
+  .name p {{
+    font-family:"JetBrains Mono",monospace; font-size:4.2mm; letter-spacing:.14em;
+    text-transform:uppercase; margin:4mm 0 0; opacity:.8;
+  }}
+  .badge {{ width:118mm; display:flex; flex-direction:column; justify-content:space-between; }}
+  .qr-plate {{ width:34mm; height:34mm; background:{art_ink}; padding:1.8mm; box-sizing:border-box; align-self:flex-end; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+  .badge address {{
+    font-style:normal; font-family:"JetBrains Mono",monospace; font-size:4mm;
+    line-height:1.5; text-align:right; margin-top:5mm; opacity:.82;
+  }}
+</style>
+<div class="sheet"><div class="frame">
+  <div class="row">
+    <div class="cell list"><ul>{listing}</ul></div>
+    <div class="cell month">
+      <div class="slash"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="8" y1="92" x2="92" y2="8" stroke="{art_ink}" stroke-width="1.1" vector-effect="non-scaling-stroke"/>
+      </svg></div>
+      <h2>{month}</h2>
+    </div>
+  </div>
+  <div class="row" style="flex:1"><div class="cell plate" style="flex:1;padding:0;border-bottom:0">{art}</div></div>
+  <div class="row"><div class="cell stamp">{stamp}</div></div>
+  <div class="row foot">
+    <div class="cell name">
+      <h1><b>{mark}</b> {year}</h1>
+      <p>{full_name}</p>
+    </div>
+    <div class="cell badge">
+      <div class="qr-plate">{qr}</div>
+      <address>{venue_name}<br>{venue_addr}<br>{url}</address>
+    </div>
+  </div>
+</div></div>
+"""
+
+
+FESTIVAL = """<!doctype html>
+<meta charset="utf-8">
+<title>{name} — A2 poster, festival</title>
+<style>
+  @page {{ size: 426mm 600mm; margin: 0; }}
+  @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; }}
+  .sheet {{
+    position:relative; width:426mm; height:600mm; overflow:hidden;
+    background:{ground}; color:{ink}; font-family:"Inter Tight",sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }}
+  .art {{ position:absolute; inset:0; overflow:hidden; }}
+  .art svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  /* Held well back. In the reference the ground is a soft bloom that the type
+     sits on without contest; ours is a field of small marks, which is busier,
+     so it is dimmed further than a photograph would need to be. */
+  .veil {{ position:absolute; inset:0; }}
+  .veil svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  .wrap {{ position:absolute; inset:0; padding:20mm 20mm 16mm; display:flex; flex-direction:column; }}
+  .top {{ display:flex; justify-content:space-between; align-items:flex-start; }}
+  .mark {{
+    font-family:"Jost",sans-serif; font-weight:700; font-size:26mm; line-height:1;
+    color:{hot}; letter-spacing:-.02em; margin:0;
+  }}
+  .mark span {{ font-weight:300; }}
+  .stamps {{
+    font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.16em;
+    text-transform:uppercase; color:{hot}; text-align:right; line-height:1.7;
+  }}
+  /* The two rotated blocks down the left edge. */
+  .rails {{ position:absolute; left:20mm; top:118mm; display:flex; gap:9mm; }}
+  .rail {{
+    writing-mode:vertical-rl; transform:rotate(180deg);
+    font-family:"Inter Tight",sans-serif; color:{hot};
+  }}
+  .rail b {{ display:block; font-size:10mm; font-weight:700; letter-spacing:-.012em; }}
+  .rail span {{
+    display:block; font-family:"JetBrains Mono",monospace; font-size:4.6mm;
+    letter-spacing:.06em; margin-right:3mm;
+  }}
+  /* The bill. Right-aligned and set as large as fourteen names allow. */
+  .bill {{ margin:16mm 0 0 auto; text-align:right; max-width:292mm; }}
+  .bill li {{
+    list-style:none; font-family:"Inter Tight",sans-serif; font-weight:500;
+    font-size:13mm; line-height:1.16; letter-spacing:-.018em; color:{ink};
+  }}
+  .bill li sup {{
+    font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:500;
+    letter-spacing:.1em; vertical-align:super; margin-left:2mm; color:{cool};
+  }}
+  .bill ul {{ margin:0; padding:0; }}
+  .dates {{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin:auto 0 0; color:{hot};
+    font-family:"Jost",sans-serif; font-weight:600; font-size:32mm; line-height:1;
+    letter-spacing:-.02em;
+  }}
+  .dates .month {{ font-weight:400; }}
+  .cols {{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:10mm; margin-top:12mm;
+    font-family:"Inter Tight",sans-serif;
+  }}
+  .cols h4 {{
+    font-family:"JetBrains Mono",monospace; font-size:3.6mm; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin:0 0 3mm;
+  }}
+  .cols ul {{ margin:0; padding:0; list-style:none; }}
+  .cols li {{
+    font-size:5.2mm; font-weight:600; line-height:1.42; color:{ink};
+    text-transform:uppercase; letter-spacing:.02em;
+  }}
+  .cols li span {{ font-weight:400; color:{cool}; text-transform:none; letter-spacing:0; }}
+  .mid {{ text-align:center; }}
+  .mid ul li {{ text-transform:none; font-weight:500; }}
+  .r {{ text-align:right; }}
+  .foot {{
+    display:flex; justify-content:space-between; align-items:flex-end; margin-top:12mm;
+    font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.14em;
+    text-transform:uppercase; color:{cool};
+  }}
+  .qr-plate {{ width:26mm; height:26mm; background:{art_ink}; padding:1.4mm; box-sizing:border-box; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+</style>
+<div class="sheet">
+  <div class="art">{art}</div>
+  <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
+    <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="{ground}" stop-opacity=".62"/>
+      <stop offset=".26" stop-color="{ground}" stop-opacity=".26"/>
+      <stop offset=".52" stop-color="{ground}" stop-opacity=".34"/>
+      <stop offset=".74" stop-color="{ground}" stop-opacity=".80"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity=".94"/>
+    </linearGradient></defs>
+    <rect width="10" height="100" fill="url(#v)"/>
+  </svg></div>
+  <div class="rails">
+    <div class="rail"><b>{venue_short}</b><span>{venue_name}</span></div>
+    <div class="rail"><b>Registration</b><span>{reg_note} &middot; {url}</span></div>
+  </div>
+  <div class="wrap">
+    <div class="top">
+      <h1 class="mark">{mark} <span>{year}</span></h1>
+      <div class="stamps">{full_name}<br>{eyebrow}</div>
+    </div>
+    <div class="bill"><ul>{bill}</ul></div>
+    <div class="dates"><span>{days}</span><span class="month">{month}</span></div>
+    <div class="cols">
+      <div><h4>Organisers</h4><ul>{organisers}</ul></div>
+      <div class="mid"><h4>Theme</h4><ul><li>{theme}</li></ul></div>
+      <div class="r"><h4>Sessions</h4><ul>{sessions_list}</ul></div>
+    </div>
+    <div class="foot"><span>{hosts}</span><div class="qr-plate">{qr}</div></div>
+  </div>
+</div>
+"""
+
+
+def listing_html(program):
+    """One line per session: day of the month, who, and when."""
+    out = []
+    for day in program["days"]:
+        dom = str(day["date"]).split("-")[-1]
+        for e in day["events"]:
+            if e.get("type") not in ("block", "tutorial", "keynote"):
+                continue
+            people = [s["name"] for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
+            if not people:
+                continue
+            out.append(
+                f'<li><span class="d">{esc(dom)}</span>'
+                f'<span class="who"><b>{esc(e["title"])}</b> &middot; {esc(", ".join(people))}</span>'
+                f'<span class="t">{esc(e.get("start", ""))}</span></li>'
+            )
+    return "".join(out)
+
+
+def festival_bits(program, organizers, site):
+    """The pieces the festival sheet needs that the others do not."""
+    bill, sess = [], []
+    for day in program["days"]:
+        for e in day["events"]:
+            if e.get("type") not in ("block", "tutorial", "keynote"):
+                continue
+            people = [s for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
+            if not people:
+                continue
+            sess.append(f"<li>{esc(e['title'])}</li>")
+            for p in people:
+                bill.append(
+                    f'<li>{esc(p["name"])}<sup>{esc(p.get("affil", ""))}</sup></li>'
+                )
+    orgs = "".join(
+        f'<li>{esc(m["name"])} <span>{esc(m.get("affil", ""))}</span></li>'
+        for m in organizers["members"]
+    )
+    days = " ".join(str(d["date"]).split("-")[-1] for d in program["days"])
+    return "".join(bill), "".join(sess), orgs, days
+
+
+def main(art_path, out_path, layout="stack"):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
@@ -279,7 +539,14 @@ def main(art_path, out_path):
             (venue["name"], f"{site['venue']}, {site['city']}"),
         ]
     )
-    doc = TEMPLATE.format(
+    tpl = {"listing": LISTING, "festival": FESTIVAL}.get(layout, TEMPLATE)
+    organizers = yaml.safe_load((DATA / "organizers.yml").read_text(encoding="utf-8"))
+    bill, sessions_list, organisers, days = festival_bits(program, organizers, site)
+    month = ["January", "February", "March", "April", "May", "June", "July",
+             "August", "September", "October", "November", "December"][
+        int(str(program["days"][0]["date"]).split("-")[1]) - 1]
+    d0 = str(program["days"][0]["date"]).split("-")
+    doc = tpl.format(
         art=art,
         name=esc(name),
         mark=esc(mark),
@@ -294,6 +561,17 @@ def main(art_path, out_path):
         cta="Programme &amp; registration",
         qr=qr_svg(site["url"], dark=PALETTE["ground2"], light=None),
         hosts=esc(" · ".join(h["name"] for h in site["hosts"]["logos"])) if site.get("hosts") else "",
+        listing=listing_html(program),
+        month=month,
+        stamp=f"{d0[1]}.{d0[0]}",
+        venue_name=esc(venue["name"]),
+        venue_addr=esc(venue.get("address", "")),
+        venue_short=esc(f"{site['venue']}, {site['city']}"),
+        bill=bill,
+        sessions_list=sessions_list,
+        organisers=organisers,
+        days=esc(days),
+        reg_note=esc((site["hero_actions"][0].get("note") or "Opens soon")),
         **PALETTE,
     )
     out = Path(out_path)
@@ -308,5 +586,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--art", required=True, help="the formula art SVG to inline")
     ap.add_argument("-o", "--out", required=True)
+    ap.add_argument("--layout", choices=("stack", "listing", "festival"), default="stack",
+                    help="stack: art behind the type; listing: ruled boxes; festival: bill of names")
     args = ap.parse_args()
-    main(args.art, args.out)
+    main(args.art, args.out, args.layout)
