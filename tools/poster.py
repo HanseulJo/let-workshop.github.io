@@ -246,8 +246,8 @@ TEMPLATE = """<!doctype html>
   .wrap {{ position:absolute; inset:0; padding:22mm 24mm 18mm; display:flex; flex-direction:column; }}
   .eyebrow {{
     font-family:"JetBrains Mono",monospace; font-size:3.9mm; font-weight:500;
-    letter-spacing:.2em; text-transform:uppercase; color:{ink};
-    border:.3mm solid {chip}; border-radius:99mm; padding:1.9mm 4.4mm;
+    letter-spacing:.2em; text-transform:uppercase; color:{hot};
+    border:.3mm solid rgba(255,138,117,.42); border-radius:99mm; padding:1.9mm 4.4mm;
     align-self:flex-start; background:rgba(11,17,28,.62);
   }}
   .mid {{ margin-top:auto; }}
@@ -255,15 +255,15 @@ TEMPLATE = """<!doctype html>
     font-family:"Jost",sans-serif; font-weight:500; font-size:58mm; line-height:.88;
     letter-spacing:-.022em; margin:0 0 5mm; color:{ink};
   }}
-  h1 b {{ font-weight:700; }}
-  h1 .year {{ font-weight:300; color:{ink_dim}; }}
+  h1 b {{ font-weight:700; color:{hot}; }}
+  h1 .year {{ font-weight:300; color:{ink}; opacity:.86; }}
   .acronym {{
     font-family:"JetBrains Mono",monospace; font-size:5.1mm; font-weight:500;
     letter-spacing:.16em; text-transform:uppercase; color:{cool}; margin:0 0 7mm;
   }}
   .theme {{
-    font-family:"Inter Tight",sans-serif; font-size:7.4mm; font-weight:500;
-    color:{ink}; margin:0 0 8mm;
+    font-family:"Inter Tight",sans-serif; font-size:6.6mm; font-weight:500;
+    color:{ink}; margin:0 0 6mm; opacity:.9;
   }}
   .theme b {{ font-weight:700; }}
   .facts {{
@@ -277,20 +277,20 @@ TEMPLATE = """<!doctype html>
      the name and from arm's length for the schedule. */
   .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:12mm; align-items:start; }}
   .day h3 {{
-    font-family:"Inter Tight",sans-serif; font-size:10mm; font-weight:700;
-    color:{ink}; margin:0 0 1.6mm;
+    font-family:"Inter Tight",sans-serif; font-size:9.4mm; font-weight:700;
+    color:{ink}; margin:0 0 1.4mm;
   }}
   .daysub {{
     font-family:"JetBrains Mono",monospace; font-size:4.6mm; letter-spacing:.12em;
     text-transform:uppercase; color:{hot}; margin:0 0 6.5mm;
   }}
-  .sess {{ margin:0 0 6.4mm; break-inside:avoid; }}
+  .sess {{ margin:0 0 5.6mm; break-inside:avoid; }}
   .sess h4 {{
-    font-family:"JetBrains Mono",monospace; font-size:4.9mm; font-weight:500;
-    letter-spacing:.13em; text-transform:uppercase; color:{cool};
-    margin:0 0 2.6mm; display:flex; justify-content:space-between; gap:4mm;
+    font-family:"JetBrains Mono",monospace; font-size:4mm; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:{hot};
+    margin:0 0 2.2mm; display:flex; justify-content:space-between; gap:4mm;
   }}
-  .clock {{ color:{cool_dim}; letter-spacing:.06em; }}
+  .clock {{ color:{cool}; letter-spacing:.06em; opacity:.8; }}
   .sess ul {{ margin:0; padding:0; list-style:none; }}
   .sess li {{
     font-family:"Inter Tight",sans-serif; font-size:9.4mm; color:{ink};
@@ -298,10 +298,10 @@ TEMPLATE = """<!doctype html>
   }}
   .sess li b {{ font-weight:700; }}
   .aff {{ color:{cool}; font-weight:500; font-size:6.4mm; }}
-  .sess li i {{
-    display:block; font-style:normal; font-family:"JetBrains Mono",monospace;
-    font-size:4.6mm; letter-spacing:.06em; color:{cool_dim}; margin-top:.6mm;
-  }}
+  /* The topic lines are gone. Eight of them under the names is a third column
+     of grey the sheet did not need, and taking them out is most of what moves
+     the title down the page. */
+  .sess li i {{ display:none; }}
   .tail {{
     display:flex; justify-content:space-between; align-items:baseline; margin-top:9mm;
     font-family:"JetBrains Mono",monospace; font-size:3.9mm; letter-spacing:.1em;
