@@ -57,9 +57,30 @@ def load_paths():
     return {m.group(1): (m.group(3), m.group(2)) for m in SYMBOL.finditer(text)}
 
 
+def alpha_grid(source, cols, rows):
+    """Per-cell opacity, or None if the source has no alpha.
+
+    A sky-removed PNG says where the subject is not, and that is worth more than
+    a low target there: asking the solver for very little ink still puts a
+    formula in every cell, and a field of faint formulas over the missing sky is
+    exactly the thing the cut-out was made to avoid.
+    """
+    im = ImageOps.exif_transpose(Image.open(source))
+    if "A" not in im.getbands():
+        return None
+    a = im.getchannel("A").resize((cols, rows), Image.BOX)
+    return np.asarray(a, dtype=np.float64) / 255.0
+
+
 def picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct):
     """The image as a (rows, bands, cols) array of target coverage in [0, 1]."""
-    im = ImageOps.exif_transpose(Image.open(source)).convert("L")
+    im = ImageOps.exif_transpose(Image.open(source))
+    if "A" in im.getbands():
+        # Composite onto mid grey first, or the transparent region arrives as
+        # black and drags the black point down with it.
+        bg = Image.new("RGBA", im.size, (128, 128, 128, 255))
+        im = Image.alpha_composite(bg, im.convert("RGBA"))
+    im = im.convert("L")
     # Crop to the art's aspect first, the way the hero's own photograph is
     # covered rather than stretched.
     im = ImageOps.fit(im, (cols * cell, rows * row_h), Image.LANCZOS, centering=(0.5, 0.45))
@@ -259,6 +280,7 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     target = np.clip((target - sig_lo) / span, 0.0, 1.0)
 
     groups = group_by_width(entries)
+    holes = None if flat is not None else alpha_grid(source, cols, rows)
     tints = None
     if tint > 0 and source:
         tints = tint_map(source, cols, rows, cell, row_h, colour if colour.startswith("#") else "#ffffff",
@@ -279,13 +301,16 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
         row = solve_row(want, groups, cols, usage, reuse_w, repeat_w, prev_row)
         got = np.zeros((bands, cols))
         for c, e in row:
-            n = min(e["units"], cols - c)
-            got[:, c : c + n] = e["arr"][:, :n]
+            n2 = min(e["units"], cols - c)
+            got[:, c : c + n2] = e["arr"][:, :n2]
         # Capped: an area the set simply cannot reach would otherwise build up
         # a debt it never pays off, and drag every row beneath it dark.
         carry = np.clip((want - got) * diffuse, -0.3, 0.3)
         row_ids = [None] * cols
         for c, e in row:
+            n = min(e["units"], cols - c)
+            if holes is not None and holes[r, c : c + n].mean() < 0.4:
+                continue  # nothing of the subject here
             usage[e["id"]] = usage.get(e["id"], 0) + 1
             for k in range(c, min(c + e["units"], cols)):
                 row_ids[k] = e["id"]

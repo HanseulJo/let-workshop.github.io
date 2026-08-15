@@ -144,6 +144,26 @@ def cutout_svg(source, shadow, highlight, width, height, contrast=0.95):
     )
 
 
+def acronym_html(full_name, mark):
+    """The full name with the letters that make the acronym picked out.
+
+    KOLT is spelled Korean workshop On Learning Theory — the lowercase w is not
+    a slip, it is what makes the O of "On" the second letter. Setting the name
+    in capitals, which is what the sheets were doing, throws that away: it
+    becomes four words in caps and the acronym is a coincidence again. In mixed
+    case with the four letters in the accent, the name shows its own working.
+    """
+    want = list(mark.upper())
+    out = []
+    for word in full_name.split():
+        if want and word[:1].upper() == want[0]:
+            out.append(f'<b>{esc(word[0])}</b>{esc(word[1:])}')
+            want.pop(0)
+        else:
+            out.append(esc(word))
+    return " ".join(out)
+
+
 def qr_svg(url, dark, light=None):
     """The site address as an SVG QR, sized by CSS rather than by pixels.
 
@@ -481,6 +501,14 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.16em;
     text-transform:uppercase; color:{hot}; text-align:right; line-height:1.7;
   }}
+  /* Mixed case, and the four letters of the acronym in the accent — the name
+     is written so that K, O, L and T fall where they do, and capitals would
+     hide it. */
+  .longname {{
+    font-family:"Inter Tight",sans-serif; font-weight:500; font-size:8.4mm;
+    letter-spacing:-.012em; color:{ink}; margin:3mm 0 0;
+  }}
+  .longname b {{ color:{hot}; font-weight:700; }}
   /* The two rotated blocks down the left edge. */
   .rails {{ position:absolute; left:20mm; top:118mm; display:flex; gap:9mm; }}
   .rail {{
@@ -493,7 +521,14 @@ FESTIVAL = """<!doctype html>
     letter-spacing:.06em; margin-right:3mm;
   }}
   /* The programme, against one right edge. */
-  .bill {{ margin:12mm 0 0 auto; text-align:right; width:246mm; }}
+  /* The programme gets a ground of its own too, the way the sheet this follows
+     sets its tables on solid blocks over the gradient. It stops short of the
+     left edge, so the picture keeps a clear half. */
+  .bill {{
+    margin:10mm 0 0 auto; text-align:right; width:252mm;
+    background:rgba(9,15,26,.74); padding:8mm 10mm 6mm; box-sizing:border-box;
+    border-left:.3mm solid rgba(255,138,117,.34);
+  }}
   .slot {{ margin:0 0 6.5mm; }}
   .slot-head {{
     display:inline-flex; align-items:baseline; gap:5mm;
@@ -519,15 +554,21 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-weight:500; font-size:3.8mm;
     letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin-left:4mm;
   }}
-  .dates {{
-    display:flex; justify-content:space-between; align-items:baseline;
-    margin:auto 0 0; color:{hot};
-    font-family:"Jost",sans-serif; font-weight:600; font-size:32mm; line-height:1;
-    letter-spacing:-.02em;
+  .panel {{
+    margin:auto 0 0; background:rgba(9,15,26,.86); padding:9mm 10mm 8mm;
+    border-top:.3mm solid rgba(255,138,117,.5);
   }}
-  .dates .month {{ font-weight:400; }}
+  .dates {{ display:flex; justify-content:space-between; align-items:flex-end; margin:0; }}
+  .stack {{
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
+    line-height:1.02; letter-spacing:-.03em; color:{hot};
+  }}
+  .datesub {{
+    font-family:"JetBrains Mono",monospace; font-size:4.4mm; letter-spacing:.13em;
+    text-transform:uppercase; color:{cool}; margin:0; text-align:right; line-height:1.7;
+  }}
   .cols {{
-    display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:10mm;
+    display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:8mm;
     font-family:"Inter Tight",sans-serif; align-items:start;
   }}
   .cols h4 {{
@@ -544,7 +585,7 @@ FESTIVAL = """<!doctype html>
   .mid ul li {{ text-transform:none; font-weight:500; }}
   .r {{ text-align:right; }}
   .foot {{
-    display:flex; justify-content:space-between; align-items:flex-end; margin-top:12mm;
+    display:flex; justify-content:space-between; align-items:flex-end; margin-top:8mm;
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.14em;
     text-transform:uppercase; color:{cool};
   }}
@@ -573,11 +614,16 @@ FESTIVAL = """<!doctype html>
   </div>
   <div class="wrap">
     <div class="top">
-      <h1 class="mark">{mark} <span>{year}</span></h1>
+      <div><h1 class="mark">{mark} <span>{year}</span></h1>
+        <p class="longname">{acronym_name}</p></div>
       <div class="stamps">{full_name}<br>{eyebrow}</div>
     </div>
     <div class="bill">{programme}</div>
-    <div class="dates"><span>{days_range}</span><span class="month">{month} {yyyy}</span></div>
+    <div class="panel">
+      <div class="dates">
+        <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
+        <p class="datesub">{month} {yyyy}<br>{venue_name}<br>{city}, {country}</p>
+      </div>
     <div class="cols">
       <div><h4>Organisers</h4><ul>{organisers}</ul></div>
       <div class="r"><h4>Venue</h4><ul><li>{venue_name}<span> {city}, {country}</span></li></ul>
@@ -585,6 +631,7 @@ FESTIVAL = """<!doctype html>
     </div>
     <div class="foot"><span>{hosts}</span>
       <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div></div>
+    </div>
   </div>
 </div>
 """
@@ -902,7 +949,7 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
-def main(art_path, out_path, layout="stack", photo=None, cutout=None):
+def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
@@ -928,12 +975,12 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None):
             w, h = 1700, 1520
         elif layout == "bauhaus":
             w, h = 1000, 1360
-        art = photo_svg(
-            photo,
-            PALETTE["paper"] if light_ground else "#0a111d",
-            PALETTE["carbon"] if light_ground else PALETTE["art_ink"],
-            w, h,
+        shadow, highlight = (
+            duotone.split(",") if duotone else
+            ((PALETTE["paper"], PALETTE["carbon"]) if light_ground
+             else ("#0a111d", PALETTE["art_ink"]))
         )
+        art = photo_svg(photo, shadow, highlight, w, h)
     else:
         art = Path(art_path).read_text(encoding="utf-8")
         if "preserveAspectRatio" not in art.split(">", 1)[0]:
@@ -1012,9 +1059,13 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None):
         city=esc(site["city"]),
         country=esc(site["country"]),
         cta_short="Register",
+        acronym_name=acronym_html(site["full_name"], mark),
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
         yyyy=esc(str(program["days"][0]["date"]).split("-")[0]),
+        mon3=month[:3].upper(),
+        md1=".".join(str(program["days"][0]["date"]).split("-")[1:]).lstrip("0").replace(".0", "."),
+        md2=".".join(str(program["days"][-1]["date"]).split("-")[1:]).lstrip("0").replace(".0", "."),
         days_long=esc(site["dates"]),
         day1=day_people[0],
         day2=day_people[1] if len(day_people) > 1 else "",
@@ -1042,10 +1093,12 @@ if __name__ == "__main__":
     ap.add_argument("--art", help="the formula art SVG to inline")
     ap.add_argument("--photo", help="use a two-tone photograph instead of the formulas")
     ap.add_argument("--cutout", help="use a sky-removed PNG (see tools/cut-sky.py)")
+    ap.add_argument("--duotone", metavar="SHADOW,HIGHLIGHT",
+                    help="two colours for the photograph, e.g. '#1b2a4a,#ff8a75'")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
                     choices=("stack", "listing", "festival", "academic", "civic", "bauhaus"),
                     default="stack",
                     help="stack, listing, festival, or academic")
     args = ap.parse_args()
-    main(args.art, args.out, args.layout, args.photo, args.cutout)
+    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone)
