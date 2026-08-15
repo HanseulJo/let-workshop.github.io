@@ -1,38 +1,48 @@
 # ─────────────────────────────────────────────────────────────
-# The formulas that drift across the hero.
+# The formulas the hero is written in.
 #
 # A flat list of LaTeX, nothing else — order is irrelevant, the
-# hero shuffles them. tools/prep-formulas.py renders each one to
-# an SVG in static/formulas/ at build time, so the page ships no
-# maths renderer and no webfont for this.
+# hero shuffles them. tools/prep-formulas.py renders each one to a
+# vector outline, so the page ships no maths renderer and no
+# webfont for this.
 #
-# Adding one: write the LaTeX, re-run the tool, rebuild. Keep them
-# SHORT — a long expression at this size reads as a grey smear.
-# They are rendered by matplotlib's mathtext, which covers most of
-# amsmath but not everything; the tool tells you if one fails.
+# Adding one: write the LaTeX, re-run prep-formulas.py, then
+# formula-lut.py and formula-art.py, and rebuild. They are drawn by
+# matplotlib's mathtext, which covers most of amsmath but not
+# everything; the tool says if one fails.
 #
-# The set spans the three parts of learning theory the way Telegarsky's
-# notes divide them — approximation, optimization, generalization —
-# plus the topics KOLT lists and the subjects this year's speakers
-# are actually talking about.
+# WHAT BELONGS HERE. Every line has to be a thing someone in this
+# room would recognise on sight: a theorem, a bound, a definition
+# that names an object, an objective, or the formulation of a
+# problem. Nothing that is only notation (`N(F, e, ||.||)` says
+# nothing without its sentence), nothing that restates a line
+# already present in weaker form, and nothing so elementary it
+# carries no information at this gathering — max{0, z} is the ReLU
+# and everyone here has known that for a decade.
+#
+# The reason is not taste. Every formula is a tile in the picture,
+# and a reader who stops on one gets exactly one sentence out of
+# the page. Spending that sentence on a definition of the spectral
+# norm is a waste of the only attention the background will ever
+# get.
+#
+# The set spans the three parts of learning theory the way
+# Telegarsky's notes divide them — approximation, optimization,
+# generalization — plus the topics KOLT lists and the subjects this
+# year's speakers are actually talking about.
 # ─────────────────────────────────────────────────────────────
 
 formulas:
-  # ---- Setup: networks, risk, and the error decomposition
+  # ---- What is being learned, and what "well" means
   - 'x \mapsto \sum_{j=1}^m a_j \sigma(w_j^\top x + b_j)'
   - 'f(x;w) = \sigma_L(W_L \cdots \sigma_1(W_1 x + b_1) \cdots)'
   - '\widehat{\mathcal{R}}(f) = \frac{1}{n}\sum_i \ell(f(x_i), y_i)'
   - '\mathcal{R}(f) = \mathbb{E}\,\ell(f(x), y)'
-  - '\mathcal{R}(\hat f) - \mathcal{R}(\bar f) \leq \varepsilon'
-  - '\sigma(z) = \max\{0, z\}'
   - '\ell(z) = \ln(1 + e^{-z})'
-  - '\|f - g\|_u = \sup_{x \in S} |f(x) - g(x)|'
 
   # ---- Approximation
-  - '\inf_{f \in \mathcal{F}} \mathcal{R}(f)'
   - '\|f\|_{\mathcal{B}} = \int \|w\|\,|\hat f(w)|\,dw'
   - 'f(x) = \int e^{i\langle w, x\rangle} \hat f(w)\, dw'
-  - '\Delta^k(x) \approx x^2'
   - '\Theta(x, x'') = \langle \nabla_w f(x), \nabla_w f(x'') \rangle'
   - 'f(x; w) \approx f(x; w_0) + \langle \nabla f(x; w_0), w - w_0 \rangle'
 
@@ -54,7 +64,6 @@ formulas:
   - '\mathcal{R}(f) \leq \widehat{\mathcal{R}}(f) + 2\mathfrak{R}(\mathcal{F}) + \sqrt{\frac{\ln(1/\delta)}{2n}}'
   - '\mathfrak{R}(\mathcal{F}) \leq \inf_\alpha \left(4\alpha + 12\int_\alpha^\infty \sqrt{\frac{\ln N(\epsilon)}{n}}\,d\epsilon\right)'
   - '\mathrm{VC}(\mathcal{H}) = O(WL\log W)'
-  - 'N(\mathcal{F}, \epsilon, \|\cdot\|)'
 
   # ---- Bandits, RL, decision-making
   - '\mathrm{Reg}(T) = \sum_{t=1}^T (\mu^\star - \mu_{a_t})'
@@ -62,6 +71,7 @@ formulas:
   - 'Q^\star(s,a) = r(s,a) + \gamma \mathbb{E}\max_{a''} Q^\star(s'',a'')'
   - 'V^\pi(s) = \mathbb{E}\left[\sum_t \gamma^t r_t \mid s_0 = s\right]'
   - '\mathrm{Reg}(T) = \tilde O(\sqrt{dT})'
+  - 'q_a(\tau) = \inf\{z : F_a(z) \geq \tau\}'
 
   # ---- Logistic and generalized linear bandits
   # Junghyun Lee''s line of work, which is where several of this year''s bandit
@@ -77,41 +87,35 @@ formulas:
   - '\mathbb{E}[y \mid X] = \mu(\langle X, \Theta_\star \rangle)'
   - '\Theta_0 = \arg\min_\Theta \mathcal{L}_N(\Theta) + \lambda \|\Theta\|_{\mathrm{nuc}}'
   - 'o_t \sim \mathrm{Ber}(\mu(\phi_w^\top \Theta_\star \phi_\ell))'
-  - '\mu(z) + \mu(-z) = 1'
   - '\Pr[y_1 \succ y_2] = \sigma(r(x, y_1) - r(x, y_2))'
   - 'w_{t+1} = \arg\min_w \eta \langle g_t, w \rangle + D_\Psi(w, w_t)'
   - 'D_\Psi(u, v) = \Psi(u) - \Psi(v) - \langle \nabla \Psi(v), u - v \rangle'
-  - 'q_a(\tau) = \inf\{z : F_a(z) \geq \tau\}'
 
   # ---- Optimizers beyond plain SGD
-  - '\hat m_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat v_t = \frac{v_t}{1 - \beta_2^t}'
-  - 'w_{t+1} = w_t - \eta \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}'
+  # AdamW rather than Adam: the decoupled decay is the part that is a claim
+  # about optimization, and the bias correction it is built on is bookkeeping.
   - 'w_{t+1} = (1 - \eta\lambda) w_t - \eta \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}'
   - 'w_{t+1} = w_t - \eta \nabla f(w_t) + \beta (w_t - w_{t-1})'
+  - 'w_{t+1} = w_t - \eta\, \mathrm{sign}(\beta m_t + (1-\beta) g_t)'
+  - '\arg\min_{\|\Delta\| \leq 1} \langle G, \Delta \rangle'
   # Muon: momentum, then the orthogonal polar factor of it
   - 'M_t = \mu M_{t-1} + G_t, \quad W_{t+1} = W_t - \eta\, O(M_t)'
   - 'O(M) = UV^\top = (MM^\top)^{-1/2} M'
   - 'X \leftarrow aX + b(XX^\top)X + c(XX^\top)^2 X'
-  - '\arg\min_{\|\Delta\| \leq 1} \langle G, \Delta \rangle'
   # Shampoo: full-matrix preconditioning, one factor per side
   - 'L_t = L_{t-1} + G_t G_t^\top'
   - 'W_{t+1} = W_t - \eta\, L_t^{-1/4} G_t R_t^{-1/4}'
-  - 'w_{t+1} = w_t - \eta\, \mathrm{sign}(\beta m_t + (1-\beta) g_t)'
-  - '\bar w_t = (1 - c_t) \bar w_{t-1} + c_t w_t'
-  - '\|W\|_2 = \sigma_{\max}(W)'
 
   # ---- Distributed and federated optimization
   - '\min_w \frac{1}{N} \sum_{i=1}^N f_i(w)'
-  - 'w_i^{t+1} = w_i^t - \eta \nabla f_i(w_i^t; \xi_i^t)'
+  - '\min_{w_i} \sum_i f_i(w_i) \;\; \mathrm{s.t.} \;\; w_i = z'
   - 'w^{r+1} = \sum_{i=1}^N \frac{n_i}{n} w_i^{r,K}'
   - 'w_i^{t+1} = \sum_{j \in \mathcal{N}_i} A_{ij} w_j^t'
   - '\rho = 1 - |\lambda_2(A)|'
-  - '\frac{1}{N} \sum_i \|w_i^t - \bar w^t\|^2'
   - '\zeta^2 = \sup_w \frac{1}{N} \sum_i \|\nabla f_i(w) - \nabla f(w)\|^2'
   - '\mathbb{E}\|\mathcal{C}(x) - x\|^2 \leq (1 - \delta)\|x\|^2'
   - 'e_i^{t+1} = p_i^t - \mathcal{C}(p_i^t)'
   - '\mathbb{E}\|\nabla f(\bar w)\|^2 = O\!\left(\frac{1}{\sqrt{NT}}\right)'
-  - '\min_{w_i} \sum_i f_i(w_i) \;\; \mathrm{s.t.} \;\; w_i = z'
 
   # ---- Uncertainty quantification and calibration
   - 'p(y \mid x, \mathcal{D}) = \int p(y \mid x, \theta)\, p(\theta \mid \mathcal{D})\, d\theta'
@@ -119,26 +123,21 @@ formulas:
   - 'H[y \mid x] = -\sum_y p(y \mid x) \ln p(y \mid x)'
   - 'I(y; \theta \mid x) = H[\mathbb{E}_\theta\, p] - \mathbb{E}_\theta\, H[p]'
   - 'R(f, g) = \frac{\mathbb{E}[g(x)\, \ell(f(x), y)]}{\mathbb{E}[g(x)]}'
-  - '\frac{1}{n} \sum_i \mathbf{1}[y_i \in C(x_i)] \geq 1 - \alpha'
-  - '\hat q_{1-\alpha} = s_{(\lceil (n+1)(1-\alpha) \rceil)}'
-  - '\Pr[\theta \in C \mid \mathcal{D}] = 1 - \alpha'
-  - 'p_\tau(y \mid x) = \mathrm{softmax}(z / \tau)'
-  - '\mathrm{Brier} = \frac{1}{n} \sum_i (p_i - y_i)^2'
 
-  # ---- High-dimensional and non-parametric statistics
+  # ---- Conformal prediction
+  - '\Pr[y \in C(x)] \geq 1 - \alpha'
+  - 'C(x) = \{y : s(x,y) \leq \hat q_{1-\alpha}\}'
+  - '\hat q_{1-\alpha} = s_{(\lceil (n+1)(1-\alpha) \rceil)}'
+
+  # ---- High-dimensional statistics
   - '\hat\beta = \arg\min_\beta \|y - X\beta\|^2 + \lambda\|\beta\|_1'
   - '\|\hat\beta - \beta^\star\|_2 \lesssim \sigma\sqrt{\frac{s\log d}{n}}'
-  - '\mathbb{E}|X|^p < \infty, \quad p \in (1, 2]'
 
   # ---- Bayesian methods, sampling, inference
   - 'p(\theta \mid x) \propto p(x \mid \theta)\, p(\theta)'
   - '\mathbb{E}[\theta_{n+1} \mid \mathcal{F}_n] = \theta_n'
   - 'dX_t = -\nabla U(X_t)\,dt + \sqrt{2}\,dB_t'
   - '\mathrm{KL}(q \,\|\, p) = \int q \ln \frac{q}{p}'
-
-  # ---- Conformal and selective prediction
-  - '\Pr[y \in C(x)] \geq 1 - \alpha'
-  - 'C(x) = \{y : s(x,y) \leq \hat q_{1-\alpha}\}'
 
   # ---- Causality
   - '\mathbb{E}[Y \mid do(X = x)]'
@@ -147,8 +146,7 @@ formulas:
   # ---- Learning under constraints
   - '\Pr[M(D) \in S] \leq e^{\varepsilon}\Pr[M(D'') \in S]'
 
-  # ---- Empirical phenomena: flatness, distillation, in-context learning
-  - '\nabla^2 \mathcal{R}(w^\star) \succeq 0'
+  # ---- Empirical phenomena: flatness, distillation, edge of stability
   - '\min_w \max_{\|\epsilon\| \leq \rho} \mathcal{R}(w + \epsilon)'
   - '\mathcal{L} = \tau^2\, \mathrm{KL}(p_T^\tau \,\|\, p_S^\tau)'
   - '\lambda_{\max}(\nabla^2 \mathcal{R}) \leq 2/\eta'

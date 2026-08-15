@@ -478,7 +478,28 @@ body {
    exactly on top of each other. */
 .hero.has-art::before {
   filter: none;
-  opacity: 0.34;
+  opacity: 0.28;
+}
+/* A heavier scrim than the photograph needed. The art is far brighter than the
+   picture it is made from — every glyph is near-white and there are a great
+   many of them — and the hero's own gradient was tuned against a blurred
+   photograph. Measured with the hero's text hidden, the title was sitting at
+   1.5:1 against the top of the field before this. */
+.hero.has-art::after {
+  background: linear-gradient(
+      to right,
+      rgba(15, 24, 38, 0.62) 0%,
+      rgba(15, 24, 38, 0.46) 34%,
+      rgba(15, 24, 38, 0.24) 55%,
+      rgba(15, 24, 38, 0.12) 72%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(13, 21, 34, 0.42) 0%,
+      rgba(13, 21, 34, 0.5) 30%,
+      rgba(12, 19, 31, 0.86) 58%,
+      rgba(11, 17, 28, 0.96) 100%
+    );
 }
 /* ---- `flow`: the writing moves, the picture stays put ----
    The drifting field is not drawn as glyphs on the hero any more; it is the
@@ -544,35 +565,14 @@ body {
   z-index: 0; /* above ::before, below the scrim — later sibling, same layer */
   pointer-events: none;
   background: url("hero.jpg") 50% 45% / cover no-repeat;
-  /* Lifted, because the glyphs are hairlines: at the photograph's own tones the
-     thin strokes disappear into the ground they are drawn on. */
-  filter: brightness(1.75) saturate(0.9);
+  /* Opened up hard. The glyphs are hairlines and the photograph they are
+     filled with is a dark duotone, so at its own tones the strokes vanish into
+     the ground they are drawn on. The scrim above takes the excess back where
+     the type needs it. */
+  filter: brightness(2.8) saturate(0.9);
   -webkit-mask: url("hero-art.svg") 50% 45% / cover no-repeat;
   mask: url("hero-art.svg") 50% 45% / cover no-repeat;
-  /* The writing crawls; the picture does not. The whole field drifts by about
-     a dozen pixels, which is more than a glyph is tall — so the text visibly
-     moves — and a fiftieth of the hero, which is far less than any feature of
-     the photograph, so the campus does not. The picture underneath does not
-     move at all, and it is what holds the position.
-     This is the only honest way to have both: the image lives in *where* the
-     ink is, so translating the ink translates the image with it. Keeping the
-     travel below the scale of the subject is the whole trick. */
-  animation: artdrift 46s ease-in-out infinite alternate;
 }
-@keyframes artdrift {
-  from {
-    -webkit-mask-position: calc(50% + 7px) calc(45% - 6px);
-    mask-position: calc(50% + 7px) calc(45% - 6px);
-  }
-  to {
-    -webkit-mask-position: calc(50% - 7px) calc(45% + 6px);
-    mask-position: calc(50% - 7px) calc(45% + 6px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-art {
-    animation: none;
-  }
 }
 .hero::after {
   z-index: 1;
@@ -2874,6 +2874,19 @@ footer a {
       rgba(15, 24, 38, 0.58) 26%,
       rgba(13, 20, 33, 0.85) 52%,
       rgba(11, 17, 28, 0.95) 100%
+    );
+  }
+  /* Said again for the art hero rather than inherited: its own rule outranks
+     the one above — two classes and a pseudo-element against one — so without
+     this the phone would quietly fall back to the desktop pair, whose
+     horizontal half does nothing here. */
+  .hero.has-art::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(13, 21, 34, 0.56) 0%,
+      rgba(13, 21, 34, 0.66) 26%,
+      rgba(12, 19, 31, 0.88) 52%,
+      rgba(11, 17, 28, 0.96) 100%
     );
   }
   /* The formulas run further down than on a laptop, not less far. The mask is a
