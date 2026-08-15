@@ -243,7 +243,7 @@ TEMPLATE = """<!doctype html>
   /* Only where the type actually is. */
   .fade {{ position:absolute; left:0; right:0; top:150mm; bottom:0; }}
   .fade svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
-  .wrap {{ position:absolute; inset:0; padding:22mm 24mm 18mm; display:flex; flex-direction:column; }}
+  .wrap {{ position:absolute; inset:0; padding:20mm 20mm 15mm; display:flex; flex-direction:column; }}
   .eyebrow {{
     font-family:"JetBrains Mono",monospace; font-size:3.9mm; font-weight:500;
     letter-spacing:.2em; text-transform:uppercase; color:{hot};
@@ -253,48 +253,48 @@ TEMPLATE = """<!doctype html>
   .mid {{ margin-top:auto; }}
   h1 {{
     font-family:"Jost",sans-serif; font-weight:500; font-size:58mm; line-height:.88;
-    letter-spacing:-.022em; margin:0 0 5mm; color:{ink};
+    letter-spacing:-.022em; margin:0 0 3.5mm; color:{ink};
   }}
   h1 b {{ font-weight:700; color:{hot}; }}
   h1 .year {{ font-weight:300; color:{ink}; opacity:.86; }}
   .acronym {{
     font-family:"JetBrains Mono",monospace; font-size:5.1mm; font-weight:500;
-    letter-spacing:.16em; text-transform:uppercase; color:{cool}; margin:0 0 7mm;
+    letter-spacing:.16em; text-transform:uppercase; color:{cool}; margin:0 0 3.5mm;
   }}
   .theme {{
     font-family:"Inter Tight",sans-serif; font-size:6.6mm; font-weight:500;
-    color:{ink}; margin:0 0 6mm; opacity:.9;
+    color:{ink}; margin:0 0 3.5mm; opacity:.9;
   }}
   .theme b {{ font-weight:700; }}
   .facts {{
     display:flex; gap:12mm; font-family:"JetBrains Mono",monospace;
-    font-size:4.6mm; font-weight:500; color:{ink}; margin:0 0 9mm;
+    font-size:4.6mm; font-weight:500; color:{ink}; margin:0 0 4.5mm;
   }}
   .facts span {{ color:{cool}; }}
-  .rule {{ height:.3mm; background:{rule}; margin:0 0 6mm; }}
+  .rule {{ height:.3mm; background:{rule}; margin:0 0 3.5mm; }}
   /* The programme. Four columns of small type at the foot, the way a season
      card does it — the poster has to survive being read from a metre away for
      the name and from arm's length for the schedule. */
-  .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:12mm; align-items:start; }}
+  .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:10mm; align-items:start; }}
   .day h3 {{
     font-family:"Inter Tight",sans-serif; font-size:9.4mm; font-weight:700;
-    color:{ink}; margin:0 0 1.4mm;
+    color:{ink}; margin:0 0 1mm;
   }}
   .daysub {{
     font-family:"JetBrains Mono",monospace; font-size:4.6mm; letter-spacing:.12em;
     text-transform:uppercase; color:{hot}; margin:0 0 6.5mm;
   }}
-  .sess {{ margin:0 0 5.6mm; break-inside:avoid; }}
+  .sess {{ margin:0 0 4.4mm; break-inside:avoid; }}
   .sess h4 {{
     font-family:"JetBrains Mono",monospace; font-size:4mm; font-weight:500;
     letter-spacing:.14em; text-transform:uppercase; color:{hot};
-    margin:0 0 2.2mm; display:flex; justify-content:space-between; gap:4mm;
+    margin:0 0 1.8mm; display:flex; justify-content:space-between; gap:4mm;
   }}
   .clock {{ color:{cool}; letter-spacing:.06em; opacity:.8; }}
   .sess ul {{ margin:0; padding:0; list-style:none; }}
   .sess li {{
     font-family:"Inter Tight",sans-serif; font-size:9.4mm; color:{ink};
-    line-height:1.12; margin:0 0 2.8mm;
+    line-height:1.1; margin:0 0 2.1mm;
   }}
   .sess li b {{ font-weight:700; }}
   .aff {{ color:{cool}; font-weight:500; font-size:6.4mm; }}
@@ -303,7 +303,7 @@ TEMPLATE = """<!doctype html>
      the title down the page. */
   .sess li i {{ display:none; }}
   .tail {{
-    display:flex; justify-content:space-between; align-items:baseline; margin-top:9mm;
+    display:flex; justify-content:space-between; align-items:baseline; margin-top:6mm;
     font-family:"JetBrains Mono",monospace; font-size:3.9mm; letter-spacing:.1em;
     text-transform:uppercase; color:{cool}; gap:10mm;
   }}
@@ -311,7 +311,7 @@ TEMPLATE = """<!doctype html>
   /* The QR sits on its own light patch. A code drawn light-on-dark decodes on
      most phones but not all — the quiet zone and the polarity are the two
      things cheap decoders are strict about, so both are given properly. */
-  .qr-card {{ grid-column:2; display:flex; align-items:center; gap:6mm; margin-top:2mm; }}
+  .qr-card {{ grid-column:2; display:flex; align-items:center; gap:5mm; margin-top:0; }}
   .qr {{ display:flex; align-items:flex-end; gap:5mm; }}
   .qr-plate {{ width:34mm; height:34mm; flex:none; background:{art_ink}; padding:1.6mm; border-radius:1mm; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
