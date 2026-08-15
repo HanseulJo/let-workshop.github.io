@@ -40,7 +40,7 @@ from pathlib import Path
 
 try:
     import numpy as np
-    from PIL import Image, ImageOps
+    from PIL import Image, ImageEnhance, ImageOps
 except ModuleNotFoundError as exc:  # pragma: no cover
     sys.exit(f"missing dependency '{exc.name}'\n  pip install numpy pillow")
 
@@ -75,6 +75,40 @@ def picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct):
     lo, hi = np.percentile(a, [lo_pct, hi_pct])
     a = np.clip((a - lo) / max(hi - lo, 1e-6), 0.0, 1.0)
     return a**gamma
+
+
+def tint_map(source, cols, rows, cell, row_h, base, strength, boost):
+    """One colour per cell, taken from the picture and pulled towards `base`.
+
+    Density alone asks the eye to read a photograph through one variable, and a
+    building and a tree at the same brightness become the same thing. Giving
+    each formula the colour of the ground it stands on adds a second variable,
+    and it costs nothing in print: the colour is a solid fill on a path, so the
+    sheet stays vector and the photograph's own resolution never enters into it.
+
+    `strength` is how far towards the photograph each fill travels. All the way
+    is a colour halftone that no longer belongs to the poster; a little way is
+    a monochrome field that happens to warm and cool with the subject.
+    """
+    im = ImageOps.exif_transpose(Image.open(source)).convert("RGB")
+    im = ImageOps.fit(im, (cols, rows), Image.BOX, centering=(0.5, 0.45))
+    if boost != 1.0:
+        im = ImageEnhance.Color(im).enhance(boost)
+
+    # Hue and saturation from the photograph, brightness from the base. This is
+    # the part that has to be said carefully: the picture's light and shade are
+    # already carried by how much ink each tile puts down, and letting the fill
+    # carry them too darkens every shadow twice — the formulas there are sparse
+    # *and* nearly the colour of the paper, so the whole lower half goes to mud.
+    # Taking only the colour leaves the tone entirely to the density, which is
+    # what the solver spent its effort on.
+    hsv = np.asarray(im.convert("HSV"), dtype=np.float64)
+    b = np.array([int(base[i:i + 2], 16) for i in (1, 3, 5)], dtype=np.float64)
+    base_v = float(np.asarray(Image.new("RGB", (1, 1), tuple(int(x) for x in b)).convert("HSV"))[0, 0, 2])
+    hsv[:, :, 1] *= strength          # how far from grey the ink is allowed
+    hsv[:, :, 2] = base_v             # and every tile the same weight of ink
+    out = np.asarray(Image.fromarray(hsv.astype(np.uint8), "HSV").convert("RGB"), dtype=np.float64)
+    return np.clip(out, 0, 255).astype(np.uint8)
 
 
 def group_by_width(entries):
@@ -157,7 +191,7 @@ def flat_target(rows, bands, cols, level, wobble, seed=7):
 
 
 def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour,
-         diffuse, flat, wobble, standalone):
+         diffuse, flat, wobble, standalone, tint, tint_boost):
     if flat is None and not source:
         sys.exit("give an image, or --flat TONE for a field with no picture in it")
     lut = json.loads(LUT.read_text(encoding="utf-8"))
@@ -209,6 +243,10 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     target = np.clip((target - sig_lo) / span, 0.0, 1.0)
 
     groups = group_by_width(entries)
+    tints = None
+    if tint > 0 and source:
+        tints = tint_map(source, cols, rows, cell, row_h, colour if colour.startswith("#") else "#ffffff",
+                         tint, tint_boost)
 
     usage, uses = {}, []
     prev_row = None
@@ -257,6 +295,8 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
                     # taken from the viewBox rather than assumed.
                     e["stroke"] * (float(paths[e["id"]][1].split()[2]) / e["w"]),
                     span_px,
+                    None if tints is None else "#%02x%02x%02x" % tuple(
+                        tints[r, min(c + e["units"] // 2, cols - 1)]),
                 )
             )
             placed += 1
@@ -271,13 +311,14 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
         # which is what you need if you are going to edit it by hand. The file
         # is several times larger; that does not matter for a working file.
         parts = []
-        for i, x, y, w, h, sw, _ in uses:
+        for i, x, y, w, h, sw, _, _ in uses:
             d, vb = paths[i]
             vb_w, vb_h = float(vb.split()[2]), float(vb.split()[3])
             k = w / vb_w  # the symbol's units are finer than a pixel; see prep-formulas.py
             stroke = f' stroke-width="{sw:.3f}"' if sw > 0.005 else ' stroke="none"'
+            paint = f' fill="{tc}" stroke="{tc}"' if tc else ""
             parts.append(
-                f'<path transform="translate({x:.1f} {y:.1f}) scale({k:.5f})" d="{d}"{stroke}/>'
+                f'<path transform="translate({x:.1f} {y:.1f}) scale({k:.5f})" d="{d}"{stroke}{paint}/>'
             )
         svg = (
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
@@ -301,8 +342,12 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
     body = "".join(
         f'<use href="#{i}" x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}"'
         + (f' stroke-width="{sw:.2f}"' if sw > 0.005 else "")
+        # Its own colour, sampled from the picture where it stands. A solid fill
+        # on a path, so the sheet is still vector and the photograph's own
+        # resolution never enters into it.
+        + (f' fill="{tc}" stroke="{tc}"' if tc else "")
         + "/>"
-        for i, x, y, w, h, sw, _ in uses
+        for i, x, y, w, h, sw, _, tc in uses
     )
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
@@ -347,8 +392,12 @@ if __name__ == "__main__":
                     help="disturbance on a flat target, so the solver does not repeat one answer")
     ap.add_argument("--standalone", action="store_true",
                     help="flat <path> per formula, no <use> — for Illustrator and the like")
+    ap.add_argument("--tint", type=float, default=0.0, metavar="0-1",
+                    help="pull each formula towards the picture's own colour there")
+    ap.add_argument("--tint-boost", type=float, default=1.25,
+                    help="saturation applied before tinting")
     ap.add_argument("--colour", default="currentColor")
     args = ap.parse_args()
     main(args.source, args.out, args.width, args.height, args.gamma,
          args.reuse, args.repeat, args.lo, args.hi, args.colour, args.diffuse,
-         args.flat, args.wobble, args.standalone)
+         args.flat, args.wobble, args.standalone, args.tint, args.tint_boost)
