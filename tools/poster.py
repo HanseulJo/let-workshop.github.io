@@ -32,18 +32,21 @@ except ModuleNotFoundError as exc:  # pragma: no cover
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 
-# Two tones, warm against cold, rather than two blues. A single hue makes the
-# picture legible only by density; putting the light on the other side of the
-# wheel from the ground gives it a second thing to be read by, which is what
-# the halftone posters this is modelled on all do.
+# The site's own palette: one cool family, near-white for the headline, the
+# coral accent kept for labels. `art` is the colour baked into the formula SVG,
+# and is deliberately a step below the headline — the field is enormous and at
+# the headline's brightness it competes with the name.
 PALETTE = {
-    "ground": "#132234",
-    "ground2": "#0d1727",
-    "ink": "#f0cba0",  # the formulas: warm sand
-    "ink_dim": "#b9976f",
-    "cool": "#6f97bd",  # secondary type
-    "cool_dim": "#4d6b8b",
-    "hot": "#ff8a75",  # the site's accent, for labels only
+    "ground": "#0f1826",
+    "ground2": "#0b111c",
+    "art_ink": "#b9cbe4",
+    "ink": "#f5f5f7",
+    "ink_dim": "#a8b8cd",
+    "cool": "#93a2b8",
+    "cool_dim": "#6d7f96",
+    "hot": "#ff8a75",
+    "rule": "rgba(255,255,255,.18)",
+    "chip": "rgba(255,255,255,.34)",
 }
 
 
@@ -145,23 +148,21 @@ TEMPLATE = """<!doctype html>
   /* The art is given the top of the sheet and nothing else. Type over a field
      this busy has to be either very large or somewhere else; the programme is
      small, so it goes somewhere else. */
-  .art {{ position:absolute; left:0; right:0; top:0; height:352mm; overflow:hidden; }}
+  .art {{ position:absolute; inset:0; overflow:hidden; }}
   .art svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   /* Only where the type actually is. */
-  .fade {{
-    position:absolute; left:0; right:0; top:250mm; height:110mm;
-  }}
+  .fade {{ position:absolute; left:0; right:0; top:150mm; bottom:0; }}
   .fade svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
-  .wrap {{ position:absolute; inset:0; padding:26mm 26mm 22mm; display:flex; flex-direction:column; }}
+  .wrap {{ position:absolute; inset:0; padding:24mm 24mm 20mm; display:flex; flex-direction:column; }}
   .eyebrow {{
     font-family:"JetBrains Mono",monospace; font-size:3.9mm; font-weight:500;
     letter-spacing:.2em; text-transform:uppercase; color:{ink};
-    border:.3mm solid rgba(240,203,160,.42); border-radius:99mm; padding:1.9mm 4.4mm;
-    align-self:flex-start; background:rgba(13,23,39,.62);
+    border:.3mm solid {chip}; border-radius:99mm; padding:1.9mm 4.4mm;
+    align-self:flex-start; background:rgba(11,17,28,.62);
   }}
   .mid {{ margin-top:auto; }}
   h1 {{
-    font-family:"Jost",sans-serif; font-weight:500; font-size:52mm; line-height:.9;
+    font-family:"Jost",sans-serif; font-weight:500; font-size:58mm; line-height:.88;
     letter-spacing:-.022em; margin:0 0 5mm; color:{ink};
   }}
   h1 b {{ font-weight:700; }}
@@ -180,36 +181,36 @@ TEMPLATE = """<!doctype html>
     font-size:4.6mm; font-weight:500; color:{ink}; margin:0 0 9mm;
   }}
   .facts span {{ color:{cool}; }}
-  .rule {{ height:.3mm; background:rgba(111,151,189,.42); margin:0 0 6mm; }}
+  .rule {{ height:.3mm; background:{rule}; margin:0 0 6mm; }}
   /* The programme. Four columns of small type at the foot, the way a season
      card does it — the poster has to survive being read from a metre away for
      the name and from arm's length for the schedule. */
-  .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:9mm; }}
+  .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:14mm; }}
   .day h3 {{
-    font-family:"Inter Tight",sans-serif; font-size:5.6mm; font-weight:700;
-    color:{ink}; margin:0 0 1mm;
+    font-family:"Inter Tight",sans-serif; font-size:10mm; font-weight:700;
+    color:{ink}; margin:0 0 1.6mm;
   }}
   .daysub {{
-    font-family:"JetBrains Mono",monospace; font-size:3.2mm; letter-spacing:.12em;
-    text-transform:uppercase; color:{hot}; margin:0 0 3.5mm;
+    font-family:"JetBrains Mono",monospace; font-size:4.6mm; letter-spacing:.12em;
+    text-transform:uppercase; color:{hot}; margin:0 0 6.5mm;
   }}
-  .sess {{ margin:0 0 3.6mm; break-inside:avoid; }}
+  .sess {{ margin:0 0 8mm; break-inside:avoid; }}
   .sess h4 {{
-    font-family:"JetBrains Mono",monospace; font-size:3.3mm; font-weight:500;
+    font-family:"JetBrains Mono",monospace; font-size:4.9mm; font-weight:500;
     letter-spacing:.13em; text-transform:uppercase; color:{cool};
-    margin:0 0 1.2mm; display:flex; justify-content:space-between; gap:4mm;
+    margin:0 0 2.6mm; display:flex; justify-content:space-between; gap:4mm;
   }}
   .clock {{ color:{cool_dim}; letter-spacing:.06em; }}
   .sess ul {{ margin:0; padding:0; list-style:none; }}
   .sess li {{
-    font-family:"Inter Tight",sans-serif; font-size:4.1mm; color:{ink};
-    line-height:1.34; margin:0 0 .6mm;
+    font-family:"Inter Tight",sans-serif; font-size:9.4mm; color:{ink};
+    line-height:1.14; margin:0 0 3.4mm;
   }}
   .sess li b {{ font-weight:700; }}
-  .aff {{ color:{cool}; font-weight:500; }}
+  .aff {{ color:{cool}; font-weight:500; font-size:6.4mm; }}
   .sess li i {{
     display:block; font-style:normal; font-family:"JetBrains Mono",monospace;
-    font-size:3mm; letter-spacing:.06em; color:{cool_dim};
+    font-size:4.6mm; letter-spacing:.06em; color:{cool_dim}; margin-top:.6mm;
   }}
   .tail {{
     display:flex; justify-content:space-between; align-items:flex-end; margin-top:8mm;
@@ -221,7 +222,7 @@ TEMPLATE = """<!doctype html>
      most phones but not all — the quiet zone and the polarity are the two
      things cheap decoders are strict about, so both are given properly. */
   .qr {{ display:flex; align-items:flex-end; gap:5mm; }}
-  .qr-plate {{ width:30mm; height:30mm; background:{ink}; padding:1.6mm; border-radius:1mm; }}
+  .qr-plate {{ width:30mm; height:30mm; background:{art_ink}; padding:1.6mm; border-radius:1mm; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
   .qr-say {{ text-align:right; }}
   .qr-say b {{ display:block; font-size:4.6mm; color:{ink}; letter-spacing:.06em; }}
@@ -232,8 +233,8 @@ TEMPLATE = """<!doctype html>
   <div class="fade"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="{ground}" stop-opacity="0"/>
-      <stop offset=".45" stop-color="{ground}" stop-opacity=".82"/>
-      <stop offset=".8" stop-color="{ground}" stop-opacity="1"/>
+      <stop offset=".28" stop-color="{ground}" stop-opacity=".72"/>
+      <stop offset=".46" stop-color="{ground}" stop-opacity=".94"/>
       <stop offset="1" stop-color="{ground}" stop-opacity="1"/>
     </linearGradient></defs>
     <rect width="10" height="100" fill="url(#f)"/>
