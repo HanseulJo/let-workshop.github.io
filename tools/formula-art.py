@@ -1,0 +1,270 @@
+#!/usr/bin/env python3
+"""Spell a photograph out in formulas.
+
+    python3 tools/formula-art.py ~/Downloads/postech.jpg -o static/hero-art.svg
+
+Reads the table written by tools/formula-lut.py and the glyph outlines from
+static/formulas.svg, and writes an SVG in which every mark is a real formula,
+chosen so that the ink it puts down reproduces the picture.
+
+How it chooses. The picture is cut into rows the height of one formula and
+columns one cell wide, and each cell is reduced to BANDS numbers — the mean
+brightness of its top, middle and bottom third. A formula spanning n cells
+therefore has to match a 3 x n patch of the picture, and the table says what
+its own 3 x n patch looks like. That is the whole matching problem: it is not
+"how dark is this square", it is "which formula, at which weight, has the shape
+of ink this strip of the picture has".
+
+Why dynamic programming rather than greedy. Formulas are not all the same
+width, so filling a row is a partition problem: a slightly worse formula here
+may leave a span that a much better one fits exactly there. Greedy takes the
+local best and then has to jam whatever is left into the gap, which shows up as
+a ragged, mismatched right edge on every row. The row is short enough (a few
+hundred cells, a few hundred candidates) that solving it exactly costs
+milliseconds, so there is no reason to approximate.
+
+Two costs are added to the match. Reuse, counted across the whole picture, so
+one conveniently mid-grey formula does not end up tiling half the sky; and
+immediate repetition, weighted far more heavily, because the same mark twice in
+a row reads as a mistake rather than as texture.
+
+Needs NumPy and Pillow. Local tool only — the site build does not run this.
+"""
+
+import argparse
+import json
+import math
+import re
+import sys
+from pathlib import Path
+
+try:
+    import numpy as np
+    from PIL import Image, ImageOps
+except ModuleNotFoundError as exc:  # pragma: no cover
+    sys.exit(f"missing dependency '{exc.name}'\n  pip install numpy pillow")
+
+ROOT = Path(__file__).resolve().parent.parent
+LUT = ROOT / "data" / "formula-lut.json"
+SPRITE = ROOT / "static" / "formulas.svg"
+
+SYMBOL = re.compile(r'<symbol id="(fx\d+)" viewBox="([^"]+)"><path d="([^"]+)"/></symbol>')
+
+
+def load_paths():
+    """id -> (path data, viewBox) from the sprite prep-formulas.py writes."""
+    text = SPRITE.read_text(encoding="utf-8")
+    return {m.group(1): (m.group(3), m.group(2)) for m in SYMBOL.finditer(text)}
+
+
+def picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct):
+    """The image as a (rows, bands, cols) array of target coverage in [0, 1]."""
+    im = ImageOps.exif_transpose(Image.open(source)).convert("L")
+    # Crop to the art's aspect first, the way the hero's own photograph is
+    # covered rather than stretched.
+    im = ImageOps.fit(im, (cols * cell, rows * row_h), Image.LANCZOS, centering=(0.5, 0.45))
+    # BOX is an exact area average, so resizing straight to the grid *is* the
+    # block mean — no reshaping, and it does not care whether the row height
+    # divides by the number of bands.
+    small = im.resize((cols, rows * bands), Image.BOX)
+    a = np.asarray(small, dtype=np.float64).reshape(rows, bands, cols) / 255.0
+
+    # Stretch the picture's own range rather than the nominal 0-255: a hero
+    # photograph that has already been toned down occupies very little of it,
+    # and mapping that straight onto the formulas' range wastes most of them.
+    lo, hi = np.percentile(a, [lo_pct, hi_pct])
+    a = np.clip((a - lo) / max(hi - lo, 1e-6), 0.0, 1.0)
+    return a**gamma
+
+
+def group_by_width(entries):
+    """Entries stacked by width, so a whole width can be scored in one go.
+
+    The inner loop compares one column against every candidate; done one
+    formula at a time in Python it is a few million array calls per picture, and
+    the run goes from seconds to minutes. Stacking each width into a single
+    (candidates, bands, units) array turns that into one subtraction per width
+    per column.
+    """
+    groups = {}
+    for e in entries:
+        groups.setdefault(e["units"], []).append(e)
+    out = {}
+    for units, group in groups.items():
+        out[units] = {
+            "entries": group,
+            "sig": np.stack([e["arr"] for e in group]),
+            "ids": np.array([e["id"] for e in group]),
+        }
+    return out
+
+
+def solve_row(target, groups, cols, usage, reuse_w, repeat_w, prev_row):
+    """Cheapest partition of one row into formulas. Returns [(col, entry)]."""
+    cost = np.full(cols + 1, math.inf)
+    pick = [None] * (cols + 1)
+    cost[cols] = 0.0
+
+    reuse = {u: reuse_w * np.array([usage.get(i, 0) for i in g["ids"]], dtype=float)
+             for u, g in groups.items()}
+
+    for c in range(cols - 1, -1, -1):
+        room = cols - c
+        best, best_e = math.inf, None
+        for units, g in groups.items():
+            span = min(units, room)
+            rest = cost[c + span]
+            if not math.isfinite(rest):
+                continue
+            tgt = target[:, c : c + span]
+            d = ((g["sig"][:, :, :span] - tgt) ** 2).mean(axis=(1, 2)) + reuse[units]
+            if prev_row is not None and prev_row[c] is not None:
+                # The row above, at this column: the same formula stacked reads
+                # as a column of duplicates even though neither row repeats.
+                d = d + repeat_w * (g["ids"] == prev_row[c])
+            k = int(d.argmin())
+            v = d[k] + rest
+            if v < best:
+                best, best_e = v, g["entries"][k]
+        cost[c], pick[c] = best, best_e
+
+    out, c = [], 0
+    while c < cols and pick[c] is not None:
+        e = pick[c]
+        out.append((c, e))
+        c += min(e["units"], cols - c)
+    return out
+
+
+def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_pct, colour):
+    lut = json.loads(LUT.read_text(encoding="utf-8"))
+    cell, row_h, bands = lut["cell"], lut["row_h"], lut["bands"]
+    scale = lut["scale"]
+    paths = load_paths()
+
+    cols = max(1, width // cell)
+    rows = max(1, height // row_h)
+    width, height = cols * cell, rows * row_h
+
+    entries = [e for e in lut["entries"] if e["id"] in paths]
+    if not entries:
+        sys.exit("no formulas in common between the table and the sprite — re-run prep-formulas.py")
+    for e in entries:
+        e["arr"] = np.asarray(e["sig"], dtype=np.float64)
+
+    flat = np.concatenate([e["arr"].ravel() for e in entries])
+    target = picture(source, cols, rows, cell, row_h, bands, gamma, lo_pct, hi_pct)
+
+    # Then the picture is pushed through the set's own distribution of ink.
+    # Linear stretching is not enough and the difference is stark: formulas are
+    # mostly whitespace, so their coverages pile up near zero, while a stretched
+    # photograph is spread evenly across its range. Ask for tones two thirds of
+    # the way up that range and nothing can supply them, so every light area
+    # saturates onto the same few heaviest formulas and the picture's whole
+    # subject — a white building against a grey sky — flattens into one tone.
+    # Matching the histograms asks only for tones the set can actually make,
+    # and because the mapping is monotone it costs no contrast: what was
+    # lighter stays lighter.
+    order = np.sort(flat)
+    target = np.interp(target, np.linspace(0.0, 1.0, len(order)), order)
+
+    # Common scale for the comparison, now that both sides live on the same
+    # distribution — and this matters more than it looks. Coverage differences
+    # between two formulas are in the hundredths, so squared they are in the
+    # ten-thousandths: leave them there and the reuse and repetition penalties
+    # are an order of magnitude larger than the picture, and the result is a
+    # nicely varied field of formulas resembling nothing at all. Percentiles
+    # rather than the extremes, so one outlier tile does not compress the rest
+    # into the middle.
+    sig_lo, sig_hi = np.percentile(flat, [1, 99])
+    span = max(sig_hi - sig_lo, 1e-6)
+    for e in entries:
+        e["arr"] = np.clip((e["arr"] - sig_lo) / span, 0.0, 1.0)
+    target = np.clip((target - sig_lo) / span, 0.0, 1.0)
+
+    groups = group_by_width(entries)
+
+    usage, uses = {}, []
+    prev_row = None
+    placed = 0
+    for r in range(rows):
+        row = solve_row(target[r], groups, cols, usage, reuse_w, repeat_w, prev_row)
+        row_ids = [None] * cols
+        for c, e in row:
+            usage[e["id"]] = usage.get(e["id"], 0) + 1
+            for k in range(c, min(c + e["units"], cols)):
+                row_ids[k] = e["id"]
+            # Scaled uniformly so the span is exact; the rounding to whole cells
+            # is at most half a cell on a formula many cells wide, so the glyph
+            # size stays within a few percent across the whole picture.
+            span_px = min(e["units"], cols - c) * cell
+            w_px = e["units"] * cell
+            h_px = e["h"] * scale * (w_px / (e["w"] * scale))
+            uses.append(
+                (
+                    e["id"],
+                    c * cell,
+                    r * row_h + (row_h - h_px) / 2,
+                    w_px,
+                    h_px,
+                    # Path units, not pixels: stroke-width on a <use> is read in
+                    # the symbol's own coordinate system and then scaled by the
+                    # viewBox transform, so converting it here scaled it twice
+                    # and every weight rendered at about a sixth of its width.
+                    e["stroke"],
+                    span_px,
+                )
+            )
+            placed += 1
+        prev_row = row_ids
+
+    used_ids = sorted({u[0] for u in uses}, key=lambda s: int(s[2:]))
+    defs = "".join(
+        f'<symbol id="{i}" viewBox="{paths[i][1]}" overflow="visible"><path d="{paths[i][0]}"/></symbol>'
+        for i in used_ids
+    )
+    body = "".join(
+        f'<use href="#{i}" x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}"'
+        + (f' stroke-width="{sw:.2f}"' if sw > 0.005 else "")
+        + "/>"
+        for i, x, y, w, h, sw, _ in uses
+    )
+    svg = (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
+        f'width="{width}" height="{height}" role="img" aria-hidden="true" '
+        # Cover, not stretch — the same thing the hero's photograph does. A
+        # background is asked to fill boxes of every shape, and squashing the
+        # picture also squashes the glyphs out of proportion.
+        f'preserveAspectRatio="xMidYMid slice">'
+        f"<defs>{defs}</defs>"
+        f'<g fill="{colour}" stroke="{colour}" stroke-linejoin="round" stroke-linecap="round">'
+        f"{body}</g></svg>"
+    )
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(svg, encoding="utf-8")
+
+    spread = sorted(usage.values(), reverse=True)
+    print(f"  {width}x{height}px, {cols}x{rows} cells, {placed} formulas placed")
+    print(f"  {len(used_ids)} of {len(paths)} distinct formulas used; "
+          f"the most-used appears {spread[0]} times, the median {spread[len(spread) // 2]}")
+    print(f"  signatures normalised over {sig_lo:.3f}-{sig_hi:.3f} coverage")
+    print(f"  -> {out_path.relative_to(ROOT) if out_path.is_relative_to(ROOT) else out_path} "
+          f"({out_path.stat().st_size // 1024} KB)")
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("source", help="image to spell out")
+    ap.add_argument("-o", "--out", default="static/hero-art.svg")
+    ap.add_argument("--width", type=int, default=1800)
+    ap.add_argument("--height", type=int, default=620)
+    ap.add_argument("--gamma", type=float, default=1.0, help=">1 darkens the midtones, <1 lifts them")
+    ap.add_argument("--lo", type=float, default=2.0, help="black point percentile")
+    ap.add_argument("--hi", type=float, default=98.0, help="white point percentile")
+    ap.add_argument("--reuse", type=float, default=0.0006, help="cost per previous use of a formula")
+    ap.add_argument("--repeat", type=float, default=0.02, help="cost for the formula directly above")
+    ap.add_argument("--colour", default="currentColor")
+    args = ap.parse_args()
+    main(args.source, args.out, args.width, args.height, args.gamma,
+         args.reuse, args.repeat, args.lo, args.hi, args.colour)
