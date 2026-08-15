@@ -648,6 +648,14 @@ body {
   padding: 6px 14px;
   margin: 0 0 24px;
 }
+/* The pill is the smallest type in the hero and it sits in the busiest part of
+   the art, where the sky is at its densest. A ground of its own is enough —
+   the border alone was leaving it to compete with the formulas behind it. */
+.hero.has-art .eyebrow {
+  background: rgba(11, 18, 30, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
 /* Size by viewport rather than a fixed em, so the title fills a phone and a
    desktop equally instead of being tuned for one of them. */
 .hero h1 {

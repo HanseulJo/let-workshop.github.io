@@ -128,7 +128,7 @@ def calibrate(paths, boxes, cell, row_h, scale, levels, max_stroke, sample=18):
     return [round(float(x), 3) for x in np.interp(wanted, curve, sweep)]
 
 
-def main(cell, row_h, bands, strokes, target_h, levels, max_stroke) -> None:
+def main(cell, row_h, bands, strokes, target_h, levels, max_stroke, sizes) -> None:
     formulas = yaml.safe_load(SOURCE.read_text(encoding="utf-8"))["formulas"]
     prop = FontProperties(size=FONTSIZE)
 
@@ -167,28 +167,41 @@ def main(cell, row_h, bands, strokes, target_h, levels, max_stroke) -> None:
         strokes = calibrate(paths, boxes, cell, row_h, scale, levels, max_stroke)
         print(f"  calibrated {levels} weights: {strokes}")
 
+    # Size is the third axis, after which formula and how heavily it is stroked.
+    # The same formula set larger fills more of its row and so reads darker; set
+    # smaller it reads lighter, and it also spans fewer cells, which gives the
+    # row solver more ways to partition itself. Both effects are wanted. The
+    # cost is that the glyphs are no longer all one size — for a picture that is
+    # the point, but it is the opposite of what the drifting field wants, which
+    # is why the two have separate tables.
     entries = []
     for i, (path, box) in enumerate(zip(paths, boxes)):
         if path is None:
             continue
         w, h = box
-        units = max(1, int(round(w * scale / cell)))
-        box_w, box_h = units * cell, row_h
-        for si, stroke in enumerate(strokes):
-            cov = raster(path, w, h, box_w, box_h, scale, stroke)
-            sig = signature(cov, bands, units)
-            entries.append(
-                {
-                    "id": f"fx{i}",
-                    "weight": si,
-                    "stroke": round(stroke, 3),
-                    "units": units,
-                    "w": round(w, 1),
-                    "h": round(h, 1),
-                    "mean": round(float(cov.mean()), 4),
-                    "sig": [[round(float(x), 4) for x in row] for row in sig],
-                }
-            )
+        for size in sizes:
+            s_scale = scale * size
+            units = max(1, int(round(w * s_scale / cell)))
+            box_w, box_h = units * cell, row_h
+            for si, stroke in enumerate(strokes):
+                # The stroke is in path units, so it has to shrink with the
+                # glyph or a small formula would be drawn in a heavier pen than
+                # a large one at the same nominal weight.
+                cov = raster(path, w, h, box_w, box_h, s_scale, stroke * size)
+                sig = signature(cov, bands, units)
+                entries.append(
+                    {
+                        "id": f"fx{i}",
+                        "weight": si,
+                        "size": round(size, 3),
+                        "stroke": round(stroke * size, 3),
+                        "units": units,
+                        "w": round(w, 1),
+                        "h": round(h, 1),
+                        "mean": round(float(cov.mean()), 4),
+                        "sig": [[round(float(x), 4) for x in row] for row in sig],
+                    }
+                )
 
     means = sorted(e["mean"] for e in entries)
     doc = {
@@ -197,12 +210,13 @@ def main(cell, row_h, bands, strokes, target_h, levels, max_stroke) -> None:
         "bands": bands,
         "scale": round(scale, 5),
         "strokes": strokes,
+        "sizes": sizes,
         "coverage": {"min": round(means[0], 4), "max": round(means[-1], 4)},
         "entries": entries,
     }
     OUT.write_text(json.dumps(doc, separators=(",", ":")), encoding="utf-8")
     print(
-        f"  {len(entries)} entries ({len(entries) // len(strokes)} formulas x {len(strokes)} weights)"
+        f"  {len(entries)} entries ({len(strokes)} weights x {len(sizes)} sizes)"
         f" -> {OUT.relative_to(ROOT)} ({OUT.stat().st_size // 1024} KB)"
     )
     print(f"  scale {scale:.4f} px/unit, cell {cell}x{row_h}px, widths "
@@ -219,10 +233,12 @@ if __name__ == "__main__":
                     help="median formula height as a fraction of the row (default 0.5)")
     ap.add_argument("--levels", type=int, default=12,
                     help="number of weights, spaced evenly in coverage (0 to use --strokes)")
+    ap.add_argument("--sizes", type=float, nargs="+", default=[1.0],
+                    help="glyph size multipliers; more sizes is finer control of tone")
     ap.add_argument("--max-stroke", type=float, default=11.0,
                     help="heaviest outline to calibrate against, in path units")
     ap.add_argument("--strokes", type=float, nargs="+", default=[0.0, 1.2, 2.6, 4.4],
                     help="explicit outline widths, used only when --levels 0")
     args = ap.parse_args()
     main(args.cell, args.row, args.bands, args.strokes, args.target_height,
-         args.levels, args.max_stroke)
+         args.levels, args.max_stroke, args.sizes)
