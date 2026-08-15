@@ -492,17 +492,33 @@ FESTIVAL = """<!doctype html>
     display:block; font-family:"JetBrains Mono",monospace; font-size:4.6mm;
     letter-spacing:.06em; margin-right:3mm;
   }}
-  /* The bill. Right-aligned and set as large as fourteen names allow. */
-  .bill {{ margin:16mm 0 0 auto; text-align:right; max-width:292mm; }}
-  .bill li {{
-    list-style:none; font-family:"Inter Tight",sans-serif; font-weight:500;
-    font-size:13mm; line-height:1.16; letter-spacing:-.018em; color:{ink};
-  }}
-  .bill li sup {{
+  /* The programme, against one right edge. */
+  .bill {{ margin:12mm 0 0 auto; text-align:right; width:246mm; }}
+  .slot {{ margin:0 0 6.5mm; }}
+  .slot-head {{
+    display:inline-flex; align-items:baseline; gap:5mm;
+    margin:0 0 1.6mm; padding:0 0 1.2mm;
+    border-bottom:.25mm solid rgba(255,138,117,.42);
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:500;
-    letter-spacing:.1em; vertical-align:super; margin-left:2mm; color:{cool};
+    letter-spacing:.15em; text-transform:uppercase; color:{hot};
   }}
-  .bill ul {{ margin:0; padding:0; }}
+  .slot-head .t {{ color:{cool}; letter-spacing:.06em; }}
+  .slot ul {{ margin:0; padding:0; list-style:none; }}
+  .slot li {{
+    font-family:"Inter Tight",sans-serif; font-weight:600; font-size:10.5mm;
+    line-height:1.16; letter-spacing:-.018em; color:{ink};
+  }}
+  .slot li span {{
+    font-weight:400; font-size:6.4mm; color:{cool}; margin-left:2.5mm;
+  }}
+  .daymark {{
+    text-align:right; margin:0 0 3mm;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:7mm; color:{ink};
+  }}
+  .daymark span {{
+    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:3.8mm;
+    letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin-left:4mm;
+  }}
   .dates {{
     display:flex; justify-content:space-between; align-items:baseline;
     margin:auto 0 0; color:{hot};
@@ -511,8 +527,8 @@ FESTIVAL = """<!doctype html>
   }}
   .dates .month {{ font-weight:400; }}
   .cols {{
-    display:grid; grid-template-columns:1fr 1fr 1fr; gap:10mm; margin-top:12mm;
-    font-family:"Inter Tight",sans-serif;
+    display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:10mm;
+    font-family:"Inter Tight",sans-serif; align-items:start;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.6mm; font-weight:500;
@@ -532,7 +548,11 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.14em;
     text-transform:uppercase; color:{cool};
   }}
-  .qr-plate {{ width:26mm; height:26mm; background:{art_ink}; padding:1.4mm; box-sizing:border-box; }}
+  .qr-plate {{ width:32mm; height:32mm; background:{art_ink}; padding:1.6mm; box-sizing:border-box; }}
+  .foot .cta {{ text-align:right; }}
+  .foot .cta b {{ display:block; font-family:"Inter Tight",sans-serif; font-size:4.4mm;
+                  font-weight:700; color:{hot}; margin-bottom:2.5mm; letter-spacing:0;
+                  text-transform:none; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
 <div class="sheet">
@@ -556,14 +576,15 @@ FESTIVAL = """<!doctype html>
       <h1 class="mark">{mark} <span>{year}</span></h1>
       <div class="stamps">{full_name}<br>{eyebrow}</div>
     </div>
-    <div class="bill"><ul>{bill}</ul></div>
+    <div class="bill">{programme}</div>
     <div class="dates"><span>{days}</span><span class="month">{month}</span></div>
     <div class="cols">
       <div><h4>Organisers</h4><ul>{organisers}</ul></div>
-      <div class="mid"><h4>Theme</h4><ul><li>{theme}</li></ul></div>
-      <div class="r"><h4>Sessions</h4><ul>{sessions_list}</ul></div>
+      <div class="r"><h4>Venue</h4><ul><li>{venue_name}<span> {city}, {country}</span></li></ul>
+        <h4 style="margin-top:6mm">Theme</h4><ul><li>{theme}</li></ul></div>
     </div>
-    <div class="foot"><span>{hosts}</span><div class="qr-plate">{qr}</div></div>
+    <div class="foot"><span>{hosts}</span>
+      <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div></div>
   </div>
 </div>
 """
@@ -938,6 +959,20 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None):
             + (f' &middot; {esc(p["topic"])}' if p.get("topic") else "")
             + "</span></li>"
             for b in d["blocks"] for p in b["people"]))
+    slots = []
+    for d in sessions(program):
+        slots.append(
+            f'<p class="daymark">{esc(d["label"])}'
+            + (f'<span>{esc(d["theme"])}</span>' if d.get("theme") else "")
+            + "</p>")
+        for b in d["blocks"]:
+            people = "".join(
+                f'<li>{esc(p2["name"])}<span>{esc(p2.get("affil", ""))}</span></li>'
+                for p2 in b["people"])
+            slots.append(
+                f'<div class="slot"><p class="slot-head">{esc(b["title"])}'
+                f'<span class="t">{esc(b["start"])}</span></p><ul>{people}</ul></div>')
+    programme_block = "".join(slots)
     names_flat = "".join(
         f'<li>{esc(p["name"].lower())}</li>'
         for d in sessions(program) for b in d["blocks"] for p in b["people"])
@@ -983,6 +1018,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None):
         day1=day_people[0],
         day2=day_people[1] if len(day_people) > 1 else "",
         names_flat=names_flat,
+        programme=programme_block,
         dots="<i></i>" * 15,
         full_title=esc(" ".join(
             w if w.isupper() and len(w) > 1
