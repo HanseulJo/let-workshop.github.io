@@ -28,11 +28,16 @@ eyebrow_ko: 제1회 · 연례 모임
 #   art    the campus written out in formulas, one glyph-block per superpixel.
 #          Regenerate with tools/formula-lut.py then tools/formula-art.py; the
 #          photograph itself is not drawn, because this *is* the photograph.
+#   flow   the drifting field used as a stencil: the writing moves, and the
+#          photograph shows only through it, fixed in place at its own
+#          resolution. Tone is the picture's tone times the local density of
+#          the writing, so the picture keeps its contrast without having to be
+#          encoded in which formula was chosen.
 #   drift  the earlier treatment — the blurred campus with a tilted field of
-#          formulas sliding across it. Everything for it is still here.
-# Not both: two layers of formulas over each other make neither legible, and
-# the picture disappears into the noise.
-hero_background: art
+#          formulas sliding across it, drawn on top rather than cut out of it.
+# Never two of them at once: two layers of formulas over each other make
+# neither legible, and the picture disappears into the noise.
+hero_background: flow
 
 theme: Bandits & Deep Learning Theory
 dates: October 7–8, 2026

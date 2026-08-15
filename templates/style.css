@@ -480,6 +480,46 @@ body {
   filter: none;
   opacity: 0.34;
 }
+/* ---- `flow`: the writing moves, the picture stays put ----
+   The drifting field is not drawn as glyphs on the hero any more; it is the
+   only place the photograph is allowed to show. Inside this box the field is
+   white on black and the photograph is multiplied over it, so a pixel survives
+   only where a formula is passing; the box is then screened onto the hero,
+   where black counts as nothing.
+
+   The picture therefore does not travel with the formulas — it is fixed, at the
+   photograph's own resolution, and the formulas slide across it like a window.
+   Tone is the photograph's tone times the local density of the writing, and the
+   field's density is even, so the picture keeps its contrast rather than having
+   to be encoded in the choice of formula at all. */
+.hero.has-flow .hero-math {
+  z-index: 0;
+  isolation: isolate; /* keep the multiply below from reaching the hero */
+  mix-blend-mode: screen; /* and let the black ground count as nothing */
+  background: #000;
+  opacity: 1;
+}
+.hero.has-flow .hero-math .fx {
+  opacity: 1;
+}
+.hero.has-flow .hero-math::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: url("hero.jpg") 50% 45% / cover no-repeat;
+  /* Multiplying by a field that is mostly gaps costs most of the light, so the
+     photograph is opened up before it is spent. */
+  filter: brightness(3.3) contrast(1.3);
+  mix-blend-mode: multiply;
+}
+/* A ghost of the picture under it all, the same one the art treatment uses:
+   enough to hold the shape together between passes of the writing. */
+.hero.has-flow::before {
+  filter: blur(1px);
+  opacity: 0.3;
+}
+
 .hero-art {
   position: absolute;
   inset: -12px;
