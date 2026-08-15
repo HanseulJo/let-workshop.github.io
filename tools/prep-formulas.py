@@ -42,6 +42,13 @@ SPRITE = ROOT / "static" / "formulas.svg"
 MANIFEST = ROOT / "static" / "formulas.json"
 
 FONTSIZE = 48  # path coordinate scale only; rounded to integers, so keep it large
+# Coordinates are stored PRECISION times larger and the viewBox with them, so
+# the integers land on quarter units instead of whole ones. At the size the
+# hero draws these, one path unit is most of a pixel, and rounding to whole
+# units put a visible facet on every curve — the bowls of R and f came out
+# polygonal. The manifest keeps reporting w and h in FONTSIZE units, so nothing
+# downstream has to know.
+PRECISION = 4
 
 
 def to_path_data(vertices, codes) -> str:
@@ -108,12 +115,12 @@ def main() -> None:
         x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
         w, h = max(x1 - x0, 0.1), max(y1 - y0, 0.1)
         # SVG's y runs down, matplotlib's runs up; flip and shift to the origin
-        shifted = [(x - x0, y1 - y) for x, y in verts]
+        shifted = [((x - x0) * PRECISION, (y1 - y) * PRECISION) for x, y in verts]
 
         ident = f"fx{i}"
         symbols.append(
             '<symbol id="%s" viewBox="0 0 %.2f %.2f"><path d="%s"/></symbol>'
-            % (ident, w, h, to_path_data(shifted, codes))
+            % (ident, w * PRECISION, h * PRECISION, to_path_data(shifted, codes))
         )
         # w and h are in path units at a single shared FONTSIZE, so scaling every
         # formula by one constant gives them all the same glyph size — which

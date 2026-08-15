@@ -222,11 +222,14 @@ def main(source, out_path, width, height, gamma, reuse_w, repeat_w, lo_pct, hi_p
                     r * row_h + (row_h - h_px) / 2,
                     w_px,
                     h_px,
-                    # Path units, not pixels: stroke-width on a <use> is read in
-                    # the symbol's own coordinate system and then scaled by the
-                    # viewBox transform, so converting it here scaled it twice
-                    # and every weight rendered at about a sixth of its width.
-                    e["stroke"],
+                    # Symbol units, not pixels: stroke-width on a <use> is read
+                    # in the symbol's own coordinate system and then scaled by
+                    # the viewBox transform, so converting it to pixels here
+                    # scaled it twice and every weight rendered at about a sixth
+                    # of its width. The sprite stores coordinates at a finer
+                    # precision than the table measures in, so the width is
+                    # taken from the viewBox rather than assumed.
+                    e["stroke"] * (float(paths[e["id"]][1].split()[2]) / e["w"]),
                     span_px,
                 )
             )
