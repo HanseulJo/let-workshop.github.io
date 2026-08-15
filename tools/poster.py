@@ -106,6 +106,44 @@ def photo_svg(source, shadow, highlight, width, height, contrast=0.92):
     )
 
 
+def cutout_svg(source, shadow, highlight, width, height, contrast=0.95):
+    """The buildings with the sky already gone, toned to the sheet's ink.
+
+    Two differences from the plain photograph, and both matter. It keeps its
+    alpha, so it is saved as a PNG rather than a JPEG — a JPEG would fill the
+    sky back in with black. And it is fitted rather than cropped, aligned to
+    the foot of its box: a cut-out has a silhouette, and cropping one throws
+    away the part that makes it read as a building rather than as a texture.
+    """
+    im = ImageOps.exif_transpose(Image.open(source)).convert("RGBA")
+    im.thumbnail((width * 2, width * 2), Image.LANCZOS)
+    rgb, alpha = im.convert("RGB"), im.getchannel("A")
+    grey = ImageOps.autocontrast(ImageOps.grayscale(rgb), cutoff=(1, 2))
+    grey = ImageEnhance.Contrast(grey).enhance(contrast)
+    a = tuple(int(shadow.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+    b = tuple(int(highlight.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+    ramp = []
+    for ch in range(3):
+        ramp += [round(a[ch] + (b[ch] - a[ch]) * (v / 255)) for v in range(256)]
+    toned = grey.convert("RGB").point(ramp)
+    toned.putalpha(alpha)
+    buf = io.BytesIO()
+    toned.save(buf, "PNG", optimize=True)
+    data = base64.b64encode(buf.getvalue()).decode("ascii")
+    # The box keeps the container's proportion and the building is laid into it
+    # at full width, standing on the bottom edge. Fitting it instead would put
+    # it in the middle of a tall box with air above and below; slicing it would
+    # crop the silhouette, which is the whole of what a cut-out has. Whatever
+    # overflows the top is sky, and sky is transparent now.
+    img_h = round(width * toned.height / toned.width)
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
+        f'width="{width}" height="{height}" preserveAspectRatio="xMidYMax slice">'
+        f'<image x="0" y="{height - img_h}" width="{width}" height="{img_h}" '
+        f'href="data:image/png;base64,{data}"/></svg>'
+    )
+
+
 def qr_svg(url, dark, light=None):
     """The site address as an SVG QR, sized by CSS rather than by pixels.
 
@@ -843,12 +881,25 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
-def main(art_path, out_path, layout="stack", photo=None):
+def main(art_path, out_path, layout="stack", photo=None, cutout=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
 
-    if photo:
+    if cutout:
+        light_ground = layout in ("civic", "bauhaus")
+        w, h = (1700, 820) if layout == "civic" else (1700, 2398)
+        if layout == "listing":
+            w, h = 1700, 1520
+        elif layout == "bauhaus":
+            w, h = 1000, 1360
+        art = cutout_svg(
+            cutout,
+            PALETTE["paper"] if light_ground else "#24374f",
+            PALETTE["carbon"] if light_ground else "#e4edfa",
+            w, h,
+        )
+    elif photo:
         # Light grounds want ink on paper; dark ones want light on the field.
         light_ground = layout in ("civic", "bauhaus")
         w, h = (1700, 820) if layout == "civic" else (1700, 2398)
@@ -953,10 +1004,11 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--art", help="the formula art SVG to inline")
     ap.add_argument("--photo", help="use a two-tone photograph instead of the formulas")
+    ap.add_argument("--cutout", help="use a sky-removed PNG (see tools/cut-sky.py)")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
                     choices=("stack", "listing", "festival", "academic", "civic", "bauhaus"),
                     default="stack",
                     help="stack, listing, festival, or academic")
     args = ap.parse_args()
-    main(args.art, args.out, args.layout, args.photo)
+    main(args.art, args.out, args.layout, args.photo, args.cutout)
