@@ -590,7 +590,7 @@ FESTIVAL = """<!doctype html>
     color:{ink}; margin:0; line-height:1.3;
   }}
   /* The two rotated blocks down the left edge. */
-  .rails {{ position:absolute; left:20mm; top:118mm; display:flex; gap:9mm; }}
+  .rails {{ position:absolute; left:20mm; right:8mm; top:118mm; display:flex; gap:9mm; }}
   .rail {{
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Inter Tight",sans-serif; color:{hot};
@@ -600,22 +600,17 @@ FESTIVAL = """<!doctype html>
     display:block; font-family:"JetBrains Mono",monospace; font-size:4.6mm;
     letter-spacing:.06em; margin-right:3mm;
   }}
-  /* The theme, turned on its side against the right edge. It sat in the foot
-     between the marks and the code, where it was one more thing in a row of
-     small things; on the edge it is the only thing, and it balances the two
-     rails opposite. Set outside the 20mm text column so it cannot meet the
-     programme, which reaches the right edge of that column. */
-  .theme-rail {{
-    position:absolute; right:8mm; top:50%; transform:translateY(-50%);
-    writing-mode:vertical-rl; text-align:left;
-    font-family:"Inter Tight",sans-serif; line-height:1.25;
-  }}
-  .theme-rail b {{ font-size:5.4mm; font-weight:600; color:{ink}; letter-spacing:-.01em; }}
-  .theme-rail span {{
-    font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
-    letter-spacing:.16em; text-transform:uppercase; color:{hot};
-    margin-left:2.6mm;
-  }}
+  /* A third rail on the opposite edge. It is a member of the same flex row
+     rather than its own absolute block, which is what makes the alignment
+     hold: the row stretches all three to one height, and since each is flipped
+     within its own box the three labels finish on the same line. Given its own
+     top it would have started level with the others but ended wherever its
+     shorter text ran out, and the labels — the part the eye actually lines up
+     — would have sat at three different heights.
+
+     Pushed to 8mm rather than the 20mm text column, because the programme
+     reaches that column's right edge lower down. */
+  .rail-right {{ margin-left:auto; }}
   /* The programme, against one right edge. */
   .panel {{ margin-top:auto; }}
   .bill {{ margin:0 0 0 auto; text-align:right; }}
@@ -724,10 +719,10 @@ FESTIVAL = """<!doctype html>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
   <div class="rails">
-    <div class="rail"><b>{venue_short}</b><span>{venue_name} &middot; {country}</span></div>
-    <div class="rail"><b>Registration</b><span>{reg_note} &middot; {url}</span></div>
+    <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
+    <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
+    <div class="rail rail-right"><b>Homepage</b><span>{url}</span></div>
   </div>
-  <div class="theme-rail"><span>{theme_label}</span><b>{theme}</b></div>
   <div class="wrap">
     <div class="top">
       <div><h1 class="mark">{mark} <span>{year}</span></h1>
