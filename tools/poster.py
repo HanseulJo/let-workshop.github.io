@@ -612,7 +612,7 @@ FESTIVAL = """<!doctype html>
      ground, and a mid grey on a mottled mid ground is the one pairing that
      does not survive being printed. */
   .rail span {{
-    display:block; font-family:"Inter Tight",sans-serif; font-size:5mm;
+    display:block; font-family:"Inter Tight",sans-serif; font-size:6.2mm;
     font-weight:200; letter-spacing:-.006em; color:{ink}; opacity:.92;
   }}
   .rail em {{
@@ -641,6 +641,10 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:4.6mm; font-weight:400;
     letter-spacing:.06em; margin-right:0; opacity:.82;
   }}
+  /* Including its label. The size on .rail em is the display size the left
+     edge is set at, and it reaches here too — this rail is one of the rails.
+     The whole line is small, which is the point of it. */
+  .rail-right em {{ font-size:inherit; letter-spacing:inherit; margin-inline-end:.8mm; }}
   .rail-right em {{ font-style:normal; color:{hot}; }}
   /* The programme, against one right edge. */
   .panel {{ margin-top:auto; }}
