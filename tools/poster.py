@@ -567,7 +567,8 @@ FESTIVAL = """<!doctype html>
     letter-spacing:.06em; margin-right:3mm;
   }}
   /* The programme, against one right edge. */
-  .bill {{ margin:auto 0 12mm auto; text-align:right; }}
+  .panel {{ margin-top:auto; }}
+  .bill {{ margin:0 0 0 auto; text-align:right; }}
 
   /* The rule and the space between sessions live on the label, because a
      display:contents element cannot carry either. */
@@ -583,41 +584,38 @@ FESTIVAL = """<!doctype html>
     text-align:right;
   }}
   .prog-grid i {{ font-style:normal; white-space:nowrap; align-self:baseline; }}
-  .prog-grid i.dayrow {{ padding-top:5mm; }}
+  .prog-grid i.dayrow {{ padding-top:3mm; }}
   .prog-grid em {{
-    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:10.5mm;
-    font-weight:600; line-height:1.22; letter-spacing:-.018em; color:{ink};
+    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:6.4mm;
+    font-weight:600; line-height:1.42; letter-spacing:-.012em; color:{ink};
     white-space:nowrap;
   }}
   .prog-grid span {{
-    font-family:"Inter Tight",sans-serif; font-size:6.2mm; font-weight:400;
+    font-family:"Inter Tight",sans-serif; font-size:4.4mm; font-weight:400;
     color:{cool}; white-space:nowrap;
   }}
   /* The session, named once over the people in it. No hour with it: the title
      says what the block is, which is what a reader standing in front of the
      sheet wants; the times are on the page the code leads to. */
   .prog-grid i b {{
-    display:block; font-family:"Inter Tight",sans-serif; font-size:4.6mm;
+    display:block; font-family:"Inter Tight",sans-serif; font-size:3.6mm;
     font-weight:600; letter-spacing:0; color:{hot};
   }}
   .prog-grid i u {{
     display:block; text-decoration:none; font-family:"Jost",sans-serif;
-    font-size:8.6mm; font-weight:500; letter-spacing:-.01em; color:{ink};
+    font-size:5.8mm; font-weight:500; letter-spacing:-.01em; color:{ink};
   }}
   .prog-grid i u small {{
-    display:block; font-size:4mm; font-weight:400; color:{cool};
+    display:block; font-size:3.2mm; font-weight:400; color:{cool};
     letter-spacing:.02em; margin-top:.4mm;
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
-    grid-column:1 / -1; width:100%; height:0; margin:4.5mm 0 3.5mm;
+    grid-column:1 / -1; width:100%; height:0; margin:2.6mm 0 2mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
   }}
-  .dates {{ display:flex; justify-content:space-between; align-items:flex-end; gap:14mm; margin:0; }}
-  .month {{
-    font-family:"Jost",sans-serif; font-weight:400; font-size:23mm;
-    line-height:1; letter-spacing:-.02em; color:{hot};
-  }}
+  .dates {{ display:flex; justify-content:space-between; align-items:flex-start; gap:16mm; margin:0; }}
+
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
     line-height:1.02; letter-spacing:-.03em; color:{hot};
@@ -678,11 +676,10 @@ FESTIVAL = """<!doctype html>
         <p class="longname">{long_upper}</p></div>
       <div class="stamps">{eyebrow}</div>
     </div>
-    <div class="bill"><div class="prog-grid">{programme}</div></div>
     <div class="panel">
       <div class="dates">
         <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
-        <div class="month">{month}</div>
+        <div class="bill"><div class="prog-grid">{programme}</div></div>
       </div>
       <div class="cols">
         <div><h4>Organisers</h4><ul class="orgs">{organisers}</ul></div>
