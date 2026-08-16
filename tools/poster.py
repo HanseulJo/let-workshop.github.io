@@ -619,9 +619,11 @@ FESTIVAL = """<!doctype html>
     font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:4.6mm; font-weight:700;
     color:{ink}; line-height:1.5; white-space:nowrap;
   }}
+  /* Ranged right inside their column, so the affiliations make an edge of
+     their own instead of six lines each ending wherever its name let it. */
   .orgs span {{
     font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:4.6mm; font-weight:400;
-    color:{cool}; line-height:1.5; white-space:nowrap;
+    color:{cool}; line-height:1.5; white-space:nowrap; text-align:right;
   }}
   .cols .theme {{
     font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:5mm; font-weight:700;
@@ -739,7 +741,15 @@ FESTIVAL = """<!doctype html>
     column-gap:4mm; row-gap:0; justify-items:end; align-items:baseline;
     text-align:right;
   }}
-  .prog-grid i {{ font-style:normal; white-space:nowrap; align-self:baseline; }}
+  /* The session names range left. Everything to their right — the speakers,
+     the affiliations, the days — is set against the sheet's right edge, so
+     ranging these right too pushed them up against the names they label and
+     left a ragged edge on the outside of the block, where the eye first meets
+     it. The dayrow keeps its own alignment; it is a heading, not a label. */
+  .prog-grid i {{
+    font-style:normal; white-space:nowrap; align-self:baseline;
+    justify-self:start; text-align:left;
+  }}
   /* The break between the two days. It measured 18.8mm against names that sit
      flush against each other inside a day, and about half of that was the
      day's own label — the rest was 10.3mm of air around a 0.4mm rule, which
