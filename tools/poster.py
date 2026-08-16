@@ -612,7 +612,11 @@ FESTIVAL = """<!doctype html>
     color:{ink}; margin:0; line-height:1.3;
   }}
   /* The two rotated blocks down the left edge. */
-  .rails {{ position:absolute; left:20mm; right:20mm; top:118mm; display:flex; gap:9mm; }}
+  /* 4.5mm between the two, not 9. A rail line's own box is 11.9mm across and
+     the space between them was 9.8mm — nearly a line's width of nothing, so
+     the venue and the theme read as two separate marks rather than as the pair
+     they are. Less than half the line box holds them together. */
+  .rails {{ position:absolute; left:20mm; right:20mm; top:118mm; display:flex; gap:4.5mm; }}
   .rail {{
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Switzer","Helvetica Neue",sans-serif; color:{hot};
