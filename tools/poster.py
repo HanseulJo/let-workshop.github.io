@@ -522,8 +522,8 @@ FESTIVAL = """<!doctype html>
   .wrap {{ position:absolute; inset:0; padding:20mm 20mm 16mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; justify-content:space-between; align-items:flex-start; }}
   .mark {{
-    font-family:"Futura","Jost",sans-serif; font-weight:600; font-size:32mm; line-height:1;
-    color:{ink}; letter-spacing:-.022em; margin:0;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:32mm;
+    line-height:1; color:{ink}; letter-spacing:-.035em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .stamps {{
@@ -537,7 +537,7 @@ FESTIVAL = """<!doctype html>
      accent explained where KOLT comes from and looked like it was explaining
      it; all caps, light and held back says the same thing without pointing. */
   .longname {{
-    font-family:"Futura","Jost",sans-serif; font-weight:300; font-size:6.2mm;
+    font-family:"Inter Tight",sans-serif; font-weight:400; font-size:6.2mm;
     letter-spacing:.16em; text-transform:uppercase; color:{ink};
     opacity:.62; margin:4.5mm 0 0;
   }}
@@ -602,8 +602,8 @@ FESTIVAL = """<!doctype html>
     color:{hot}; margin-bottom:.8mm;
   }}
   .prog-grid i u {{
-    display:block; text-decoration:none; font-family:"Futura","Jost",sans-serif;
-    font-size:7.6mm; font-weight:600; color:{ink};
+    display:block; text-decoration:none; font-family:"Inter Tight",sans-serif;
+    font-size:7.6mm; font-weight:700; letter-spacing:-.015em; color:{ink};
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
@@ -616,10 +616,9 @@ FESTIVAL = """<!doctype html>
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
     line-height:1.02; letter-spacing:-.03em; color:{hot};
   }}
-  .datesub {{
-    font-family:"JetBrains Mono",monospace; font-size:4.4mm; letter-spacing:.13em;
-    text-transform:uppercase; color:{cool}; margin:0; text-align:right; line-height:1.7;
-  }}
+  /* The venue lives in the rail; the country is the one thing neither the rail
+     nor the stack says, so it goes with the day. */
+  .datesub {{ display:none; }}
   .cols {{
     display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:8mm;
     font-family:"Inter Tight",sans-serif; align-items:start;
@@ -664,7 +663,7 @@ FESTIVAL = """<!doctype html>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
   <div class="rails">
-    <div class="rail"><b>{venue_short}</b><span>{venue_name}</span></div>
+    <div class="rail"><b>{venue_short}</b><span>{venue_name} &middot; {country}</span></div>
     <div class="rail"><b>Registration</b><span>{reg_note} &middot; {url}</span></div>
   </div>
   <div class="wrap">
@@ -677,7 +676,6 @@ FESTIVAL = """<!doctype html>
     <div class="panel">
       <div class="dates">
         <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
-        <p class="datesub">{month} {yyyy}<br>{venue_name}<br>{city}, {country}</p>
       </div>
       <div class="cols">
         <div><h4>Organisers</h4><ul class="orgs">{organisers}</ul></div>
