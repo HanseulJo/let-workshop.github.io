@@ -763,9 +763,13 @@ FESTIVAL = """<!doctype html>
   }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; gap:16mm; margin:0; }}
 
+  /* The date keeps Inter Tight, the face it was set in before the sheet moved
+     to Satoshi. It is the one block here that is pure figures, and Inter Tight
+     is drawn narrow — at 23mm over three lines that reads as a stack rather
+     than as three separate numbers, which is the whole of the effect. */
   .stack {{
     margin-bottom:1mm;
-    font-family:"Satoshi","Helvetica Neue",sans-serif; font-weight:700; font-size:23mm;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
     line-height:1.02; letter-spacing:-.03em; color:{hot};
   }}
   /* The venue lives in the rail; the country is the one thing neither the rail
