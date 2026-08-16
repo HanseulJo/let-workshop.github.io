@@ -195,6 +195,31 @@ variants:
     noindex: true
 
 # ─────────────────────────────────────────────────────────────
+# The printed sheet, shown under the travel section. `image` is what
+# the page displays and `full` is what clicking it opens; both live in
+# static/ and are made from the A2 export with tools/poster.py. Delete
+# this block and the section disappears.
+# ─────────────────────────────────────────────────────────────
+poster:
+  title: Poster
+  title_ko: 포스터
+  subtitle: Print it, pin it up, pass it on.
+  subtitle_ko: 인쇄해서 붙이고 나눠주세요.
+  image: poster-2026.png
+  full: poster-2026-large.png
+  # One language only, and plain text. `alt` is an attribute, and the bilingual
+  # helper writes a pair of spans — markup inside an attribute ends it early and
+  # spills the rest onto the page.
+  alt: KOLT 2026 A2 poster — the POSTECH campus drawn in learning-theory formulas
+  # The sheet prints names, rooms and hours that are not settled yet, and a
+  # printed thing is the one form nobody comes back to check. The note says so
+  # on the page, next to the size, before anyone takes a copy away.
+  caption: A2 · 420 × 594 mm · details are tentative
+  caption_ko: A2 · 420 × 594 mm · 세부 사항은 변경될 수 있습니다
+  download: Open full size
+  download_ko: 원본 크기로 보기
+
+# ─────────────────────────────────────────────────────────────
 # Redirect stubs, written on every build. GitHub Pages has no
 # server-side redirects, so these are meta-refresh + canonical
 # pages. Point `index.html` at the newest edition each year.

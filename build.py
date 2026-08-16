@@ -291,6 +291,12 @@ def fill_defaults(bundle: dict) -> None:
     bundle["venue"].setdefault("subtitle_ko", None)
     bundle["program"].setdefault("title_ko", None)
     bundle["site"].setdefault("hero_background", "art")
+    # No poster block at all is a legitimate site; the section disappears.
+    bundle["site"].setdefault("poster", None)
+    if bundle["site"]["poster"]:
+        for key in ("title_ko", "subtitle", "subtitle_ko",
+                    "caption", "caption_ko", "full", "download", "download_ko"):
+            bundle["site"]["poster"].setdefault(key, None)
     # No eyebrow at all is a legitimate hero — the pill simply disappears.
     bundle["site"].setdefault("eyebrow", None)
     bundle["site"].setdefault("eyebrow_ko", None)

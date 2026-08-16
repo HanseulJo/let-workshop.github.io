@@ -597,9 +597,44 @@
         </div>
       </div>
     </section>
+    {% if site.poster %}
+
+    <!-- ===== POSTER =====
+         The printed sheet, after the travel section: by this point the page has
+         said everything the poster says, so it is here as a thing to take away
+         rather than as a thing to read. It links to the full-size file instead
+         of shipping the 48MB print PDF into the repository. -->
+    <section id="poster" class="band">
+      <div class="wrap">
+        <h2>{{ t(site.poster.title, site.poster.title_ko) }}</h2>
+        {% if site.poster.subtitle %}
+        <p class="sub">{{ t(site.poster.subtitle, site.poster.subtitle_ko) }}</p>
+        {% endif %}
+        <figure class="poster">
+          {% if site.poster.full %}
+          <a class="poster-shot" href="{{ site.poster.full }}" target="_blank" rel="noopener">
+          {% else %}
+          <span class="poster-shot">
+          {% endif %}
+            <img src="{{ site.poster.image }}"
+                 alt="{{ site.poster.alt }}"
+                 width="1200" height="1698" loading="lazy" decoding="async" />
+          {% if site.poster.full %}</a>{% else %}</span>{% endif %}
+          <figcaption>
+            {% if site.poster.caption %}<span class="poster-spec">{{ t(site.poster.caption, site.poster.caption_ko) }}</span>{% endif %}
+            {% if site.poster.full %}
+            <a class="poster-get" href="{{ site.poster.full }}" target="_blank" rel="noopener">
+              {{ t(site.poster.download, site.poster.download_ko) }}
+            </a>
+            {% endif %}
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+    {% endif %}
     {% if variant.candidates %}
 
-    <!-- ===== CANDIDATES (internal build only) ===== -->
+    <!-- ===== CANDIDATES (internal build only) =====
     <section class="band">
       <div class="wrap">
         <h2>{{ candidates.title }}</h2>
