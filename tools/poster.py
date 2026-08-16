@@ -542,17 +542,18 @@ FESTIVAL = """<!doctype html>
      so it is dimmed further than a photograph would need to be. */
   .veil {{ position:absolute; inset:0; }}
   .veil svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
-  .wrap {{ position:absolute; inset:0; padding:20mm 20mm 16mm; display:flex; flex-direction:column; }}
+  /* The sheet is 426x600: A2 plus 3mm of bleed all round, so 20mm here is
+     17mm from the trim. The bottom was 16mm, which is 13mm trimmed — four
+     millimetres shy of the other three sides, and a poster whose content sits
+     lower than its own margin reads as sliding off the bottom edge. */
+  .wrap {{ position:absolute; inset:0; padding:20mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; justify-content:space-between; align-items:flex-start; }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:32mm;
     line-height:1; color:{hot}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
-  .stamps {{
-    font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.16em;
-    text-transform:uppercase; color:{hot}; text-align:right; line-height:1.7;
-  }}
+  .stamps {{ color:{hot}; text-align:right; line-height:1.7; }}
   /* Mixed case, and the four letters of the acronym in the accent — the name
      is written so that K, O, L and T fall where they do, and capitals would
      hide it. */
@@ -645,12 +646,19 @@ FESTIVAL = """<!doctype html>
      34mm is the longer of the two plus a word space. As inline-size, not
      width: the rails are turned, and the axis this has to hold is the one the
      text runs along, whichever way that ends up pointing. */
+  /* Field names — VENUE, THEME, HOMEPAGE, ORGANISERS, the stamps at the top —
+     all speak in the mono at one size. They were set at 4mm, 3.8mm and, in the
+     case of Organisers, at whatever a browser gives an unstyled h4, which was
+     16px. Nothing was gained by any of the differences. */
+  .rail b, .side h4, .stamps, .prog-grid i u small {{
+    font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:400;
+    letter-spacing:.16em; text-transform:uppercase;
+  }}
   .rail b {{
-    display:inline-block; inline-size:34mm; vertical-align:baseline;
-    font-family:"JetBrains Mono",monospace; font-size:4mm;
-    font-weight:400; letter-spacing:.16em; text-transform:uppercase;
+    display:inline-block; inline-size:32mm; vertical-align:baseline;
     color:{ink}; opacity:.72;
   }}
+  .side h4 {{ color:{ink}; opacity:.72; margin:7mm 0 2.5mm; }}
   .rail span {{
     font-family:"Switzer","Helvetica Neue",sans-serif; font-size:9mm;
     font-weight:700; letter-spacing:-.014em; color:{hot};
@@ -700,7 +708,11 @@ FESTIVAL = """<!doctype html>
     text-align:right;
   }}
   .prog-grid i {{ font-style:normal; white-space:nowrap; align-self:baseline; }}
-  .prog-grid i.dayrow {{ padding-top:4mm; }}
+  /* The break between the two days. It measured 18.8mm against names that sit
+     flush against each other inside a day, and about half of that was the
+     day's own label — the rest was 10.3mm of air around a 0.4mm rule, which
+     read as a gap in the list rather than as a division of it. Halved. */
+  .prog-grid i.dayrow {{ padding-top:2.2mm; }}
   .prog-grid em {{
     font-style:normal; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:8.6mm;
     font-weight:600; line-height:1.34; letter-spacing:-.012em; color:{ink};
@@ -714,7 +726,7 @@ FESTIVAL = """<!doctype html>
      says what the block is, which is what a reader standing in front of the
      sheet wants; the times are on the page the code leads to. */
   .prog-grid i b {{
-    display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.4mm;
+    display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.6mm;
     font-weight:600; letter-spacing:0; color:{hot};
   }}
   .prog-grid i u {{
@@ -722,12 +734,11 @@ FESTIVAL = """<!doctype html>
     font-size:7.6mm; font-weight:500; letter-spacing:-.01em; color:{ink};
   }}
   .prog-grid i u small {{
-    display:block; font-size:3.8mm; font-weight:400; color:{cool};
-    letter-spacing:.02em; margin-top:.4mm;
+    display:block; font-weight:400; color:{cool}; margin-top:.8mm;
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
-    grid-column:1 / -1; width:100%; height:0; margin:3.5mm 0 2.8mm;
+    grid-column:1 / -1; width:100%; height:0; margin:2.2mm 0 1.6mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
   }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; gap:16mm; margin:0; }}
@@ -747,7 +758,7 @@ FESTIVAL = """<!doctype html>
      that signs the sheet off, so it takes the theme's size, not its own. */
   .footname {{
     margin:0; align-self:flex-end;
-    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:5.4mm; font-weight:500;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:5.6mm; font-weight:500;
     letter-spacing:-.01em; text-transform:none; color:{ink}; opacity:.58;
   }}
   .cols h4 {{
@@ -772,7 +783,7 @@ FESTIVAL = """<!doctype html>
   }}
   .qr-plate {{ width:32mm; height:32mm; background:{art_ink}; padding:1.6mm; box-sizing:border-box; }}
   .foot .cta {{ text-align:right; }}
-  .foot .cta b {{ display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.4mm;
+  .foot .cta b {{ display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.6mm;
                   font-weight:700; color:{hot}; margin-bottom:2.5mm; letter-spacing:0;
                   text-transform:none; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
