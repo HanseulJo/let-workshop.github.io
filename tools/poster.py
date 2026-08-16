@@ -523,23 +523,27 @@ FESTIVAL = """<!doctype html>
     letter-spacing:.06em; margin-right:3mm;
   }}
   /* The programme, against one right edge. */
-  .bill {{ margin:10mm 0 0 auto; text-align:right; width:252mm; }}
-  .slot {{ margin:0 0 6.5mm; }}
+  .bill {{ margin:10mm 0 0 auto; text-align:right; width:214mm; }}
+  .slot {{ margin:0 0 6mm; padding:2.6mm 0 0; border-top:.25mm solid rgba(255,255,255,.16); }}
   .slot-head {{
-    display:inline-flex; align-items:baseline; gap:4mm; margin:0 0 2mm;
+    display:block; margin:0 0 2mm 25mm; text-align:left;
     font-family:"JetBrains Mono",monospace; font-size:4.2mm; font-weight:500;
     letter-spacing:.12em; text-transform:uppercase; color:{hot};
   }}
-  .slot-head .t {{ color:{ink}; letter-spacing:.04em; opacity:.75; }}
+
   .slot ul {{ margin:0; padding:0; list-style:none; }}
   .slot li {{
-    display:grid; grid-template-columns:1fr 30mm; column-gap:4mm;
-    align-items:baseline;
+    display:grid; grid-template-columns:20mm 1fr 30mm; column-gap:5mm;
+    align-items:baseline; text-align:left;
     font-family:"Inter Tight",sans-serif; font-weight:600; font-size:10.5mm;
     line-height:1.16; letter-spacing:-.018em; color:{ink};
   }}
-  .slot li em {{ font-style:normal; text-align:right; }}
-  .slot li span {{ text-align:left; }}
+  .slot li em {{ font-style:normal; text-align:left; }}
+  .slot li i {{
+    font-style:normal; text-align:right; color:{hot};
+    font-family:"Inter Tight",sans-serif; font-size:8.4mm; font-weight:700;
+    letter-spacing:-.01em; line-height:1.16;
+  }}
   .slot li span {{
     font-weight:400; font-size:6.4mm; color:{cool}; text-align:left;
   }}
@@ -1036,13 +1040,13 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             + "</div>")
         for b in d["blocks"]:
             people = "".join(
-                f'<li><em>{esc(p2["name"])}</em>'
+                f'<li><i>{esc(b["start"]) if k == 0 else ""}</i>'
+                f'<em>{esc(p2["name"])}</em>'
                 f'<span>{esc(p2.get("affil", ""))}</span></li>'
-                for p2 in b["people"])
+                for k, p2 in enumerate(b["people"]))
             slots.append(
-                f'<div class="slot"><p class="slot-head">'
-                f'<span class="t">{esc(b["start"])}</span>{esc(b["title"])}'
-                f'</p><ul>{people}</ul></div>')
+                f'<div class="slot"><p class="slot-head">{esc(b["title"])}</p>'
+                f"<ul>{people}</ul></div>")
     programme_block = "".join(slots)
     names_flat = "".join(
         f'<li>{esc(p["name"].lower())}</li>'
