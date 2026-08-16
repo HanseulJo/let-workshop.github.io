@@ -632,7 +632,14 @@ FESTIVAL = """<!doctype html>
      the space between them was 9.8mm — nearly a line's width of nothing, so
      the venue and the theme read as two separate marks rather than as the pair
      they are. Less than half the line box holds them together. */
-  .rails {{ position:absolute; left:20mm; right:20mm; top:118mm; display:flex; gap:4.5mm; }}
+  /* Not pinned to a measurement. The rails are the only thing between the
+     title and the programme, so they take the space between them and sit in
+     the middle of it: auto margins above and below share the free height
+     equally, and the panel below keeps its place because the column is a fixed
+     height and there is nothing left for it to move into. Fixed at 118mm the
+     gap above and the gap below were whatever the two blocks happened to
+     leave. */
+  .rails {{ display:flex; gap:4.5mm; margin:auto 0; }}
   .rail {{
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Satoshi","Helvetica Neue",sans-serif; color:{hot};
@@ -674,8 +681,13 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:400;
     letter-spacing:.16em; text-transform:uppercase;
   }}
+  /* Right-aligned in its box, so the label ends against the line it opens
+     instead of floating a word's width away from it. text-align is resolved on
+     the inline axis, which these rails have turned and one of them has turned
+     again, so it is set logically. */
   .rail b {{
     display:inline-block; inline-size:32mm; vertical-align:baseline;
+    text-align:end; padding-inline-end:2.6mm; box-sizing:border-box;
     color:{ink}; opacity:.72;
   }}
   .side h4 {{ color:{ink}; opacity:.72; margin:7mm 0 2.5mm; }}
@@ -711,7 +723,7 @@ FESTIVAL = """<!doctype html>
      edge is set at, and it reaches here too — this rail is one of the rails.
      The whole line is small, which is the point of it. */
   /* The programme, against one right edge. */
-  .panel {{ margin-top:auto; }}
+  .panel {{ margin-top:0; }}
   .bill {{ margin:0 0 0 auto; text-align:right; }}
 
   /* The rule and the space between sessions live on the label, because a
@@ -732,7 +744,13 @@ FESTIVAL = """<!doctype html>
      flush against each other inside a day, and about half of that was the
      day's own label — the rest was 10.3mm of air around a 0.4mm rule, which
      read as a gap in the list rather than as a division of it. Halved. */
-  .prog-grid i.dayrow {{ padding-top:2.2mm; }}
+  /* The day gets the whole width and sits at the right edge, over the
+     affiliations rather than out beyond the session labels. It is the heading
+     of the block under it, and a heading belongs on the side the block is set
+     against — this one is set right. */
+  .prog-grid i.dayrow {{
+    grid-column:1 / -1; justify-self:end; text-align:right; padding-top:2.2mm;
+  }}
   .prog-grid em {{
     font-style:normal; font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:8.6mm;
     font-weight:700; line-height:1.34; letter-spacing:-.012em; color:{ink};
@@ -780,8 +798,13 @@ FESTIVAL = """<!doctype html>
   /* The name once more along the bottom, at the size the theme used to sit at
      there. The mark states it in full at the top; down here it is the line
      that signs the sheet off, so it takes the theme's size, not its own. */
+  /* Centred on the sheet rather than in the gap between the marks and the
+     code. In the flex row it sat wherever those two left it, which is not the
+     middle of anything; taken out of the flow it lands on the paper's centre
+     line, which is what a line signing the sheet off should do. */
   .footname {{
-    margin:0; align-self:flex-end;
+    position:absolute; left:50%; transform:translateX(-50%); bottom:20mm;
+    margin:0;
     font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:5.6mm; font-weight:500;
     letter-spacing:-.01em; text-transform:none; color:{ink}; opacity:.58;
   }}
@@ -824,16 +847,16 @@ FESTIVAL = """<!doctype html>
     </linearGradient></defs>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
-  <div class="rails">
-    <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
-    <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
-    <div class="rail rail-right"><b>Homepage</b><span>{url}</span></div>
-  </div>
   <div class="wrap">
     <div class="top">
       <div><h1 class="mark">{mark} <span>{year}</span></h1>
         <p class="longname">{long_name}</p></div>
       <div class="stamps">{eyebrow}</div>
+    </div>
+    <div class="rails">
+      <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
+      <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
+      <div class="rail rail-right"><b>Homepage</b><span>{url}</span></div>
     </div>
     <div class="panel">
       <div class="dates">
@@ -1274,7 +1297,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         for b in d["blocks"]:
             for k, p2 in enumerate(b["people"]):
                 if k == 0 and first:
-                    slots.append(f'<i class="dayrow"><u>{label}</u></i><em></em><span></span>')
+                    slots.append(f'<i class="dayrow"><u>{label}</u></i>')
                     first = False
                 key = f'<b>{esc(b["title"])}</b>' if k == 0 else ""
                 slots.append(
