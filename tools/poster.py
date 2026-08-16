@@ -596,9 +596,18 @@ FESTIVAL = """<!doctype html>
     font-family:"Inter Tight",sans-serif; color:{hot};
   }}
   .rail b {{ display:block; font-size:10mm; font-weight:700; letter-spacing:-.012em; }}
+  /* The particular under the label takes the cool grey, not the accent. Both
+     were hot, and at this size a mono line beside a 10mm bold in the same
+     colour joins onto it — the pair read as one orange mass rather than as a
+     heading and the thing it heads. It is also the pairing the sheet already
+     uses: hot names the field, the paper colour states it.
+
+     Not the cool grey the rest of the sheet uses for that job — these two sit
+     over the drawing rather than over flat ground, and a mid grey on a mottled
+     mid ground is the one pairing that does not survive being printed. */
   .rail span {{
     display:block; font-family:"JetBrains Mono",monospace; font-size:4.6mm;
-    letter-spacing:.06em; margin-right:3mm;
+    letter-spacing:.06em; margin-right:3mm; color:{ink}; opacity:.86;
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
@@ -611,6 +620,11 @@ FESTIVAL = """<!doctype html>
      Pushed to 8mm rather than the 20mm text column, because the programme
      reaches that column's right edge lower down. */
   .rail-right {{ margin-left:auto; }}
+  /* One line, not a heading with a note under it. An address is a single fact
+     and the left edge is where the sheet makes its statements; giving this the
+     same 10mm bold put a shout on both edges for a URL. */
+  .rail-right span {{ margin-right:0; }}
+  .rail-right em {{ font-style:normal; color:{hot}; }}
   /* The programme, against one right edge. */
   .panel {{ margin-top:auto; }}
   .bill {{ margin:0 0 0 auto; text-align:right; }}
@@ -721,7 +735,7 @@ FESTIVAL = """<!doctype html>
   <div class="rails">
     <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
     <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
-    <div class="rail rail-right"><b>Homepage</b><span>{url}</span></div>
+    <div class="rail rail-right"><span><em>Homepage</em> &middot; {url}</span></div>
   </div>
   <div class="wrap">
     <div class="top">
