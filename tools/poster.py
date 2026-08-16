@@ -274,7 +274,7 @@ TEMPLATE = """<!doctype html>
   /* A2 plus 3 mm of bleed all round. No trim marks: the printer sets those. */
   @page {{ size: 426mm 600mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
@@ -405,7 +405,7 @@ LISTING = """<!doctype html>
 <style>
   @page {{ size: 426mm 600mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
@@ -504,7 +504,7 @@ FESTIVAL = """<!doctype html>
 <style>
   @page {{ size: 426mm 600mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
@@ -595,25 +595,27 @@ FESTIVAL = """<!doctype html>
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Inter Tight",sans-serif; color:{hot};
   }}
-  .rail b {{ display:block; font-size:10mm; font-weight:700; letter-spacing:-.012em; }}
-  /* Both halves at the display size, separated by weight and colour rather
-     than by size. Setting the particular small made it a caption hung off a
-     heading; at the same size the two are one statement, and the rail reads
-     as a single long line the way the left edge of a festival sheet does.
+  /* One line per rail, not a heading with its particular under it. Two blocks
+     made a corner; a single line makes an edge, which is what the left of a
+     festival sheet is for.
 
-     The paper colour, not the cool grey the sheet uses for a second voice
-     elsewhere: these two sit over the drawing rather than over flat ground,
-     and a mid grey on a mottled mid ground is the one pairing that does not
-     survive being printed.
+     The label is the only heavy thing on it and the rest is set light — the
+     contrast that was doing the work is weight, so it can do all of it and
+     the size can stay put. Inter Tight's weight axis runs 100 to 900; the
+     @font-face here declared 500 to 700, so every lighter request on the sheet
+     was being clamped to Medium and nothing could be set light at all. That is
+     also why the affiliations in the programme now sit slightly lighter than
+     they did: they always asked for 400.
 
-     Inter Tight rather than the mono it was in. A monospaced face at 10mm
-     sets 33 characters over 165mm, and the two rails would have run into the
-     programme; the proportional face at the same size does not. */
+     The paper colour rather than the cool grey the sheet uses for a second
+     voice elsewhere. These lines sit over the drawing rather than over flat
+     ground, and a mid grey on a mottled mid ground is the one pairing that
+     does not survive being printed. */
   .rail span {{
     display:block; font-family:"Inter Tight",sans-serif; font-size:10mm;
-    font-weight:400; letter-spacing:-.012em; margin-right:2mm;
-    color:{ink}; opacity:.9;
+    font-weight:200; letter-spacing:-.012em; color:{ink}; opacity:.92;
   }}
+  .rail em {{ font-style:normal; font-weight:700; color:{hot}; }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
      hold: the row stretches all three to one height, and since each is flipped
@@ -741,8 +743,8 @@ FESTIVAL = """<!doctype html>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
   <div class="rails">
-    <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
-    <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
+    <div class="rail"><span><em>Venue</em> &middot; {venue_name}, {city}</span></div>
+    <div class="rail"><span><em>Theme {year}</em> &middot; {theme}</span></div>
     <div class="rail rail-right"><span><em>Homepage</em> &middot; {url}</span></div>
   </div>
   <div class="wrap">
@@ -796,7 +798,7 @@ ACADEMIC = """<!doctype html>
 <style>
   @page {{ size: 426mm 600mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
@@ -893,7 +895,7 @@ CIVIC = """<!doctype html>
 <title>{name} — A2 poster, civic</title>
 <style>
   @page {{ size: 426mm 600mm; margin: 0; }}
-  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter"; font-weight:400 700; src:url("fonts/inter-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
@@ -983,7 +985,7 @@ BAUHAUS = """<!doctype html>
 <title>{name} — A2 poster, bauhaus</title>
 <style>
   @page {{ size: 426mm 600mm; margin: 0; }}
-  @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter"; font-weight:400 700; src:url("fonts/inter-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
