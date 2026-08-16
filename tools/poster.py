@@ -526,7 +526,7 @@ FESTIVAL = """<!doctype html>
   .top {{ display:flex; justify-content:space-between; align-items:flex-start; }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:32mm;
-    line-height:1; color:{ink}; letter-spacing:-.02em; margin:0;
+    line-height:1; color:{hot}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .stamps {{
