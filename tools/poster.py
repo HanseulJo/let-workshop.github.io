@@ -276,6 +276,7 @@ TEMPLATE = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -406,6 +407,7 @@ LISTING = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   /* One ink on one ground, and every division drawn as a hairline rule. The
      layout is a stack of boxes with nothing between them, so the sheet has no
@@ -504,6 +506,7 @@ FESTIVAL = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -535,17 +538,21 @@ FESTIVAL = """<!doctype html>
      hide it. */
   /* One quiet line under the mark. Picking the acronym's letters out in the
      accent explained where KOLT comes from and looked like it was explaining
-     it; all caps, light and held back says the same thing without pointing.
+     it, so the line is set plainly instead.
 
-     A serif, and the only one on the sheet. In a sans it sat directly under a
-     much heavier sans and read as the same typeface shrunk — the difference
-     was size, which looks like a mistake rather than a choice. The high stroke
-     contrast of a Didot separates it at a glance while staying quieter than
-     the mark above it. */
+     Sentence case, not capitals. All caps gave every word the same rectangle
+     and needed loose tracking to stay readable, which spread a four-word line
+     across the sheet and read as a subtitle bar rather than a name. With
+     ascenders and descenders back the line has its own outline, so it can sit
+     close under the mark at a larger size without competing with it.
+
+     Space Grotesk for the face. It is the only thing here that is not a
+     geometric sans or a mono, and its flat terminals and single-storey
+     details keep it clearly separate from the mark above without borrowing
+     the period flavour a serif brought with it. */
   .longname {{
-    font-family:"Didot","Playfair Display",serif; font-weight:400; font-size:7.4mm;
-    letter-spacing:.03em; text-transform:uppercase; color:{ink};
-    opacity:.82; margin:4.5mm 0 0;
+    font-family:"Space Grotesk",sans-serif; font-weight:400; font-size:8mm;
+    letter-spacing:-.015em; color:{ink}; opacity:.85; margin:4mm 0 0;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
@@ -680,7 +687,7 @@ FESTIVAL = """<!doctype html>
   <div class="wrap">
     <div class="top">
       <div><h1 class="mark">{mark} <span>{year}</span></h1>
-        <p class="longname">{long_upper}</p></div>
+        <p class="longname">{long_name}</p></div>
       <div class="stamps">{eyebrow}</div>
     </div>
     <div class="panel">
@@ -730,6 +737,7 @@ ACADEMIC = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -1157,7 +1165,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         logos=logo_row([h["name"] for h in site["hosts"]["logos"]], PALETTE["cool"])
               if site.get("hosts") else "",
         acronym_name=acronym_html(site["full_name"], mark),
-        long_upper=esc(site["full_name"].upper()),
+        # site.yml spells it "Korean workshop On Learning Theory" so the four
+        # letters of the acronym can be picked out; set as a plain line that
+        # casing reads as a typo, so it is normalised back here.
+        long_name=esc(site["full_name"].title().replace(" On ", " on ")),
         ghost=ghost_layer,
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
