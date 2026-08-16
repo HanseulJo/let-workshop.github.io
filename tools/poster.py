@@ -614,17 +614,17 @@ FESTIVAL = """<!doctype html>
     grid-column:1 / -1; width:100%; height:0; margin:3.5mm 0 2.8mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
   }}
-  .dates {{ display:flex; justify-content:space-between; align-items:flex-start; gap:16mm; margin:0; }}
+  .dates {{ display:flex; justify-content:space-between; align-items:flex-end; gap:16mm; margin:0; }}
 
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
-    line-height:1.02; letter-spacing:-.03em; color:{hot};
+    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin-bottom:-2mm;
   }}
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
   .datesub {{ display:none; }}
   .cols {{
-    display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:8mm;
+    display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:5mm;
     font-family:"Inter Tight",sans-serif; align-items:start;
   }}
   .cols h4 {{
