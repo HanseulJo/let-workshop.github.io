@@ -617,16 +617,17 @@ FESTIVAL = """<!doctype html>
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; gap:16mm; margin:0; }}
 
   .stack {{
+    margin-bottom:1mm;
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
-    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin-bottom:-2mm;
+    line-height:1.02; letter-spacing:-.03em; color:{hot};
   }}
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
   .datesub {{ display:none; }}
-  .cols {{
-    display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:5mm;
-    font-family:"Inter Tight",sans-serif; align-items:start;
-  }}
+  .side {{ flex:none; }}
+  .side h4 {{ margin-top:7mm; }}
+  .themebit {{ text-align:center; }}
+  .themebit h4 {{ margin:0 0 1.5mm; }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.6mm; font-weight:500;
     letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin:0 0 3mm;
@@ -643,7 +644,7 @@ FESTIVAL = """<!doctype html>
   .marks {{ display:flex; align-items:flex-end; gap:9mm; }}
   .marks img {{ height:9mm; width:auto; display:block; opacity:.72; }}
   .foot {{
-    display:flex; justify-content:space-between; align-items:flex-end; margin-top:8mm;
+    display:flex; justify-content:space-between; align-items:flex-end; margin-top:9mm; gap:10mm;
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.14em;
     text-transform:uppercase; color:{cool};
   }}
@@ -678,15 +679,18 @@ FESTIVAL = """<!doctype html>
     </div>
     <div class="panel">
       <div class="dates">
-        <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
+        <div class="side">
+          <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
+          <h4>Organisers</h4>
+          <ul class="orgs">{organisers}</ul>
+        </div>
         <div class="bill"><div class="prog-grid">{programme}</div></div>
       </div>
-      <div class="cols">
-        <div><h4>Organisers</h4><ul class="orgs">{organisers}</ul></div>
-        <div class="r"><h4>Theme</h4><p class="theme">{theme}</p></div>
+      <div class="foot">
+        <span class="marks">{logos}</span>
+        <div class="themebit"><h4>Theme</h4><p class="theme">{theme}</p></div>
+        <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
       </div>
-      <div class="foot"><span class="marks">{logos}</span>
-        <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div></div>
     </div>
   </div>
 </div>
