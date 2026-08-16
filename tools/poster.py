@@ -573,36 +573,19 @@ FESTIVAL = """<!doctype html>
   /* Mixed case, and the four letters of the acronym in the accent — the name
      is written so that K, O, L and T fall where they do, and capitals would
      hide it. */
-  /* One quiet line under the mark. Picking the acronym's letters out in the
-     accent explained where KOLT comes from and looked like it was explaining
-     it, so the line is set plainly instead.
+  /* One quiet line under the mark, in the mono the sheet names its fields
+     with. Set in the text face it was a second, smaller statement competing
+     with the first; in the mono and in capitals it reads as a caption on the
+     mark rather than as a line of its own, which is what it is — the mark
+     spelled out. Held closer to the title and fainter for the same reason.
 
-     Sentence case, not capitals. All caps gave every word the same rectangle
-     and needed loose tracking to stay readable, which spread a four-word line
-     across the sheet and read as a subtitle bar rather than a name. With
-     ascenders and descenders back the line has its own outline, so it can sit
-     close under the mark at a larger size without competing with it.
-
-     Satoshi, the face the rest of the sheet is set in. A geometric sans under a
-     geometric mark read as the mark shrunk however the details were varied; a
-     neo-grotesque has different bones — horizontal terminals, closed apertures,
-     a taller x-height — so the two separate on sight without either of them
-     changing size.
-
-     Medium rather than Regular. Held at this opacity a Regular went thin
-     enough at 8mm that the line looked faded instead of quiet; one step of
-     weight buys back the body, which is what lets the opacity drop further.
-
-     The indent is optical, not decorative. Both lines start with a K and both
-     boxes start at the same x, but a glyph's ink sits inside its advance width
-     by a sidebearing that scales with size — 0.0738 of the em in Jost, 0.086
-     in Geist Medium. At 32mm and 8mm that is 2.36mm against 0.69mm, so the two
-     K's stand 1.67mm apart with nothing visibly wrong; the difference is added
-     back here. Changing either size, either face or either weight changes this
-     number, and it is measured off the loaded fonts, not guessed. */
+     The optical indent stays optical but the number changes with the face:
+     JetBrains Mono's sidebearing is 0.080 of the em against Jost's 0.0738, so
+     against a 32mm mark and an 8mm line the correction is 1.72mm. */
   .longname {{
-    font-family:"Satoshi","Helvetica Neue",sans-serif; font-weight:500; font-size:8mm;
-    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:4mm 0 0 1.71mm;
+    font-family:"JetBrains Mono",monospace; font-weight:600; font-size:8mm;
+    letter-spacing:.1em; text-transform:uppercase; color:{ink};
+    opacity:.46; margin:1.6mm 0 0 1.72mm;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
@@ -926,8 +909,15 @@ BANNER = """<!doctype html>
   .veil svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   /* A banner is hung, and the top and bottom 60mm go into the hem or round a
      pole. Nothing that has to be read lives there. */
+  /* The same keyline the X-banner and the square set carry, inset to the line
+     the type is set to. It is what stops a dark field dissolving into whatever
+     wall or crowd is behind it. */
+  .frame {{
+    position:absolute; inset:56mm; border:1.4mm solid rgba(245,245,247,.30);
+    pointer-events:none;
+  }}
   .wrap {{
-    position:absolute; inset:0; padding:120mm 180mm;
+    position:absolute; inset:56mm; padding:70mm 120mm;
     display:flex; align-items:center; justify-content:space-between; gap:120mm;
   }}
   .mark {{
@@ -967,6 +957,7 @@ BANNER = """<!doctype html>
     </linearGradient></defs>
     <rect width="100" height="10" fill="url(#v)"/>
   </svg></div>
+  <div class="frame"></div>
   <div class="wrap">
     <div>
       <h1 class="mark">{mark} <span>{year}</span></h1>
@@ -1010,44 +1001,63 @@ XBANNER = """<!doctype html>
   /* An X-banner hangs from four corner eyelets and stands on the floor. The
      lower 250mm is below the knee of anyone reading it and is usually behind
      the frame's foot, so it carries the marks and nothing that must be read. */
+  /* A keyline, as the square set has, inset to the line the type is set to.
+     A banner is seen against a wall, a window and a crowd, and an edge is what
+     stops it dissolving into whichever one is behind it. */
+  .frame {{
+    position:absolute; inset:46mm; border:1.2mm solid rgba(245,245,247,.30);
+    pointer-events:none;
+  }}
   .wrap {{
-    position:absolute; inset:0; padding:150mm 60mm 120mm;
+    position:absolute; inset:46mm; padding:80mm 44mm 60mm;
     display:flex; flex-direction:column;
   }}
+  /* The three facts, evenly spaced between the title and the foot, each opened
+     by a rule its label sits on. Centred as one block they left a third of the
+     banner empty under them and the spacing read as an accident; distributed,
+     the same air is divided into equal parts and reads as a measure. */
+  .facts {{ flex:1; display:flex; flex-direction:column; justify-content:space-evenly; margin:0; }}
+  .fact {{ padding-top:12mm; border-top:.8mm solid rgba(245,245,247,.22); }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:132mm;
     line-height:.94; color:{hot}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
-  /* 26mm, because 33mm ran the name to 565mm inside a 474mm column and broke
-     it over two lines under a mark that is already two lines. Measured, not
-     guessed: at 26mm it sets 445mm and stays whole. */
+  /* 22mm. At 33 the name ran 565mm inside what was then a 474mm column and
+     broke over two lines under a mark that is already two; the keyline since
+     took the column to 414mm, and 24mm would clear it by three millimetres,
+     which is not a margin. At 22 it sets 377mm and stays whole. */
   .longname {{
-    font-family:"Satoshi",sans-serif; font-weight:500; font-size:26mm;
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:22mm;
     letter-spacing:-.01em; color:{ink}; opacity:.58; margin:14mm 0 0 6mm;
   }}
-  .middle {{ margin:auto 0; }}
   .field {{
-    font-family:"JetBrains Mono",monospace; font-size:17mm; font-weight:400;
+    font-family:"JetBrains Mono",monospace; font-size:15mm; font-weight:400;
     letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
-    margin:0 0 5mm;
+    margin:0 0 6mm;
   }}
   /* 30mm is the largest size at which both of the two lines this sets — the
-     venue and the theme — stay whole in a 480mm column: the venue on its own
-     line with the city under it, the theme on one. At 40mm the venue broke
-     into three and the theme into two, and a banner read from across a hall
-     wants each fact in one piece. */
+     venue and the theme — stay whole in the 420mm column the keyline leaves:
+     the venue 355mm with the city under it, the theme 407mm on one line. At
+     40mm the venue broke into three and the theme into two, and a banner read
+     from across a hall wants each fact in one piece. */
   .line {{
-    font-family:"Satoshi",sans-serif; font-weight:700; font-size:30mm;
-    letter-spacing:-.014em; color:{hot}; margin:0 0 30mm;
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:27mm;
+    letter-spacing:-.014em; color:{hot}; margin:0;
   }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:96mm;
-    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0 0 30mm;
+    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0;
   }}
-  .foot {{ display:flex; align-items:flex-end; justify-content:space-between; gap:30mm; }}
-  .marks {{ display:flex; align-items:flex-end; gap:34mm; }}
-  .marks img {{ height:34mm; width:auto; display:block; opacity:.72; }}
+  .foot {{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:30mm;
+    padding-top:16mm; border-top:.8mm solid rgba(245,245,247,.22);
+  }}
+  /* 22mm, not 34. At 34 the two marks measured 386mm and the foot needed
+     386 + 30 of gap + 110 of code = 526mm inside a 420mm column, so the code
+     hung 62mm off the edge of the banner. */
+  .marks {{ display:flex; align-items:flex-end; gap:24mm; }}
+  .marks img {{ height:22mm; width:auto; display:block; opacity:.72; }}
   .cta {{ text-align:right; }}
   .cta b {{
     display:block; font-family:"Satoshi",sans-serif; font-size:16mm;
@@ -1067,18 +1077,25 @@ XBANNER = """<!doctype html>
     </linearGradient></defs>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
+  <div class="frame"></div>
   <div class="wrap">
     <div>
       <h1 class="mark">{mark}<br><span>{year}</span></h1>
       <p class="longname">{long_name}</p>
     </div>
-    <div class="middle">
-      <p class="field">Venue</p>
-      <p class="line">{venue_name}<br>{city}</p>
-      <p class="field">Theme {year}</p>
-      <p class="line">{theme}</p>
-      <p class="field">Dates</p>
-      <p class="stack">{yyyy}.<br>{md1}–{md2}</p>
+    <div class="facts">
+      <div class="fact">
+        <p class="field">Venue</p>
+        <p class="line">{venue_name}<br>{city}</p>
+      </div>
+      <div class="fact">
+        <p class="field">Theme {year}</p>
+        <p class="line">{theme}</p>
+      </div>
+      <div class="fact">
+        <p class="field">Dates</p>
+        <p class="stack">{yyyy}.<br>{md1}–{md2}</p>
+      </div>
     </div>
     <div class="foot">
       <span class="marks">{logos}</span>
@@ -1122,8 +1139,8 @@ SOCIAL = """<!doctype html>
   .ghost {{ opacity:.26; }}
   .art svg, .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   /* Every slide but the cover holds the drawing well down: it is the same
-     picture doing the same job, but a list of fourteen names over it at this
-     size is a list nobody reads. */
+     picture doing the same job, but a list of names over it at this size is a
+     list nobody reads. */
   .card.quiet .art {{ opacity:.42; }}
   .card.quiet .ghost {{ opacity:.20; }}
   .veil {{ position:absolute; inset:0;
@@ -1132,154 +1149,159 @@ SOCIAL = """<!doctype html>
       rgba(15,24,38,.70) 72%, rgba(15,24,38,.96) 100%); }}
   .card.quiet .veil {{ background:linear-gradient(180deg,
       rgba(15,24,38,.90) 0%, rgba(15,24,38,.86) 50%, rgba(15,24,38,.96) 100%); }}
-  .pad {{ position:absolute; inset:0; padding:78px 78px 68px; display:flex; flex-direction:column; }}
+  /* A keyline inset from the edge. A carousel is shown on a white feed and a
+     black one, and a dark square with no edge bleeds into the first and
+     vanishes into the second; the rule gives every slide the same frame and
+     makes the set read as a set. It is also the margin the type is set to, so
+     it is doing two jobs. */
+  .frame {{
+    position:absolute; inset:44px; border:1.5px solid rgba(245,245,247,.34);
+    border-radius:6px; pointer-events:none;
+  }}
+  .pad {{ position:absolute; inset:44px; padding:52px 54px 48px; display:flex; flex-direction:column; }}
+  .head {{ display:flex; align-items:baseline; justify-content:space-between; gap:24px; }}
   .kicker {{
     font-family:"JetBrains Mono",monospace; font-size:19px; font-weight:400;
     letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72; margin:0;
   }}
   .kicker.hot {{ color:{hot}; opacity:1; }}
+  .num {{ font-family:"JetBrains Mono",monospace; font-size:19px; letter-spacing:.16em;
+          color:{ink}; opacity:.45; }}
   .mark {{
-    font-family:"Jost",sans-serif; font-weight:700; font-size:184px;
+    font-family:"Jost",sans-serif; font-weight:700; font-size:176px;
     line-height:.94; color:{hot}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .longname {{
-    font-family:"Satoshi",sans-serif; font-weight:500; font-size:40px;
-    letter-spacing:-.01em; color:{ink}; opacity:.6; margin:16px 0 0 8px;
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:38px;
+    letter-spacing:-.01em; color:{ink}; opacity:.6; margin:14px 0 0 7px;
   }}
   h2 {{
-    font-family:"Satoshi",sans-serif; font-weight:700; font-size:78px;
-    line-height:1.1; letter-spacing:-.02em; color:{hot}; margin:14px 0 0;
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:74px;
+    line-height:1.1; letter-spacing:-.02em; color:{hot}; margin:0;
   }}
   h2.ink {{ color:{ink}; }}
   .stack {{
-    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:126px;
-    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:14px 0 0;
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:118px;
+    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0;
   }}
-  .body {{ font-size:34px; font-weight:400; line-height:1.45; color:{ink}; opacity:.8; margin:22px 0 0; }}
-  .fill {{ margin-top:auto; }}
-  .row {{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; }}
-  .facts {{ font-family:"JetBrains Mono",monospace; font-size:21px; letter-spacing:.1em;
-            text-transform:uppercase; color:{ink}; opacity:.72; line-height:1.9; }}
-  .facts b {{ color:{hot}; font-weight:400; }}
-  /* Speakers. Two grid columns so the affiliations make an edge of their own,
-     the way they do on the sheet. */
-  .people {{ display:grid; grid-template-columns:auto auto; column-gap:24px; row-gap:0;
-             align-items:baseline; justify-content:start; margin-top:26px; }}
-  .people b {{ font-size:45px; font-weight:700; letter-spacing:-.014em; color:{ink};
-               line-height:1.42; white-space:nowrap; }}
-  .people span {{ font-size:26px; font-weight:400; color:{cool}; white-space:nowrap; }}
-  .orgs2 {{ display:grid; grid-template-columns:auto auto; column-gap:22px;
-            align-items:baseline; justify-content:start; margin-top:20px; }}
-  .orgs2 b {{ font-size:34px; font-weight:700; color:{ink}; line-height:1.5; white-space:nowrap; }}
-  .orgs2 span {{ font-size:24px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
-  .marks img {{ height:44px; width:auto; display:block; opacity:.72; }}
-  .marks {{ display:flex; align-items:flex-end; gap:40px; }}
-  .qr-plate {{ width:190px; height:190px; background:{art_ink}; padding:9px; box-sizing:border-box; }}
-  .qr-plate svg {{ display:block; width:100%; height:100%; }}
-  .num {{ position:absolute; right:78px; top:78px;
-          font-family:"JetBrains Mono",monospace; font-size:19px; letter-spacing:.16em;
-          color:{ink}; opacity:.5; }}
-  .tent {{ font-family:"JetBrains Mono",monospace; font-size:17px; letter-spacing:.1em;
-           text-transform:uppercase; color:{ink}; opacity:.45; margin:18px 0 0; }}
-  /* The label stays at the top and the closing row at the foot; what the slide
-     is actually about sits between them and takes the middle. Top-anchored, the
-     content leant on the label and left the whole lower half empty.
-
-     Last in the sheet on purpose: .people and .orgs2 set their own margin-top,
-     and at equal specificity the later rule wins — declared above them this
-     centred the two slides that had no competing rule and silently did nothing
-     on the three that did. */
+  .body {{ font-size:32px; font-weight:400; line-height:1.45; color:{ink}; opacity:.82; margin:22px 0 0; }}
+  /* The foot is the same on every slide: a rule, the address, and one fact
+     that belongs to that slide. A single screenshot of any one of them still
+     says where to go. */
+  .foot {{
+    margin-top:auto; padding-top:22px; border-top:1px solid rgba(245,245,247,.20);
+    display:flex; align-items:baseline; justify-content:space-between; gap:24px;
+    font-family:"JetBrains Mono",monospace; font-size:18px; letter-spacing:.1em;
+    text-transform:uppercase; color:{ink}; opacity:.6;
+  }}
+  .foot b {{ color:{hot}; font-weight:400; opacity:1; }}
   .mid {{ margin:auto 0; }}
+  .facts {{ font-family:"JetBrains Mono",monospace; font-size:21px; letter-spacing:.1em;
+            text-transform:uppercase; color:{ink}; opacity:.78; line-height:2; margin:0; }}
+  .facts b {{ color:{hot}; font-weight:400; }}
+  /* Speakers, grouped under the session that holds them. Two columns so the
+     affiliations make an edge, the way they do on the sheet. */
+  .sess {{
+    font-family:"JetBrains Mono",monospace; font-size:18px; font-weight:400;
+    letter-spacing:.14em; text-transform:uppercase; color:{hot}; margin:26px 0 6px;
+  }}
+  .sess:first-child {{ margin-top:0; }}
+  .people {{ display:grid; grid-template-columns:auto auto; column-gap:22px; row-gap:0;
+             align-items:baseline; justify-content:start; }}
+  .people b {{ font-size:40px; font-weight:700; letter-spacing:-.014em; color:{ink};
+               line-height:1.36; white-space:nowrap; }}
+  .people span {{ font-size:24px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
+  .orgs2 {{ display:grid; grid-template-columns:auto auto; column-gap:22px;
+            align-items:baseline; justify-content:start; }}
+  .orgs2 b {{ font-size:36px; font-weight:700; color:{ink}; line-height:1.52; white-space:nowrap; }}
+  .orgs2 span {{ font-size:24px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
+  .marks {{ display:flex; align-items:flex-end; gap:38px; }}
+  .marks img {{ height:42px; width:auto; display:block; opacity:.72; }}
+  .qr-plate {{ width:186px; height:186px; background:{art_ink}; padding:9px; box-sizing:border-box; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+  .join {{ display:flex; align-items:flex-end; justify-content:space-between; gap:30px; margin-top:34px; }}
 </style></head><body>
 
 <div class="card">
-  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <p class="kicker hot">{eyebrow}</p>
-    <div class="fill">
+    <div class="head"><p class="kicker hot">{eyebrow}</p><span class="num">1/6</span></div>
+    <div class="mid"></div>
+    <div>
       <h1 class="mark">{mark} <span>{year}</span></h1>
       <p class="longname">{long_name}</p>
-      <p class="facts" style="margin-top:34px">
-        <b>{yyyy}.{md1}–{md2}</b> &nbsp;·&nbsp; {venue_name}, {city}
-      </p>
     </div>
+    <div class="foot"><span><b>{yyyy}.{md1}–{md2}</b></span><span>{venue_name}, {city}</span></div>
   </div>
-  <div class="num">1/6</div>
 </div>
 
 <div class="card quiet">
-  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <p class="kicker">Theme {year}</p>
+    <div class="head"><p class="kicker">What it is</p><span class="num">2/6</span></div>
     <div class="mid">
+      <p class="kicker hot" style="margin-bottom:14px">Theme {year}</p>
       <h2>{theme}</h2>
       <p class="body">{blurb}</p>
     </div>
-    <div class="row">
-      <p class="facts"><b>{yyyy}.{md1}–{md2}</b><br>{venue_name}, {city}</p>
-    </div>
+    <div class="foot"><span>kolt-workshop.github.io/{year}</span><span><b>Free to attend</b></span></div>
   </div>
-  <div class="num">2/6</div>
 </div>
 
 <div class="card quiet">
-  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <p class="kicker">When &amp; where</p>
+    <div class="head"><p class="kicker">When &amp; where</p><span class="num">3/6</span></div>
     <div class="mid">
       <p class="stack">{yyyy}.<br>{md1}–{md2}</p>
-      <h2 class="ink" style="font-size:52px;margin-top:34px">{venue_name}</h2>
-      <p class="body" style="margin-top:8px">{venue_addr}</p>
+      <h2 class="ink" style="font-size:48px;margin-top:32px">{venue_name}</h2>
+      <p class="body" style="font-size:28px;margin-top:8px">{venue_addr}</p>
+      <p class="facts" style="margin-top:26px">{rooms}</p>
     </div>
-    <div>
-      <p class="facts">{rooms}</p>
-      <p class="tent">Details are tentative</p>
-    </div>
+    <div class="foot"><span>2 days · Korean</span><span><b>Details are tentative</b></span></div>
   </div>
-  <div class="num">3/6</div>
 </div>
 
 <div class="card quiet">
-  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <p class="kicker hot">{day1_label}</p>
-    <div class="people mid">{day1_grid}</div>
-    <p class="tent">Programme subject to change</p>
+    <div class="head"><p class="kicker hot">{day1_label}</p><span class="num">4/6</span></div>
+    <div class="mid">{day1_grid}</div>
+    <div class="foot"><span>Day 1 of 2</span><span>Programme subject to change</span></div>
   </div>
-  <div class="num">4/6</div>
 </div>
 
 <div class="card quiet">
-  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <p class="kicker hot">{day2_label}</p>
-    <div class="people mid">{day2_grid}</div>
-    <p class="tent">Programme subject to change</p>
+    <div class="head"><p class="kicker hot">{day2_label}</p><span class="num">5/6</span></div>
+    <div class="mid">{day2_grid}</div>
+    <div class="foot"><span>Day 2 of 2</span><span>Programme subject to change</span></div>
   </div>
-  <div class="num">5/6</div>
 </div>
 
 <div class="card quiet">
-  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <p class="kicker">Organisers</p>
-    <div class="orgs2 mid">{organisers}</div>
-    <div class="row">
-      <div>
-        <p class="kicker" style="margin-bottom:16px">{url}</p>
-        <span class="marks">{logos}</span>
+    <div class="head"><p class="kicker">Organisers</p><span class="num">6/6</span></div>
+    <div class="mid">
+      <div class="orgs2">{organisers}</div>
+      <div class="join">
+        <div>
+          <p class="kicker hot" style="margin-bottom:12px">Registration {reg_note}</p>
+          <p class="body" style="font-size:30px;margin:0 0 24px">kolt-workshop.github.io/{year}</p>
+          <span class="marks">{logos}</span>
+        </div>
+        <div class="qr-plate">{qr}</div>
       </div>
-      <div class="qr-plate">{qr}</div>
     </div>
+    <div class="foot"><span>{mark} {year}</span><span><b>See you in {city}</b></span></div>
   </div>
-  <div class="num">6/6</div>
 </div>
 
 </body></html>
 """
-
-
 def listing_html(program):
     """One line per session: day of the month, who, and when."""
     out = []
@@ -1721,9 +1743,17 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     # rooms as one mono block, and the day's own label.
     day_grids, day_labels = [], []
     for d in sessions(program):
-        day_grids.append("".join(
-            f'<b>{esc(p["name"])}</b><span>{esc(p.get("affil", ""))}</span>'
-            for b in d["blocks"] for p in b["people"]))
+        # Grouped under the session that holds them rather than run together:
+        # fourteen names in one column say who is coming, and nothing about
+        # what the two days are made of.
+        groups = []
+        for b in d["blocks"]:
+            people = "".join(
+                f'<b>{esc(p["name"])}</b><span>{esc(p.get("affil", ""))}</span>'
+                for p in b["people"])
+            groups.append(f'<p class="sess">{esc(b["title"])}</p>'
+                          f'<div class="people">{people}</div>')
+        day_grids.append("".join(groups))
         raw = d["label"].split("·")[-1].strip() if "·" in d["label"] else d["label"]
         day_labels.append(esc(raw.replace("(", "· ").rstrip(")")))
     rooms = "<br>".join(

@@ -606,7 +606,8 @@
          of shipping the 48MB print PDF into the repository. -->
     <section id="poster" class="band">
       <div class="wrap">
-        <h2>{{ t(site.poster.title, site.poster.title_ko) }}</h2>
+        <h2>{{ t(site.poster.title, site.poster.title_ko) }}{% if site.poster.title_note %}
+          <span class="h2-note">({{ t(site.poster.title_note, site.poster.title_note_ko) }})</span>{% endif %}</h2>
         {% if site.poster.subtitle %}
         <p class="sub">{{ t(site.poster.subtitle, site.poster.subtitle_ko) }}</p>
         {% endif %}

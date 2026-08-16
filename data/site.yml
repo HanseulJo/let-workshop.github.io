@@ -203,6 +203,10 @@ variants:
 poster:
   title: Poster
   title_ko: 포스터
+  # Beside the heading as well as under the sheet. Someone who scrolls to this
+  # section and takes a copy away may never read the caption.
+  title_note: details are tentative
+  title_note_ko: 세부 사항은 변경될 수 있습니다
   subtitle: Print it, pin it up, pass it on.
   subtitle_ko: 인쇄해서 붙이고 나눠주세요.
   image: poster-2026.png

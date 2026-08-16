@@ -1187,7 +1187,16 @@ h2::before {
   display: flex;
   align-items: center;
   padding: 9px 16px;
-  border-radius: 999px;
+  /* Half of one line's height, not 999px. At 999px the radius is always half
+     the box, so a topic that wraps to two lines turns into a lozenge with
+     bulging sides — the shape changes with the length of the sentence, which
+     is the one thing it should not do. Fixed at half a single line, the
+     one-liners are still pills and the longer ones grow straight sides.
+
+     Written from the same numbers the box is built from — 1.45em of line and
+     9px of padding on each side — so it follows the type rather than needing
+     to be re-measured whenever the type moves. */
+  border-radius: calc(0.725em + 9px);
   background: color-mix(in srgb, var(--accent) 8%, transparent);
   font-family: var(--mono);
   font-size: 0.72em;
@@ -3090,6 +3099,20 @@ footer a {
   }
 }
 
+
+/* A qualifier beside a heading, not inside it: the same baseline so it reads
+   as part of the line, but at body size and in the muted colour so it does not
+   compete with the word it qualifies. */
+.h2-note {
+  font-family: var(--mono);
+  font-size: 0.42em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--muted);
+  margin-left: 0.5em;
+  white-space: nowrap;
+}
 
 /* ===== POSTER =====
    One image, given room. The sheet is 1:1.414, which is tall enough that at

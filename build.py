@@ -295,6 +295,7 @@ def fill_defaults(bundle: dict) -> None:
     bundle["site"].setdefault("poster", None)
     if bundle["site"]["poster"]:
         for key in ("title_ko", "subtitle", "subtitle_ko",
+                    "title_note", "title_note_ko",
                     "caption", "caption_ko", "full", "download", "download_ko"):
             bundle["site"]["poster"].setdefault(key, None)
     # No eyebrow at all is a legitimate hero — the pill simply disappears.
