@@ -533,14 +533,15 @@ FESTIVAL = """<!doctype html>
   .slot-head .t {{ color:{ink}; letter-spacing:.04em; opacity:.75; }}
   .slot ul {{ margin:0; padding:0; list-style:none; }}
   .slot li {{
-    display:grid; grid-template-columns:1fr 88mm; column-gap:4mm;
+    display:grid; grid-template-columns:1fr 30mm; column-gap:4mm;
     align-items:baseline;
     font-family:"Inter Tight",sans-serif; font-weight:600; font-size:10.5mm;
     line-height:1.16; letter-spacing:-.018em; color:{ink};
   }}
   .slot li em {{ font-style:normal; text-align:right; }}
+  .slot li span {{ text-align:left; }}
   .slot li span {{
-    font-weight:400; font-size:6.4mm; color:{cool}; text-align:right;
+    font-weight:400; font-size:6.4mm; color:{cool}; text-align:left;
   }}
   /* One rule a day, and the day given its own line above what it opens. */
   .daymark {{
@@ -1035,8 +1036,8 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             + "</div>")
         for b in d["blocks"]:
             people = "".join(
-                f'<li><span>{esc(p2.get("affil", ""))}</span>'
-                f'<em>{esc(p2["name"])}</em></li>'
+                f'<li><em>{esc(p2["name"])}</em>'
+                f'<span>{esc(p2.get("affil", ""))}</span></li>'
                 for p2 in b["people"])
             slots.append(
                 f'<div class="slot"><p class="slot-head">'
