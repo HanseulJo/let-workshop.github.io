@@ -599,9 +599,9 @@ FESTIVAL = """<!doctype html>
      made a corner; a single line makes an edge, which is what the left of a
      festival sheet is for.
 
-     The label is the only heavy thing on it and the rest is set light — the
-     contrast that was doing the work is weight, so it can do all of it and
-     the size can stay put. Inter Tight's weight axis runs 100 to 900; the
+     The label is the only heavy thing on it and the rest is set light and at
+     half the size, so the eye reads Venue, Theme, Homepage down the edge and
+     picks up the particular only on the second pass. Inter Tight's weight axis runs 100 to 900; the
      @font-face here declared 500 to 700, so every lighter request on the sheet
      was being clamped to Medium and nothing could be set light at all. That is
      also why the affiliations in the programme now sit slightly lighter than
@@ -612,10 +612,17 @@ FESTIVAL = """<!doctype html>
      ground, and a mid grey on a mottled mid ground is the one pairing that
      does not survive being printed. */
   .rail span {{
-    display:block; font-family:"Inter Tight",sans-serif; font-size:10mm;
-    font-weight:200; letter-spacing:-.012em; color:{ink}; opacity:.92;
+    display:block; font-family:"Inter Tight",sans-serif; font-size:5mm;
+    font-weight:200; letter-spacing:-.006em; color:{ink}; opacity:.92;
   }}
-  .rail em {{ font-style:normal; font-weight:700; color:{hot}; }}
+  .rail em {{
+    font-style:normal; font-size:10mm; font-weight:700;
+    letter-spacing:-.012em; color:{hot};
+    /* Along the reading direction, whichever way the rail is turned: the word
+       space after the label is set at the small size and is not enough to
+       part a 10mm bold from what follows it. */
+    margin-inline-end:1.4mm;
+  }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
      hold: the row stretches all three to one height, and since each is flipped
