@@ -570,12 +570,21 @@ FESTIVAL = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
     letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin:7mm 0 2mm;
   }}
-  .orgs {{ margin:0; padding:0; list-style:none; }}
-  .orgs li {{
-    font-family:"Inter Tight",sans-serif; font-size:4.6mm; font-weight:600;
-    color:{ink}; line-height:1.5;
+  /* Names in one column, affiliations in another, the way the programme sets
+     them. As plain lines each affiliation began wherever its name ended, so
+     six of them made a ragged edge down the middle of the block. */
+  .orgs {{
+    display:inline-grid; grid-template-columns:auto auto; column-gap:4mm;
+    row-gap:0; align-items:baseline;
   }}
-  .orgs li span {{ font-weight:400; color:{cool}; }}
+  .orgs b {{
+    font-family:"Inter Tight",sans-serif; font-size:4.6mm; font-weight:600;
+    color:{ink}; line-height:1.5; white-space:nowrap;
+  }}
+  .orgs span {{
+    font-family:"Inter Tight",sans-serif; font-size:4.6mm; font-weight:400;
+    color:{cool}; line-height:1.5; white-space:nowrap;
+  }}
   .cols .theme {{
     font-family:"Inter Tight",sans-serif; font-size:5mm; font-weight:600;
     color:{ink}; margin:0; line-height:1.3;
@@ -590,6 +599,22 @@ FESTIVAL = """<!doctype html>
   .rail span {{
     display:block; font-family:"JetBrains Mono",monospace; font-size:4.6mm;
     letter-spacing:.06em; margin-right:3mm;
+  }}
+  /* The theme, turned on its side against the right edge. It sat in the foot
+     between the marks and the code, where it was one more thing in a row of
+     small things; on the edge it is the only thing, and it balances the two
+     rails opposite. Set outside the 20mm text column so it cannot meet the
+     programme, which reaches the right edge of that column. */
+  .theme-rail {{
+    position:absolute; right:8mm; top:50%; transform:translateY(-50%);
+    writing-mode:vertical-rl; text-align:left;
+    font-family:"Inter Tight",sans-serif; line-height:1.25;
+  }}
+  .theme-rail b {{ font-size:5.4mm; font-weight:600; color:{ink}; letter-spacing:-.01em; }}
+  .theme-rail span {{
+    font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:{hot};
+    margin-left:2.6mm;
   }}
   /* The programme, against one right edge. */
   .panel {{ margin-top:auto; }}
@@ -651,8 +676,14 @@ FESTIVAL = """<!doctype html>
   .datesub {{ display:none; }}
   .side {{ flex:none; }}
   .side h4 {{ margin-top:7mm; }}
-  .themebit {{ text-align:center; }}
-  .themebit h4 {{ margin:0 0 1.5mm; }}
+  /* The name once more along the bottom, at the size the theme used to sit at
+     there. The mark states it in full at the top; down here it is the line
+     that signs the sheet off, so it takes the theme's size, not its own. */
+  .footname {{
+    margin:0; align-self:flex-end;
+    font-family:"Avenir Next","Outfit",sans-serif; font-size:5.4mm; font-weight:500;
+    letter-spacing:-.01em; text-transform:none; color:{ink}; opacity:.58;
+  }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.6mm; font-weight:500;
     letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin:0 0 3mm;
@@ -696,6 +727,7 @@ FESTIVAL = """<!doctype html>
     <div class="rail"><b>{venue_short}</b><span>{venue_name} &middot; {country}</span></div>
     <div class="rail"><b>Registration</b><span>{reg_note} &middot; {url}</span></div>
   </div>
+  <div class="theme-rail"><span>{theme_label}</span><b>{theme}</b></div>
   <div class="wrap">
     <div class="top">
       <div><h1 class="mark">{mark} <span>{year}</span></h1>
@@ -707,13 +739,13 @@ FESTIVAL = """<!doctype html>
         <div class="side">
           <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
           <h4>Organisers</h4>
-          <ul class="orgs">{organisers}</ul>
+          <div class="orgs">{organisers}</div>
         </div>
         <div class="bill"><div class="prog-grid">{programme}</div></div>
       </div>
       <div class="foot">
         <span class="marks">{logos}</span>
-        <div class="themebit"><h4>Theme</h4><p class="theme">{theme}</p></div>
+        <p class="footname">{long_name}</p>
         <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
       </div>
     </div>
@@ -1027,8 +1059,10 @@ def festival_bits(program, organizers, site):
                 bill.append(
                     f'<li>{esc(p["name"])}<sup>{esc(p.get("affil", ""))}</sup></li>'
                 )
+    # Two cells per person, not one line each: the affiliations then form a
+    # column of their own instead of starting wherever the name happens to end.
     orgs = "".join(
-        f'<li>{esc(m["name"])} <span>{esc(m.get("affil", ""))}</span></li>'
+        f'<b>{esc(m["name"])}</b><span>{esc(m.get("affil", ""))}</span>'
         for m in organizers["members"]
     )
     days = " ".join(str(d["date"]).split("-")[-1] for d in program["days"])

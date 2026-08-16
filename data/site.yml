@@ -102,8 +102,8 @@ nav:
 hosts:
   label: Host and participating institutions
   logos:
-    - { name: POSTECH, file: postech.png, url: https://www.postech.ac.kr/eng/ }
     - { name: KAIST, file: kaist.png, url: https://www.kaist.ac.kr/en/ }
+    - { name: POSTECH, file: postech.png, url: https://www.postech.ac.kr/eng/ }
 
 # The particulars under the hero title. `icon` names a symbol in the inline
 # sprite: cal, pin, globe, mic. `mono` sets the value in the monospace face —
