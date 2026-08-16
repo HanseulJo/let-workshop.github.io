@@ -276,6 +276,11 @@ TEMPLATE = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  /* Switzer as served by Fontshare's CDN has its name table blanked to the
+     string "false". A browser never looks — @font-face supplies the name — but
+     a printed PDF embeds whatever the file calls itself, and the sheet went out
+     carrying a font called "false". The copies in static/fonts have the names
+     written back. */
   @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
