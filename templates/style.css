@@ -2871,10 +2871,13 @@ footer a {
   }
   .hero {
     padding: 40px 16px 40px;
-    /* The whole width, as a band under the bar, rather than a slice of the
-       middle blown up to fill a tall box. */
-    --hero-size: 155% auto;
-    --hero-focus: 57% 74px;
+    /* Cropped, and aimed at the tower rather than the middle of the frame.
+       At this magnification the glyphs are texture — nothing is legible as
+       maths at six times size — so the picture takes over here and the
+       formulas step back. On a laptop the reverse is true and neither of these
+       overrides applies. */
+    --hero-size: cover;
+    --hero-focus: 62% 42%;
   }
   /* One scrim on a phone, and a heavier one. The horizontal half of the desktop
      pair buys contrast for the left column by spending it on the right — but
@@ -2913,6 +2916,15 @@ footer a {
   .hero-math {
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 84%);
     mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 84%);
+  }
+  /* The picture reads, the writing recedes. */
+  .hero.has-art::before {
+    opacity: 0.62;
+    filter: contrast(1.12);
+  }
+  .hero-art {
+    opacity: 0.5;
+    filter: brightness(2.2) saturate(0.9);
   }
   /* rem, not em. As an em it was measured against the title, which the clamp
      holds at its 46px floor on a phone — so 0.46em came out at 21px against the
