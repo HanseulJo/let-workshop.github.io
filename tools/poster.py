@@ -58,6 +58,12 @@ PALETTE = {
     "accent": "#e8503a",
     "sky": "#4ec3e0",
     "rule": "rgba(255,255,255,.18)",
+    # The veil, as five stops down the sheet. It exists to hold a photograph
+    # back from the type on a dark ground; a scheme that puts a flat field in
+    # the sky and a plate under the campus wants far less of it, or the veil
+    # simply repaints the whole sheet in the ground colour. Palette values, so
+    # a scheme can set them without a second template.
+    "veil1": ".72", "veil2": ".50", "veil3": ".62", "veil4": ".90", "veil5": ".985",
     "chip": "rgba(255,255,255,.34)",
 }
 
@@ -836,11 +842,11 @@ FESTIVAL = """<!doctype html>
   {ghost}<div class="art">{art}</div>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="{ground}" stop-opacity=".72"/>
-      <stop offset=".22" stop-color="{ground}" stop-opacity=".50"/>
-      <stop offset=".52" stop-color="{ground}" stop-opacity=".62"/>
-      <stop offset=".70" stop-color="{ground}" stop-opacity=".90"/>
-      <stop offset="1" stop-color="{ground}" stop-opacity=".985"/>
+      <stop offset="0" stop-color="{ground}" stop-opacity="{veil1}"/>
+      <stop offset=".22" stop-color="{ground}" stop-opacity="{veil2}"/>
+      <stop offset=".52" stop-color="{ground}" stop-opacity="{veil3}"/>
+      <stop offset=".70" stop-color="{ground}" stop-opacity="{veil4}"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity="{veil5}"/>
     </linearGradient></defs>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
@@ -1794,13 +1800,27 @@ GHOST_SIZE = {
 }
 
 
-def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None, ghost=None):
+def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None,
+         ghost=None, silhouette=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
 
     ghost_layer = ""
-    if ghost:
+    if silhouette:
+        # A flat plate in the shape of the subject, under the formulas. The
+        # drawing alone is thin strokes, and at any distance a field of thin
+        # strokes reads as a tint rather than as a thing; the plate gives it a
+        # mass and the formulas become the texture on it. Written as a mask on
+        # a coloured box rather than as a coloured image, so the plate follows
+        # whatever art_ink the scheme sets.
+        data = base64.b64encode(Path(silhouette).read_bytes()).decode("ascii")
+        url = f"data:image/png;base64,{data}"
+        ghost_layer = (
+            f'<div style="position:absolute;inset:0;background:{PALETTE["art_ink"]};'
+            f'-webkit-mask:url({url}) 0 0/100% 100% no-repeat;'
+            f'mask:url({url}) 0 0/100% 100% no-repeat;opacity:.9"></div>')
+    elif ghost:
         # The same two layers the website's hero uses. The formulas alone are a
         # drawing of the photograph; the photograph faintly behind them is what
         # holds the shape together between the marks, and it is the reason the
@@ -2083,6 +2103,9 @@ if __name__ == "__main__":
                     help="a faint photograph behind the formulas, as the website has")
     ap.add_argument("--duotone", metavar="SHADOW,HIGHLIGHT",
                     help="two colours for the photograph, e.g. '#1b2a4a,#ff8a75'")
+    ap.add_argument("--silhouette", metavar="PNG",
+                    help="a cut-out PNG whose alpha is filled flat in art_ink, "
+                         "laid under the formulas so the subject reads as a mass")
     ap.add_argument("--palette", metavar="JSON",
                     help="override palette entries, e.g. '{\"ground\":\"#101010\"}'. "
                          "The artwork's own ink is recoloured to match art_ink.")
@@ -2106,4 +2129,5 @@ if __name__ == "__main__":
             patched.write_text(src.read_text(encoding="utf-8")
                                .replace(OLD_ART_INK, override["art_ink"]), encoding="utf-8")
             args.art = str(patched)
-    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone, args.ghost)
+    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone,
+         args.ghost, args.silhouette)

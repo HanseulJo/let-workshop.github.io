@@ -109,25 +109,27 @@ SCHEMES = [
     # sheet's own colour stands there as a plain field. The building is the only thing drawn, in a colour chosen against
     # that field rather than blended into it. No photograph behind these — a
     # ghost in the sky would fill the very area the split depends on.
-    dict(name="30-split-yellow-indigo", art="split", ghost=False,
-         ground="#f7c815", ground2="#e3b400", art_ink="#2a2a8f",
-         ink="#ffffff", cool="#4a4a9e", hot="#2a2a8f", band="#e3b400"),
-    dict(name="31-split-mint-indigo", art="split", ghost=False,
-         ground="#2fd7a8", ground2="#1fbf93", art_ink="#231a5c",
-         ink="#ffffff", cool="#3d3178", hot="#231a5c", band="#1fbf93"),
-    dict(name="32-split-lavender-black", art="split", ghost=False,
-         ground="#c9bdf5", ground2="#b3a4ef", art_ink="#16121f",
-         ink="#16121f", cool="#4b4266", hot="#e8503a", band="#b3a4ef"),
-    dict(name="33-split-coral-navy", art="split", ghost=False,
-         ground="#ff8a75", ground2="#f0705a", art_ink="#0f1826",
-         ink="#0f1826", cool="#3d4c63", hot="#0f1826", band="#f0705a"),
-    dict(name="34-split-sky-orange", art="split", ghost=False,
-         ground="#9ed8f5", ground2="#7cc4e8", art_ink="#1b2a4a",
-         ink="#0d1a30", cool="#41567a", hot="#ff5a1f", band="#7cc4e8"),
-    dict(name="35-split-bone-red", art="split", ghost=False,
-         ground="#efe9dd", ground2="#ddd4c2", art_ink="#c1281c",
-         ink="#1a1613", cool="#6b6157", hot="#c1281c", band="#ddd4c2"),
+    dict(name="30-split-yellow-indigo", art="split", ground="#f7c815", ground2="#e3b400",
+         art_ink="#2a2a8f", ink="#1a1a4a", cool="#4a4a9e", hot="#2a2a8f", band="#e3b400"),
+    dict(name="31-split-mint-indigo", art="split", ground="#2fd7a8", ground2="#1fbf93",
+         art_ink="#231a5c", ink="#14113a", cool="#3d3178", hot="#231a5c", band="#1fbf93"),
+    dict(name="32-split-lavender-black", art="split", ground="#c9bdf5", ground2="#b3a4ef",
+         art_ink="#16121f", ink="#16121f", cool="#4b4266", hot="#e8503a", band="#b3a4ef"),
+    dict(name="33-split-coral-navy", art="split", ground="#ff8a75", ground2="#f0705a",
+         art_ink="#0f1826", ink="#0f1826", cool="#3d4c63", hot="#0f1826", band="#f0705a"),
+    dict(name="34-split-sky-orange", art="split", ground="#9ed8f5", ground2="#7cc4e8",
+         art_ink="#1b2a4a", ink="#0d1a30", cool="#41567a", hot="#ff5a1f", band="#7cc4e8"),
+    dict(name="35-split-bone-red", art="split", ground="#efe9dd", ground2="#ddd4c2",
+         art_ink="#c1281c", ink="#1a1613", cool="#6b6157", hot="#c1281c", band="#ddd4c2"),
 ]
+
+# What a split scheme needs on top of its colours. The plate is what makes the
+# campus a mass rather than a tint — the formulas alone are thin strokes, and a
+# field of thin strokes reads as a tone at any distance. And the veil has to be
+# taken almost all the way off at the top or it repaints the flat sky in the
+# ground colour; it comes back down the sheet, where the programme has to be
+# read off it.
+SPLIT_EXTRAS = dict(veil1=".02", veil2=".02", veil3=".44", veil4=".86", veil5=".97")
 
 
 def luminance(hex_colour):
@@ -149,6 +151,7 @@ def main():
     ap.add_argument("--art-dark", required=True, help="artwork for dark grounds")
     ap.add_argument("--art-light", required=True, help="artwork for light grounds (--invert)")
     ap.add_argument("--art-split", help="artwork drawn from the sky-removed photograph")
+    ap.add_argument("--silhouette", help="alpha PNG of the subject, filled flat under the split drawings")
     ap.add_argument("--ghost", help="the photograph behind the formulas")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--width", type=int, default=900, help="pixel width of each PNG")
@@ -169,10 +172,14 @@ def main():
         art = {"dark": args.art_dark, "light": args.art_light,
                "split": args.art_split or args.art_light}[scheme["art"]]
         palette = {k: v for k, v in scheme.items() if k not in ("name", "art", "ghost")}
+        if scheme["art"] == "split":
+            palette.update(SPLIT_EXTRAS)
         cmd = [sys.executable, str(HERE / "poster.py"), "--art", art,
                "--layout", "festival", "--palette", json.dumps(palette),
                "-o", str(work / f"{scheme['name']}.html")]
-        if args.ghost and scheme.get("ghost", True):
+        if scheme["art"] == "split" and args.silhouette:
+            cmd += ["--silhouette", args.silhouette]
+        elif args.ghost and scheme.get("ghost", True):
             cmd += ["--ghost", args.ghost]
         subprocess.run(cmd, capture_output=True, check=True)
         ct = contrast(scheme["ink"], scheme["ground"])
