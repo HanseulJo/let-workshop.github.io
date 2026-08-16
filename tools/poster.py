@@ -535,11 +535,17 @@ FESTIVAL = """<!doctype html>
      hide it. */
   /* One quiet line under the mark. Picking the acronym's letters out in the
      accent explained where KOLT comes from and looked like it was explaining
-     it; all caps, light and held back says the same thing without pointing. */
+     it; all caps, light and held back says the same thing without pointing.
+
+     A serif, and the only one on the sheet. In a sans it sat directly under a
+     much heavier sans and read as the same typeface shrunk — the difference
+     was size, which looks like a mistake rather than a choice. The high stroke
+     contrast of a Didot separates it at a glance while staying quieter than
+     the mark above it. */
   .longname {{
-    font-family:"Jost",sans-serif; font-weight:400; font-size:6.2mm;
-    letter-spacing:.16em; text-transform:uppercase; color:{ink};
-    opacity:.62; margin:4.5mm 0 0;
+    font-family:"Didot","Playfair Display",serif; font-weight:400; font-size:7.4mm;
+    letter-spacing:.03em; text-transform:uppercase; color:{ink};
+    opacity:.82; margin:4.5mm 0 0;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
