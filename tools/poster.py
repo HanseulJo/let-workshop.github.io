@@ -595,8 +595,8 @@ FESTIVAL = """<!doctype html>
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Inter Tight",sans-serif; color:{hot};
   }}
-  /* Two lines again, with the sizes the other way round: the field name small
-     over the thing itself large. Venue and Theme are the words a reader can
+  /* One line, sizes the other way round: the field name small, the thing
+     itself large. Venue and Theme are the words a reader can
      supply for themselves — what they cannot is which venue and which theme,
      and that is what the edge should be saying at a distance.
 
@@ -613,14 +613,23 @@ FESTIVAL = """<!doctype html>
      The paper colour rather than the cool grey the sheet uses for a second
      voice elsewhere: these lines sit over the drawing rather than over flat
      ground, and a mid grey on a mottled mid ground is the one pairing that
-     does not survive being printed. */
+     does not survive being printed.
+
+     The field name is given a box of its own so both rails start their large
+     text at the same point. VENUE measures 15.2mm and THEME 2026 measures
+     30.4mm; set next to their own words the two would have begun 15mm apart
+     and the edge would read as two unrelated lines rather than as a list.
+     34mm is the longer of the two plus a word space. As inline-size, not
+     width: the rails are turned, and the axis this has to hold is the one the
+     text runs along, whichever way that ends up pointing. */
   .rail b {{
-    display:block; font-family:"JetBrains Mono",monospace; font-size:4mm;
+    display:inline-block; inline-size:34mm; vertical-align:baseline;
+    font-family:"JetBrains Mono",monospace; font-size:4mm;
     font-weight:400; letter-spacing:.16em; text-transform:uppercase;
-    color:{ink}; opacity:.72; margin-right:2.4mm;
+    color:{ink}; opacity:.72;
   }}
   .rail span {{
-    display:block; font-family:"Inter Tight",sans-serif; font-size:10mm;
+    font-family:"Inter Tight",sans-serif; font-size:10mm;
     font-weight:700; letter-spacing:-.012em; color:{hot};
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
@@ -640,16 +649,16 @@ FESTIVAL = """<!doctype html>
   /* One thin line, not a statement. An address is a single fact and the left
      edge is where the sheet makes its statements; at the display size on the
      opposite edge it would have been a second shout for a URL. */
+  .rail-right b {{
+    inline-size:auto; margin-inline-end:2.4mm; color:{hot}; opacity:1;
+  }}
   .rail-right span {{
     font-family:"JetBrains Mono",monospace; font-size:4.6mm; font-weight:400;
-    letter-spacing:.06em; margin-right:0; color:{ink}; opacity:.82;
+    letter-spacing:.06em; color:{ink}; opacity:.82;
   }}
   /* Including its label. The size on .rail em is the display size the left
      edge is set at, and it reaches here too — this rail is one of the rails.
      The whole line is small, which is the point of it. */
-  .rail-right em {{
-    font-style:normal; color:{hot}; margin-inline-end:.8mm;
-  }}
   /* The programme, against one right edge. */
   .panel {{ margin-top:auto; }}
   .bill {{ margin:0 0 0 auto; text-align:right; }}
@@ -760,7 +769,7 @@ FESTIVAL = """<!doctype html>
   <div class="rails">
     <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
     <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
-    <div class="rail rail-right"><span><em>Homepage</em> &middot; {url}</span></div>
+    <div class="rail rail-right"><b>Homepage</b><span>{url}</span></div>
   </div>
   <div class="wrap">
     <div class="top">
