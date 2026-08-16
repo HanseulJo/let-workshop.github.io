@@ -888,6 +888,208 @@ FESTIVAL = """<!doctype html>
 """
 
 
+# ─────────────────────────────────────────────────────────────
+# The two large-format pieces, in the sheet's own language: the
+# coral mark in Jost, everything else in Satoshi, field names in
+# the mono, the campus written out in formulas behind a veil.
+#
+# What changes is the reading distance. A poster is read at arm's
+# length and can carry a programme; a banner is read across a
+# room or a courtyard and can carry a name, a date and a place.
+# Anything more is decoration at that size, so there is nothing
+# more on either of them.
+# ─────────────────────────────────────────────────────────────
+
+BANNER = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>KOLT 2026 — banner, 5000x900mm</title>
+<style>
+  @page {{ size: 5000mm 900mm; margin: 0; }}
+  @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:300; src:url("fonts/satoshi-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; }}
+  .sheet {{
+    position:relative; width:5000mm; height:900mm; overflow:hidden;
+    background:{ground}; color:{ink}; font-family:"Satoshi",sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }}
+  .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:.3; }}
+  .art, .ghost svg {{ position:absolute; inset:0; }}
+  .art {{ overflow:hidden; }}
+  .art svg, .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  .veil {{ position:absolute; inset:0; }}
+  .veil svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  /* A banner is hung, and the top and bottom 60mm go into the hem or round a
+     pole. Nothing that has to be read lives there. */
+  .wrap {{
+    position:absolute; inset:0; padding:120mm 180mm;
+    display:flex; align-items:center; justify-content:space-between; gap:120mm;
+  }}
+  .mark {{
+    font-family:"Jost",sans-serif; font-weight:700; font-size:290mm;
+    line-height:.92; color:{hot}; letter-spacing:-.02em; margin:0;
+  }}
+  .mark span {{ font-weight:300; }}
+  .longname {{
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:62mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:26mm 0 0 13mm;
+  }}
+  .right {{ text-align:right; flex:none; }}
+  .stack {{
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:150mm;
+    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0;
+  }}
+  .field {{
+    font-family:"JetBrains Mono",monospace; font-size:34mm; font-weight:400;
+    letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
+    margin:34mm 0 8mm;
+  }}
+  .where {{
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:66mm;
+    letter-spacing:-.014em; color:{ink}; margin:0;
+  }}
+  .marks {{ display:flex; justify-content:flex-end; gap:70mm; margin-top:40mm; }}
+  .marks img {{ height:66mm; width:auto; display:block; opacity:.72; }}
+</style></head><body>
+<div class="sheet">
+  {ghost}<div class="art">{art}</div>
+  <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
+    <defs><linearGradient id="v" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="{ground}" stop-opacity=".93"/>
+      <stop offset=".34" stop-color="{ground}" stop-opacity=".62"/>
+      <stop offset=".66" stop-color="{ground}" stop-opacity=".70"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity=".93"/>
+    </linearGradient></defs>
+    <rect width="100" height="10" fill="url(#v)"/>
+  </svg></div>
+  <div class="wrap">
+    <div>
+      <h1 class="mark">{mark} <span>{year}</span></h1>
+      <p class="longname">{long_name}</p>
+    </div>
+    <div class="right">
+      <p class="stack">{yyyy}.{md1}–{md2}</p>
+      <p class="field">Venue</p>
+      <p class="where">{venue_name}, {city}</p>
+      <span class="marks">{logos}</span>
+    </div>
+  </div>
+</div>
+</body></html>
+"""
+
+
+XBANNER = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>KOLT 2026 — X-banner, 600x1800mm</title>
+<style>
+  @page {{ size: 600mm 1800mm; margin: 0; }}
+  @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:300; src:url("fonts/satoshi-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; }}
+  .sheet {{
+    position:relative; width:600mm; height:1800mm; overflow:hidden;
+    background:{ground}; color:{ink}; font-family:"Satoshi",sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }}
+  .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:.3; }}
+  .art {{ position:absolute; inset:0; overflow:hidden; }}
+  .art svg, .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  .veil {{ position:absolute; inset:0; }}
+  .veil svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  /* An X-banner hangs from four corner eyelets and stands on the floor. The
+     lower 250mm is below the knee of anyone reading it and is usually behind
+     the frame's foot, so it carries the marks and nothing that must be read. */
+  .wrap {{
+    position:absolute; inset:0; padding:150mm 60mm 120mm;
+    display:flex; flex-direction:column;
+  }}
+  .mark {{
+    font-family:"Jost",sans-serif; font-weight:700; font-size:132mm;
+    line-height:.94; color:{hot}; letter-spacing:-.02em; margin:0;
+  }}
+  .mark span {{ font-weight:300; }}
+  /* 26mm, because 33mm ran the name to 565mm inside a 474mm column and broke
+     it over two lines under a mark that is already two lines. Measured, not
+     guessed: at 26mm it sets 445mm and stays whole. */
+  .longname {{
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:26mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:14mm 0 0 6mm;
+  }}
+  .middle {{ margin:auto 0; }}
+  .field {{
+    font-family:"JetBrains Mono",monospace; font-size:17mm; font-weight:400;
+    letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
+    margin:0 0 5mm;
+  }}
+  /* 30mm is the largest size at which both of the two lines this sets — the
+     venue and the theme — stay whole in a 480mm column: the venue on its own
+     line with the city under it, the theme on one. At 40mm the venue broke
+     into three and the theme into two, and a banner read from across a hall
+     wants each fact in one piece. */
+  .line {{
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:30mm;
+    letter-spacing:-.014em; color:{hot}; margin:0 0 30mm;
+  }}
+  .stack {{
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:96mm;
+    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0 0 30mm;
+  }}
+  .foot {{ display:flex; align-items:flex-end; justify-content:space-between; gap:30mm; }}
+  .marks {{ display:flex; align-items:flex-end; gap:34mm; }}
+  .marks img {{ height:34mm; width:auto; display:block; opacity:.72; }}
+  .cta {{ text-align:right; }}
+  .cta b {{
+    display:block; font-family:"Satoshi",sans-serif; font-size:16mm;
+    font-weight:700; color:{hot}; margin-bottom:8mm;
+  }}
+  .qr-plate {{ width:110mm; height:110mm; background:{art_ink}; padding:5mm; box-sizing:border-box; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+</style></head><body>
+<div class="sheet">
+  {ghost}<div class="art">{art}</div>
+  <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
+    <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="{ground}" stop-opacity=".80"/>
+      <stop offset=".26" stop-color="{ground}" stop-opacity=".52"/>
+      <stop offset=".58" stop-color="{ground}" stop-opacity=".66"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity=".97"/>
+    </linearGradient></defs>
+    <rect width="10" height="100" fill="url(#v)"/>
+  </svg></div>
+  <div class="wrap">
+    <div>
+      <h1 class="mark">{mark}<br><span>{year}</span></h1>
+      <p class="longname">{long_name}</p>
+    </div>
+    <div class="middle">
+      <p class="field">Venue</p>
+      <p class="line">{venue_name}<br>{city}</p>
+      <p class="field">Theme {year}</p>
+      <p class="line">{theme}</p>
+      <p class="field">Dates</p>
+      <p class="stack">{yyyy}.<br>{md1}–{md2}</p>
+    </div>
+    <div class="foot">
+      <span class="marks">{logos}</span>
+      <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
+    </div>
+  </div>
+</div>
+</body></html>
+"""
+
+
 def listing_html(program):
     """One line per session: day of the month, who, and when."""
     out = []
@@ -1215,6 +1417,18 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
+# The pixel size the photographic layers are generated at, per layout. Not the
+# print size — this is the raster the duotone is computed on, and it only has to
+# match the shape of the piece so nothing is cropped into or stretched across.
+GHOST_SIZE = {
+    "civic": (1700, 820),
+    "listing": (1700, 1520),
+    "bauhaus": (1000, 1360),
+    "banner": (3400, 612),      # 5000 x 900mm
+    "xbanner": (900, 2700),     # 600 x 1800mm
+}
+
+
 def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None, ghost=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
@@ -1228,11 +1442,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         # hero reads as a place rather than as a texture. Held right down — it
         # is there to be felt, not seen.
         light_ground = layout in ("civic", "bauhaus")
-        gw, gh = (1700, 820) if layout == "civic" else (1700, 2398)
-        if layout == "listing":
-            gw, gh = 1700, 1520
-        elif layout == "bauhaus":
-            gw, gh = 1000, 1360
+        gw, gh = GHOST_SIZE.get(layout, (1700, 2398))
         ghost_layer = (
             '<div class="ghost">'
             + photo_svg(ghost,
@@ -1243,11 +1453,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
 
     if cutout:
         light_ground = layout in ("civic", "bauhaus")
-        w, h = (1700, 820) if layout == "civic" else (1700, 2398)
-        if layout == "listing":
-            w, h = 1700, 1520
-        elif layout == "bauhaus":
-            w, h = 1000, 1360
+        w, h = GHOST_SIZE.get(layout, (1700, 2398))
         art = cutout_svg(
             cutout,
             PALETTE["paper"] if light_ground else "#24374f",
@@ -1257,11 +1463,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     elif photo:
         # Light grounds want ink on paper; dark ones want light on the field.
         light_ground = layout in ("civic", "bauhaus")
-        w, h = (1700, 820) if layout == "civic" else (1700, 2398)
-        if layout == "listing":
-            w, h = 1700, 1520
-        elif layout == "bauhaus":
-            w, h = 1000, 1360
+        w, h = GHOST_SIZE.get(layout, (1700, 2398))
         shadow, highlight = (
             duotone.split(",") if duotone else
             ((PALETTE["paper"], PALETTE["carbon"]) if light_ground
@@ -1283,7 +1485,8 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         ]
     )
     tpl = {"listing": LISTING, "festival": FESTIVAL, "academic": ACADEMIC,
-           "civic": CIVIC, "bauhaus": BAUHAUS}.get(layout, TEMPLATE)
+           "civic": CIVIC, "bauhaus": BAUHAUS,
+           "banner": BANNER, "xbanner": XBANNER}.get(layout, TEMPLATE)
     organizers = yaml.safe_load((DATA / "organizers.yml").read_text(encoding="utf-8"))
     bill, sessions_list, organisers, days = festival_bits(program, organizers, site)
     day_people = []
@@ -1401,8 +1604,9 @@ if __name__ == "__main__":
                     help="two colours for the photograph, e.g. '#1b2a4a,#ff8a75'")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
-                    choices=("stack", "listing", "festival", "academic", "civic", "bauhaus"),
+                    choices=("stack", "listing", "festival", "academic", "civic",
+                             "bauhaus", "banner", "xbanner"),
                     default="stack",
-                    help="stack, listing, festival, or academic")
+                    help="a poster layout, or banner (5000x900mm) / xbanner (600x1800mm)")
     args = ap.parse_args()
     main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone, args.ghost)
