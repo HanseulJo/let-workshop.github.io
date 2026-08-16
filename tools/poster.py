@@ -596,18 +596,23 @@ FESTIVAL = """<!doctype html>
     font-family:"Inter Tight",sans-serif; color:{hot};
   }}
   .rail b {{ display:block; font-size:10mm; font-weight:700; letter-spacing:-.012em; }}
-  /* The particular under the label takes the cool grey, not the accent. Both
-     were hot, and at this size a mono line beside a 10mm bold in the same
-     colour joins onto it — the pair read as one orange mass rather than as a
-     heading and the thing it heads. It is also the pairing the sheet already
-     uses: hot names the field, the paper colour states it.
+  /* Both halves at the display size, separated by weight and colour rather
+     than by size. Setting the particular small made it a caption hung off a
+     heading; at the same size the two are one statement, and the rail reads
+     as a single long line the way the left edge of a festival sheet does.
 
-     Not the cool grey the rest of the sheet uses for that job — these two sit
-     over the drawing rather than over flat ground, and a mid grey on a mottled
-     mid ground is the one pairing that does not survive being printed. */
+     The paper colour, not the cool grey the sheet uses for a second voice
+     elsewhere: these two sit over the drawing rather than over flat ground,
+     and a mid grey on a mottled mid ground is the one pairing that does not
+     survive being printed.
+
+     Inter Tight rather than the mono it was in. A monospaced face at 10mm
+     sets 33 characters over 165mm, and the two rails would have run into the
+     programme; the proportional face at the same size does not. */
   .rail span {{
-    display:block; font-family:"JetBrains Mono",monospace; font-size:4.6mm;
-    letter-spacing:.06em; margin-right:3mm; color:{ink}; opacity:.86;
+    display:block; font-family:"Inter Tight",sans-serif; font-size:10mm;
+    font-weight:400; letter-spacing:-.012em; margin-right:2mm;
+    color:{ink}; opacity:.9;
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
@@ -620,10 +625,13 @@ FESTIVAL = """<!doctype html>
      Pushed to 8mm rather than the 20mm text column, because the programme
      reaches that column's right edge lower down. */
   .rail-right {{ margin-left:auto; }}
-  /* One line, not a heading with a note under it. An address is a single fact
-     and the left edge is where the sheet makes its statements; giving this the
-     same 10mm bold put a shout on both edges for a URL. */
-  .rail-right span {{ margin-right:0; }}
+  /* One thin line, not a statement. An address is a single fact and the left
+     edge is where the sheet makes its statements; at the display size on the
+     opposite edge it would have been a second shout for a URL. */
+  .rail-right span {{
+    font-family:"JetBrains Mono",monospace; font-size:4.6mm; font-weight:400;
+    letter-spacing:.06em; margin-right:0; opacity:.82;
+  }}
   .rail-right em {{ font-style:normal; color:{hot}; }}
   /* The programme, against one right edge. */
   .panel {{ margin-top:auto; }}
