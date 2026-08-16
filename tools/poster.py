@@ -524,18 +524,24 @@ FESTIVAL = """<!doctype html>
   }}
   /* The programme, against one right edge. */
   .bill {{ margin:10mm 0 0 auto; text-align:right; width:214mm; }}
-  .slot {{ margin:0 0 6mm; padding:2.6mm 0 0; border-top:.25mm solid rgba(255,255,255,.16); }}
+
+  /* The rule and the space between sessions live on the label, because a
+     display:contents element cannot carry either. */
   .slot-head {{
-    display:block; margin:0 0 2mm; text-align:right;
+    grid-column:1 / -1; margin:5mm 0 1.6mm; padding:2.6mm 0 0;
+    border-top:.25mm solid rgba(255,255,255,.16); text-align:right;
     font-family:"JetBrains Mono",monospace; font-size:4.2mm; font-weight:500;
     letter-spacing:.12em; text-transform:uppercase; color:{hot};
   }}
 
   .slot ul {{ margin:0; padding:0; list-style:none; }}
-  .slot ul {{
+  .prog-grid {{
     display:inline-grid; grid-template-columns:auto auto auto;
-    column-gap:5mm; row-gap:0; justify-items:end; align-items:baseline;
+    column-gap:3mm; row-gap:0; justify-items:end; align-items:baseline;
+    text-align:right;
   }}
+  .slot {{ display:contents; }}
+  .slot ul {{ display:contents; }}
   .slot li {{
     display:contents;
     font-family:"Inter Tight",sans-serif; font-weight:600; font-size:10.5mm;
@@ -550,13 +556,13 @@ FESTIVAL = """<!doctype html>
   .slot li span {{ font-weight:400; font-size:6.4mm; color:{cool}; }}
   /* One rule a day, and the day given its own line above what it opens. */
   .daytheme {{
-    text-align:right; margin:6mm 0 1.5mm;
+    grid-column:1 / -1; text-align:right; margin:7mm 0 0;
     font-family:"JetBrains Mono",monospace; font-size:4mm; letter-spacing:.15em;
     text-transform:uppercase; color:{hot};
   }}
-  .slot.day-open {{ border-top-width:.5mm; border-top-color:rgba(255,255,255,.4); }}
+  .day-open .slot-head {{ border-top-width:.5mm; border-top-color:rgba(255,255,255,.42); }}
   .slot-head .hr {{ color:{ink}; opacity:.7; margin-left:4mm; letter-spacing:.04em; }}
-  .slot:first-of-type {{ margin-top:0; }}
+  .prog-grid > :first-child {{ margin-top:0; }}
   .panel {{ margin:auto 0 0; }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; margin:0; }}
   .stack {{
@@ -618,7 +624,7 @@ FESTIVAL = """<!doctype html>
         <p class="longname">{acronym_name}</p></div>
       <div class="stamps">{full_name}<br>{eyebrow}</div>
     </div>
-    <div class="bill">{programme}</div>
+    <div class="bill"><div class="prog-grid">{programme}</div></div>
     <div class="panel">
       <div class="dates">
         <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
