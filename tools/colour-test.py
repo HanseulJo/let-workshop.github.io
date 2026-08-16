@@ -102,11 +102,13 @@ SCHEMES = [
          art_ink="#a99ada", ink="#f2eefc", cool="#9184bf", hot="#7cf0c4", band="#0f0a24"),
 
     # ── the split: the sky one flat field, the campus another ─────────────
-    # The drawing is made from the sky-removed PNG itself, alpha and all. The
-    # solver has to put something in every cell it is given, so a sky
-    # composited onto white still came out under an even wash of the lightest
-    # formulas; handed the transparency it drops those cells entirely and the
-    # sheet's own colour stands there as a plain field. The building is the only thing drawn, in a colour chosen against
+    # The split is a split of colour, not a hole. The whole drawing is there,
+    # sky included — the clouds are formulas like everything else and dropping
+    # them threw away the half of the picture that reads at a distance. What
+    # separates the two halves is the plate: a solid field in the shape of the
+    # campus, under the drawing, in a colour chosen against the sky rather than
+    # blended into it. The drawing runs quieter over the top of both so the
+    # plate can be a mass and the title can still be read. The building is the only thing drawn, in a colour chosen against
     # that field rather than blended into it. No photograph behind these — a
     # ghost in the sky would fill the very area the split depends on.
     dict(name="30-split-yellow-indigo", art="split", ground="#f7c815", ground2="#e3b400",
@@ -129,7 +131,8 @@ SCHEMES = [
 # taken almost all the way off at the top or it repaints the flat sky in the
 # ground colour; it comes back down the sheet, where the programme has to be
 # read off it.
-SPLIT_EXTRAS = dict(veil1=".02", veil2=".02", veil3=".44", veil4=".86", veil5=".97")
+SPLIT_EXTRAS = dict(veil1=".02", veil2=".02", veil3=".44", veil4=".86", veil5=".97",
+                    art_alpha=".35")
 
 
 def luminance(hex_colour):
@@ -169,8 +172,10 @@ def main():
 
     print(f"{'scheme':22}{'type/ground':>12}  {'accent/ground':>14}")
     for scheme in SCHEMES:
+        # A split scheme takes the full drawing, not the cut-out one: the sky
+        # keeps its formulas and the plate does the separating.
         art = {"dark": args.art_dark, "light": args.art_light,
-               "split": args.art_split or args.art_light}[scheme["art"]]
+               "split": args.art_dark}[scheme["art"]]
         palette = {k: v for k, v in scheme.items() if k not in ("name", "art", "ghost")}
         if scheme["art"] == "split":
             palette.update(SPLIT_EXTRAS)

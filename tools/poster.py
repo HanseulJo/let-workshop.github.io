@@ -64,6 +64,11 @@ PALETTE = {
     # simply repaints the whole sheet in the ground colour. Palette values, so
     # a scheme can set them without a second template.
     "veil1": ".72", "veil2": ".50", "veil3": ".62", "veil4": ".90", "veil5": ".985",
+    # How strongly the formulas themselves are drawn. On the dark sheet they
+    # are the picture and run at full strength; a scheme that also lays a solid
+    # plate under the campus wants them quieter, or the two together bury the
+    # title.
+    "art_alpha": "1",
     "chip": "rgba(255,255,255,.34)",
 }
 
@@ -555,7 +560,7 @@ FESTIVAL = """<!doctype html>
     background:{ground}; color:{ink}; font-family:"Satoshi","Helvetica Neue",sans-serif;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }}
-  .art {{ position:absolute; inset:0; overflow:hidden; }}
+  .art {{ position:absolute; inset:0; overflow:hidden; opacity:{art_alpha}; }}
   .art svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:.3; }}
   .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
