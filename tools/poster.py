@@ -527,43 +527,34 @@ FESTIVAL = """<!doctype html>
 
   /* The rule and the space between sessions live on the label, because a
      display:contents element cannot carry either. */
-  .slot-head {{
-    grid-column:1 / -1; margin:5mm 0 1.6mm; padding:2.6mm 0 0;
-    border-top:.25mm solid rgba(255,255,255,.16); text-align:right;
-    font-family:"JetBrains Mono",monospace; font-size:4.2mm; font-weight:500;
-    letter-spacing:.12em; text-transform:uppercase; color:{hot};
-  }}
 
   .slot ul {{ margin:0; padding:0; list-style:none; }}
+  /* Three columns, one grid, shared by the whole programme: the date, the
+     name, the affiliation. The session titles and the hours are gone — a
+     poster is read standing up and what it has to deliver is who is speaking;
+     the schedule belongs on the page the QR leads to. */
   .prog-grid {{
     display:inline-grid; grid-template-columns:auto auto auto;
-    column-gap:3mm; row-gap:0; justify-items:end; align-items:baseline;
+    column-gap:4mm; row-gap:0; justify-items:end; align-items:baseline;
     text-align:right;
   }}
-  .slot {{ display:contents; }}
-  .slot ul {{ display:contents; }}
-  .slot li {{
-    display:contents;
-    font-family:"Inter Tight",sans-serif; font-weight:600; font-size:10.5mm;
-    line-height:1.16; letter-spacing:-.018em; color:{ink};
+  .prog-grid i {{
+    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:7.4mm;
+    font-weight:700; letter-spacing:-.012em; color:{hot}; white-space:nowrap;
   }}
-  .slot li em {{ font-style:normal; }}
-  .slot li i {{
-    font-style:normal; text-align:right; color:{hot};
-    font-family:"Inter Tight",sans-serif; font-size:8.4mm; font-weight:700;
-    letter-spacing:-.01em; line-height:1.16;
+  .prog-grid em {{
+    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:11mm;
+    font-weight:600; line-height:1.2; letter-spacing:-.018em; color:{ink};
+    white-space:nowrap;
   }}
-  .slot li span {{ font-weight:400; font-size:6.4mm; color:{cool}; }}
-  /* One rule a day, and the day given its own line above what it opens. */
-  .daytheme {{
-    grid-column:1 / -1; text-align:right; margin:7mm 0 0;
-    font-family:"JetBrains Mono",monospace; font-size:4mm; letter-spacing:.15em;
-    text-transform:uppercase; color:{hot};
+  .prog-grid span {{
+    font-family:"Inter Tight",sans-serif; font-size:6.4mm; font-weight:400;
+    color:{cool}; white-space:nowrap;
   }}
-  .day-open .slot-head {{ border-top-width:.5mm; border-top-color:rgba(255,255,255,.42); }}
-  .slot-head .hr {{ color:{ink}; opacity:.7; margin-left:4mm; letter-spacing:.04em; }}
-  .prog-grid > :first-child {{ margin-top:0; }}
-  .panel {{ margin:auto 0 0; }}
+  .dayrule {{
+    grid-column:1 / -1; width:100%; height:0; margin:5mm 0 4mm;
+    border:0; border-top:.4mm solid rgba(255,255,255,.34);
+  }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; margin:0; }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
@@ -1035,21 +1026,19 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             for b in d["blocks"] for p in b["people"]))
     slots = []
     for d in sessions(program):
-        if d.get("theme"):
-            slots.append(f'<p class="daytheme">{esc(d["theme"])}</p>')
-        day_label = esc(d["label"].split("·")[-1].strip()) if "·" in d["label"] else esc(d["label"])
-        for j, b in enumerate(d["blocks"]):
-            lead = day_label
-            people = "".join(
-                f'<li><i>{lead if (k == 0 and j == 0) else ""}</i>'
-                f'<em>{esc(p2["name"])}</em>'
-                f'<span>{esc(p2.get("affil", ""))}</span></li>'
-                for k, p2 in enumerate(b["people"]))
-            slots.append(
-                f'<div class="slot{" day-open" if j == 0 else ""}">'
-                f'<p class="slot-head">{esc(b["title"])}'
-                f'<span class="hr">{esc(b["start"])}</span></p>'
-                f"<ul>{people}</ul></div>")
+        if slots:
+            slots.append('<hr class="dayrule">')
+        # The date only on the first line of its day: repeated down every row it
+        # would read as a stamp rather than as the thing that opens the group.
+        first = True
+        for b in d["blocks"]:
+            for p2 in b["people"]:
+                label = esc(d["label"].split("·")[-1].strip()) if "·" in d["label"] else esc(d["label"])
+                slots.append(
+                    f'<i>{label if first else ""}</i>'
+                    f'<em>{esc(p2["name"])}</em>'
+                    f'<span>{esc(p2.get("affil", ""))}</span>')
+                first = False
     programme_block = "".join(slots)
     names_flat = "".join(
         f'<li>{esc(p["name"].lower())}</li>'
