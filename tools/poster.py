@@ -280,9 +280,13 @@ TEMPLATE = """<!doctype html>
      "false". A browser never looks — @font-face supplies the name — but a
      printed PDF embeds whatever the file calls itself, and one export went out
      carrying a font called "false". The copies in static/fonts have their
-     names written back. */
-  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+     names written back, one file per weight. */
+  @font-face {{ font-family:"Switzer"; font-weight:200; src:url("fonts/switzer-200.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:300; src:url("fonts/switzer-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:500; src:url("fonts/switzer-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:600; src:url("fonts/switzer-600.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -316,7 +320,7 @@ TEMPLATE = """<!doctype html>
     letter-spacing:.16em; text-transform:uppercase; color:{cool}; margin:0 0 3.5mm;
   }}
   .theme {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:6.6mm; font-weight:500;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:6.6mm; font-weight:500;
     color:{ink}; margin:0 0 3.5mm; opacity:.9;
   }}
   .theme b {{ font-weight:700; }}
@@ -331,7 +335,7 @@ TEMPLATE = """<!doctype html>
      the name and from arm's length for the schedule. */
   .prog {{ display:grid; grid-template-columns:1fr 1fr; gap:10mm; align-items:start; }}
   .day h3 {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:9.4mm; font-weight:700;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:9.4mm; font-weight:700;
     color:{ink}; margin:0 0 1mm;
   }}
   .daysub {{
@@ -347,7 +351,7 @@ TEMPLATE = """<!doctype html>
   .clock {{ color:{cool}; letter-spacing:.06em; opacity:.8; }}
   .sess ul {{ margin:0; padding:0; list-style:none; }}
   .sess li {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:9.4mm; color:{ink};
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:9.4mm; color:{ink};
     line-height:1.1; margin:0 0 2.1mm;
   }}
   .sess li b {{ font-weight:700; }}
@@ -413,8 +417,12 @@ LISTING = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:200; src:url("fonts/switzer-200.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:300; src:url("fonts/switzer-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:500; src:url("fonts/switzer-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:600; src:url("fonts/switzer-600.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   /* One ink on one ground, and every division drawn as a hairline rule. The
      layout is a stack of boxes with nothing between them, so the sheet has no
@@ -423,7 +431,7 @@ LISTING = """<!doctype html>
     position:relative; width:426mm; height:600mm; overflow:hidden;
     background:{ground}; color:{art_ink}; box-sizing:border-box; padding:10mm;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif;
+    font-family:"Switzer","Helvetica Neue",sans-serif;
   }}
   .frame {{
     height:100%; box-sizing:border-box; border:.45mm solid {art_ink};
@@ -513,12 +521,16 @@ FESTIVAL = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:200; src:url("fonts/switzer-200.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:300; src:url("fonts/switzer-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:500; src:url("fonts/switzer-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:600; src:url("fonts/switzer-600.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
-    background:{ground}; color:{ink}; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif;
+    background:{ground}; color:{ink}; font-family:"Switzer","Helvetica Neue",sans-serif;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }}
   .art {{ position:absolute; inset:0; overflow:hidden; }}
@@ -554,12 +566,11 @@ FESTIVAL = """<!doctype html>
      ascenders and descenders back the line has its own outline, so it can sit
      close under the mark at a larger size without competing with it.
 
-     Helvetica Neue, the face the rest of the sheet is set in. A geometric sans
-     under a geometric mark read as the mark shrunk however the details were
-     varied; a neo-grotesque has different bones — horizontal terminals, closed
-     apertures, a taller x-height — so the two separate on sight without either
-     of them changing size. Inter is the fallback where Helvetica is not
-     installed; on this machine and in Illustrator it is.
+     Switzer, the face the rest of the sheet is set in. A geometric sans under a
+     geometric mark read as the mark shrunk however the details were varied; a
+     neo-grotesque has different bones — horizontal terminals, closed apertures,
+     a taller x-height — so the two separate on sight without either of them
+     changing size.
 
      Medium rather than Regular. Held at this opacity a Regular went thin
      enough at 8mm that the line looked faded instead of quiet; one step of
@@ -573,8 +584,8 @@ FESTIVAL = """<!doctype html>
      back here. Changing either size, either face or either weight changes this
      number, and it is measured off the loaded fonts, not guessed. */
   .longname {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:500; font-size:8mm;
-    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:4mm 0 0 1.75mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:500; font-size:8mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:4mm 0 0 1.78mm;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
@@ -588,22 +599,22 @@ FESTIVAL = """<!doctype html>
     row-gap:0; align-items:baseline;
   }}
   .orgs b {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:4.6mm; font-weight:600;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.6mm; font-weight:600;
     color:{ink}; line-height:1.5; white-space:nowrap;
   }}
   .orgs span {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:4.6mm; font-weight:400;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.6mm; font-weight:400;
     color:{cool}; line-height:1.5; white-space:nowrap;
   }}
   .cols .theme {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:5mm; font-weight:600;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:5mm; font-weight:600;
     color:{ink}; margin:0; line-height:1.3;
   }}
   /* The two rotated blocks down the left edge. */
   .rails {{ position:absolute; left:20mm; right:20mm; top:118mm; display:flex; gap:9mm; }}
   .rail {{
     writing-mode:vertical-rl; transform:rotate(180deg);
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; color:{hot};
+    font-family:"Switzer","Helvetica Neue",sans-serif; color:{hot};
   }}
   /* One line, sizes the other way round: the field name small, the thing
      itself large. Venue and Theme are the words a reader can
@@ -640,22 +651,8 @@ FESTIVAL = """<!doctype html>
     font-weight:400; letter-spacing:.16em; text-transform:uppercase;
     color:{ink}; opacity:.72;
   }}
-  /* The one place on the sheet that is not Helvetica. These two lines are what
-     the poster says about itself from across a room, and they are the only
-     lines with room to carry a voice of their own.
-
-     Satoshi, from the Indian Type Foundry: a warm neo-grotesque of the kind the
-     software industry's house faces are drawn from, without being any of them.
-     Geist belongs to Vercel, Mona Sans to GitHub, Söhne to OpenAI and Stripe,
-     and Inter is on enough of the web to read as a default rather than a
-     choice; borrowing one brings its owner along with it.
-
-     Switzer was tried here first and was the wrong kind of right — a Suisse
-     Int'l in the same lane as the Helvetica around it, so at this size the
-     change did not read as a decision at all. Satoshi's open apertures and its
-     C, a, g and R part from Helvetica on sight. */
   .rail span {{
-    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:9mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:9mm;
     font-weight:700; letter-spacing:-.014em; color:{hot};
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
@@ -705,19 +702,19 @@ FESTIVAL = """<!doctype html>
   .prog-grid i {{ font-style:normal; white-space:nowrap; align-self:baseline; }}
   .prog-grid i.dayrow {{ padding-top:4mm; }}
   .prog-grid em {{
-    font-style:normal; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:8.6mm;
+    font-style:normal; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:8.6mm;
     font-weight:600; line-height:1.34; letter-spacing:-.012em; color:{ink};
     white-space:nowrap;
   }}
   .prog-grid span {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:5.6mm; font-weight:400;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:5.6mm; font-weight:400;
     color:{cool}; white-space:nowrap;
   }}
   /* The session, named once over the people in it. No hour with it: the title
      says what the block is, which is what a reader standing in front of the
      sheet wants; the times are on the page the code leads to. */
   .prog-grid i b {{
-    display:block; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:4.4mm;
+    display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.4mm;
     font-weight:600; letter-spacing:0; color:{hot};
   }}
   .prog-grid i u {{
@@ -737,7 +734,7 @@ FESTIVAL = """<!doctype html>
 
   .stack {{
     margin-bottom:1mm;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:23mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:23mm;
     line-height:1.02; letter-spacing:-.03em; color:{hot};
   }}
   /* The venue lives in the rail; the country is the one thing neither the rail
@@ -750,7 +747,7 @@ FESTIVAL = """<!doctype html>
      that signs the sheet off, so it takes the theme's size, not its own. */
   .footname {{
     margin:0; align-self:flex-end;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:5.4mm; font-weight:500;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:5.4mm; font-weight:500;
     letter-spacing:-.01em; text-transform:none; color:{ink}; opacity:.58;
   }}
   .cols h4 {{
@@ -775,7 +772,7 @@ FESTIVAL = """<!doctype html>
   }}
   .qr-plate {{ width:32mm; height:32mm; background:{art_ink}; padding:1.6mm; box-sizing:border-box; }}
   .foot .cta {{ text-align:right; }}
-  .foot .cta b {{ display:block; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:4.4mm;
+  .foot .cta b {{ display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:4.4mm;
                   font-weight:700; color:{hot}; margin-bottom:2.5mm; letter-spacing:0;
                   text-transform:none; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
@@ -850,12 +847,16 @@ ACADEMIC = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:200; src:url("fonts/switzer-200.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:300; src:url("fonts/switzer-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:500; src:url("fonts/switzer-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:600; src:url("fonts/switzer-600.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
-    background:{ground}; color:{ink}; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif;
+    background:{ground}; color:{ink}; font-family:"Switzer","Helvetica Neue",sans-serif;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }}
   /* The picture is an accent here, not a field. In the sheet this follows, a
@@ -872,11 +873,11 @@ ACADEMIC = """<!doctype html>
   }}
   .wrap {{ position:absolute; inset:0; padding:26mm 24mm 0; display:flex; flex-direction:column; }}
   h1 {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:24mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:24mm;
     line-height:1.05; letter-spacing:-.02em; margin:0 0 10mm; color:#fff;
   }}
   .when {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:11mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:11mm;
     line-height:1.36; color:{gold}; margin:0 0 14mm;
   }}
   .when span {{ display:block; }}
@@ -898,7 +899,7 @@ ACADEMIC = """<!doctype html>
     padding:14mm 24mm; box-sizing:border-box; display:flex; gap:14mm; align-items:flex-start;
   }}
   .band h4 {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:7mm; font-weight:700;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:7mm; font-weight:700;
     color:{gold}; margin:0 0 4.5mm;
   }}
   .orgs {{ flex:1; }}
@@ -909,12 +910,12 @@ ACADEMIC = """<!doctype html>
   .qr-plate {{ width:44mm; height:44mm; background:#fff; padding:2mm; box-sizing:border-box; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
   .cta b {{
-    display:block; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:6.4mm;
+    display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-size:6.4mm;
     font-weight:700; color:{gold}; margin-top:3.5mm;
   }}
   .site {{
     position:absolute; left:24mm; right:24mm; bottom:9mm;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-size:5.6mm; font-weight:500;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:5.6mm; font-weight:500;
     color:#fff; display:flex; justify-content:space-between; align-items:baseline;
   }}
   .site span {{ color:{cool}; font-size:4.6mm; }}
@@ -966,40 +967,40 @@ CIVIC = """<!doctype html>
     border:1.2mm solid {sky}; padding:9mm 7mm; box-sizing:border-box;
   }}
   .rail h1 {{
-    writing-mode:vertical-rl; margin:0; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif;
+    writing-mode:vertical-rl; margin:0; font-family:"Switzer","Helvetica Neue",sans-serif;
     font-weight:700; font-size:19mm; letter-spacing:.06em; line-height:1;
     text-transform:uppercase; color:{carbon};
   }}
   .rail2 {{
     position:absolute; right:12mm; top:34mm;
-    writing-mode:vertical-rl; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif;
+    writing-mode:vertical-rl; font-family:"Switzer","Helvetica Neue",sans-serif;
     font-weight:700; font-size:11mm; letter-spacing:.1em; text-transform:uppercase;
     color:{carbon};
   }}
   .blurb {{
     position:absolute; right:14mm; top:300mm; width:60mm;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:7mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:7mm;
     line-height:1.3; color:{carbon};
   }}
   .left {{ position:absolute; left:26mm; top:104mm; width:146mm; }}
   .kicker {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:6.4mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:6.4mm;
     letter-spacing:.06em; text-transform:uppercase; margin:0 0 6mm; line-height:1.24;
   }}
-  .when {{ font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:9mm; line-height:1.18; margin:0 0 3mm; }}
+  .when {{ font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:9mm; line-height:1.18; margin:0 0 3mm; }}
   .where {{ font-size:4.8mm; line-height:1.4; color:{carbon2}; margin:0 0 14mm; }}
   .grp {{ margin:0 0 9mm; }}
   .grp h4 {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:500; font-size:4.2mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:500; font-size:4.2mm;
     letter-spacing:.1em; text-transform:uppercase; color:{carbon2}; margin:0 0 2.5mm;
   }}
   .grp ul {{ margin:0; padding:0; list-style:none; }}
   .grp li {{ margin:0 0 3.4mm; }}
-  .grp b {{ display:block; font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:8mm; line-height:1.1; }}
+  .grp b {{ display:block; font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:8mm; line-height:1.1; }}
   .grp span {{ display:block; font-size:4.4mm; color:{carbon2}; line-height:1.34; margin-top:.8mm; }}
   .side {{ position:absolute; right:14mm; top:336mm; width:104mm; font-size:4.8mm; line-height:1.46; color:{carbon}; }}
   .cols h4 {{
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:500; font-size:4mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:500; font-size:4mm;
     letter-spacing:.1em; text-transform:uppercase; color:{carbon2}; margin:0 0 2mm;
   }}
   .side ul {{ margin:0 0 8mm; padding:0; list-style:none; }}
@@ -1052,23 +1053,23 @@ BAUHAUS = """<!doctype html>
   .plate svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   h1 {{
     position:absolute; left:24mm; top:26mm; margin:0;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:78mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:78mm;
     line-height:.86; letter-spacing:-.045em; text-transform:lowercase;
   }}
   .motto {{
     position:absolute; left:24mm; top:246mm; margin:0; width:64mm;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:11mm;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:11mm;
     line-height:1.18; letter-spacing:-.02em; text-transform:lowercase;
   }}
   .motto i {{ font-style:normal; color:{accent}; }}
   .meta {{ position:absolute; left:228mm; top:30mm; width:110mm; font-size:6.4mm; line-height:1.44; text-transform:lowercase; }}
   .meta .lead {{ color:{carbon2}; margin:0 0 6mm; }}
-  .meta .big {{ font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:8mm; line-height:1.24; margin:0 0 5mm; }}
+  .meta .big {{ font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:8mm; line-height:1.24; margin:0 0 5mm; }}
   .meta .red {{ color:{accent}; font-weight:700; margin:0 0 8mm; }}
   .meta .hours {{ color:{carbon2}; margin:0; }}
   .dates {{
     position:absolute; right:22mm; top:26mm; text-align:right;
-    font-family:"Helvetica Neue",Helvetica,"Inter",sans-serif; font-weight:700; font-size:19mm; line-height:1.1;
+    font-family:"Switzer","Helvetica Neue",sans-serif; font-weight:700; font-size:19mm; line-height:1.1;
   }}
   .dates hr {{ border:0; border-top:.4mm solid {carbon}; margin:3mm 0; }}
   .dates small {{ display:block; font-size:11mm; font-weight:500; }}
