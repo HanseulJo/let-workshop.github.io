@@ -597,13 +597,16 @@ FESTIVAL = """<!doctype html>
      says what the block is, which is what a reader standing in front of the
      sheet wants; the times are on the page the code leads to. */
   .prog-grid i b {{
-    display:block; font-family:"JetBrains Mono",monospace; font-size:3.8mm;
-    font-weight:500; letter-spacing:.14em; text-transform:uppercase;
-    color:{hot}; margin-bottom:.8mm;
+    display:block; font-family:"Inter Tight",sans-serif; font-size:4.6mm;
+    font-weight:600; letter-spacing:0; color:{hot};
   }}
   .prog-grid i u {{
     display:block; text-decoration:none; font-family:"Jost",sans-serif;
-    font-size:7.6mm; font-weight:600; letter-spacing:-.01em; color:{ink};
+    font-size:8.6mm; font-weight:500; letter-spacing:-.01em; color:{ink};
+  }}
+  .prog-grid i u small {{
+    display:block; font-size:4mm; font-weight:400; color:{cool};
+    letter-spacing:.02em; margin-top:.4mm;
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
@@ -1089,7 +1092,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             slots.append('<hr class="dayrule">')
         # The date only on the first line of its day: repeated down every row it
         # would read as a stamp rather than as the thing that opens the group.
-        label = esc(d["label"].split("·")[-1].strip()) if "·" in d["label"] else esc(d["label"])
+        # "Day 1 · Oct 7 (Wed)" -> "Oct 7" with the weekday on its own line.
+        raw = d["label"].split("·")[-1].strip() if "·" in d["label"] else d["label"]
+        day, _, wd = raw.partition("(")
+        label = esc(day.strip()) + (f"<small>{esc(wd.rstrip(')'))}</small>" if wd else "")
         first = True
         for b in d["blocks"]:
             for k, p2 in enumerate(b["people"]):
