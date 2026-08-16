@@ -579,13 +579,17 @@ FESTIVAL = """<!doctype html>
      mark rather than as a line of its own, which is what it is — the mark
      spelled out. Held closer to the title and fainter for the same reason.
 
-     The optical indent stays optical but the number changes with the face:
-     JetBrains Mono's sidebearing is 0.080 of the em against Jost's 0.0738, so
-     against a 32mm mark and an 8mm line the correction is 1.72mm. */
+     6.5mm, which is the size at which the line ends where the mark ends. KOLT
+     2026 sets 155mm; at 8mm this ran 190mm and overhung it by 35, so the two
+     lines had no relationship at either end. Now they share both.
+
+     The optical indent stays optical but the number changes with the face and
+     the size: JetBrains Mono's sidebearing is 0.080 of the em against Jost's
+     0.0738, so against a 32mm mark and a 6.5mm line the correction is 1.4mm. */
   .longname {{
-    font-family:"JetBrains Mono",monospace; font-weight:600; font-size:8mm;
+    font-family:"JetBrains Mono",monospace; font-weight:600; font-size:6.5mm;
     letter-spacing:.1em; text-transform:uppercase; color:{ink};
-    opacity:.46; margin:1.6mm 0 0 1.72mm;
+    opacity:.46; margin:1.6mm 0 0 1.4mm;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
@@ -798,8 +802,8 @@ FESTIVAL = """<!doctype html>
   .footname {{
     position:absolute; left:50%; transform:translateX(-50%); bottom:20mm;
     margin:0;
-    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:5.6mm; font-weight:500;
-    letter-spacing:-.01em; text-transform:none; color:{ink}; opacity:.58;
+    font-family:"JetBrains Mono",monospace; font-size:4.4mm; font-weight:500;
+    letter-spacing:.1em; text-transform:uppercase; color:{ink}; opacity:.46;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.6mm; font-weight:500;
