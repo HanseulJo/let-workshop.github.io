@@ -507,8 +507,8 @@ FESTIVAL = """<!doctype html>
      is written so that K, O, L and T fall where they do, and capitals would
      hide it. */
   .longname {{
-    font-family:"JetBrains Mono",monospace; font-weight:400; font-size:7mm;
-    letter-spacing:.045em; color:{ink}; margin:4mm 0 0;
+    font-family:"Inter Tight",sans-serif; font-weight:500; font-size:8mm;
+    letter-spacing:-.008em; color:{ink}; margin:3.5mm 0 0;
   }}
   .longname b {{ color:{hot}; font-weight:600; }}
   /* The two rotated blocks down the left edge. */
