@@ -1090,6 +1090,196 @@ XBANNER = """<!doctype html>
 """
 
 
+# ─────────────────────────────────────────────────────────────
+# The square set, for a carousel. Six slides of 1080x1080 in one
+# document, one under the other; tools/poster.py --layout social
+# writes the page and the export slices it into six files.
+#
+# A phone holds it at arm's length for a second and a half, so
+# each slide carries one thing. The cover is the only one with
+# the drawing at full strength — behind a list of names it makes
+# them unreadable, and a carousel that cannot be read in the
+# first second is not read at all.
+# ─────────────────────────────────────────────────────────────
+
+SOCIAL = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>KOLT 2026 — square set</title>
+<style>
+  @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:300; src:url("fonts/satoshi-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; background:#000; }}
+  .card {{
+    position:relative; width:1080px; height:1080px; overflow:hidden;
+    background:{ground}; color:{ink}; font-family:"Satoshi",sans-serif;
+  }}
+  .art, .ghost {{ position:absolute; inset:0; overflow:hidden; }}
+  .ghost {{ opacity:.26; }}
+  .art svg, .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  /* Every slide but the cover holds the drawing well down: it is the same
+     picture doing the same job, but a list of fourteen names over it at this
+     size is a list nobody reads. */
+  .card.quiet .art {{ opacity:.42; }}
+  .card.quiet .ghost {{ opacity:.20; }}
+  .veil {{ position:absolute; inset:0;
+    background:linear-gradient(180deg,
+      rgba(15,24,38,.62) 0%, rgba(15,24,38,.42) 34%,
+      rgba(15,24,38,.70) 72%, rgba(15,24,38,.96) 100%); }}
+  .card.quiet .veil {{ background:linear-gradient(180deg,
+      rgba(15,24,38,.90) 0%, rgba(15,24,38,.86) 50%, rgba(15,24,38,.96) 100%); }}
+  .pad {{ position:absolute; inset:0; padding:78px 78px 68px; display:flex; flex-direction:column; }}
+  .kicker {{
+    font-family:"JetBrains Mono",monospace; font-size:19px; font-weight:400;
+    letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72; margin:0;
+  }}
+  .kicker.hot {{ color:{hot}; opacity:1; }}
+  .mark {{
+    font-family:"Jost",sans-serif; font-weight:700; font-size:184px;
+    line-height:.94; color:{hot}; letter-spacing:-.02em; margin:0;
+  }}
+  .mark span {{ font-weight:300; }}
+  .longname {{
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:40px;
+    letter-spacing:-.01em; color:{ink}; opacity:.6; margin:16px 0 0 8px;
+  }}
+  h2 {{
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:78px;
+    line-height:1.1; letter-spacing:-.02em; color:{hot}; margin:14px 0 0;
+  }}
+  h2.ink {{ color:{ink}; }}
+  .stack {{
+    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:126px;
+    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:14px 0 0;
+  }}
+  .body {{ font-size:34px; font-weight:400; line-height:1.45; color:{ink}; opacity:.8; margin:22px 0 0; }}
+  .fill {{ margin-top:auto; }}
+  .row {{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; }}
+  .facts {{ font-family:"JetBrains Mono",monospace; font-size:21px; letter-spacing:.1em;
+            text-transform:uppercase; color:{ink}; opacity:.72; line-height:1.9; }}
+  .facts b {{ color:{hot}; font-weight:400; }}
+  /* Speakers. Two grid columns so the affiliations make an edge of their own,
+     the way they do on the sheet. */
+  .people {{ display:grid; grid-template-columns:auto auto; column-gap:24px; row-gap:0;
+             align-items:baseline; justify-content:start; margin-top:26px; }}
+  .people b {{ font-size:45px; font-weight:700; letter-spacing:-.014em; color:{ink};
+               line-height:1.42; white-space:nowrap; }}
+  .people span {{ font-size:26px; font-weight:400; color:{cool}; white-space:nowrap; }}
+  .orgs2 {{ display:grid; grid-template-columns:auto auto; column-gap:22px;
+            align-items:baseline; justify-content:start; margin-top:20px; }}
+  .orgs2 b {{ font-size:34px; font-weight:700; color:{ink}; line-height:1.5; white-space:nowrap; }}
+  .orgs2 span {{ font-size:24px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
+  .marks img {{ height:44px; width:auto; display:block; opacity:.72; }}
+  .marks {{ display:flex; align-items:flex-end; gap:40px; }}
+  .qr-plate {{ width:190px; height:190px; background:{art_ink}; padding:9px; box-sizing:border-box; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+  .num {{ position:absolute; right:78px; top:78px;
+          font-family:"JetBrains Mono",monospace; font-size:19px; letter-spacing:.16em;
+          color:{ink}; opacity:.5; }}
+  .tent {{ font-family:"JetBrains Mono",monospace; font-size:17px; letter-spacing:.1em;
+           text-transform:uppercase; color:{ink}; opacity:.45; margin:18px 0 0; }}
+  /* The label stays at the top and the closing row at the foot; what the slide
+     is actually about sits between them and takes the middle. Top-anchored, the
+     content leant on the label and left the whole lower half empty.
+
+     Last in the sheet on purpose: .people and .orgs2 set their own margin-top,
+     and at equal specificity the later rule wins — declared above them this
+     centred the two slides that had no competing rule and silently did nothing
+     on the three that did. */
+  .mid {{ margin:auto 0; }}
+</style></head><body>
+
+<div class="card">
+  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  <div class="pad">
+    <p class="kicker hot">{eyebrow}</p>
+    <div class="fill">
+      <h1 class="mark">{mark} <span>{year}</span></h1>
+      <p class="longname">{long_name}</p>
+      <p class="facts" style="margin-top:34px">
+        <b>{yyyy}.{md1}–{md2}</b> &nbsp;·&nbsp; {venue_name}, {city}
+      </p>
+    </div>
+  </div>
+  <div class="num">1/6</div>
+</div>
+
+<div class="card quiet">
+  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  <div class="pad">
+    <p class="kicker">Theme {year}</p>
+    <div class="mid">
+      <h2>{theme}</h2>
+      <p class="body">{blurb}</p>
+    </div>
+    <div class="row">
+      <p class="facts"><b>{yyyy}.{md1}–{md2}</b><br>{venue_name}, {city}</p>
+    </div>
+  </div>
+  <div class="num">2/6</div>
+</div>
+
+<div class="card quiet">
+  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  <div class="pad">
+    <p class="kicker">When &amp; where</p>
+    <div class="mid">
+      <p class="stack">{yyyy}.<br>{md1}–{md2}</p>
+      <h2 class="ink" style="font-size:52px;margin-top:34px">{venue_name}</h2>
+      <p class="body" style="margin-top:8px">{venue_addr}</p>
+    </div>
+    <div>
+      <p class="facts">{rooms}</p>
+      <p class="tent">Details are tentative</p>
+    </div>
+  </div>
+  <div class="num">3/6</div>
+</div>
+
+<div class="card quiet">
+  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  <div class="pad">
+    <p class="kicker hot">{day1_label}</p>
+    <div class="people mid">{day1_grid}</div>
+    <p class="tent">Programme subject to change</p>
+  </div>
+  <div class="num">4/6</div>
+</div>
+
+<div class="card quiet">
+  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  <div class="pad">
+    <p class="kicker hot">{day2_label}</p>
+    <div class="people mid">{day2_grid}</div>
+    <p class="tent">Programme subject to change</p>
+  </div>
+  <div class="num">5/6</div>
+</div>
+
+<div class="card quiet">
+  {ghost}<div class="art">{art}</div><div class="veil"></div>
+  <div class="pad">
+    <p class="kicker">Organisers</p>
+    <div class="orgs2 mid">{organisers}</div>
+    <div class="row">
+      <div>
+        <p class="kicker" style="margin-bottom:16px">{url}</p>
+        <span class="marks">{logos}</span>
+      </div>
+      <div class="qr-plate">{qr}</div>
+    </div>
+  </div>
+  <div class="num">6/6</div>
+</div>
+
+</body></html>
+"""
+
+
 def listing_html(program):
     """One line per session: day of the month, who, and when."""
     out = []
@@ -1426,6 +1616,7 @@ GHOST_SIZE = {
     "bauhaus": (1000, 1360),
     "banner": (3400, 612),      # 5000 x 900mm
     "xbanner": (900, 2700),     # 600 x 1800mm
+    "social": (1400, 1400),     # 1080 x 1080 square
 }
 
 
@@ -1486,7 +1677,8 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     )
     tpl = {"listing": LISTING, "festival": FESTIVAL, "academic": ACADEMIC,
            "civic": CIVIC, "bauhaus": BAUHAUS,
-           "banner": BANNER, "xbanner": XBANNER}.get(layout, TEMPLATE)
+           "banner": BANNER, "xbanner": XBANNER,
+           "social": SOCIAL}.get(layout, TEMPLATE)
     organizers = yaml.safe_load((DATA / "organizers.yml").read_text(encoding="utf-8"))
     bill, sessions_list, organisers, days = festival_bits(program, organizers, site)
     day_people = []
@@ -1525,6 +1717,19 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
              "August", "September", "October", "November", "December"][
         int(str(program["days"][0]["date"]).split("-")[1]) - 1]
     d0 = str(program["days"][0]["date"]).split("-")
+    # Pieces only the square set needs: a day's speakers as grid cells, the
+    # rooms as one mono block, and the day's own label.
+    day_grids, day_labels = [], []
+    for d in sessions(program):
+        day_grids.append("".join(
+            f'<b>{esc(p["name"])}</b><span>{esc(p.get("affil", ""))}</span>'
+            for b in d["blocks"] for p in b["people"]))
+        raw = d["label"].split("·")[-1].strip() if "·" in d["label"] else d["label"]
+        day_labels.append(esc(raw.replace("(", "· ").rstrip(")")))
+    rooms = "<br>".join(
+        f'<b>{esc(r["label"])}</b> {esc(r["name"])}'
+        for r in venue.get("rooms", [])) or esc(venue.get("address", ""))
+
     doc = tpl.format(
         art=art,
         name=esc(name),
@@ -1583,6 +1788,12 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             else w.capitalize()
             for w in site["full_name"].split())),
         reg_note=esc((site["hero_actions"][0].get("note") or "Opens soon")),
+        blurb=esc(site.get("blurb", "")),
+        rooms=rooms,
+        day1_label=day_labels[0] if day_labels else "",
+        day2_label=day_labels[1] if len(day_labels) > 1 else "",
+        day1_grid=day_grids[0] if day_grids else "",
+        day2_grid=day_grids[1] if len(day_grids) > 1 else "",
         **PALETTE,
     )
     out = Path(out_path)
@@ -1605,7 +1816,7 @@ if __name__ == "__main__":
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
                     choices=("stack", "listing", "festival", "academic", "civic",
-                             "bauhaus", "banner", "xbanner"),
+                             "bauhaus", "banner", "xbanner", "social"),
                     default="stack",
                     help="a poster layout, or banner (5000x900mm) / xbanner (600x1800mm)")
     args = ap.parse_args()
