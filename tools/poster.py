@@ -106,6 +106,33 @@ def photo_svg(source, shadow, highlight, width, height, contrast=0.92):
     )
 
 
+def logo_row(names, colour, height=54):
+    """The host marks, recoloured to one flat tone and embedded.
+
+    Logos arrive in their own brand colours, which on a sheet built from one
+    ink is three palettes fighting. The alpha channel carries the shape, so the
+    art is discarded and the silhouette refilled — that also sidesteps the
+    reproduction rules both universities publish, which govern the mark in its
+    own colours, not a monotone courtesy credit.
+    """
+    out = []
+    for name in names:
+        f = ROOT / "static" / "logos" / f"{name.lower()}.png"
+        if not f.exists():
+            continue
+        im = ImageOps.exif_transpose(Image.open(f)).convert("RGBA")
+        rgb = tuple(int(colour.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+        flat = Image.new("RGBA", im.size, rgb + (0,))
+        flat.putalpha(im.getchannel("A"))
+        if im.height > height * 4:
+            flat.thumbnail((im.width, height * 4), Image.LANCZOS)
+        buf = io.BytesIO()
+        flat.save(buf, "PNG", optimize=True)
+        data = base64.b64encode(buf.getvalue()).decode("ascii")
+        out.append(f'<img alt="{esc(name)}" src="data:image/png;base64,{data}">')
+    return "".join(out)
+
+
 def cutout_svg(source, shadow, highlight, width, height, contrast=0.95):
     """The buildings with the sky already gone, toned to the sheet's ink.
 
@@ -590,6 +617,8 @@ FESTIVAL = """<!doctype html>
   .mid {{ text-align:center; }}
   .mid ul li {{ text-transform:none; font-weight:500; }}
   .r {{ text-align:right; }}
+  .marks {{ display:flex; align-items:flex-end; gap:9mm; }}
+  .marks img {{ height:9mm; width:auto; display:block; opacity:.72; }}
   .foot {{
     display:flex; justify-content:space-between; align-items:flex-end; margin-top:8mm;
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.14em;
@@ -635,7 +664,7 @@ FESTIVAL = """<!doctype html>
       <div class="r"><h4>Venue</h4><ul><li>{venue_name}<span> {city}, {country}</span></li></ul>
         <h4 style="margin-top:6mm">Theme</h4><ul><li>{theme}</li></ul></div>
     </div>
-    <div class="foot"><span>{hosts}</span>
+    <div class="foot"><span class="marks">{logos}</span>
       <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div></div>
     </div>
   </div>
@@ -1089,6 +1118,8 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         city=esc(site["city"]),
         country=esc(site["country"]),
         cta_short="Register",
+        logos=logo_row([h["name"] for h in site["hosts"]["logos"]], PALETTE["cool"])
+              if site.get("hosts") else "",
         acronym_name=acronym_html(site["full_name"], mark),
         ghost=ghost_layer,
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
