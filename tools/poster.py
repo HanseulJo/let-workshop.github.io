@@ -926,7 +926,7 @@ BANNER = """<!doctype html>
   }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:290mm;
-    line-height:.92; color:{hot}; letter-spacing:-.02em; margin:0;
+    line-height:.92; color:{ink}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .longname {{
@@ -1024,7 +1024,7 @@ XBANNER = """<!doctype html>
   .fact {{ padding-top:12mm; border-top:.8mm solid rgba(245,245,247,.22); }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:132mm;
-    line-height:.94; color:{hot}; letter-spacing:-.02em; margin:0;
+    line-height:.94; color:{ink}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   /* 22mm. At 33 the name ran 565mm inside what was then a 474mm column and
@@ -1173,7 +1173,7 @@ SOCIAL = """<!doctype html>
           color:{ink}; opacity:.45; }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:176px;
-    line-height:.94; color:{hot}; letter-spacing:-.02em; margin:0;
+    line-height:.94; color:{ink}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .longname {{
@@ -1390,7 +1390,7 @@ BADGE = """<!doctype html>
      a wordmark split across a line break stops being a wordmark. */
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:9mm; white-space:nowrap;
-    line-height:1; color:{hot}; letter-spacing:-.02em; margin:0;
+    line-height:1; color:{ink}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .when {{
