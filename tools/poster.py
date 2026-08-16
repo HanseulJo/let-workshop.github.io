@@ -276,7 +276,7 @@ TEMPLATE = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -407,7 +407,7 @@ LISTING = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   /* One ink on one ground, and every division drawn as a hairline rule. The
      layout is a stack of boxes with nothing between them, so the sheet has no
@@ -506,7 +506,7 @@ FESTIVAL = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -546,13 +546,20 @@ FESTIVAL = """<!doctype html>
      ascenders and descenders back the line has its own outline, so it can sit
      close under the mark at a larger size without competing with it.
 
-     Space Grotesk for the face. It is the only thing here that is not a
-     geometric sans or a mono, and its flat terminals and single-storey
-     details keep it clearly separate from the mark above without borrowing
-     the period flavour a serif brought with it. */
+     Avenir Next: Futura's geometry redrawn on humanist proportions, which is
+     near enough the mark above to belong to it and far enough not to read as
+     the same typeface shrunk. Outfit is the fallback where it is missing.
+
+     The indent is optical, not decorative. Both lines start with a K and both
+     boxes start at the same x, but a glyph's ink sits inside its advance width
+     by a sidebearing that scales with size — 0.0738 of the em in Jost, 0.094
+     in Avenir Next. At 32mm and 8mm that is 2.36mm against 0.75mm, so the two
+     K's stand almost 1.6mm apart with nothing visibly wrong; the difference is
+     added back here. Changing either size or either face changes this number.
+     */
   .longname {{
-    font-family:"Space Grotesk",sans-serif; font-weight:400; font-size:8mm;
-    letter-spacing:-.015em; color:{ink}; opacity:.85; margin:4mm 0 0;
+    font-family:"Avenir Next","Outfit",sans-serif; font-weight:400; font-size:8mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.66; margin:4mm 0 0 1.61mm;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
@@ -737,7 +744,7 @@ ACADEMIC = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:500 700; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Space Grotesk"; font-weight:300 700; src:url("fonts/space-grotesk-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Outfit"; font-weight:100 900; src:url("fonts/outfit-latin.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
