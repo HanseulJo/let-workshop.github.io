@@ -936,11 +936,18 @@ BANNER = """<!doctype html>
   .right {{ text-align:right; flex:none; }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:150mm;
-    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0;
+  /* The accent goes on the small type, not the large. The mark is white here
+     and the date is the biggest thing on the piece; painting that the accent
+     colour too left the loudest element carrying the colour while the name of
+     the workshop stayed quiet, which is the hierarchy upside down. The accent
+     is worth more on a field name that would otherwise disappear.
+     The sheet does it the other way round because there the mark is the accent
+     and the largest thing on the page. */
+    line-height:1.02; letter-spacing:-.03em; color:{ink}; margin:0;
   }}
   .field {{
     font-family:"JetBrains Mono",monospace; font-size:34mm; font-weight:400;
-    letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
+    letter-spacing:.16em; text-transform:uppercase; color:{hot};
     margin:34mm 0 8mm;
   }}
   .where {{
@@ -1037,7 +1044,7 @@ XBANNER = """<!doctype html>
   }}
   .field {{
     font-family:"JetBrains Mono",monospace; font-size:15mm; font-weight:400;
-    letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
+    letter-spacing:.16em; text-transform:uppercase; color:{hot};
     margin:0 0 6mm;
   }}
   /* 30mm is the largest size at which both of the two lines this sets — the
@@ -1047,11 +1054,11 @@ XBANNER = """<!doctype html>
      from across a hall wants each fact in one piece. */
   .line {{
     font-family:"Satoshi",sans-serif; font-weight:700; font-size:27mm;
-    letter-spacing:-.014em; color:{hot}; margin:0;
+    letter-spacing:-.014em; color:{ink}; margin:0;
   }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:96mm;
-    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0;
+    line-height:1.02; letter-spacing:-.03em; color:{ink}; margin:0;
   }}
   .foot {{
     display:flex; align-items:flex-end; justify-content:space-between; gap:30mm;
@@ -1182,12 +1189,12 @@ SOCIAL = """<!doctype html>
   }}
   h2 {{
     font-family:"Satoshi",sans-serif; font-weight:700; font-size:74px;
-    line-height:1.1; letter-spacing:-.02em; color:{hot}; margin:0;
+    line-height:1.1; letter-spacing:-.02em; color:{ink}; margin:0;
   }}
   h2.ink {{ color:{ink}; }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:118px;
-    line-height:1.02; letter-spacing:-.03em; color:{hot}; margin:0;
+    line-height:1.02; letter-spacing:-.03em; color:{ink}; margin:0;
   }}
   .body {{ font-size:32px; font-weight:400; line-height:1.45; color:{ink}; opacity:.82; margin:22px 0 0; }}
   /* The foot is the same on every slide: a rule, the address, and one fact
@@ -1215,7 +1222,7 @@ SOCIAL = """<!doctype html>
                 gap:24px; margin:0 0 6px; }}
   .when-head p {{ font-family:"Inter Tight",sans-serif; font-weight:700; font-size:56px;
                   letter-spacing:-.03em; color:{ink}; margin:0; }}
-  .when-head p.hot {{ color:{hot}; }}
+  .when-head p.hot {{ color:{ink}; }}
   .tags {{ display:flex; align-items:center; gap:14px; }}
   .tag {{
     font-family:"JetBrains Mono",monospace; font-size:20px; font-weight:500;
@@ -1767,11 +1774,19 @@ def festival_bits(program, organizers, site):
 # The pixel size the photographic layers are generated at, per layout. Not the
 # print size — this is the raster the duotone is computed on, and it only has to
 # match the shape of the piece so nothing is cropped into or stretched across.
+ART_FIT = {
+    # The banner's drawing is made from a band cut out of the photograph at the
+    # banner's own shape, so there is nothing left to crop and nothing to
+    # squash. The band is chosen so the clock tower is whole inside it: its cap
+    # sits at 20% of the frame and its foot at 42%, and the band is 24% tall.
+    "banner": "xMidYMid slice",
+}
+
 GHOST_SIZE = {
     "civic": (1700, 820),
     "listing": (1700, 1520),
     "bauhaus": (1000, 1360),
-    "banner": (3400, 612),      # 5000 x 900mm
+    "banner": (3400, 612),      # 5000 x 900mm, from the pre-cut band
     "xbanner": (900, 2700),     # 600 x 1800mm
     "social": (1400, 1400),     # 1080 x 1080 square
     "badge": (900, 1300),       # 90 x 130mm
@@ -1821,8 +1836,17 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         art = photo_svg(photo, shadow, highlight, w, h)
     else:
         art = Path(art_path).read_text(encoding="utf-8")
-        if "preserveAspectRatio" not in art.split(">", 1)[0]:
-            art = art.replace("<svg ", '<svg preserveAspectRatio="xMidYMid slice" ', 1)
+        # How the drawing is fitted to a box that is not its shape. Slicing
+        # crops; it never squashes, which is what a wide banner would otherwise
+        # do to a photograph taken in 4:3. The anchor says which part survives
+        # the crop, and for the banner that is the top — the clock tower is the
+        # thing on this campus a passer-by recognises, and a centred crop cuts
+        # its head off.
+        fit = ART_FIT.get(layout, "xMidYMid slice")
+        if "preserveAspectRatio" in art.split(">", 1)[0]:
+            art = re.sub(r'preserveAspectRatio="[^"]*"', f'preserveAspectRatio="{fit}"', art, count=1)
+        else:
+            art = art.replace("<svg ", f'<svg preserveAspectRatio="{fit}" ', 1)
 
     name = site["name"]
     mark, year = (name.rsplit(" ", 1) + [""])[:2] if " " in name else (name, "")
@@ -2058,6 +2082,9 @@ if __name__ == "__main__":
                     help="a faint photograph behind the formulas, as the website has")
     ap.add_argument("--duotone", metavar="SHADOW,HIGHLIGHT",
                     help="two colours for the photograph, e.g. '#1b2a4a,#ff8a75'")
+    ap.add_argument("--palette", metavar="JSON",
+                    help="override palette entries, e.g. '{\"ground\":\"#101010\"}'. "
+                         "The artwork's own ink is recoloured to match art_ink.")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
                     choices=("stack", "listing", "festival", "academic", "civic",
@@ -2065,4 +2092,17 @@ if __name__ == "__main__":
                     default="stack",
                     help="a poster layout, or banner (5000x900mm) / xbanner (600x1800mm)")
     args = ap.parse_args()
+    if args.palette:
+        import json
+        override = json.loads(args.palette)
+        # The drawing carries its ink colour inside the file, so a new palette
+        # has to reach in and change it too or the formulas keep the old one.
+        OLD_ART_INK = PALETTE["art_ink"]
+        PALETTE.update(override)
+        if "art_ink" in override and args.art:
+            src = Path(args.art)
+            patched = src.with_name(src.stem + "__tinted.svg")
+            patched.write_text(src.read_text(encoding="utf-8")
+                               .replace(OLD_ART_INK, override["art_ink"]), encoding="utf-8")
+            args.art = str(patched)
     main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone, args.ghost)
