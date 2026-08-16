@@ -447,6 +447,18 @@ body {
    The photo is blurred and the formulas are not, which is the whole point of
    the effect: the maths reads as a clear window onto an out-of-focus ground. */
 .hero {
+  /* Where the picture is anchored. The crop is 2.9:1, so on a wide screen
+     almost all of it shows and the middle is the right place to hold. A phone's
+     hero is taller than it is wide, which means `cover` fills the height and
+     shows a narrow column — and the clock tower sits at 61% across, outside
+     that column. Both layers read this, so they cannot drift apart. */
+  --hero-focus: 50% 45%;
+  /* `cover` on a wide crop in a tall box is the wrong instruction: a 2.9:1
+     picture filling a phone's hero has to scale to its height, which makes it
+     six times wider than the screen and shows a seventeen percent slice of the
+     middle. Nothing in that slice reads. Sized to the width instead, the whole
+     campus sits across the top as a band. Both layers take this too. */
+  --hero-size: cover;
   position: relative;
   isolation: isolate; /* keep the blend inside the hero */
   overflow: hidden;
@@ -463,7 +475,7 @@ body {
 }
 .hero::before {
   z-index: 0;
-  background: url("hero.jpg") 50% 45% / cover no-repeat;
+  background: url("hero.jpg") var(--hero-focus) / var(--hero-size) no-repeat;
   filter: blur(2px);
 }
 /* The campus written out in formulas — two layers of the same photograph.
@@ -564,14 +576,14 @@ body {
   inset: -12px;
   z-index: 0; /* above ::before, below the scrim — later sibling, same layer */
   pointer-events: none;
-  background: url("hero.jpg") 50% 45% / cover no-repeat;
+  background: url("hero.jpg") var(--hero-focus) / var(--hero-size) no-repeat;
   /* Opened up hard. The glyphs are hairlines and the photograph they are
      filled with is a dark duotone, so at its own tones the strokes vanish into
      the ground they are drawn on. The scrim above takes the excess back where
      the type needs it. */
   filter: brightness(2.8) saturate(0.9);
-  -webkit-mask: url("hero-art.svg") 50% 45% / cover no-repeat;
-  mask: url("hero-art.svg") 50% 45% / cover no-repeat;
+  -webkit-mask: url("hero-art.svg") var(--hero-focus) / var(--hero-size) no-repeat;
+  mask: url("hero-art.svg") var(--hero-focus) / var(--hero-size) no-repeat;
 }
 }
 .hero::after {
@@ -2859,6 +2871,10 @@ footer a {
   }
   .hero {
     padding: 40px 16px 40px;
+    /* The whole width, as a band under the bar, rather than a slice of the
+       middle blown up to fill a tall box. */
+    --hero-size: 155% auto;
+    --hero-focus: 57% 74px;
   }
   /* One scrim on a phone, and a heavier one. The horizontal half of the desktop
      pair buys contrast for the left column by spending it on the right — but
