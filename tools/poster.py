@@ -565,10 +565,8 @@ FESTIVAL = """<!doctype html>
     column-gap:4mm; row-gap:0; justify-items:end; align-items:baseline;
     text-align:right;
   }}
-  .prog-grid i {{
-    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:7.4mm;
-    font-weight:700; letter-spacing:-.012em; color:{hot}; white-space:nowrap;
-  }}
+  .prog-grid i {{ font-style:normal; white-space:nowrap; align-self:baseline; }}
+  .prog-grid i.dayrow {{ padding-top:5mm; }}
   .prog-grid em {{
     font-style:normal; font-family:"Inter Tight",sans-serif; font-size:11mm;
     font-weight:600; line-height:1.2; letter-spacing:-.018em; color:{ink};
@@ -581,12 +579,16 @@ FESTIVAL = """<!doctype html>
   /* The session, named once over the people in it. No hour with it: the title
      says what the block is, which is what a reader standing in front of the
      sheet wants; the times are on the page the code leads to. */
-  .sesslabel {{
-    grid-column:1 / -1; text-align:right; margin:4.5mm 0 1.4mm;
-    font-family:"JetBrains Mono",monospace; font-size:4mm; font-weight:500;
-    letter-spacing:.14em; text-transform:uppercase; color:{hot};
+  .prog-grid i b {{
+    display:block; font-family:"JetBrains Mono",monospace; font-size:3.8mm;
+    font-weight:500; letter-spacing:.14em; text-transform:uppercase;
+    color:{hot}; margin-bottom:.8mm;
   }}
-  .prog-grid > .sesslabel:first-child {{ margin-top:0; }}
+  .prog-grid i u {{
+    display:block; text-decoration:none; font-family:"Futura","Jost",sans-serif;
+    font-size:8mm; font-weight:600; color:{ink};
+  }}
+  .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
     grid-column:1 / -1; width:100%; height:0; margin:5mm 0 4mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
@@ -1068,16 +1070,18 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             slots.append('<hr class="dayrule">')
         # The date only on the first line of its day: repeated down every row it
         # would read as a stamp rather than as the thing that opens the group.
+        label = esc(d["label"].split("·")[-1].strip()) if "·" in d["label"] else esc(d["label"])
         first = True
         for b in d["blocks"]:
-            slots.append(f'<p class="sesslabel">{esc(b["title"])}</p>')
-            for p2 in b["people"]:
-                label = esc(d["label"].split("·")[-1].strip()) if "·" in d["label"] else esc(d["label"])
+            for k, p2 in enumerate(b["people"]):
+                if k == 0 and first:
+                    slots.append(f'<i class="dayrow"><u>{label}</u></i><em></em><span></span>')
+                    first = False
+                key = f'<b>{esc(b["title"])}</b>' if k == 0 else ""
                 slots.append(
-                    f'<i>{label if first else ""}</i>'
+                    f"<i>{key}</i>"
                     f'<em>{esc(p2["name"])}</em>'
                     f'<span>{esc(p2.get("affil", ""))}</span>')
-                first = False
     programme_block = "".join(slots)
     names_flat = "".join(
         f'<li>{esc(p["name"].lower())}</li>'
