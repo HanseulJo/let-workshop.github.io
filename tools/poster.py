@@ -522,8 +522,8 @@ FESTIVAL = """<!doctype html>
   .wrap {{ position:absolute; inset:0; padding:20mm 20mm 16mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; justify-content:space-between; align-items:flex-start; }}
   .mark {{
-    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:32mm;
-    line-height:1; color:{ink}; letter-spacing:-.035em; margin:0;
+    font-family:"Jost",sans-serif; font-weight:700; font-size:32mm;
+    line-height:1; color:{ink}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .stamps {{
@@ -537,7 +537,7 @@ FESTIVAL = """<!doctype html>
      accent explained where KOLT comes from and looked like it was explaining
      it; all caps, light and held back says the same thing without pointing. */
   .longname {{
-    font-family:"Inter Tight",sans-serif; font-weight:400; font-size:6.2mm;
+    font-family:"Jost",sans-serif; font-weight:400; font-size:6.2mm;
     letter-spacing:.16em; text-transform:uppercase; color:{ink};
     opacity:.62; margin:4.5mm 0 0;
   }}
@@ -567,7 +567,7 @@ FESTIVAL = """<!doctype html>
     letter-spacing:.06em; margin-right:3mm;
   }}
   /* The programme, against one right edge. */
-  .bill {{ margin:auto 0 auto auto; text-align:right; }}
+  .bill {{ margin:auto 0 12mm auto; text-align:right; }}
 
   /* The rule and the space between sessions live on the label, because a
      display:contents element cannot carry either. */
@@ -602,16 +602,19 @@ FESTIVAL = """<!doctype html>
     color:{hot}; margin-bottom:.8mm;
   }}
   .prog-grid i u {{
-    display:block; text-decoration:none; font-family:"Inter Tight",sans-serif;
-    font-size:7.6mm; font-weight:700; letter-spacing:-.015em; color:{ink};
+    display:block; text-decoration:none; font-family:"Jost",sans-serif;
+    font-size:7.6mm; font-weight:600; letter-spacing:-.01em; color:{ink};
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
     grid-column:1 / -1; width:100%; height:0; margin:4.5mm 0 3.5mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
   }}
-  .panel {{ margin-top:auto; }}
-  .dates {{ display:flex; justify-content:space-between; align-items:flex-start; gap:14mm; margin:0; }}
+  .dates {{ display:flex; justify-content:space-between; align-items:flex-end; gap:14mm; margin:0; }}
+  .month {{
+    font-family:"Jost",sans-serif; font-weight:400; font-size:23mm;
+    line-height:1; letter-spacing:-.02em; color:{hot};
+  }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
     line-height:1.02; letter-spacing:-.03em; color:{hot};
@@ -676,6 +679,7 @@ FESTIVAL = """<!doctype html>
     <div class="panel">
       <div class="dates">
         <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
+        <div class="month">{month}</div>
       </div>
       <div class="cols">
         <div><h4>Organisers</h4><ul class="orgs">{organisers}</ul></div>
