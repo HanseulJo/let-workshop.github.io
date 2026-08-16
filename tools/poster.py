@@ -485,6 +485,8 @@ FESTIVAL = """<!doctype html>
   }}
   .art {{ position:absolute; inset:0; overflow:hidden; }}
   .art svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
+  .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:.3; }}
+  .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   /* Held well back. In the reference the ground is a soft bloom that the type
      sits on without contest; ours is a field of small marks, which is busier,
      so it is dimmed further than a photograph would need to be. */
@@ -587,7 +589,7 @@ FESTIVAL = """<!doctype html>
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style>
 <div class="sheet">
-  <div class="art">{art}</div>
+  {ghost}<div class="art">{art}</div>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="{ground}" stop-opacity=".72"/>
@@ -939,10 +941,31 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
-def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None):
+def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None, ghost=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
+
+    ghost_layer = ""
+    if ghost:
+        # The same two layers the website's hero uses. The formulas alone are a
+        # drawing of the photograph; the photograph faintly behind them is what
+        # holds the shape together between the marks, and it is the reason the
+        # hero reads as a place rather than as a texture. Held right down — it
+        # is there to be felt, not seen.
+        light_ground = layout in ("civic", "bauhaus")
+        gw, gh = (1700, 820) if layout == "civic" else (1700, 2398)
+        if layout == "listing":
+            gw, gh = 1700, 1520
+        elif layout == "bauhaus":
+            gw, gh = 1000, 1360
+        ghost_layer = (
+            '<div class="ghost">'
+            + photo_svg(ghost,
+                        PALETTE["paper"] if light_ground else "#0a111d",
+                        PALETTE["carbon"] if light_ground else PALETTE["art_ink"],
+                        gw, gh)
+            + "</div>")
 
     if cutout:
         light_ground = layout in ("civic", "bauhaus")
@@ -1050,6 +1073,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         country=esc(site["country"]),
         cta_short="Register",
         acronym_name=acronym_html(site["full_name"], mark),
+        ghost=ghost_layer,
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
         yyyy=esc(str(program["days"][0]["date"]).split("-")[0]),
@@ -1083,6 +1107,8 @@ if __name__ == "__main__":
     ap.add_argument("--art", help="the formula art SVG to inline")
     ap.add_argument("--photo", help="use a two-tone photograph instead of the formulas")
     ap.add_argument("--cutout", help="use a sky-removed PNG (see tools/cut-sky.py)")
+    ap.add_argument("--ghost", metavar="IMAGE",
+                    help="a faint photograph behind the formulas, as the website has")
     ap.add_argument("--duotone", metavar="SHADOW,HIGHLIGHT",
                     help="two colours for the photograph, e.g. '#1b2a4a,#ff8a75'")
     ap.add_argument("-o", "--out", required=True)
@@ -1091,4 +1117,4 @@ if __name__ == "__main__":
                     default="stack",
                     help="stack, listing, festival, or academic")
     args = ap.parse_args()
-    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone)
+    main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone, args.ghost)
