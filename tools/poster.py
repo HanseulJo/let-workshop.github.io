@@ -600,9 +600,11 @@ FESTIVAL = """<!doctype html>
      supply for themselves — what they cannot is which venue and which theme,
      and that is what the edge should be saying at a distance.
 
-     So the label goes to the small mono the sheet uses everywhere else to name
-     a field, and the particular takes the display size, set light because at
-     10mm it does not need weight as well to be seen.
+     So everything the label had — the size, the accent, the weight — moves to
+     the particular in one piece, and the label takes what the particular had:
+     the small mono the sheet uses everywhere else to name a field, set quiet
+     in the paper colour. Moving the size alone left the emphasis where it was
+     and only made the loud thing small.
 
      Inter Tight for it rather than the mono. A monospaced face at 10mm sets 33
      characters over 165mm and the two rails would have reached the programme;
@@ -614,12 +616,12 @@ FESTIVAL = """<!doctype html>
      does not survive being printed. */
   .rail b {{
     display:block; font-family:"JetBrains Mono",monospace; font-size:4mm;
-    font-weight:500; letter-spacing:.16em; text-transform:uppercase;
-    color:{hot}; margin-right:2.4mm;
+    font-weight:400; letter-spacing:.16em; text-transform:uppercase;
+    color:{ink}; opacity:.72; margin-right:2.4mm;
   }}
   .rail span {{
     display:block; font-family:"Inter Tight",sans-serif; font-size:10mm;
-    font-weight:300; letter-spacing:-.012em; color:{ink}; opacity:.92;
+    font-weight:700; letter-spacing:-.012em; color:{hot};
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
@@ -637,7 +639,7 @@ FESTIVAL = """<!doctype html>
      opposite edge it would have been a second shout for a URL. */
   .rail-right span {{
     font-family:"JetBrains Mono",monospace; font-size:4.6mm; font-weight:400;
-    letter-spacing:.06em; margin-right:0; opacity:.82;
+    letter-spacing:.06em; margin-right:0; color:{ink}; opacity:.82;
   }}
   /* Including its label. The size on .rail em is the display size the left
      edge is set at, and it reaches here too — this rail is one of the rails.
