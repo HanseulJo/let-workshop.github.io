@@ -102,9 +102,11 @@ SCHEMES = [
          art_ink="#a99ada", ink="#f2eefc", cool="#9184bf", hot="#7cf0c4", band="#0f0a24"),
 
     # ── the split: the sky one flat field, the campus another ─────────────
-    # The drawing is made from the sky-removed photograph, so where the sky was
-    # there is no ink at all and the sheet's own colour stands there as a plain
-    # field. The building is the only thing drawn, in a colour chosen against
+    # The drawing is made from the sky-removed PNG itself, alpha and all. The
+    # solver has to put something in every cell it is given, so a sky
+    # composited onto white still came out under an even wash of the lightest
+    # formulas; handed the transparency it drops those cells entirely and the
+    # sheet's own colour stands there as a plain field. The building is the only thing drawn, in a colour chosen against
     # that field rather than blended into it. No photograph behind these — a
     # ghost in the sky would fill the very area the split depends on.
     dict(name="30-split-yellow-indigo", art="split", ghost=False,

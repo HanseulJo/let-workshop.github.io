@@ -1778,7 +1778,8 @@ ART_FIT = {
     # The banner's drawing is made from a band cut out of the photograph at the
     # banner's own shape, so there is nothing left to crop and nothing to
     # squash. The band is chosen so the clock tower is whole inside it: its cap
-    # sits at 20% of the frame and its foot at 42%, and the band is 24% tall.
+    # sits at 2% of the frame and the skyline at 11%; the band is 24% tall and
+    # cut from 30%, which is where the tower is whole and the buildings fill it.
     "banner": "xMidYMid slice",
 }
 
