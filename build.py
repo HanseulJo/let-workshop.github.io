@@ -287,6 +287,19 @@ def fill_defaults(bundle: dict) -> None:
     bundle["about"].setdefault("subtitle", None)
     bundle["about"].setdefault("subtitle_ko", None)
     bundle["venue"].setdefault("title_ko", None)
+    # No accommodation block is a legitimate page; the card simply omits it.
+    bundle["venue"].setdefault("accommodation", None)
+    if bundle["venue"]["accommodation"]:
+        acc = bundle["venue"]["accommodation"]
+        for key in ("title_ko", "nearby_note", "nearby_note_ko"):
+            acc.setdefault(key, None)
+        acc.setdefault("first_come", None)
+        if acc["first_come"]:
+            for key in ("name_ko", "note", "note_ko"):
+                acc["first_come"].setdefault(key, None)
+        for place in acc.setdefault("nearby", []):
+            for key in ("name_ko", "travel", "travel_ko"):
+                place.setdefault(key, None)
     bundle["venue"].setdefault("subtitle", None)
     bundle["venue"].setdefault("subtitle_ko", None)
     bundle["program"].setdefault("title_ko", None)

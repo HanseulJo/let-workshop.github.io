@@ -89,6 +89,7 @@ nav:
   - { label: Program, label_ko: 프로그램, href: "#program" }
   - { label: Organizers, label_ko: 조직위원회, href: "#organizers" }
   - { label: Travel Info, label_ko: 오시는 길, href: "#venue" }
+  - { label: Poster, label_ko: 포스터, href: "#poster" }
 
 # Institution logos, shown greyscale in a strip under the organisers.
 #

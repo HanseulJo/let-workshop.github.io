@@ -108,3 +108,40 @@ getting_here:
     mode_ko: 주차
     detail: TBD
     detail_ko: 미정
+
+# Where to sleep. The pattern every recent POSTECH workshop has used: a small
+# block of rooms in the building the workshop is in, given out until they run
+# out, and a list of places nearby for everyone after that — booked by the
+# guest, not by us, because a room we cannot guarantee should not be promised.
+#
+# `first_come` is the on-campus allocation; `nearby` are the alternatives, each
+# with how long it takes to reach the venue. Times are by taxi unless the note
+# says otherwise. No rates here on purpose: they move, and a stale price on a
+# programme page is worse than no price.
+accommodation:
+  title: Where to stay
+  title_ko: 숙소
+  first_come:
+    name: POSCO International Center
+    name_ko: 포스코국제관
+    note: A limited number of rooms in the venue itself, allocated in registration order.
+    note_ko: 행사장 건물 내 객실을 한정 수량으로, 신청 순서대로 배정합니다.
+  nearby_note: >-
+    Everyone else books directly. These are the places other POSTECH workshops
+    send people to; rooms and rates are not held for us.
+  nearby_note_ko: >-
+    그 외에는 직접 예약해 주세요. 다른 POSTECH 워크숍에서 안내해 온 숙소들이며,
+    객실과 요금은 주최 측이 확보해 둔 것이 아닙니다.
+  nearby:
+    - name: Hotel Yeongildae
+      name_ko: 호텔영일대
+      travel: 5 min by taxi · 20 min on foot
+      travel_ko: 택시 5분 · 도보 20분
+    - name: Apple Tree Hotel
+      name_ko: 애플트리호텔
+      travel: 15 min by taxi
+      travel_ko: 택시 15분
+    - name: Hotel Lahan Pohang
+      name_ko: 라한호텔 포항
+      travel: 15 min by taxi · seaside
+      travel_ko: 택시 15분 · 바닷가

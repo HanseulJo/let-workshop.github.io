@@ -1165,11 +1165,11 @@ SOCIAL = """<!doctype html>
   .pad {{ position:absolute; inset:44px; padding:52px 54px 48px; display:flex; flex-direction:column; }}
   .head {{ display:flex; align-items:baseline; justify-content:space-between; gap:24px; }}
   .kicker {{
-    font-family:"JetBrains Mono",monospace; font-size:19px; font-weight:400;
+    font-family:"JetBrains Mono",monospace; font-size:22px; font-weight:400;
     letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72; margin:0;
   }}
   .kicker.hot {{ color:{hot}; opacity:1; }}
-  .num {{ font-family:"JetBrains Mono",monospace; font-size:19px; letter-spacing:.16em;
+  .num {{ font-family:"JetBrains Mono",monospace; font-size:22px; letter-spacing:.16em;
           color:{ink}; opacity:.45; }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:176px;
@@ -1196,30 +1196,54 @@ SOCIAL = """<!doctype html>
   .foot {{
     margin-top:auto; padding-top:22px; border-top:1px solid rgba(245,245,247,.20);
     display:flex; align-items:baseline; justify-content:space-between; gap:24px;
-    font-family:"JetBrains Mono",monospace; font-size:18px; letter-spacing:.1em;
+    font-family:"JetBrains Mono",monospace; font-size:21px; letter-spacing:.1em;
     text-transform:uppercase; color:{ink}; opacity:.6;
   }}
   .foot b {{ color:{hot}; font-weight:400; opacity:1; }}
   .mid {{ margin:auto 0; }}
-  .facts {{ font-family:"JetBrains Mono",monospace; font-size:21px; letter-spacing:.1em;
+  .facts {{ font-family:"JetBrains Mono",monospace; font-size:26px; letter-spacing:.1em;
             text-transform:uppercase; color:{ink}; opacity:.78; line-height:2; margin:0; }}
   .facts b {{ color:{hot}; font-weight:400; }}
   /* Speakers, grouped under the session that holds them. Two columns so the
      affiliations make an edge, the way they do on the sheet. */
-  .sess {{
-    font-family:"JetBrains Mono",monospace; font-size:18px; font-weight:400;
-    letter-spacing:.14em; text-transform:uppercase; color:{hot}; margin:26px 0 6px;
+  /* The timetable. A row per session, opened by its hour and closed by a rule
+     — the shape a printed programme has had for a century, and the reason it
+     survives is that the eye can find one row in it without reading the rest.
+     The hour is the column that makes that possible, and the earlier version
+     of these slides left it out entirely. */
+  .when-head {{ display:flex; align-items:baseline; justify-content:space-between;
+                gap:24px; margin:0 0 6px; }}
+  .when-head p {{ font-family:"Inter Tight",sans-serif; font-weight:700; font-size:56px;
+                  letter-spacing:-.03em; color:{ink}; margin:0; }}
+  .when-head p.hot {{ color:{hot}; }}
+  .tags {{ display:flex; align-items:center; gap:14px; }}
+  .tag {{
+    font-family:"JetBrains Mono",monospace; font-size:20px; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:{hot};
+    border:1.5px solid {hot}; border-radius:999px; padding:7px 16px;
   }}
-  .sess:first-child {{ margin-top:0; }}
+  .tag.plain {{ color:{ink}; border-color:rgba(245,245,247,.42); opacity:.8; }}
+  .rows {{ margin-top:6px; }}
+  .row {{
+    display:grid; grid-template-columns:150px 1fr; column-gap:24px;
+    padding:20px 0 18px; border-top:1.5px solid rgba(245,245,247,.26);
+  }}
+  .hour {{ font-family:"JetBrains Mono",monospace; font-size:28px; letter-spacing:.04em;
+           color:{ink}; opacity:.72; margin:0; }}
+  .what {{ font-family:"Satoshi",sans-serif; font-weight:700; font-size:38px;
+           letter-spacing:-.014em; color:{ink}; margin:0 0 6px; line-height:1.16; }}
+  .whom {{ font-family:"Satoshi",sans-serif; font-weight:400; font-size:29px;
+           color:{ink}; opacity:.78; margin:0; line-height:1.4; }}
+  .whom i {{ font-style:normal; font-size:24px; color:{cool}; }}
   .people {{ display:grid; grid-template-columns:auto auto; column-gap:22px; row-gap:0;
              align-items:baseline; justify-content:start; }}
   .people b {{ font-size:40px; font-weight:700; letter-spacing:-.014em; color:{ink};
                line-height:1.36; white-space:nowrap; }}
-  .people span {{ font-size:24px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
+  .people span {{ font-size:28px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
   .orgs2 {{ display:grid; grid-template-columns:auto auto; column-gap:22px;
             align-items:baseline; justify-content:start; }}
   .orgs2 b {{ font-size:36px; font-weight:700; color:{ink}; line-height:1.52; white-space:nowrap; }}
-  .orgs2 span {{ font-size:24px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
+  .orgs2 span {{ font-size:28px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
   .marks {{ display:flex; align-items:flex-end; gap:38px; }}
   .marks img {{ height:42px; width:auto; display:block; opacity:.72; }}
   .qr-plate {{ width:186px; height:186px; background:{art_ink}; padding:9px; box-sizing:border-box; }}
@@ -1270,8 +1294,12 @@ SOCIAL = """<!doctype html>
 <div class="card quiet">
   {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <div class="head"><p class="kicker hot">{day1_label}</p><span class="num">4/6</span></div>
-    <div class="mid">{day1_grid}</div>
+    <div class="head"><p class="kicker">Programme</p><span class="num">4/6</span></div>
+    <div class="when-head">
+      <p class="hot">{day1_date}</p><p>{day1_span}</p>
+    </div>
+    <div class="tags"><span class="tag">{day1_label}</span><span class="tag plain">{room}</span></div>
+    <div class="rows mid">{day1_rows}</div>
     <div class="foot"><span>Day 1 of 2</span><span>Programme subject to change</span></div>
   </div>
 </div>
@@ -1279,8 +1307,12 @@ SOCIAL = """<!doctype html>
 <div class="card quiet">
   {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <div class="head"><p class="kicker hot">{day2_label}</p><span class="num">5/6</span></div>
-    <div class="mid">{day2_grid}</div>
+    <div class="head"><p class="kicker">Programme</p><span class="num">5/6</span></div>
+    <div class="when-head">
+      <p class="hot">{day2_date}</p><p>{day2_span}</p>
+    </div>
+    <div class="tags"><span class="tag">{day2_label}</span><span class="tag plain">{room}</span></div>
+    <div class="rows mid">{day2_rows}</div>
     <div class="foot"><span>Day 2 of 2</span><span>Programme subject to change</span></div>
   </div>
 </div>
@@ -1306,6 +1338,105 @@ SOCIAL = """<!doctype html>
 
 </body></html>
 """
+# ─────────────────────────────────────────────────────────────
+# Name badges, 90x130mm — the usual insert for a lanyard holder.
+# One card per page, so a print shop can take the file as it is.
+#
+# A badge is read across a handshake, which is about a metre, and
+# what is read is the name. Everything else is for the second
+# look: the affiliation to place the person, the role to say why
+# they are on the programme, the mark so a badge left on a table
+# still says which workshop it belongs to.
+# ─────────────────────────────────────────────────────────────
+
+BADGE = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>KOLT 2026 — name badges, 90x130mm</title>
+<style>
+  @page {{ size: 90mm 130mm; margin: 0; }}
+  @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:300; src:url("fonts/satoshi-300.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  html, body {{ margin:0; padding:0; background:#000; }}
+  .card {{
+    position:relative; width:90mm; height:130mm; overflow:hidden;
+    background:{ground}; color:{ink}; font-family:"Satoshi",sans-serif;
+    page-break-after:always; break-after:page;
+  }}
+  .card:last-child {{ page-break-after:auto; break-after:auto; }}
+  /* The drawing is carried once, in the stylesheet, and the twenty-one cards
+     reference it. Inlined into each card the document came to 21MB and Chrome
+     would not finish printing it; as one data URI behind a background-image it
+     is stored once and painted twenty-one times.
+
+     Held right down either way. It is why the badge belongs to this workshop
+     and not another, and it is the one thing on the card that must not compete
+     with a name read across a handshake. */
+  .art, .ghost {{ position:absolute; inset:0; background-position:center;
+                  background-size:cover; background-repeat:no-repeat; }}
+  .art {{ background-image:url("{art_url}"); opacity:.34; }}
+  .ghost {{ background-image:url("{ghost_url}"); opacity:.16; }}
+  .veil {{ position:absolute; inset:0;
+    background:linear-gradient(180deg,
+      rgba(15,24,38,.72) 0%, rgba(15,24,38,.88) 46%, rgba(15,24,38,.97) 100%); }}
+  .pad {{ position:absolute; inset:0; padding:9mm 8mm 8mm; display:flex; flex-direction:column; }}
+  .top {{ display:flex; align-items:baseline; justify-content:space-between; gap:4mm; }}
+  /* 9mm and unbreakable. At 11 the mark measured 53mm of the 74mm the card
+     has, the date column took the rest, and KOLT 2026 wrapped onto two lines —
+     a wordmark split across a line break stops being a wordmark. */
+  .mark {{
+    font-family:"Jost",sans-serif; font-weight:700; font-size:9mm; white-space:nowrap;
+    line-height:1; color:{hot}; letter-spacing:-.02em; margin:0;
+  }}
+  .mark span {{ font-weight:300; }}
+  .when {{
+    font-family:"JetBrains Mono",monospace; font-size:2.8mm; letter-spacing:.1em;
+    text-transform:uppercase; color:{ink}; opacity:.5; text-align:right; line-height:1.5;
+  }}
+  /* The name sits above centre, not on it: a lanyard holder curls forward at
+     the bottom and a card worn on a chest is read from above. */
+  .who {{ margin-top:13mm; }}
+  .role {{
+    display:inline-block; font-family:"JetBrains Mono",monospace; font-size:2.9mm;
+    font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:{hot};
+    border:.3mm solid {hot}; border-radius:1.6mm; padding:1.4mm 2.6mm; margin:0 0 4mm;
+  }}
+  .role.plain {{ color:{ink}; border-color:rgba(245,245,247,.42); opacity:.7; }}
+  .name {{
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:11mm;
+    line-height:1.12; letter-spacing:-.016em; color:{ink}; margin:0;
+  }}
+  .name-ko {{
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:5.4mm;
+    color:{ink}; opacity:.62; margin:1.6mm 0 0;
+  }}
+  .affil {{
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:5mm;
+    color:{cool}; margin:3.4mm 0 0;
+  }}
+  /* Ruled space instead of a printed name, for anyone registering on the day.
+     The rule is what tells a person there is something to write. */
+  .write {{ margin-top:6mm; }}
+  .write i {{ display:block; height:.35mm; background:rgba(245,245,247,.30); margin-bottom:9mm; }}
+  .foot {{
+    margin-top:auto; padding-top:4mm; border-top:.3mm solid rgba(245,245,247,.20);
+    display:flex; align-items:flex-end; justify-content:space-between; gap:4mm;
+    font-family:"JetBrains Mono",monospace; font-size:2.7mm; letter-spacing:.1em;
+    text-transform:uppercase; color:{ink}; opacity:.55;
+  }}
+  .foot .longname {{ margin:0; max-width:44mm; line-height:1.5; }}
+  .qr-plate {{ width:16mm; height:16mm; background:{art_ink}; padding:.8mm; box-sizing:border-box; flex:none; }}
+  .qr-plate svg {{ display:block; width:100%; height:100%; }}
+</style></head><body>
+{badges}
+</body></html>
+"""
+
+
 def listing_html(program):
     """One line per session: day of the month, who, and when."""
     out = []
@@ -1643,6 +1774,7 @@ GHOST_SIZE = {
     "banner": (3400, 612),      # 5000 x 900mm
     "xbanner": (900, 2700),     # 600 x 1800mm
     "social": (1400, 1400),     # 1080 x 1080 square
+    "badge": (900, 1300),       # 90 x 130mm
 }
 
 
@@ -1704,7 +1836,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     tpl = {"listing": LISTING, "festival": FESTIVAL, "academic": ACADEMIC,
            "civic": CIVIC, "bauhaus": BAUHAUS,
            "banner": BANNER, "xbanner": XBANNER,
-           "social": SOCIAL}.get(layout, TEMPLATE)
+           "social": SOCIAL, "badge": BADGE}.get(layout, TEMPLATE)
     organizers = yaml.safe_load((DATA / "organizers.yml").read_text(encoding="utf-8"))
     bill, sessions_list, organisers, days = festival_bits(program, organizers, site)
     day_people = []
@@ -1745,6 +1877,28 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     d0 = str(program["days"][0]["date"]).split("-")
     # Pieces only the square set needs: a day's speakers as grid cells, the
     # rooms as one mono block, and the day's own label.
+    # The day slides are a timetable, not a list of names: a row per session,
+    # opened by its hour and separated by a rule. The hour is what a reader
+    # actually wants from a programme, and it was the one thing the earlier
+    # version left out.
+    day_rows, day_spans = [], []
+    for day in program["days"]:
+        talks = [e for e in day["events"]
+                 if e.get("type") in ("block", "tutorial", "keynote") and e.get("speakers")]
+        rows = []
+        for e in talks:
+            people = " · ".join(
+                f'{esc(s["name"])} <i>{esc(s.get("affil", ""))}</i>'
+                for s in e["speakers"] if s.get("name") and s["name"] != "TBD")
+            rows.append(
+                f'<div class="row">'
+                f'<p class="hour">{esc(e.get("start", ""))}</p>'
+                f'<div><p class="what">{esc(e["title"])}</p>'
+                f'<p class="whom">{people}</p></div></div>')
+        day_rows.append("".join(rows))
+        first, last = day["events"][0], day["events"][-1]
+        day_spans.append(f'{first.get("start", "")} – {last.get("end", "")}')
+
     day_grids, day_labels = [], []
     for d in sessions(program):
         # Grouped under the session that holds them rather than run together:
@@ -1760,6 +1914,53 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         day_grids.append("".join(groups))
         raw = d["label"].split("·")[-1].strip() if "·" in d["label"] else d["label"]
         day_labels.append(esc(raw.replace("(", "· ").rstrip(")")))
+    # One card per person the programme already names, then a run of blanks for
+    # whoever registers on the day. Speakers before organisers, and a speaker
+    # who is also an organiser is billed as a speaker — that is the reason they
+    # are on the programme, and two cards for one person is a card wasted.
+    # "October 7-8, 2026" is three lines in the badge's corner and the month is
+    # the least of what it says; the short form is one.
+    short_dates = re.sub(r"^(\w{3})\w*", lambda m: m.group(1), site["dates"])
+    as_url = lambda svg: "data:image/svg+xml;base64," + base64.b64encode(
+        svg.encode("utf-8")).decode("ascii")
+    art_url = as_url(art)
+    ghost_url = as_url(ghost_layer[len('<div class="ghost">'):-len("</div>")]) if ghost_layer else ""
+
+    def badge_card(role, hot, name="", name_ko="", affil=""):
+        who = (f'<p class="name">{esc(name)}</p>'
+               + (f'<p class="name-ko">{esc(name_ko)}</p>' if name_ko else "")
+               + (f'<p class="affil">{esc(affil)}</p>' if affil else "")) if name else (
+               '<div class="write"><i></i><i></i></div>')
+        return (
+            '<div class="card"><div class="ghost"></div><div class="art"></div>'
+            '<div class="veil"></div><div class="pad">'
+            f'<div class="top"><h1 class="mark">{esc(mark)} <span>{esc(year)}</span></h1>'
+            f'<div class="when">{esc(short_dates)}<br>{esc(site["venue"])}, {esc(site["city"])}</div></div>'
+            f'<div class="who"><span class="role{"" if hot else " plain"}">{esc(role)}</span>{who}</div>'
+            '<div class="foot">'
+            f'<p class="longname">{esc(site["full_name"].upper())}</p>'
+            f'<div class="qr-plate">{qr_svg(site["url"], dark=PALETTE["ground2"], light=None)}</div>'
+            "</div></div></div>")
+
+    speaker_names = set()
+    badge_cards = []
+    for d in sessions(program):
+        for b in d["blocks"]:
+            for person in b["people"]:
+                if person["name"] in speaker_names:
+                    continue
+                speaker_names.add(person["name"])
+                badge_cards.append(badge_card(
+                    "Speaker", True, person["name"],
+                    person.get("name_ko", ""), person.get("affil", "")))
+    for mbr in organizers["members"]:
+        if mbr["name"] in speaker_names:
+            continue
+        badge_cards.append(badge_card(
+            "Organiser", True, mbr["name"], mbr.get("name_ko", ""), mbr.get("affil", "")))
+    badge_cards += [badge_card("Participant", False) for _ in range(4)]
+    badges = "".join(badge_cards)
+
     rooms = "<br>".join(
         f'<b>{esc(r["label"])}</b> {esc(r["name"])}'
         for r in venue.get("rooms", [])) or esc(venue.get("address", ""))
@@ -1822,12 +2023,22 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             else w.capitalize()
             for w in site["full_name"].split())),
         reg_note=esc((site["hero_actions"][0].get("note") or "Opens soon")),
+        badges=badges,
+        art_url=art_url,
+        ghost_url=ghost_url,
         blurb=esc(site.get("blurb", "")),
         rooms=rooms,
         day1_label=day_labels[0] if day_labels else "",
         day2_label=day_labels[1] if len(day_labels) > 1 else "",
         day1_grid=day_grids[0] if day_grids else "",
         day2_grid=day_grids[1] if len(day_grids) > 1 else "",
+        day1_rows=day_rows[0] if day_rows else "",
+        day2_rows=day_rows[1] if len(day_rows) > 1 else "",
+        day1_span=esc(day_spans[0]) if day_spans else "",
+        day2_span=esc(day_spans[1]) if len(day_spans) > 1 else "",
+        day1_date=esc(str(program["days"][0]["date"]).replace("-", ".")[2:]),
+        day2_date=esc(str(program["days"][-1]["date"]).replace("-", ".")[2:]),
+        room=esc(venue["rooms"][0]["name"]) if venue.get("rooms") else esc(venue["name"]),
         **PALETTE,
     )
     out = Path(out_path)
@@ -1850,7 +2061,7 @@ if __name__ == "__main__":
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
                     choices=("stack", "listing", "festival", "academic", "civic",
-                             "bauhaus", "banner", "xbanner", "social"),
+                             "bauhaus", "banner", "xbanner", "social", "badge"),
                     default="stack",
                     help="a poster layout, or banner (5000x900mm) / xbanner (600x1800mm)")
     args = ap.parse_args()
