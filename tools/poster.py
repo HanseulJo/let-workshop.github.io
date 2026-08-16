@@ -523,7 +523,7 @@ FESTIVAL = """<!doctype html>
     letter-spacing:.06em; margin-right:3mm;
   }}
   /* The programme, against one right edge. */
-  .bill {{ margin:10mm 0 0 auto; text-align:right; width:214mm; }}
+  .bill {{ margin:auto 0 auto auto; text-align:right; width:214mm; }}
 
   /* The rule and the space between sessions live on the label, because a
      display:contents element cannot carry either. */
@@ -551,6 +551,15 @@ FESTIVAL = """<!doctype html>
     font-family:"Inter Tight",sans-serif; font-size:6.4mm; font-weight:400;
     color:{cool}; white-space:nowrap;
   }}
+  /* The session, named once over the people in it. No hour with it: the title
+     says what the block is, which is what a reader standing in front of the
+     sheet wants; the times are on the page the code leads to. */
+  .sesslabel {{
+    grid-column:1 / -1; text-align:right; margin:4.5mm 0 1.4mm;
+    font-family:"JetBrains Mono",monospace; font-size:4mm; font-weight:500;
+    letter-spacing:.14em; text-transform:uppercase; color:{hot};
+  }}
+  .prog-grid > .sesslabel:first-child {{ margin-top:0; }}
   .dayrule {{
     grid-column:1 / -1; width:100%; height:0; margin:5mm 0 4mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
@@ -1032,6 +1041,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         # would read as a stamp rather than as the thing that opens the group.
         first = True
         for b in d["blocks"]:
+            slots.append(f'<p class="sesslabel">{esc(b["title"])}</p>')
             for p2 in b["people"]:
                 label = esc(d["label"].split("·")[-1].strip()) if "·" in d["label"] else esc(d["label"])
                 slots.append(
