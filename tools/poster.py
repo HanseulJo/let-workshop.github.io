@@ -533,11 +533,28 @@ FESTIVAL = """<!doctype html>
   /* Mixed case, and the four letters of the acronym in the accent — the name
      is written so that K, O, L and T fall where they do, and capitals would
      hide it. */
+  /* One quiet line under the mark. Picking the acronym's letters out in the
+     accent explained where KOLT comes from and looked like it was explaining
+     it; all caps, light and held back says the same thing without pointing. */
   .longname {{
-    font-family:"Futura","Jost",sans-serif; font-weight:500; font-size:8mm;
-    letter-spacing:.004em; color:{ink}; margin:4mm 0 0;
+    font-family:"Futura","Jost",sans-serif; font-weight:300; font-size:6.2mm;
+    letter-spacing:.16em; text-transform:uppercase; color:{ink};
+    opacity:.62; margin:4.5mm 0 0;
   }}
-  .longname b {{ color:{hot}; font-weight:600; }}
+  .cols h4 {{
+    font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin:7mm 0 2mm;
+  }}
+  .orgs {{ margin:0; padding:0; list-style:none; }}
+  .orgs li {{
+    font-family:"Inter Tight",sans-serif; font-size:4.6mm; font-weight:600;
+    color:{ink}; line-height:1.5;
+  }}
+  .orgs li span {{ font-weight:400; color:{cool}; }}
+  .cols .theme {{
+    font-family:"Inter Tight",sans-serif; font-size:5mm; font-weight:600;
+    color:{ink}; margin:0; line-height:1.3;
+  }}
   /* The two rotated blocks down the left edge. */
   .rails {{ position:absolute; left:20mm; top:118mm; display:flex; gap:9mm; }}
   .rail {{
@@ -550,7 +567,7 @@ FESTIVAL = """<!doctype html>
     letter-spacing:.06em; margin-right:3mm;
   }}
   /* The programme, against one right edge. */
-  .bill {{ margin:auto 0 auto auto; text-align:right; width:214mm; }}
+  .bill {{ margin:auto 0 auto auto; text-align:right; }}
 
   /* The rule and the space between sessions live on the label, because a
      display:contents element cannot carry either. */
@@ -568,12 +585,12 @@ FESTIVAL = """<!doctype html>
   .prog-grid i {{ font-style:normal; white-space:nowrap; align-self:baseline; }}
   .prog-grid i.dayrow {{ padding-top:5mm; }}
   .prog-grid em {{
-    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:11mm;
-    font-weight:600; line-height:1.2; letter-spacing:-.018em; color:{ink};
+    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:10.5mm;
+    font-weight:600; line-height:1.22; letter-spacing:-.018em; color:{ink};
     white-space:nowrap;
   }}
   .prog-grid span {{
-    font-family:"Inter Tight",sans-serif; font-size:6.4mm; font-weight:400;
+    font-family:"Inter Tight",sans-serif; font-size:6.2mm; font-weight:400;
     color:{cool}; white-space:nowrap;
   }}
   /* The session, named once over the people in it. No hour with it: the title
@@ -586,14 +603,15 @@ FESTIVAL = """<!doctype html>
   }}
   .prog-grid i u {{
     display:block; text-decoration:none; font-family:"Futura","Jost",sans-serif;
-    font-size:8mm; font-weight:600; color:{ink};
+    font-size:7.6mm; font-weight:600; color:{ink};
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
-    grid-column:1 / -1; width:100%; height:0; margin:5mm 0 4mm;
+    grid-column:1 / -1; width:100%; height:0; margin:4.5mm 0 3.5mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
   }}
-  .dates {{ display:flex; justify-content:space-between; align-items:flex-end; margin:0; }}
+  .panel {{ margin-top:auto; }}
+  .dates {{ display:flex; justify-content:space-between; align-items:flex-start; gap:14mm; margin:0; }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
     line-height:1.02; letter-spacing:-.03em; color:{hot};
@@ -652,8 +670,8 @@ FESTIVAL = """<!doctype html>
   <div class="wrap">
     <div class="top">
       <div><h1 class="mark">{mark} <span>{year}</span></h1>
-        <p class="longname">{acronym_name}</p></div>
-      <div class="stamps">{full_name}<br>{eyebrow}</div>
+        <p class="longname">{long_upper}</p></div>
+      <div class="stamps">{eyebrow}</div>
     </div>
     <div class="bill"><div class="prog-grid">{programme}</div></div>
     <div class="panel">
@@ -661,13 +679,12 @@ FESTIVAL = """<!doctype html>
         <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
         <p class="datesub">{month} {yyyy}<br>{venue_name}<br>{city}, {country}</p>
       </div>
-    <div class="cols">
-      <div><h4>Organisers</h4><ul>{organisers}</ul></div>
-      <div class="r"><h4>Venue</h4><ul><li>{venue_name}<span> {city}, {country}</span></li></ul>
-        <h4 style="margin-top:6mm">Theme</h4><ul><li>{theme}</li></ul></div>
-    </div>
-    <div class="foot"><span class="marks">{logos}</span>
-      <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div></div>
+      <div class="cols">
+        <div><h4>Organisers</h4><ul class="orgs">{organisers}</ul></div>
+        <div class="r"><h4>Theme</h4><p class="theme">{theme}</p></div>
+      </div>
+      <div class="foot"><span class="marks">{logos}</span>
+        <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div></div>
     </div>
   </div>
 </div>
@@ -847,7 +864,7 @@ CIVIC = """<!doctype html>
   .grp b {{ display:block; font-family:"Inter Tight",sans-serif; font-weight:700; font-size:8mm; line-height:1.1; }}
   .grp span {{ display:block; font-size:4.4mm; color:{carbon2}; line-height:1.34; margin-top:.8mm; }}
   .side {{ position:absolute; right:14mm; top:336mm; width:104mm; font-size:4.8mm; line-height:1.46; color:{carbon}; }}
-  .side h4 {{
+  .cols h4 {{
     font-family:"Inter Tight",sans-serif; font-weight:500; font-size:4mm;
     letter-spacing:.1em; text-transform:uppercase; color:{carbon2}; margin:0 0 2mm;
   }}
@@ -1125,6 +1142,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         logos=logo_row([h["name"] for h in site["hosts"]["logos"]], PALETTE["cool"])
               if site.get("hosts") else "",
         acronym_name=acronym_html(site["full_name"], mark),
+        long_upper=esc(site["full_name"].upper()),
         ghost=ghost_layer,
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
