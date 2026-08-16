@@ -595,33 +595,31 @@ FESTIVAL = """<!doctype html>
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Inter Tight",sans-serif; color:{hot};
   }}
-  /* One line per rail, not a heading with its particular under it. Two blocks
-     made a corner; a single line makes an edge, which is what the left of a
-     festival sheet is for.
+  /* Two lines again, with the sizes the other way round: the field name small
+     over the thing itself large. Venue and Theme are the words a reader can
+     supply for themselves — what they cannot is which venue and which theme,
+     and that is what the edge should be saying at a distance.
 
-     The label is the only heavy thing on it and the rest is set light and at
-     half the size, so the eye reads Venue, Theme, Homepage down the edge and
-     picks up the particular only on the second pass. Inter Tight's weight axis runs 100 to 900; the
-     @font-face here declared 500 to 700, so every lighter request on the sheet
-     was being clamped to Medium and nothing could be set light at all. That is
-     also why the affiliations in the programme now sit slightly lighter than
-     they did: they always asked for 400.
+     So the label goes to the small mono the sheet uses everywhere else to name
+     a field, and the particular takes the display size, set light because at
+     10mm it does not need weight as well to be seen.
+
+     Inter Tight for it rather than the mono. A monospaced face at 10mm sets 33
+     characters over 165mm and the two rails would have reached the programme;
+     the proportional face at the same size stops 50mm short of it.
 
      The paper colour rather than the cool grey the sheet uses for a second
-     voice elsewhere. These lines sit over the drawing rather than over flat
+     voice elsewhere: these lines sit over the drawing rather than over flat
      ground, and a mid grey on a mottled mid ground is the one pairing that
      does not survive being printed. */
-  .rail span {{
-    display:block; font-family:"Inter Tight",sans-serif; font-size:6.2mm;
-    font-weight:200; letter-spacing:-.006em; color:{ink}; opacity:.92;
+  .rail b {{
+    display:block; font-family:"JetBrains Mono",monospace; font-size:4mm;
+    font-weight:500; letter-spacing:.16em; text-transform:uppercase;
+    color:{hot}; margin-right:2.4mm;
   }}
-  .rail em {{
-    font-style:normal; font-size:10mm; font-weight:700;
-    letter-spacing:-.012em; color:{hot};
-    /* Along the reading direction, whichever way the rail is turned: the word
-       space after the label is set at the small size and is not enough to
-       part a 10mm bold from what follows it. */
-    margin-inline-end:1.4mm;
+  .rail span {{
+    display:block; font-family:"Inter Tight",sans-serif; font-size:10mm;
+    font-weight:300; letter-spacing:-.012em; color:{ink}; opacity:.92;
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
@@ -644,8 +642,9 @@ FESTIVAL = """<!doctype html>
   /* Including its label. The size on .rail em is the display size the left
      edge is set at, and it reaches here too — this rail is one of the rails.
      The whole line is small, which is the point of it. */
-  .rail-right em {{ font-size:inherit; letter-spacing:inherit; margin-inline-end:.8mm; }}
-  .rail-right em {{ font-style:normal; color:{hot}; }}
+  .rail-right em {{
+    font-style:normal; color:{hot}; margin-inline-end:.8mm;
+  }}
   /* The programme, against one right edge. */
   .panel {{ margin-top:auto; }}
   .bill {{ margin:0 0 0 auto; text-align:right; }}
@@ -754,8 +753,8 @@ FESTIVAL = """<!doctype html>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
   <div class="rails">
-    <div class="rail"><span><em>Venue</em> &middot; {venue_name}, {city}</span></div>
-    <div class="rail"><span><em>Theme {year}</em> &middot; {theme}</span></div>
+    <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
+    <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
     <div class="rail rail-right"><span><em>Homepage</em> &middot; {url}</span></div>
   </div>
   <div class="wrap">
