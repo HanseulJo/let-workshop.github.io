@@ -590,7 +590,7 @@ FESTIVAL = """<!doctype html>
     color:{ink}; margin:0; line-height:1.3;
   }}
   /* The two rotated blocks down the left edge. */
-  .rails {{ position:absolute; left:20mm; right:8mm; top:118mm; display:flex; gap:9mm; }}
+  .rails {{ position:absolute; left:20mm; right:20mm; top:118mm; display:flex; gap:9mm; }}
   .rail {{
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Inter Tight",sans-serif; color:{hot};
@@ -631,8 +631,11 @@ FESTIVAL = """<!doctype html>
      shorter text ran out, and the labels — the part the eye actually lines up
      — would have sat at three different heights.
 
-     Pushed to 8mm rather than the 20mm text column, because the programme
-     reaches that column's right edge lower down. */
+     On the same 20mm column as everything else on that edge. It was pushed out
+     to 8mm to stay clear of the programme, which does reach the column's right
+     edge — but 100mm lower down, and the rail ends well above it. The only
+     thing 8mm bought was a rail that did not line up with the schedule, the
+     code or the sheet's own margin. */
   .rail-right {{ margin-left:auto; }}
   /* One thin line, not a statement. An address is a single fact and the left
      edge is where the sheet makes its statements; at the display size on the
