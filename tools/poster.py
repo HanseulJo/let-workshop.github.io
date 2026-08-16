@@ -584,34 +584,34 @@ FESTIVAL = """<!doctype html>
     text-align:right;
   }}
   .prog-grid i {{ font-style:normal; white-space:nowrap; align-self:baseline; }}
-  .prog-grid i.dayrow {{ padding-top:3mm; }}
+  .prog-grid i.dayrow {{ padding-top:4mm; }}
   .prog-grid em {{
-    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:6.4mm;
-    font-weight:600; line-height:1.42; letter-spacing:-.012em; color:{ink};
+    font-style:normal; font-family:"Inter Tight",sans-serif; font-size:8.6mm;
+    font-weight:600; line-height:1.34; letter-spacing:-.012em; color:{ink};
     white-space:nowrap;
   }}
   .prog-grid span {{
-    font-family:"Inter Tight",sans-serif; font-size:4.4mm; font-weight:400;
+    font-family:"Inter Tight",sans-serif; font-size:5.6mm; font-weight:400;
     color:{cool}; white-space:nowrap;
   }}
   /* The session, named once over the people in it. No hour with it: the title
      says what the block is, which is what a reader standing in front of the
      sheet wants; the times are on the page the code leads to. */
   .prog-grid i b {{
-    display:block; font-family:"Inter Tight",sans-serif; font-size:3.6mm;
+    display:block; font-family:"Inter Tight",sans-serif; font-size:4.4mm;
     font-weight:600; letter-spacing:0; color:{hot};
   }}
   .prog-grid i u {{
     display:block; text-decoration:none; font-family:"Jost",sans-serif;
-    font-size:5.8mm; font-weight:500; letter-spacing:-.01em; color:{ink};
+    font-size:7.6mm; font-weight:500; letter-spacing:-.01em; color:{ink};
   }}
   .prog-grid i u small {{
-    display:block; font-size:3.2mm; font-weight:400; color:{cool};
+    display:block; font-size:3.8mm; font-weight:400; color:{cool};
     letter-spacing:.02em; margin-top:.4mm;
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
-    grid-column:1 / -1; width:100%; height:0; margin:2.6mm 0 2mm;
+    grid-column:1 / -1; width:100%; height:0; margin:3.5mm 0 2.8mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
   }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-start; gap:16mm; margin:0; }}
