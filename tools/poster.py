@@ -539,7 +539,7 @@ FESTIVAL = """<!doctype html>
     line-height:1.16; letter-spacing:-.018em; color:{ink};
   }}
   .slot li span {{
-    font-weight:400; font-size:6.4mm; color:{cool}; margin-left:2.5mm;
+    font-weight:400; font-size:6.4mm; color:{cool}; margin-right:3mm;
   }}
   .daymark {{
     text-align:right; margin:0 0 3mm;
@@ -1027,7 +1027,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             + "</p>")
         for b in d["blocks"]:
             people = "".join(
-                f'<li>{esc(p2["name"])}<span>{esc(p2.get("affil", ""))}</span></li>'
+                f'<li><span>{esc(p2.get("affil", ""))}</span>{esc(p2["name"])}</li>'
                 for p2 in b["people"])
             slots.append(
                 f'<div class="slot"><p class="slot-head">{esc(b["title"])}'
