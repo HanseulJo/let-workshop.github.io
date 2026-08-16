@@ -550,16 +550,21 @@ FESTIVAL = """<!doctype html>
      near enough the mark above to belong to it and far enough not to read as
      the same typeface shrunk. Outfit is the fallback where it is missing.
 
+     Medium rather than Regular. Held at this opacity a Regular went thin
+     enough at 8mm that the line looked faded instead of quiet; one step of
+     weight buys back the body, which is what lets the opacity drop further.
+
      The indent is optical, not decorative. Both lines start with a K and both
      boxes start at the same x, but a glyph's ink sits inside its advance width
-     by a sidebearing that scales with size — 0.0738 of the em in Jost, 0.094
-     in Avenir Next. At 32mm and 8mm that is 2.36mm against 0.75mm, so the two
-     K's stand almost 1.6mm apart with nothing visibly wrong; the difference is
-     added back here. Changing either size or either face changes this number.
+     by a sidebearing that scales with size — 0.0738 of the em in Jost, 0.086
+     in Avenir Next Medium. At 32mm and 8mm that is 2.36mm against 0.69mm, so
+     the two K's stand 1.67mm apart with nothing visibly wrong; the difference
+     is added back here. Changing either size, either face or either weight
+     changes this number, and it is measured off the loaded fonts, not guessed.
      */
   .longname {{
-    font-family:"Avenir Next","Outfit",sans-serif; font-weight:400; font-size:8mm;
-    letter-spacing:-.01em; color:{ink}; opacity:.66; margin:4mm 0 0 1.61mm;
+    font-family:"Avenir Next","Outfit",sans-serif; font-weight:500; font-size:8mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:4mm 0 0 1.67mm;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
