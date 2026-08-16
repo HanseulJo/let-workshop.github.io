@@ -522,7 +522,7 @@ FESTIVAL = """<!doctype html>
   .wrap {{ position:absolute; inset:0; padding:20mm 20mm 16mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; justify-content:space-between; align-items:flex-start; }}
   .mark {{
-    font-family:"Jost",sans-serif; font-weight:700; font-size:32mm; line-height:1;
+    font-family:"Futura","Jost",sans-serif; font-weight:600; font-size:32mm; line-height:1;
     color:{ink}; letter-spacing:-.022em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
@@ -534,8 +534,8 @@ FESTIVAL = """<!doctype html>
      is written so that K, O, L and T fall where they do, and capitals would
      hide it. */
   .longname {{
-    font-family:"Inter Tight",sans-serif; font-weight:500; font-size:8mm;
-    letter-spacing:-.008em; color:{ink}; margin:3.5mm 0 0;
+    font-family:"Futura","Jost",sans-serif; font-weight:500; font-size:8mm;
+    letter-spacing:.004em; color:{ink}; margin:4mm 0 0;
   }}
   .longname b {{ color:{hot}; font-weight:600; }}
   /* The two rotated blocks down the left edge. */
