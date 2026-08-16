@@ -526,29 +526,37 @@ FESTIVAL = """<!doctype html>
   .bill {{ margin:10mm 0 0 auto; text-align:right; width:252mm; }}
   .slot {{ margin:0 0 6.5mm; }}
   .slot-head {{
-    display:inline-flex; align-items:baseline; gap:5mm;
-    margin:0 0 1.6mm; padding:0 0 1.2mm;
-    border-bottom:.25mm solid rgba(255,138,117,.42);
-    font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:500;
-    letter-spacing:.15em; text-transform:uppercase; color:{hot};
+    display:inline-flex; align-items:baseline; gap:4mm; margin:0 0 2mm;
+    font-family:"JetBrains Mono",monospace; font-size:4.2mm; font-weight:500;
+    letter-spacing:.12em; text-transform:uppercase; color:{hot};
   }}
-  .slot-head .t {{ color:{cool}; letter-spacing:.06em; }}
+  .slot-head .t {{ color:{ink}; letter-spacing:.04em; opacity:.75; }}
   .slot ul {{ margin:0; padding:0; list-style:none; }}
   .slot li {{
+    display:grid; grid-template-columns:1fr 88mm; column-gap:4mm;
+    align-items:baseline;
     font-family:"Inter Tight",sans-serif; font-weight:600; font-size:10.5mm;
     line-height:1.16; letter-spacing:-.018em; color:{ink};
   }}
+  .slot li em {{ font-style:normal; text-align:right; }}
   .slot li span {{
-    font-weight:400; font-size:6.4mm; color:{cool}; margin-right:3mm;
+    font-weight:400; font-size:6.4mm; color:{cool}; text-align:right;
   }}
+  /* One rule a day, and the day given its own line above what it opens. */
   .daymark {{
-    text-align:right; margin:0 0 3mm;
-    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:7mm; color:{ink};
+    text-align:right; margin:0 0 7mm; padding:4mm 0 0;
+    border-top:.4mm solid rgba(255,255,255,.22);
   }}
-  .daymark span {{
-    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:3.8mm;
-    letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin-left:4mm;
+  .daymark b {{
+    display:block; font-family:"Inter Tight",sans-serif; font-weight:700;
+    font-size:12mm; line-height:1.05; letter-spacing:-.02em; color:{ink};
   }}
+  .daymark i {{
+    display:block; font-style:normal; font-family:"JetBrains Mono",monospace;
+    font-size:4mm; letter-spacing:.15em; text-transform:uppercase;
+    color:{hot}; margin-top:2mm;
+  }}
+  .slot:first-of-type {{ margin-top:0; }}
   .panel {{ margin:auto 0 0; }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; margin:0; }}
   .stack {{
@@ -1022,16 +1030,18 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     slots = []
     for d in sessions(program):
         slots.append(
-            f'<p class="daymark">{esc(d["label"])}'
-            + (f'<span>{esc(d["theme"])}</span>' if d.get("theme") else "")
-            + "</p>")
+            f'<div class="daymark"><b>{esc(d["label"])}</b>'
+            + (f'<i>{esc(d["theme"])}</i>' if d.get("theme") else "")
+            + "</div>")
         for b in d["blocks"]:
             people = "".join(
-                f'<li><span>{esc(p2.get("affil", ""))}</span>{esc(p2["name"])}</li>'
+                f'<li><span>{esc(p2.get("affil", ""))}</span>'
+                f'<em>{esc(p2["name"])}</em></li>'
                 for p2 in b["people"])
             slots.append(
-                f'<div class="slot"><p class="slot-head">{esc(b["title"])}'
-                f'<span class="t">{esc(b["start"])}</span></p><ul>{people}</ul></div>')
+                f'<div class="slot"><p class="slot-head">'
+                f'<span class="t">{esc(b["start"])}</span>{esc(b["title"])}'
+                f'</p><ul>{people}</ul></div>')
     programme_block = "".join(slots)
     names_flat = "".join(
         f'<li>{esc(p["name"].lower())}</li>'
