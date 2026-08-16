@@ -276,13 +276,13 @@ TEMPLATE = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  /* Switzer as served by Fontshare's CDN has its name table blanked to the
-     string "false". A browser never looks — @font-face supplies the name — but
-     a printed PDF embeds whatever the file calls itself, and the sheet went out
-     carrying a font called "false". The copies in static/fonts have the names
-     written back. */
-  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
+  /* Fontshare's CDN serves these with the name table blanked to the string
+     "false". A browser never looks — @font-face supplies the name — but a
+     printed PDF embeds whatever the file calls itself, and one export went out
+     carrying a font called "false". The copies in static/fonts have their
+     names written back. */
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -413,8 +413,8 @@ LISTING = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   /* One ink on one ground, and every division drawn as a hairline rule. The
      layout is a stack of boxes with nothing between them, so the sheet has no
@@ -513,8 +513,8 @@ FESTIVAL = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -644,15 +644,18 @@ FESTIVAL = """<!doctype html>
      the poster says about itself from across a room, and they are the only
      lines with room to carry a voice of their own.
 
-     Switzer, from the Indian Type Foundry. It is the open answer to Suisse
-     Int'l — the Swiss-modern neo-grotesque that most of the software industry's
-     house faces are drawn from — so it shares that design language without
-     being any company's own typeface. Geist belongs to Vercel, Mona Sans to
-     GitHub, Söhne to OpenAI and Stripe, and Inter is on so much of the web
-     that it reads as a default rather than a choice; borrowing one of those
-     brings its owner along with it. */
+     Satoshi, from the Indian Type Foundry: a warm neo-grotesque of the kind the
+     software industry's house faces are drawn from, without being any of them.
+     Geist belongs to Vercel, Mona Sans to GitHub, Söhne to OpenAI and Stripe,
+     and Inter is on enough of the web to read as a default rather than a
+     choice; borrowing one brings its owner along with it.
+
+     Switzer was tried here first and was the wrong kind of right — a Suisse
+     Int'l in the same lane as the Helvetica around it, so at this size the
+     change did not read as a decision at all. Satoshi's open apertures and its
+     C, a, g and R part from Helvetica on sight. */
   .rail span {{
-    font-family:"Switzer","Helvetica Neue",sans-serif; font-size:9mm;
+    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:9mm;
     font-weight:700; letter-spacing:-.014em; color:{hot};
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
@@ -847,8 +850,8 @@ ACADEMIC = """<!doctype html>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Switzer"; font-weight:400; src:url("fonts/switzer-400.woff2") format("woff2"); }}
-  @font-face {{ font-family:"Switzer"; font-weight:700; src:url("fonts/switzer-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
