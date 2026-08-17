@@ -610,7 +610,7 @@
               {% endif %}
               <ul class="stay-list">
                 {% for place in venue.accommodation.nearby %}
-                <li><b>{{ t(place.name, place.name_ko) }}</b><span>{{ t(place.travel, place.travel_ko) }}</span></li>
+                <li>{% if place.map %}<a href="{{ place.map }}" target="_blank" rel="noopener">{{ t(place.name, place.name_ko) }}</a>{% else %}<b>{{ t(place.name, place.name_ko) }}</b>{% endif %}<span>{{ t(place.travel, place.travel_ko) }}</span></li>
                 {% endfor %}
               </ul>
               {% endif %}
@@ -627,7 +627,7 @@
          said everything the poster says, so it is here as a thing to take away
          rather than as a thing to read. It links to the full-size file instead
          of shipping the 48MB print PDF into the repository. -->
-    <section id="poster" class="band">
+    <section id="poster" class="band band-alt">
       <div class="wrap">
         <h2>{{ t(site.poster.title, site.poster.title_ko) }}{% if site.poster.title_note %}
           <span class="h2-note">({{ t(site.poster.title_note, site.poster.title_note_ko) }})</span>{% endif %}</h2>

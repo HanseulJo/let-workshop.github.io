@@ -104,6 +104,16 @@ map_links:
 # printing a figure that could be wrong on the day. Call 054-279-8500 to
 # confirm the rate and the registration procedure, then say so here.
 getting_here:
+  # Bus numbers and times are POSTECH's own, from the 오시는 길 page at
+  # postech.ac.kr/kor/university-introduction/direction.do.
+  - mode: From Pohang KTX
+    mode_ko: 포항역에서
+    detail: Bus 5000 to the intercity terminal, change to 207 · 1 hr · or taxi, 20–30 min
+    detail_ko: 5000번 → 시외버스터미널 환승 207번 · 1시간 · 또는 택시 20–30분
+  - mode: From the bus terminal
+    mode_ko: 시외버스터미널에서
+    detail: Bus 207 to POSTECH · 10 min
+    detail_ko: 207번 · 10분
   - mode: Parking
     mode_ko: 주차
     detail: TBD
@@ -124,24 +134,23 @@ accommodation:
   first_come:
     name: POSCO International Center
     name_ko: 포스코국제관
-    note: A limited number of rooms in the venue itself, allocated in registration order.
-    note_ko: 행사장 건물 내 객실을 한정 수량으로, 신청 순서대로 배정합니다.
-  nearby_note: >-
-    Everyone else books directly. These are the places other POSTECH workshops
-    send people to; rooms and rates are not held for us.
-  nearby_note_ko: >-
-    그 외에는 직접 예약해 주세요. 다른 POSTECH 워크숍에서 안내해 온 숙소들이며,
-    객실과 요금은 주최 측이 확보해 둔 것이 아닙니다.
+    note: In the venue. Limited rooms, first come.
+    note_ko: 행사장 건물. 객실 한정, 선착순.
+  nearby_note: Otherwise book direct.
+  nearby_note_ko: 그 외에는 직접 예약해 주세요.
   nearby:
     - name: Hotel Yeongildae
       name_ko: 호텔영일대
-      travel: 5 min by taxi · 20 min on foot
-      travel_ko: 택시 5분 · 도보 20분
+      travel: taxi 5 min
+      travel_ko: 택시 5분
+      map: https://map.naver.com/p/search/포항%20호텔영일대
     - name: Apple Tree Hotel
       name_ko: 애플트리호텔
-      travel: 15 min by taxi
+      travel: taxi 15 min
       travel_ko: 택시 15분
+      map: https://map.naver.com/p/search/포항%20애플트리호텔
     - name: Hotel Lahan Pohang
       name_ko: 라한호텔 포항
-      travel: 15 min by taxi · seaside
-      travel_ko: 택시 15분 · 바닷가
+      travel: taxi 15 min
+      travel_ko: 택시 15분
+      map: https://map.naver.com/p/search/라한호텔%20포항
