@@ -734,7 +734,7 @@ body {
    the art, where the sky is at its densest. A ground of its own is enough —
    the border alone was leaving it to compete with the formulas behind it. */
 .hero.has-art .eyebrow {
-  background: rgba(11, 18, 30, 0.55);
+  background: var(--hero-pill-bg);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 }
@@ -3371,6 +3371,10 @@ a.poster-shot:focus-visible {
   --hero-art-image: url("hero.jpg");
   --hero-art-filter: brightness(2.8) saturate(0.9);
   --hero-art-mask: url("hero-art.svg");
+  /* The pill's own ground. It was a hard-coded navy, which is the right ground
+     for exactly one of the two heroes: on paper it put a dark lozenge on a
+     pale sheet and then set dark type on top of it. */
+  --hero-pill-bg: rgba(11, 18, 30, 0.55);
   --hero-scrim: linear-gradient(
       to right,
       rgba(15, 24, 38, 0.62) 0%,
@@ -3410,6 +3414,7 @@ a.poster-shot:focus-visible {
     two sheets differ. Counted across the two files, the top fifth of the frame
     holds 929 marks in one and 2408 in the other. */
     --hero-art-mask: url("hero-art-light.svg");
+    --hero-pill-bg: rgba(240, 247, 253, 0.72);
     /* Let go much sooner across the frame than the dark one does. There the
        scrim can be heavy because the writing is bright against it; here the
        writing *is* the dark thing, and a heavy scrim rubs it out. */
@@ -3449,6 +3454,7 @@ a.poster-shot:focus-visible {
   two sheets differ. Counted across the two files, the top fifth of the frame
   holds 929 marks in one and 2408 in the other. */
   --hero-art-mask: url("hero-art-light.svg");
+  --hero-pill-bg: rgba(240, 247, 253, 0.72);
   --hero-scrim: linear-gradient(
       to right,
       rgba(207, 228, 245, 0.62) 0%,
