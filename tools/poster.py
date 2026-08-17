@@ -41,10 +41,10 @@ DATA = ROOT / "data"
 PALETTE = {
     "ground": "#0f1826",
     "ground2": "#0b111c",
-    # A step lighter than it was. Across a room the sheet read as dark before
-    # it read as anything else — the drawing is light marks on a dark field and
-    # what carries at that distance is how much light the marks put back.
-    "art_ink": "#dbe6f5",
+    # Near white. Across a room the sheet read as dark before it read as
+    # anything else — the drawing is light marks on a dark field, and what
+    # carries at that distance is how much light the marks put back.
+    "art_ink": "#f2f7fd",
     "ink": "#f5f5f7",
     "ink_dim": "#a8b8cd",
     "cool": "#93a2b8",
@@ -66,12 +66,15 @@ PALETTE = {
     # the sky and a plate under the campus wants far less of it, or the veil
     # simply repaints the whole sheet in the ground colour. Palette values, so
     # a scheme can set them without a second template.
-    # Thinner than it was, for the same reason. The veil was doing more than
-    # holding the photograph off the type: it was taking a third of the
-    # drawing's light with it. Measured across the whole sheet, the two changes
-    # together take mean luminance from 52 to 70, and the programme still sits
-    # on 15.3:1 because the veil's lower stops are untouched.
-    "veil1": ".52", "veil2": ".30", "veil3": ".44", "veil4": ".80", "veil5": ".96",
+    # Not thinner everywhere — thinner in the middle and *thicker* at the very
+    # top. The veil was taking a third of the drawing's light with it, but
+    # simply lifting it all lifted the ground behind the mark too, and the mark
+    # is coral on that ground: taking the whole veil down took the mark from
+    # 3.3:1 to 2.2:1, under the 3:1 a 32mm word needs. The first stop covers
+    # only the strip the mark sits in, so it goes up while the rest comes down.
+    # Measured across the sheet: mean luminance 52 before any of this, 76 now,
+    # with the mark at 3.6:1 — better than it was — and the programme at 14.5:1.
+    "veil1": ".66", "veil2": ".10", "veil3": ".22", "veil4": ".66", "veil5": ".92",
     # How strongly the formulas themselves are drawn. On the dark sheet they
     # are the picture and run at full strength; a scheme that also lays a solid
     # plate under the campus wants them quieter, or the two together bury the

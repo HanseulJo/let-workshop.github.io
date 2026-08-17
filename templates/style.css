@@ -2493,14 +2493,22 @@ h2 .note {
   fill: currentColor;
 }
 
+/* One rule to open the group, none between the rooms. Each room already
+   announces itself with its label in the accent — SESSIONS, BANQUET — so a
+   rule between them says the same thing a second time, and it says it in the
+   language the card uses for peers, which these two are not. The travel rows
+   keep their rules because nothing else there separates one from the next. */
 .venue-rooms {
   list-style: none;
   margin: 14px 0 0;
-  padding: 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--wash);
 }
 .venue-rooms li {
-  padding: 7px 0;
-  border-top: 1px solid var(--wash);
+  padding: 0 0 7px;
+}
+.venue-rooms li.minor {
+  padding-top: 10px;
 }
 /* The room the sessions are in is what a reader is looking for; the banquet
    hall is where dinner happens and was being announced at the same volume.
