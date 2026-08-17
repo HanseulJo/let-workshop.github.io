@@ -323,6 +323,7 @@ TEMPLATE = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -466,6 +467,7 @@ LISTING = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   /* One ink on one ground, and every division drawn as a hairline rule. The
      layout is a stack of boxes with nothing between them, so the sheet has no
@@ -577,6 +579,7 @@ FESTIVAL = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
@@ -662,8 +665,14 @@ FESTIVAL = """<!doctype html>
      equally, and the panel below keeps its place because the column is a fixed
      height and there is nothing left for it to move into. Fixed at 118mm the
      gap above and the gap below were whatever the two blocks happened to
-     leave. */
-  .rails {{ display:flex; gap:4.5mm; margin:auto 0; }}
+     leave.
+
+     Then nudged down 33mm. Auto margins centre the rails between the title and
+     the panel, but the panel opens with the programme's right-hand column and
+     the thing on the left they are actually read against is the date, which
+     starts 66mm lower. Measured on the sheet: title bottom 61.3, date top
+     403.9, so the midpoint is 232.6 and the rails were sitting at 199.8. */
+  .rails {{ display:flex; gap:4.5mm; margin:auto 0; position:relative; top:33mm; }}
   .rail {{
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Satoshi","Helvetica Neue",sans-serif; color:{hot};
@@ -715,9 +724,13 @@ FESTIVAL = """<!doctype html>
     color:{ink}; opacity:.72;
   }}
   .side h4 {{ color:{ink}; opacity:.72; margin:7mm 0 2.5mm; }}
+  /* Black, not Bold. A contrast ratio says nothing about how much of the
+     letter there is, and on a busy drawing that is most of what legibility is:
+     at 900 the rails put down 12.0% ink against 10.4% at 700, and the thicker
+     stroke is what lets the strip behind them stay lighter. */
   .rail span {{
     font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:9mm;
-    font-weight:700; letter-spacing:-.014em; color:{hot};
+    font-weight:900; letter-spacing:-.014em; color:{hot};
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
@@ -943,6 +956,7 @@ BANNER = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:5000mm; height:900mm; overflow:hidden;
@@ -1042,6 +1056,7 @@ XBANNER = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:600mm; height:1800mm; overflow:hidden;
@@ -1185,6 +1200,7 @@ SOCIAL = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; background:#000; }}
   .card {{
     position:relative; width:1080px; height:1080px; overflow:hidden;
@@ -1412,6 +1428,7 @@ BADGE = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; background:#000; }}
   .card {{
     position:relative; width:90mm; height:130mm; overflow:hidden;
@@ -1528,6 +1545,7 @@ ACADEMIC = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:400; src:url("fonts/satoshi-400.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:500; src:url("fonts/satoshi-500.woff2") format("woff2"); }}
   @font-face {{ font-family:"Satoshi"; font-weight:700; src:url("fonts/satoshi-700.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
     position:relative; width:426mm; height:600mm; overflow:hidden;
