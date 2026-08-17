@@ -642,18 +642,18 @@
         {% endif %}
         <figure class="poster">
           {% if site.poster.full %}
-          <a class="poster-shot" href="{{ site.poster.full }}" target="_blank" rel="noopener">
+          <a class="poster-shot" href="{{ site.poster.full | asset }}" target="_blank" rel="noopener">
           {% else %}
           <span class="poster-shot">
           {% endif %}
-            <img src="{{ site.poster.image }}"
+            <img src="{{ site.poster.image | asset }}"
                  alt="{{ site.poster.alt }}"
                  width="1200" height="1698" loading="lazy" decoding="async" />
           {% if site.poster.full %}</a>{% else %}</span>{% endif %}
           <figcaption>
             {% if site.poster.caption %}<span class="poster-spec">{{ t(site.poster.caption, site.poster.caption_ko) }}</span>{% endif %}
             {% if site.poster.full %}
-            <a class="poster-get" href="{{ site.poster.full }}" target="_blank" rel="noopener">
+            <a class="poster-get" href="{{ site.poster.full | asset }}" target="_blank" rel="noopener">
               {{ t(site.poster.download, site.poster.download_ko) }}
             </a>
             {% endif %}

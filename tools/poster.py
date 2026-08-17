@@ -1856,6 +1856,25 @@ GHOST_SIZE = {
 }
 
 
+def on_paper():
+    """True when the sheet is ink on paper rather than light on a dark field.
+
+    Asked of the palette, not of the layout. The photographic layers — the
+    ghost behind the formulas, the duotone, the cut-out — each need to know
+    which way round the sheet is, and for a long time they asked which layout
+    was being drawn. That was right while only two layouts had light grounds
+    and every palette was dark. It stopped being right the moment a palette
+    could be swapped: a pale sheet then got the dark-ground duotone, a nearly
+    black photograph laid over pale blue at 30%, which is what made every light
+    scheme look washed and flat. The ground's own luminance is the thing that
+    was always meant.
+    """
+    c = PALETTE["ground"].lstrip("#")
+    ch = [int(c[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    lin = [x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in ch]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2] > 0.35
+
+
 def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None,
          ghost=None, silhouette=None):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
@@ -1882,7 +1901,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         # holds the shape together between the marks, and it is the reason the
         # hero reads as a place rather than as a texture. Held right down — it
         # is there to be felt, not seen.
-        light_ground = layout in ("civic", "bauhaus")
+        light_ground = on_paper()
         gw, gh = GHOST_SIZE.get(layout, (1700, 2398))
         ghost_layer = (
             '<div class="ghost">'
@@ -1893,7 +1912,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             + "</div>")
 
     if cutout:
-        light_ground = layout in ("civic", "bauhaus")
+        light_ground = on_paper()
         w, h = GHOST_SIZE.get(layout, (1700, 2398))
         art = cutout_svg(
             cutout,
@@ -1903,7 +1922,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         )
     elif photo:
         # Light grounds want ink on paper; dark ones want light on the field.
-        light_ground = layout in ("civic", "bauhaus")
+        light_ground = on_paper()
         w, h = GHOST_SIZE.get(layout, (1700, 2398))
         shadow, highlight = (
             duotone.split(",") if duotone else

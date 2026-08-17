@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import argparse
 import os
+import hashlib
+import functools
 import re
 import shutil
 import sys
@@ -175,6 +177,32 @@ def resolve_colors(program: dict) -> None:
 def outbound(html: str) -> str:
     """Every link in the prose points off-site."""
     return html.replace('<a href="http', '<a target="_blank" rel="noopener" href="http')
+
+
+@functools.lru_cache(maxsize=None)
+def asset_url(name: str) -> str:
+    """A static file's name with a stamp of its contents on the end.
+
+    A file that keeps its name when its contents change is a file a browser
+    will not fetch again. The poster is the case that bit: it is rewritten
+    whenever the sheet is, always as poster-2026.png, and GitHub Pages serves
+    it with a ten-minute max-age — so the server had the new one and every
+    returning reader kept the old one, with nothing to tell them apart.
+
+    Eight hex digits of the file's SHA-256, as a query string. The URL then
+    changes exactly when the bytes do: a new poster is a new address and is
+    fetched, an unchanged one keeps its address and stays cached. Nothing to
+    remember on the next export, which is the point — a version number bumped
+    by hand is the same bug with an extra step.
+
+    Unknown names are passed through untouched, so a template can use this on
+    anything without having to know whether the file is there yet.
+    """
+    path = STATIC / name
+    if not path.exists():
+        return name
+    stamp = hashlib.sha256(path.read_bytes()).hexdigest()[:8]
+    return f"{name}?v={stamp}"
 
 
 def render_about(about: dict, links: dict) -> dict:
@@ -768,6 +796,7 @@ def main() -> int:
         keep_trailing_newline=True,
     )
     env.globals["t"] = bilingual
+    env.filters["asset"] = asset_url
 
     wanted = args.variants or list(site["variants"])
     unknown = [v for v in wanted if v not in site["variants"]]
