@@ -44,7 +44,7 @@ PALETTE = {
     # Near white. Across a room the sheet read as dark before it read as
     # anything else — the drawing is light marks on a dark field, and what
     # carries at that distance is how much light the marks put back.
-    "art_ink": "#f2f7fd",
+    "art_ink": "#ffffff",
     "ink": "#f5f5f7",
     "ink_dim": "#a8b8cd",
     "cool": "#93a2b8",
@@ -66,15 +66,20 @@ PALETTE = {
     # the sky and a plate under the campus wants far less of it, or the veil
     # simply repaints the whole sheet in the ground colour. Palette values, so
     # a scheme can set them without a second template.
-    # Not thinner everywhere — thinner in the middle and *thicker* at the very
-    # top. The veil was taking a third of the drawing's light with it, but
-    # simply lifting it all lifted the ground behind the mark too, and the mark
-    # is coral on that ground: taking the whole veil down took the mark from
-    # 3.3:1 to 2.2:1, under the 3:1 a 32mm word needs. The first stop covers
-    # only the strip the mark sits in, so it goes up while the rest comes down.
-    # Measured across the sheet: mean luminance 52 before any of this, 76 now,
-    # with the mark at 3.6:1 — better than it was — and the programme at 14.5:1.
-    "veil1": ".66", "veil2": ".10", "veil3": ".22", "veil4": ".66", "veil5": ".92",
+    # Thinner across the sky, and untouched at the two ends. The veil was taking
+    # a third of the drawing's light with it, but it cannot simply be lifted:
+    # the accent is a mid-light colour and so is a bright drawing, so past a
+    # point the two meet. Lifting the top took the mark from 3.3:1 against its
+    # own ground to 2.2:1, under the 3:1 a 32mm word needs, and lifting the
+    # bottom took the programme with it. So the first stop goes up to cover the
+    # strip the mark sits in, the last two stay where they always were behind
+    # the programme, and the two in the middle — the sky — come down hard.
+    #
+    # That is as far as it goes without a halo behind the coral, and a halo is
+    # furniture this sheet does not otherwise have. Measured: mean luminance 52
+    # before, 74.5 now; mark 3.6:1, rails 3.1:1, programme 15.2:1, every one of
+    # them at or above where it started.
+    "veil1": ".66", "veil2": ".10", "veil3": ".22", "veil4": ".80", "veil5": ".96",
     # How strongly the formulas themselves are drawn. On the dark sheet they
     # are the picture and run at full strength; a scheme that also lays a solid
     # plate under the campus wants them quieter, or the two together bury the
