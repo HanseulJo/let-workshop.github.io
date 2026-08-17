@@ -2495,11 +2495,11 @@ h2 .note {
 
 .venue-rooms {
   list-style: none;
-  margin: 18px 0 0;
+  margin: 14px 0 0;
   padding: 0;
 }
 .venue-rooms li {
-  padding: 10px 0;
+  padding: 7px 0;
   border-top: 1px solid var(--wash);
 }
 /* The room the sessions are in is what a reader is looking for; the banquet
@@ -2508,8 +2508,8 @@ h2 .note {
 .venue-rooms li.minor .room-name {
   font-family: inherit;
   font-weight: 500;
-  font-size: 0.92em;
-  color: var(--prose);
+  font-size: 0.88em;
+  color: var(--muted);
 }
 .venue-rooms li.minor .room-detail {
   font-size: 0.72rem;
@@ -2519,6 +2519,7 @@ h2 .note {
 }
 .room-label {
   display: inline-block;
+  margin-top: 1px;
   font-family: var(--mono);
   font-size: 0.66rem;
   font-weight: 500;
@@ -2547,21 +2548,21 @@ h2 .note {
   font-style: normal;
   color: var(--muted);
   font-size: 0.9em;
-  margin: 18px 0 0;
-  line-height: 1.65;
+  margin: 14px 0 0;
+  line-height: 1.55;
 }
 .venue-info address span {
   color: var(--muted);
 }
 .venue-travel {
   list-style: none;
-  margin: 18px 0 0;
+  margin: 14px 0 0;
   padding: 0;
   color: var(--prose);
   font-size: 0.94em;
 }
 .venue-travel li {
-  padding: 7px 0;
+  padding: 6px 0;
   border-top: 1px solid var(--wash);
 }
 .venue-travel b {
@@ -3129,15 +3130,21 @@ footer a {
    and the answer to the second depends on the first. The venue's own rooms are
    set apart because they are the only ones we control; the rest is a list. */
 .stay {
-  margin-top: 20px;
-  padding-top: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid var(--line);
 }
 /* One heading for each list in the card. The transport rows used to begin
    straight under the address with nothing to say what they were, so the card
-   read as one undifferentiated run of facts. */
+   read as one undifferentiated run of facts.
+
+   The card's vertical rhythm is one gap, not three. It had grown 18px between
+   blocks, 20 plus 16 before the accommodation, and rows padded 10, 7 and 5 —
+   spacing that arrived a piece at a time as the card did. Every gap is 14px
+   between blocks and every row is padded the same, which takes 90px out of a
+   card whose content did not change. */
 .venue-h {
-  margin: 18px 0 10px;
+  margin: 14px 0 7px;
   font-family: var(--mono);
   font-size: 0.66rem;
   font-weight: 500;
@@ -3149,8 +3156,14 @@ footer a {
 .venue-h + .stay-first {
   margin-top: 0;
 }
+/* The accommodation block already opens with its own rule and padding; the
+   heading's top margin then landed on top of that and made one gap in the card
+   half again as wide as every other. */
+.stay .venue-h {
+  margin-top: 0;
+}
 .stay-first {
-  margin: 0 0 10px;
+  margin: 0 0 7px;
   font-size: 0.9rem;
   line-height: 1.5;
   color: var(--prose);
@@ -3168,7 +3181,7 @@ footer a {
   word-break: keep-all;
 }
 .stay-note {
-  margin: 0 0 10px;
+  margin: 0 0 7px;
   font-size: 0.82rem;
   line-height: 1.5;
   color: var(--muted);
@@ -3185,7 +3198,7 @@ footer a {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  padding: 5px 0;
+  padding: 4px 0;
   font-size: 0.88rem;
 }
 .stay-list b,
