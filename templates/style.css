@@ -1171,37 +1171,37 @@ h2::before {
 }
 /* Topics: pills of wildly different widths wrapped into a ragged block. An
    aligned two-column list keeps all of them but gives the eye a left edge. */
-/* Still a grid of equal columns, so the topics stay in tidy rows rather than
-   ragging like a tag cloud — but each cell is now a pill instead of a ruled
-   line. min() so the track can never be wider than what holds it: a bare 320px
-   minimum overflows a 320px phone, which has ~256px of content. */
-.chips {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-  gap: 8px;
+/* The topics, in the four groups the call for papers is organised around.
+   Eleven of them in a flat grid read as a list to be got to the end of; four
+   named groups with what falls in each read as the shape of the field, which is
+   what a reader deciding whether to submit is actually asking.
+
+   One column, not a grid. Each group is a heading and a sentence, and a
+   sentence set in a half-width cell wraps three times — the grid was right for
+   chips of four words and wrong the moment they became prose. */
+.topics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-top: 4px;
 }
-/* A tint of the accent rather than a colour of its own, so a dozen of these
-   read as one quiet family and not as a dozen buttons asking to be pressed. */
-.chip {
-  display: flex;
-  align-items: center;
-  padding: 9px 16px;
-  /* Half of one line's height, not 999px. At 999px the radius is always half
-     the box, so a topic that wraps to two lines turns into a lozenge with
-     bulging sides — the shape changes with the length of the sentence, which
-     is the one thing it should not do. Fixed at half a single line, the
-     one-liners are still pills and the longer ones grow straight sides.
-
-     Written from the same numbers the box is built from — 1.45em of line and
-     9px of padding on each side — so it follows the type rather than needing
-     to be re-measured whenever the type moves. */
-  border-radius: calc(0.725em + 9px);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-  font-family: var(--mono);
-  font-size: 0.72em;
-  letter-spacing: 0.01em;
-  line-height: 1.45;
+.topic-group {
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.topic-group h4 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.topic-group p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
   color: var(--prose);
 }
 .about a {
@@ -2502,6 +2502,21 @@ h2 .note {
   padding: 10px 0;
   border-top: 1px solid var(--wash);
 }
+/* The room the sessions are in is what a reader is looking for; the banquet
+   hall is where dinner happens and was being announced at the same volume.
+   Same information, one step quieter. */
+.venue-rooms li.minor .room-name {
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.92em;
+  color: var(--prose);
+}
+.venue-rooms li.minor .room-detail {
+  font-size: 0.72rem;
+}
+.venue-rooms li.minor .room-label {
+  opacity: 0.5;
+}
 .room-label {
   display: inline-block;
   font-family: var(--mono);
@@ -3118,14 +3133,21 @@ footer a {
   padding-top: 16px;
   border-top: 1px solid var(--line);
 }
-.stay h4 {
-  margin: 0 0 10px;
+/* One heading for each list in the card. The transport rows used to begin
+   straight under the address with nothing to say what they were, so the card
+   read as one undifferentiated run of facts. */
+.venue-h {
+  margin: 18px 0 10px;
   font-family: var(--mono);
   font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
+}
+.venue-h + .venue-travel,
+.venue-h + .stay-first {
+  margin-top: 0;
 }
 .stay-first {
   margin: 0 0 10px;

@@ -23,14 +23,16 @@ situated at the crossroads of computer science, statistics, mathematics, and
 related disciplines. We welcome work that primarily advances theoretical analysis
 and guarantees. Key topics include, but are not limited to:
 
-- Design and analysis of learning algorithms
-- Statistical and computational complexity of learning
-- Optimization methods for learning, including online and stochastic methods
-- Theory of artificial neural networks, including deep learning
-- Theoretical insights into empirical phenomena in learning
-- Reinforcement learning, bandits, and decision-making processes
-- High-dimensional and non-parametric statistics
-- Bayesian methods in learning, sampling, and probabilistic inference
-- Causality
-- Learning under system constraints (e.g., privacy, fairness, memory, communication)
-- The interplay between learning theory and other mathematical fields.
+- **Foundations and Complexity of Learning**
+  - Design and analysis of learning algorithms, statistical and computational
+    complexity of learning, learning under system constraints, interplay between
+    learning theory and other mathematical fields
+- **Optimization and Learning Dynamics**
+  - Optimization methods for learning, including online and stochastic methods,
+    theory of artificial neural networks including deep learning, theoretical
+    insights into empirical phenomena in learning
+- **Sequential Decision Making**
+  - Reinforcement learning, bandits, online learning
+- **Statistics, Inference, and Causality**
+  - High-dimensional and non-parametric statistics, Bayesian methods in learning,
+    sampling and probabilistic inference, causality

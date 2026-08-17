@@ -196,21 +196,35 @@ def render_about(about: dict, links: dict) -> dict:
 
         blocks = []
         for heading, body in zip(rest[0::2], rest[1::2]):
-            # A bullet list in a block becomes chips, not prose.
-            prose, bullets = [], []
+            # A bullet list in a block is not prose — it is the topic list, and
+            # it is nested: an unindented bullet names a group and the indented
+            # ones under it say what falls in it. Eleven flat topics read as a
+            # list to get to the end of; four named groups read as the shape of
+            # the field, which is what a call for papers is trying to convey.
+            prose, groups = [], []
             for line in body.strip().splitlines():
-                (bullets if line.lstrip().startswith("- ") else prose).append(line)
+                stripped = line.strip()
+                if not stripped.startswith("- "):
+                    if groups and stripped:
+                        # a wrapped continuation of the line above
+                        groups[-1]["body"] += " " + stripped
+                    else:
+                        prose.append(line)
+                elif line.startswith("- "):
+                    groups.append({"title": stripped[2:].strip().strip("*"), "body": ""})
+                elif groups:
+                    groups[-1]["body"] = (groups[-1]["body"] + " " + stripped[2:]).strip()
             blocks.append(
                 {
                     "heading": heading.strip(),
                     "html": Markup(outbound(md.markdown("\n".join(prose) + refs))),
-                    "chips": [line.strip()[2:].strip() for line in bullets],
+                    "groups": groups,
                 }
             )
 
-        # The block carrying the topic chips runs full width; the rest are cards.
-        lang["pillars"] = [b for b in blocks if not b["chips"]]
-        lang["wide"] = [b for b in blocks if b["chips"]]
+        # The block carrying the topics runs full width; the rest are cards.
+        lang["pillars"] = [b for b in blocks if not b["groups"]]
+        lang["wide"] = [b for b in blocks if b["groups"]]
         codes.append(lang["code"])
 
     about["codes"] = codes
@@ -288,6 +302,8 @@ def fill_defaults(bundle: dict) -> None:
     bundle["about"].setdefault("subtitle_ko", None)
     bundle["venue"].setdefault("title_ko", None)
     # No accommodation block is a legitimate page; the card simply omits it.
+    bundle["venue"].setdefault("getting_here_title", None)
+    bundle["venue"].setdefault("getting_here_title_ko", None)
     bundle["venue"].setdefault("accommodation", None)
     if bundle["venue"]["accommodation"]:
         acc = bundle["venue"]["accommodation"]

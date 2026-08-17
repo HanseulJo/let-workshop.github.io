@@ -103,6 +103,10 @@ map_links:
 # So this line says the scheme exists and points at the desk rather than
 # printing a figure that could be wrong on the day. Call 054-279-8500 to
 # confirm the rate and the registration procedure, then say so here.
+# How to arrive. `title` heads the list; without one the rows sat straight
+# under the address with nothing saying what they were.
+getting_here_title: Getting here
+getting_here_title_ko: 가는 방법
 getting_here:
   # Bus numbers and times are POSTECH's own, from the 오시는 길 page at
   # postech.ac.kr/kor/university-introduction/direction.do.
@@ -141,8 +145,11 @@ accommodation:
   nearby:
     - name: Hotel Yeongildae
       name_ko: 호텔영일대
-      travel: taxi 5 min
-      travel_ko: 택시 5분
+      # 207 runs 영일대 to 포항공과대학교 every 12-14 min, so this one has a bus
+      # worth naming. The other two are given a taxi time only: no route to
+      # them was verified, and an invented bus number is worse than none.
+      travel: bus 207 · taxi 5 min
+      travel_ko: 207번 · 택시 5분
       map: https://map.naver.com/p/search/포항%20호텔영일대
     - name: Apple Tree Hotel
       name_ko: 애플트리호텔

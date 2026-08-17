@@ -292,14 +292,17 @@ days:
             note: >-
               Seungki Min (SNU) withdrew — scheduling conflict. Candidates
               raised: Kyungjae Lee (Korea), Jongyeong Lee (KIST).
-          - name: Gi-Soo Kim
-            role: Prof.
-            role_ko: 교수
-            name_ko: 김지수
-            photo: gi-soo-kim.jpg
-            affil: UNIST
-            topic: heavy-tailed
-            home: https://sdm.unist.ac.kr/professor/
+          # Gi-Soo Kim is not confirmed yet — asked again 2026-08-18. Kept here
+          # rather than deleted so the slot can be restored by uncommenting it.
+          # - name: Gi-Soo Kim
+          #   role: Prof.
+          #   role_ko: 교수
+          #   name_ko: 김지수
+          #   photo: gi-soo-kim.jpg
+          #   affil: UNIST
+          #   topic: heavy-tailed
+          #   home: https://sdm.unist.ac.kr/professor/
+          - name: TBD
 
       - type: break
         title: Coffee Break (20 min)

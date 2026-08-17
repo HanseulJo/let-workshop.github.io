@@ -41,7 +41,10 @@ DATA = ROOT / "data"
 PALETTE = {
     "ground": "#0f1826",
     "ground2": "#0b111c",
-    "art_ink": "#b9cbe4",
+    # A step lighter than it was. Across a room the sheet read as dark before
+    # it read as anything else — the drawing is light marks on a dark field and
+    # what carries at that distance is how much light the marks put back.
+    "art_ink": "#dbe6f5",
     "ink": "#f5f5f7",
     "ink_dim": "#a8b8cd",
     "cool": "#93a2b8",
@@ -63,7 +66,12 @@ PALETTE = {
     # the sky and a plate under the campus wants far less of it, or the veil
     # simply repaints the whole sheet in the ground colour. Palette values, so
     # a scheme can set them without a second template.
-    "veil1": ".72", "veil2": ".50", "veil3": ".62", "veil4": ".90", "veil5": ".985",
+    # Thinner than it was, for the same reason. The veil was doing more than
+    # holding the photograph off the type: it was taking a third of the
+    # drawing's light with it. Measured across the whole sheet, the two changes
+    # together take mean luminance from 52 to 70, and the programme still sits
+    # on 15.3:1 because the veil's lower stops are untouched.
+    "veil1": ".52", "veil2": ".30", "veil3": ".44", "veil4": ".80", "veil5": ".96",
     # How strongly the formulas themselves are drawn. On the dark sheet they
     # are the picture and run at full strength; a scheme that also lays a solid
     # plate under the campus wants them quieter, or the two together bury the
