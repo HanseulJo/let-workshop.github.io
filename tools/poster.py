@@ -590,17 +590,18 @@ FESTIVAL = """<!doctype html>
      mark rather than as a line of its own, which is what it is — the mark
      spelled out. Held closer to the title and fainter for the same reason.
 
-     6.5mm, which is the size at which the line ends where the mark ends. KOLT
-     2026 sets 155mm; at 8mm this ran 190mm and overhung it by 35, so the two
-     lines had no relationship at either end. Now they share both.
+     5.8mm, which is the size at which the line ends where the mark ends. KOLT
+     2026 sets 155mm. The face is monospaced, so the width goes with the
+     character count and nothing else: at 6.5mm the shorter name set 154.7mm
+     over 33 characters, and 1st adds four more.
 
      The optical indent stays optical but the number changes with the face and
      the size: JetBrains Mono's sidebearing is 0.080 of the em against Jost's
-     0.0738, so against a 32mm mark and a 6.5mm line the correction is 1.4mm. */
+     0.0738, so against a 32mm mark and a 5.8mm line the correction is 1.9mm. */
   .longname {{
-    font-family:"JetBrains Mono",monospace; font-weight:600; font-size:6.5mm;
+    font-family:"JetBrains Mono",monospace; font-weight:600; font-size:5.8mm;
     letter-spacing:.1em; text-transform:uppercase; color:{ink};
-    opacity:.46; margin:1.6mm 0 0 1.4mm;
+    opacity:.46; margin:1.6mm 0 0 1.9mm;
   }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.4mm; font-weight:500;
@@ -858,7 +859,7 @@ FESTIVAL = """<!doctype html>
   <div class="wrap">
     <div class="top">
       <div><h1 class="mark">{mark} <span>{year}</span></h1>
-        <p class="longname">{long_name}</p></div>
+        <p class="longname">{long_name_ed}</p></div>
       <div class="stamps">{eyebrow}</div>
     </div>
     <div class="rails">
@@ -877,7 +878,7 @@ FESTIVAL = """<!doctype html>
       </div>
       <div class="foot">
         <span class="marks">{logos}</span>
-        <p class="footname">{long_name}</p>
+        <p class="footname">{long_name_ed}</p>
         <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
       </div>
     </div>
@@ -2054,6 +2055,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         # letters of the acronym can be picked out; set as a plain line that
         # casing reads as a typo, so it is normalised back here.
         long_name=esc(site["full_name"].title().replace(" On ", " on ")),
+        # The sheet says which one this is; the banners and the badges do not,
+        # because a first edition is news on a poster and clutter on a name tag.
+        long_name_ed=esc(f'{site["edition"]} '
+                         + site["full_name"].title().replace(" On ", " on ")),
         ghost=ghost_layer,
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
