@@ -353,8 +353,11 @@ def fill_defaults(bundle: dict) -> None:
     if bundle["site"]["poster"]:
         for key in ("title_ko", "subtitle", "subtitle_ko",
                     "title_note", "title_note_ko",
-                    "caption", "caption_ko", "full", "download", "download_ko"):
+                    "caption", "caption_ko", "download", "download_ko"):
             bundle["site"]["poster"].setdefault(key, None)
+        for sheet in bundle["site"]["poster"].setdefault("sheets", []):
+            for key in ("full", "label", "label_ko"):
+                sheet.setdefault(key, None)
     # No eyebrow at all is a legitimate hero — the pill simply disappears.
     bundle["site"].setdefault("eyebrow", None)
     bundle["site"].setdefault("eyebrow_ko", None)

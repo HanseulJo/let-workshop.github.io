@@ -640,25 +640,37 @@
         {% if site.poster.subtitle %}
         <p class="sub">{{ t(site.poster.subtitle, site.poster.subtitle_ko) }}</p>
         {% endif %}
-        <figure class="poster">
-          {% if site.poster.full %}
-          <a class="poster-shot" href="{{ site.poster.full | asset }}" target="_blank" rel="noopener">
-          {% else %}
-          <span class="poster-shot">
-          {% endif %}
-            <img src="{{ site.poster.image | asset }}"
-                 alt="{{ site.poster.alt }}"
-                 width="1200" height="1698" loading="lazy" decoding="async" />
-          {% if site.poster.full %}</a>{% else %}</span>{% endif %}
-          <figcaption>
-            {% if site.poster.caption %}<span class="poster-spec">{{ t(site.poster.caption, site.poster.caption_ko) }}</span>{% endif %}
-            {% if site.poster.full %}
-            <a class="poster-get" href="{{ site.poster.full | asset }}" target="_blank" rel="noopener">
-              {{ t(site.poster.download, site.poster.download_ko) }}
-            </a>
+        <!-- Two sheets, side by side where there is room and a swipe where
+             there is not. The scroller is the same markup either way: a grid
+             on a wide screen, and on a phone one column of full-width tracks
+             with scroll snapping, which is the gesture a phone already has for
+             "there is another one". -->
+        <div class="poster-set">
+          {% for sheet in site.poster.sheets %}
+          <figure class="poster">
+            {% if sheet.full %}
+            <a class="poster-shot" href="{{ sheet.full }}" target="_blank" rel="noopener">
+            {% else %}
+            <span class="poster-shot">
             {% endif %}
-          </figcaption>
-        </figure>
+              <img src="{{ sheet.image }}"
+                   alt="{{ site.poster.alt }}{% if sheet.label %} — {{ sheet.label }}{% endif %}"
+                   width="1200" height="1698" loading="lazy" decoding="async" />
+            {% if sheet.full %}</a>{% else %}</span>{% endif %}
+            <figcaption>
+              {% if sheet.label %}<span class="poster-spec">{{ t(sheet.label, sheet.label_ko) }}</span>{% endif %}
+              {% if sheet.full %}
+              <a class="poster-get" href="{{ sheet.full }}" target="_blank" rel="noopener">
+                {{ t(site.poster.download, site.poster.download_ko) }}
+              </a>
+              {% endif %}
+            </figcaption>
+          </figure>
+          {% endfor %}
+        </div>
+        {% if site.poster.caption %}
+        <p class="poster-note">{{ t(site.poster.caption, site.poster.caption_ko) }}</p>
+        {% endif %}
       </div>
     </section>
     {% endif %}

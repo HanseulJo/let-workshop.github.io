@@ -134,6 +134,26 @@ SCHEMES = [
 SPLIT_EXTRAS = dict(veil1=".02", veil2=".02", veil3=".44", veil4=".86", veil5=".97",
                     art_alpha=".35")
 
+# What a pale ground needs, whatever colours it is wearing. These are the same
+# values the canon light sheet uses, and they are applied by measuring the
+# ground rather than by listing which schemes are light — the same test
+# poster.py makes to decide which way round to render the photograph.
+#
+# The veil almost disappears across the middle: it exists to hold a photograph
+# back from type on a dark ground, and over a pale one it simply repaints the
+# sheet in the ground colour, which is what made every light scheme here look
+# washed. It comes back at the foot, where the programme has to be read off it.
+# And the photograph itself is felt more strongly, because a pale ground and a
+# drawing whose darkest mark is only so dark leave the building and the sky at
+# nearly the same tone without it.
+PAPER_EXTRAS = dict(veil1=".20", veil2="0", veil3="0", veil4=".74", veil5=".93",
+                    veilx=".10", ghost_alpha=".45")
+
+
+def on_paper(ground):
+    """True when the ground is light enough that the sheet is ink on paper."""
+    return luminance(ground) > 0.35
+
 
 def luminance(hex_colour):
     c = hex_colour.lstrip("#")
@@ -179,6 +199,8 @@ def main():
         palette = {k: v for k, v in scheme.items() if k not in ("name", "art", "ghost")}
         if scheme["art"] == "split":
             palette.update(SPLIT_EXTRAS)
+        elif on_paper(scheme["ground"]):
+            palette.update(PAPER_EXTRAS)
         cmd = [sys.executable, str(HERE / "poster.py"), "--art", art,
                "--layout", "festival", "--palette", json.dumps(palette),
                "-o", str(work / f"{scheme['name']}.html")]

@@ -3248,12 +3248,31 @@ footer a {
    full column width it would fill a laptop screen on its own and push the
    footer out of reach; capped by height instead, so it always sits inside one
    view whatever the window is doing. */
+/* Two sheets. On a wide screen they sit side by side; on a phone they become
+   one column of full-width tracks that snap, which is the gesture a phone
+   already has for "there is another one". Same markup either way — a grid with
+   a different template and overflow, rather than two layouts to keep in step. */
+.poster-set {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem;
+  align-items: start;
+  justify-items: center;
+}
 .poster {
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.9rem;
+}
+.poster-note {
+  margin: 1.2rem 0 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }
 .poster-shot {
   display: block;
@@ -3306,5 +3325,124 @@ a.poster-shot:focus-visible {
   }
   .poster-shot img {
     max-height: none;
+  }
+  /* One track per sheet, each the width of the content column, scrolled
+     sideways. The negative margin and the matching padding let the row bleed
+     to the screen edges while the first sheet still starts on the text
+     margin — without it the strip looks inset and the swipe reads as a bug. */
+  .poster-set {
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    margin-inline: calc(var(--pad) * -1);
+    padding-inline: var(--pad);
+    scrollbar-width: none;
+  }
+  .poster-set::-webkit-scrollbar {
+    display: none;
+  }
+  .poster-set > .poster {
+    scroll-snap-align: center;
+  }
+}
+
+/* ===== THE HERO ON PAPER =====
+   The hero has always been the dark sheet, in both themes. It is the same
+   picture as the poster and the poster now prints either way round, so in
+   light mode the hero turns over with the page.
+
+   It is not the dark hero with its colours swapped, for the same reason the
+   light poster is not: the artwork draws light marks and lets the ground show
+   between them. Filling the glyphs with the photograph works on a dark field
+   and cannot work on a pale one — a photograph is never light enough at its
+   dark end to read as ink. So on paper the glyphs are filled with a flat ink
+   instead, the photograph stays behind them as a faint duotone, and the scrim
+   turns from a darkening to a lightening.
+
+   Declared twice, as the rest of the theme is: once for the explicit choice
+   and once for the system default. */
+:root[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --hero-bg: #cfe4f5;
+  --hero-bg2: #b9d6ee;
+  --hero-title: #0d2137;
+  --hero-body: #26405c;
+  --hero-mute: #456080;
+  --hero-rule: rgba(13, 33, 55, 0.16);
+  --hero-accent: #c93a1c;
+  --hero-art-ink: #16324f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hero-bg: #0f1826;
+    --hero-bg2: #16233a;
+    --hero-title: #f5f5f7;
+    --hero-body: #b9c7da;
+    --hero-mute: #93a2b8;
+    --hero-rule: rgba(255, 255, 255, 0.12);
+    --hero-accent: #ff8a75;
+    --hero-art-ink: #b9cbe4;
+  }
+}
+:root[data-theme="dark"] {
+  --hero-bg: #0f1826;
+  --hero-bg2: #16233a;
+  --hero-title: #f5f5f7;
+  --hero-body: #b9c7da;
+  --hero-mute: #93a2b8;
+  --hero-rule: rgba(255, 255, 255, 0.12);
+  --hero-accent: #ff8a75;
+  --hero-art-ink: #b9cbe4;
+}
+
+/* The three layers, on paper. Grouped under one selector per theme state so
+   the whole treatment moves together rather than a filter here and an opacity
+   there. */
+:root[data-theme="light"] .hero.has-art::before,
+:root:not([data-theme="dark"]) .hero.has-art::before {
+  /* The photograph behind the writing, lifted towards the paper. Left at its
+     own tones it is a dark rectangle on a pale sheet. */
+  opacity: 0.2;
+  filter: brightness(1.5) contrast(0.75) saturate(0.6);
+}
+:root[data-theme="light"] .hero-art,
+:root:not([data-theme="dark"]) .hero-art {
+  /* Flat ink through the mask, not the photograph. */
+  background: var(--hero-art-ink);
+  filter: none;
+  opacity: 0.72;
+}
+:root[data-theme="light"] .hero.has-art::after,
+:root:not([data-theme="dark"]) .hero.has-art::after {
+  /* The same two scrims the dark hero uses — weighted left for the column the
+     type is in, and to the foot for the info bar — painted in paper rather
+     than in ink. */
+  background: linear-gradient(
+      to right,
+      rgba(207, 228, 245, 0.72) 0%,
+      rgba(207, 228, 245, 0.5) 34%,
+      rgba(207, 228, 245, 0.24) 55%,
+      rgba(207, 228, 245, 0.1) 72%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(207, 228, 245, 0.3) 0%,
+      rgba(207, 228, 245, 0.36) 30%,
+      rgba(203, 224, 242, 0.78) 58%,
+      rgba(199, 220, 240, 0.92) 100%
+    );
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero.has-art::before {
+    opacity: 0.28;
+    filter: none;
+  }
+  :root:not([data-theme="light"]) .hero-art {
+    background: url("hero.jpg") var(--hero-focus) / var(--hero-size) no-repeat;
+    filter: brightness(2.8) saturate(0.9);
+    opacity: 1;
   }
 }

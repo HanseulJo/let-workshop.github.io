@@ -210,8 +210,17 @@ poster:
   title_note_ko: 세부 사항은 변경될 수 있습니다
   subtitle: Print it, pin it up, pass it on.
   subtitle_ko: 인쇄해서 붙이고 나눠주세요.
-  image: poster-2026.png
-  full: poster-2026-large.png
+  # Two sheets, the same poster printed either way round. `sheets` is what the
+  # page shows; the first is the one that leads.
+  sheets:
+    - image: poster-2026.png
+      full: poster-2026-large.png
+      label: Dark
+      label_ko: 어두운 판
+    - image: poster-2026-light.png
+      full: poster-2026-light-large.png
+      label: Light
+      label_ko: 밝은 판
   # One language only, and plain text. `alt` is an attribute, and the bilingual
   # helper writes a pair of spans — markup inside an attribute ends it early and
   # spills the rest onto the page.
