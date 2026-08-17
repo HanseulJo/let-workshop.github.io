@@ -79,7 +79,14 @@ PALETTE = {
     # furniture this sheet does not otherwise have. Measured: mean luminance 52
     # before, 74.5 now; mark 3.6:1, rails 3.1:1, programme 15.2:1, every one of
     # them at or above where it started.
-    "veil1": ".66", "veil2": ".10", "veil3": ".22", "veil4": ".80", "veil5": ".96",
+    # And one across, not down. The rails are coral over the drawing at the left
+    # edge, and the sky above them is now bright enough that the two meet at
+    # 3.1:1 — a hair over what a 9mm word needs and no more. A halo under the
+    # letters would fix it and is furniture; darkening the strip they stand on
+    # is the same veil doing the same job on the other axis, and across a fifth
+    # of the sheet it reads as the corner falling away rather than as a panel.
+    "veilx": ".26",
+    "veil1": ".66", "veil2": ".04", "veil3": ".14", "veil4": ".80", "veil5": ".96",
     # How strongly the formulas themselves are drawn. On the dark sheet they
     # are the picture and run at full strength; a scheme that also lays a solid
     # plate under the campus wants them quieter, or the two together bury the
@@ -873,7 +880,13 @@ FESTIVAL = """<!doctype html>
       <stop offset=".70" stop-color="{ground}" stop-opacity="{veil4}"/>
       <stop offset="1" stop-color="{ground}" stop-opacity="{veil5}"/>
     </linearGradient></defs>
+    <defs><linearGradient id="vx" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="{ground}" stop-opacity="{veilx}"/>
+      <stop offset=".10" stop-color="{ground}" stop-opacity="{veilx}"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity="0"/>
+    </linearGradient></defs>
     <rect width="10" height="100" fill="url(#v)"/>
+    <rect width="10" height="100" fill="url(#vx)"/>
   </svg></div>
   <div class="wrap">
     <div class="top">
