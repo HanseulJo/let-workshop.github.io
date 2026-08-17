@@ -749,16 +749,19 @@ FESTIVAL = """<!doctype html>
     font-style:normal; white-space:nowrap; align-self:baseline;
     justify-self:start; text-align:left;
   }}
-  /* The break between the two days. It measured 18.8mm against names that sit
-     flush against each other inside a day, and about half of that was the
-     day's own label — the rest was 10.3mm of air around a 0.4mm rule, which
-     read as a gap in the list rather than as a division of it. Halved. */
   /* The day gets the whole width and sits at the right edge, over the
      affiliations rather than out beyond the session labels. It is the heading
      of the block under it, and a heading belongs on the side the block is set
-     against — this one is set right. */
+     against — this one is set right.
+
+     Where the break's air sits matters as much as how much of it there is. It
+     began at 18.8mm against names that sit flush inside a day, which read as
+     the list stopping rather than dividing; halving that left the rule 2.2mm
+     under the last name of the first day and 3.8mm above the heading of the
+     second, so it sat closer to the group it ended than to the one it opens. A
+     rule belongs to what follows it. 5.5mm above and 2.0mm below now. */
   .prog-grid i.dayrow {{
-    grid-column:1 / -1; justify-self:end; text-align:right; padding-top:2.2mm;
+    grid-column:1 / -1; justify-self:end; text-align:right; padding-top:0.5mm;
   }}
   .prog-grid em {{
     font-style:normal; font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:8.6mm;
@@ -785,7 +788,7 @@ FESTIVAL = """<!doctype html>
   }}
   .prog-grid i b {{ margin-bottom:0; }}
   .dayrule {{
-    grid-column:1 / -1; width:100%; height:0; margin:2.2mm 0 1.6mm;
+    grid-column:1 / -1; width:100%; height:0; margin:5.5mm 0 1.5mm;
     border:0; border-top:.4mm solid rgba(255,255,255,.34);
   }}
   .dates {{ display:flex; justify-content:space-between; align-items:flex-end; gap:16mm; margin:0; }}

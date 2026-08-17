@@ -1247,6 +1247,34 @@
         if (window.ResizeObserver) new ResizeObserver(fitAnchors).observe(bar);
       })();
 
+      // ---- Clearance for the fixed tab bar
+      //
+      // The bar is pinned over the bottom of the viewport, so the page needs
+      // that much padding under it or the last line sits behind the bar. The
+      // padding used to be a number in the stylesheet — 58px against a bar that
+      // measures 53 — and the five it was out by was scrollable emptiness under
+      // the footer. Any change to the bar's type, padding or safe-area inset
+      // moved one of the two numbers and not the other.
+      //
+      // So the bar reports its own height and the padding is that. One fact,
+      // one source, and it cannot drift: whatever the bar becomes, the page
+      // follows it on the same frame. The stylesheet keeps a fallback for the
+      // case where this never runs.
+      (function () {
+        var bar = document.querySelector(".tabs-mobile");
+        if (!bar) return;
+        function syncClearance() {
+          // display:none above the breakpoint, where the page needs no
+          // clearance at all and offsetHeight is already 0.
+          document.documentElement.style.setProperty(
+            "--tabbar-h", bar.offsetHeight + "px");
+        }
+        syncClearance();
+        addEventListener("resize", syncClearance);
+        addEventListener("orientationchange", syncClearance);
+        if (window.ResizeObserver) new ResizeObserver(syncClearance).observe(bar);
+      })();
+
       // ---- Day filter (list view; the grid always shows every day side by side)
       function setDay(day) {
         document.querySelectorAll("#day-pills button").forEach(function (b) {

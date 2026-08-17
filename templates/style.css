@@ -3087,12 +3087,21 @@ footer a {
   }
 
 @media (max-width: 780px) {
-  /* Clearance for the fixed tab bar. The footer's own 60px bottom padding was
-     designed for a page that ended at the footer; with this added on top it
-     came to 118px of nothing under the last line, which reads as the page
-     scrolling past its own end. The footer gives most of it back. */
+  /* Clearance for the fixed tab bar, which is pinned over the bottom of the
+     viewport and would otherwise stand on the last line of the page.
+
+     The value comes from the bar itself, measured at runtime into --tabbar-h
+     (see the script). A number written here instead is a second copy of a fact
+     the bar already knows, and the two drift: this said 58px against a bar that
+     measures 53, and the five it was out by was scrollable emptiness under the
+     footer. The literal below is only the fallback for a page whose script
+     never ran, and it is deliberately a little short — content tucked under the
+     bar is recoverable by scrolling, dead space is not.
+
+     The bar's own padding already carries the safe-area inset, so the measured
+     height carries it too and it must not be added again here. */
   body {
-    padding-bottom: calc(58px + env(safe-area-inset-bottom));
+    padding-bottom: var(--tabbar-h, 53px);
   }
   footer {
     padding-bottom: 14px;
