@@ -1943,12 +1943,19 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         # building it stands behind, and turning the layer up made the picture
         # more wrong rather than more present. On a light sheet the dark end of
         # the photograph is the one that gets ink.
+        # A wider tonal range on paper. photo_svg's default squeezes the
+        # picture — right on a dark ground, where the drawing is doing the
+        # describing and the photograph is only holding the shape together
+        # between the marks. On a pale sheet the photograph has to carry the
+        # difference between a pale building and a pale sky, and at the default
+        # the two arrive within a few levels of each other.
         ghost_layer = (
             '<div class="ghost">'
             + photo_svg(ghost,
                         PALETTE["carbon"] if light_ground else "#0a111d",
                         PALETTE["paper"] if light_ground else PALETTE["art_ink"],
-                        gw, gh)
+                        gw, gh,
+                        contrast=1.35 if light_ground else 0.92)
             + "</div>")
 
     if cutout:
