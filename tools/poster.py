@@ -92,6 +92,13 @@ PALETTE = {
     # plate under the campus wants them quieter, or the two together bury the
     # title.
     "art_alpha": "1",
+    # And how strongly the photograph behind the formulas is felt. On the dark
+    # sheet it is there to hold the shape together between the marks and is
+    # meant to be felt rather than seen. On paper it has more to do: the ground
+    # is pale, the drawing's darkest mark is only so dark, and without the
+    # photograph carrying some of it the building and the sky arrive at almost
+    # the same tone.
+    "ghost_alpha": ".3",
     "chip": "rgba(255,255,255,.34)",
 }
 
@@ -588,7 +595,7 @@ FESTIVAL = """<!doctype html>
   }}
   .art {{ position:absolute; inset:0; overflow:hidden; opacity:{art_alpha}; }}
   .art svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
-  .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:.3; }}
+  .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:{ghost_alpha}; }}
   .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   /* Held well back. In the reference the ground is a soft bloom that the type
      sits on without contest; ours is a field of small marks, which is busier,
@@ -745,7 +752,12 @@ FESTIVAL = """<!doctype html>
      edge — but 100mm lower down, and the rail ends well above it. The only
      thing 8mm bought was a rail that did not line up with the schedule, the
      code or the sheet's own margin. */
-  .rail-right {{ margin-left:auto; }}
+  /* The homepage rail rides the same row as the other two but is read against
+     different neighbours: on the right the things above and below it are the
+     stamp at the top and the programme's first day, not the title and the
+     date. Measured on the sheet: stamp bottom 26.5mm, Oct 7 at 338.2, so the
+     midpoint is 182.3 and the row leaves it at 232.8. Fifty back up. */
+  .rail-right {{ margin-left:auto; position:relative; top:-50.5mm; }}
   /* One thin line, not a statement. An address is a single fact and the left
      edge is where the sheet makes its statements; at the display size on the
      opposite edge it would have been a second shout for a URL. */
@@ -1856,6 +1868,28 @@ GHOST_SIZE = {
 }
 
 
+# The two sheets that are printed. Everything else in the palette is shared;
+# a scheme is only what has to change to turn the sheet over.
+#
+# The light one is not the dark one with the colours swapped. Ink on paper is
+# the opposite job — the drawing has to be dark marks with the ground showing
+# between them rather than light marks on a dark field, so it needs its own
+# artwork from `formula-art.py --invert`. The veil almost disappears: it exists
+# to hold a photograph back from type on a dark ground, and over a pale one it
+# simply repaints the sheet in the ground colour. And the accent goes deeper,
+# because coral on pale blue is 1.4:1 — the same colour that carries a dark
+# sheet is nearly invisible on a light one.
+SCHEMES = {
+    "light": {
+        "ground": "#cfe4f5", "ground2": "#b5d4ee", "band": "#b5d4ee",
+        "art_ink": "#16324f", "ink": "#0d2137", "cool": "#456080",
+        "hot": "#c93a1c",
+        "veil1": ".20", "veil2": "0", "veil3": "0", "veil4": ".74", "veil5": ".93",
+        "veilx": ".10", "ghost_alpha": ".45",
+    },
+}
+
+
 def on_paper():
     """True when the sheet is ink on paper rather than light on a dark field.
 
@@ -1903,11 +1937,17 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         # is there to be felt, not seen.
         light_ground = on_paper()
         gw, gh = GHOST_SIZE.get(layout, (1700, 2398))
+        # shadow first, highlight second — the photograph's dark end and its
+        # light end, in that order. On paper those were the other way round,
+        # which made the ghost a negative: the sky came out darker than the
+        # building it stands behind, and turning the layer up made the picture
+        # more wrong rather than more present. On a light sheet the dark end of
+        # the photograph is the one that gets ink.
         ghost_layer = (
             '<div class="ghost">'
             + photo_svg(ghost,
-                        PALETTE["paper"] if light_ground else "#0a111d",
-                        PALETTE["carbon"] if light_ground else PALETTE["art_ink"],
+                        PALETTE["carbon"] if light_ground else "#0a111d",
+                        PALETTE["paper"] if light_ground else PALETTE["art_ink"],
                         gw, gh)
             + "</div>")
 
@@ -1916,8 +1956,8 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         w, h = GHOST_SIZE.get(layout, (1700, 2398))
         art = cutout_svg(
             cutout,
-            PALETTE["paper"] if light_ground else "#24374f",
-            PALETTE["carbon"] if light_ground else "#e4edfa",
+            PALETTE["carbon"] if light_ground else "#24374f",
+            PALETTE["paper"] if light_ground else "#e4edfa",
             w, h,
         )
     elif photo:
@@ -2185,6 +2225,9 @@ if __name__ == "__main__":
     ap.add_argument("--silhouette", metavar="PNG",
                     help="a cut-out PNG whose alpha is filled flat in art_ink, "
                          "laid under the formulas so the subject reads as a mass")
+    ap.add_argument("--scheme", choices=sorted(SCHEMES),
+                    help="a named palette; 'light' is the ink-on-paper sheet, "
+                         "which also wants the artwork from formula-art.py --invert")
     ap.add_argument("--palette", metavar="JSON",
                     help="override palette entries, e.g. '{\"ground\":\"#101010\"}'. "
                          "The artwork's own ink is recoloured to match art_ink.")
@@ -2195,9 +2238,11 @@ if __name__ == "__main__":
                     default="stack",
                     help="a poster layout, or banner (5000x900mm) / xbanner (600x1800mm)")
     args = ap.parse_args()
-    if args.palette:
+    if args.scheme or args.palette:
         import json
-        override = json.loads(args.palette)
+        override = dict(SCHEMES.get(args.scheme, {}))
+        if args.palette:
+            override.update(json.loads(args.palette))
         # The drawing carries its ink colour inside the file, so a new palette
         # has to reach in and change it too or the formulas keep the old one.
         OLD_ART_INK = PALETTE["art_ink"]
