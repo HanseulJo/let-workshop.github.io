@@ -99,6 +99,16 @@ PALETTE = {
     # photograph carrying some of it the building and the sky arrive at almost
     # the same tone.
     "ghost_alpha": ".3",
+    # The veils and rules of the other four pieces, so a scheme can turn them
+    # over too. Each piece veils a different shape at a different reading
+    # distance, so they are separate values rather than one shared set.
+    "veil_b_mid1": ".62", "veil_b_mid2": ".70", "veil_b_end": ".93",
+    "veil_x1": ".52", "veil_x2": ".66", "veil_x3": ".80", "veil_x4": ".97",
+    "scrim1": "rgba(15,24,38,.62)", "scrim2": "rgba(15,24,38,.42)",
+    "scrim3": "rgba(15,24,38,.70)", "scrim4": "rgba(15,24,38,.96)",
+    "scrim5": "rgba(15,24,38,.90)", "scrim6": "rgba(15,24,38,.86)",
+    "keyline": "rgba(245,245,247,.34)", "rule_soft": "rgba(245,245,247,.20)",
+    "rule_mid": "rgba(245,245,247,.30)", "rule_strong": "rgba(245,245,247,.42)",
     "chip": "rgba(255,255,255,.34)",
 }
 
@@ -987,7 +997,7 @@ BANNER = """<!doctype html>
      the type is set to. It is what stops a dark field dissolving into whatever
      wall or crowd is behind it. */
   .frame {{
-    position:absolute; inset:56mm; border:1.4mm solid rgba(245,245,247,.30);
+    position:absolute; inset:56mm; border:1.4mm solid {keyline};
     pointer-events:none;
   }}
   .wrap {{
@@ -1031,10 +1041,10 @@ BANNER = """<!doctype html>
   {ghost}<div class="art">{art}</div>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="{ground}" stop-opacity=".93"/>
-      <stop offset=".34" stop-color="{ground}" stop-opacity=".62"/>
-      <stop offset=".66" stop-color="{ground}" stop-opacity=".70"/>
-      <stop offset="1" stop-color="{ground}" stop-opacity=".93"/>
+      <stop offset="0" stop-color="{ground}" stop-opacity="{veil_b_end}"/>
+      <stop offset=".34" stop-color="{ground}" stop-opacity="{veil_b_mid1}"/>
+      <stop offset=".66" stop-color="{ground}" stop-opacity="{veil_b_mid2}"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity="{veil_b_end}"/>
     </linearGradient></defs>
     <rect width="100" height="10" fill="url(#v)"/>
   </svg></div>
@@ -1087,7 +1097,7 @@ XBANNER = """<!doctype html>
      A banner is seen against a wall, a window and a crowd, and an edge is what
      stops it dissolving into whichever one is behind it. */
   .frame {{
-    position:absolute; inset:46mm; border:1.2mm solid rgba(245,245,247,.30);
+    position:absolute; inset:46mm; border:1.2mm solid {keyline};
     pointer-events:none;
   }}
   .wrap {{
@@ -1099,7 +1109,7 @@ XBANNER = """<!doctype html>
      banner empty under them and the spacing read as an accident; distributed,
      the same air is divided into equal parts and reads as a measure. */
   .facts {{ flex:1; display:flex; flex-direction:column; justify-content:space-evenly; margin:0; }}
-  .fact {{ padding-top:12mm; border-top:.8mm solid rgba(245,245,247,.22); }}
+  .fact {{ padding-top:12mm; border-top:.8mm solid {rule_soft}; }}
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:132mm;
     line-height:.94; color:{ink}; letter-spacing:-.02em; margin:0;
@@ -1133,7 +1143,7 @@ XBANNER = """<!doctype html>
   }}
   .foot {{
     display:flex; align-items:flex-end; justify-content:space-between; gap:30mm;
-    padding-top:16mm; border-top:.8mm solid rgba(245,245,247,.22);
+    padding-top:16mm; border-top:.8mm solid {rule_soft};
   }}
   /* 22mm, not 34. At 34 the two marks measured 386mm and the foot needed
      386 + 30 of gap + 110 of code = 526mm inside a 420mm column, so the code
@@ -1152,10 +1162,10 @@ XBANNER = """<!doctype html>
   {ghost}<div class="art">{art}</div>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 100" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="{ground}" stop-opacity=".80"/>
-      <stop offset=".26" stop-color="{ground}" stop-opacity=".52"/>
-      <stop offset=".58" stop-color="{ground}" stop-opacity=".66"/>
-      <stop offset="1" stop-color="{ground}" stop-opacity=".97"/>
+      <stop offset="0" stop-color="{ground}" stop-opacity="{veil_x3}"/>
+      <stop offset=".26" stop-color="{ground}" stop-opacity="{veil_x1}"/>
+      <stop offset=".58" stop-color="{ground}" stop-opacity="{veil_x2}"/>
+      <stop offset="1" stop-color="{ground}" stop-opacity="{veil_x4}"/>
     </linearGradient></defs>
     <rect width="10" height="100" fill="url(#v)"/>
   </svg></div>
@@ -1228,17 +1238,17 @@ SOCIAL = """<!doctype html>
   .card.quiet .ghost {{ opacity:.20; }}
   .veil {{ position:absolute; inset:0;
     background:linear-gradient(180deg,
-      rgba(15,24,38,.62) 0%, rgba(15,24,38,.42) 34%,
-      rgba(15,24,38,.70) 72%, rgba(15,24,38,.96) 100%); }}
+      {scrim1} 0%, {scrim2} 34%,
+      {scrim3} 72%, {scrim4} 100%); }}
   .card.quiet .veil {{ background:linear-gradient(180deg,
-      rgba(15,24,38,.90) 0%, rgba(15,24,38,.86) 50%, rgba(15,24,38,.96) 100%); }}
+      {scrim5} 0%, {scrim6} 50%, {scrim4} 100%); }}
   /* A keyline inset from the edge. A carousel is shown on a white feed and a
      black one, and a dark square with no edge bleeds into the first and
      vanishes into the second; the rule gives every slide the same frame and
      makes the set read as a set. It is also the margin the type is set to, so
      it is doing two jobs. */
   .frame {{
-    position:absolute; inset:44px; border:1.5px solid rgba(245,245,247,.34);
+    position:absolute; inset:44px; border:1.5px solid {keyline};
     border-radius:6px; pointer-events:none;
   }}
   .pad {{ position:absolute; inset:44px; padding:52px 54px 48px; display:flex; flex-direction:column; }}
@@ -1273,7 +1283,7 @@ SOCIAL = """<!doctype html>
      that belongs to that slide. A single screenshot of any one of them still
      says where to go. */
   .foot {{
-    margin-top:auto; padding-top:22px; border-top:1px solid rgba(245,245,247,.20);
+    margin-top:auto; padding-top:22px; border-top:1px solid {rule_soft};
     display:flex; align-items:baseline; justify-content:space-between; gap:24px;
     font-family:"JetBrains Mono",monospace; font-size:21px; letter-spacing:.1em;
     text-transform:uppercase; color:{ink}; opacity:.6;
@@ -1301,11 +1311,11 @@ SOCIAL = """<!doctype html>
     letter-spacing:.14em; text-transform:uppercase; color:{hot};
     border:1.5px solid {hot}; border-radius:999px; padding:7px 16px;
   }}
-  .tag.plain {{ color:{ink}; border-color:rgba(245,245,247,.42); opacity:.8; }}
+  .tag.plain {{ color:{ink}; border-color:{rule_strong}; opacity:.8; }}
   .rows {{ margin-top:6px; }}
   .row {{
     display:grid; grid-template-columns:150px 1fr; column-gap:24px;
-    padding:20px 0 18px; border-top:1.5px solid rgba(245,245,247,.26);
+    padding:20px 0 18px; border-top:1.5px solid {rule_mid};
   }}
   .hour {{ font-family:"JetBrains Mono",monospace; font-size:28px; letter-spacing:.04em;
            color:{ink}; opacity:.72; margin:0; }}
@@ -1462,7 +1472,7 @@ BADGE = """<!doctype html>
   .ghost {{ background-image:url("{ghost_url}"); opacity:.16; }}
   .veil {{ position:absolute; inset:0;
     background:linear-gradient(180deg,
-      rgba(15,24,38,.72) 0%, rgba(15,24,38,.88) 46%, rgba(15,24,38,.97) 100%); }}
+      {scrim1} 0%, {scrim5} 46%, {scrim4} 100%); }}
   .pad {{ position:absolute; inset:0; padding:9mm 8mm 8mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; align-items:baseline; justify-content:space-between; gap:4mm; }}
   /* 9mm and unbreakable. At 11 the mark measured 53mm of the 74mm the card
@@ -1485,7 +1495,7 @@ BADGE = """<!doctype html>
     font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:{hot};
     border:.3mm solid {hot}; border-radius:1.6mm; padding:1.4mm 2.6mm; margin:0 0 4mm;
   }}
-  .role.plain {{ color:{ink}; border-color:rgba(245,245,247,.42); opacity:.7; }}
+  .role.plain {{ color:{ink}; border-color:{rule_strong}; opacity:.7; }}
   .name {{
     font-family:"Satoshi",sans-serif; font-weight:700; font-size:11mm;
     line-height:1.12; letter-spacing:-.016em; color:{ink}; margin:0;
@@ -1501,9 +1511,9 @@ BADGE = """<!doctype html>
   /* Ruled space instead of a printed name, for anyone registering on the day.
      The rule is what tells a person there is something to write. */
   .write {{ margin-top:6mm; }}
-  .write i {{ display:block; height:.35mm; background:rgba(245,245,247,.30); margin-bottom:9mm; }}
+  .write i {{ display:block; height:.35mm; background:{rule_mid}; margin-bottom:9mm; }}
   .foot {{
-    margin-top:auto; padding-top:4mm; border-top:.3mm solid rgba(245,245,247,.20);
+    margin-top:auto; padding-top:4mm; border-top:.3mm solid {rule_soft};
     display:flex; align-items:flex-end; justify-content:space-between; gap:4mm;
     font-family:"JetBrains Mono",monospace; font-size:2.7mm; letter-spacing:.1em;
     text-transform:uppercase; color:{ink}; opacity:.55;
@@ -1883,9 +1893,19 @@ SCHEMES = {
     "light": {
         "ground": "#cfe4f5", "ground2": "#b5d4ee", "band": "#b5d4ee",
         "art_ink": "#16324f", "ink": "#0d2137", "cool": "#456080",
-        "hot": "#c93a1c",
+            "hot": "#c93a1c",
         "veil1": ".20", "veil2": "0", "veil3": "0", "veil4": ".74", "veil5": ".93",
         "veilx": ".10", "ghost_alpha": ".45",
+        # The other four, turned over the same way: the veil almost gone where
+        # the picture is and back at the ends where type has to be read off it,
+        # and every rule and keyline in ink rather than in paper.
+        "veil_b_mid1": ".18", "veil_b_mid2": ".26", "veil_b_end": ".80",
+        "veil_x1": ".10", "veil_x2": ".20", "veil_x3": ".60", "veil_x4": ".88",
+        "scrim1": "rgba(207,228,245,.30)", "scrim2": "rgba(207,228,245,.10)",
+        "scrim3": "rgba(207,228,245,.34)", "scrim4": "rgba(203,224,242,.92)",
+        "scrim5": "rgba(203,224,242,.80)", "scrim6": "rgba(203,224,242,.72)",
+        "keyline": "rgba(13,33,55,.30)", "rule_soft": "rgba(13,33,55,.18)",
+        "rule_mid": "rgba(13,33,55,.26)", "rule_strong": "rgba(13,33,55,.36)",
     },
 }
 
