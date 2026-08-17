@@ -489,8 +489,9 @@ body {
    Both take the crop and position the photograph had, so the two register
    exactly on top of each other. */
 .hero.has-art::before {
-  filter: none;
-  opacity: 0.28;
+  background: var(--hero-photo) var(--hero-focus) / var(--hero-size) no-repeat;
+  filter: var(--hero-photo-filter);
+  opacity: var(--hero-photo-opacity);
 }
 /* A heavier scrim than the photograph needed. The art is far brighter than the
    picture it is made from — every glyph is near-white and there are a great
@@ -498,20 +499,7 @@ body {
    photograph. Measured with the hero's text hidden, the title was sitting at
    1.5:1 against the top of the field before this. */
 .hero.has-art::after {
-  background: linear-gradient(
-      to right,
-      rgba(15, 24, 38, 0.62) 0%,
-      rgba(15, 24, 38, 0.46) 34%,
-      rgba(15, 24, 38, 0.24) 55%,
-      rgba(15, 24, 38, 0.12) 72%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(13, 21, 34, 0.42) 0%,
-      rgba(13, 21, 34, 0.5) 30%,
-      rgba(12, 19, 31, 0.86) 58%,
-      rgba(11, 17, 28, 0.96) 100%
-    );
+  background: var(--hero-scrim);
 }
 /* ---- `flow`: the writing moves, the picture stays put ----
    The drifting field is not drawn as glyphs on the hero any more; it is the
@@ -576,12 +564,12 @@ body {
   inset: -12px;
   z-index: 0; /* above ::before, below the scrim — later sibling, same layer */
   pointer-events: none;
-  background: url("hero.jpg") var(--hero-focus) / var(--hero-size) no-repeat;
-  /* Opened up hard. The glyphs are hairlines and the photograph they are
-     filled with is a dark duotone, so at its own tones the strokes vanish into
-     the ground they are drawn on. The scrim above takes the excess back where
-     the type needs it. */
-  filter: brightness(2.8) saturate(0.9);
+  background: var(--hero-art-image) var(--hero-focus) / var(--hero-size) no-repeat;
+  /* Opened up hard on a dark ground: the glyphs are hairlines and the
+     photograph they are filled with is a dark duotone, so at its own tones the
+     strokes vanish into the ground they are drawn on. On paper the same layer
+     wants the opposite — a real ink, and no lift at all. */
+  filter: var(--hero-art-filter);
   -webkit-mask: url("hero-art.svg") var(--hero-focus) / var(--hero-size) no-repeat;
   mask: url("hero-art.svg") var(--hero-focus) / var(--hero-size) no-repeat;
 }
@@ -3349,23 +3337,91 @@ a.poster-shot:focus-visible {
   }
 }
 
-/* ===== THE HERO ON PAPER =====
-   The hero has always been the dark sheet, in both themes. It is the same
-   picture as the poster and the poster now prints either way round, so in
-   light mode the hero turns over with the page.
+/* ===== THE HERO, EITHER WAY ROUND =====
+   The hero has always been the dark sheet in both themes. It is the same
+   picture as the poster, the poster now prints either way round, and so does
+   this.
 
-   It is not the dark hero with its colours swapped, for the same reason the
-   light poster is not: the artwork draws light marks and lets the ground show
-   between them. Filling the glyphs with the photograph works on a dark field
-   and cannot work on a pale one — a photograph is never light enough at its
-   dark end to read as ink. So on paper the glyphs are filled with a flat ink
-   instead, the photograph stays behind them as a faint duotone, and the scrim
-   turns from a darkening to a lightening.
+   Every difference between the two is a variable, and the three layers above
+   read those variables. That is deliberate: the first version of this wrote a
+   second set of rules for light and then restated the dark ones inside a
+   `prefers-color-scheme: dark` block to undo them, missed one property in the
+   restatement, and a dark system set to Auto ended up wearing the paper
+   photograph on the dark ground. Nothing is said twice here, so nothing can be
+   half-unsaid.
 
-   Declared twice, as the rest of the theme is: once for the explicit choice
-   and once for the system default. */
-:root[data-theme="light"],
-:root:not([data-theme="dark"]) {
+   Two reductions of the photograph, not one. hero.jpg is dark, and no amount
+   of opacity or brightness turns a dark photograph into a picture on pale blue
+   — it turns it into a grey stain. The same reduction the sheet uses for its
+   ghost is run twice at build time, to two different ranges:
+
+     hero-paper-ink.jpg   down to the page's own ink, for the layer that fills
+                          the glyphs; the letters need a real ink to be drawn
+                          in or there is nothing to see
+     hero-paper.jpg       never far from the paper, for the layer behind them;
+                          any darker and it fills the gaps between the glyphs
+                          and the writing dissolves into it
+
+   which is the same division the dark hero gets for free from one file, an
+   opacity and a brightness filter. */
+:root {
+  --hero-photo: url("hero.jpg");
+  --hero-photo-opacity: 0.28;
+  --hero-photo-filter: none;
+  --hero-art-image: url("hero.jpg");
+  --hero-art-filter: brightness(2.8) saturate(0.9);
+  --hero-scrim: linear-gradient(
+      to right,
+      rgba(15, 24, 38, 0.62) 0%,
+      rgba(15, 24, 38, 0.46) 34%,
+      rgba(15, 24, 38, 0.24) 55%,
+      rgba(15, 24, 38, 0.12) 72%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(13, 21, 34, 0.42) 0%,
+      rgba(13, 21, 34, 0.5) 30%,
+      rgba(12, 19, 31, 0.86) 58%,
+      rgba(11, 17, 28, 0.96) 100%
+    );
+}
+
+/* On paper. Declared once and applied to both ways of asking for it: the
+   explicit choice, and the system default when nothing has been chosen. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --hero-bg: #cfe4f5;
+    --hero-bg2: #b9d6ee;
+    --hero-title: #0d2137;
+    --hero-body: #26405c;
+    --hero-mute: #456080;
+    --hero-rule: rgba(13, 33, 55, 0.16);
+    --hero-accent: #c93a1c;
+    --hero-art-ink: #16324f;
+    --hero-photo: url("hero-paper.jpg");
+    --hero-photo-opacity: 0.62;
+    --hero-art-image: url("hero-paper-ink.jpg");
+    --hero-art-filter: contrast(1.35) brightness(0.88);
+    /* Let go much sooner across the frame than the dark one does. There the
+       scrim can be heavy because the writing is bright against it; here the
+       writing *is* the dark thing, and a heavy scrim rubs it out. */
+    --hero-scrim: linear-gradient(
+        to right,
+        rgba(207, 228, 245, 0.62) 0%,
+        rgba(207, 228, 245, 0.34) 30%,
+        rgba(207, 228, 245, 0.08) 48%,
+        transparent 62%
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(207, 228, 245, 0.14) 0%,
+        rgba(207, 228, 245, 0.2) 34%,
+        rgba(203, 224, 242, 0.6) 62%,
+        rgba(199, 220, 240, 0.86) 100%
+      );
+  }
+}
+:root[data-theme="light"] {
   --hero-bg: #cfe4f5;
   --hero-bg2: #b9d6ee;
   --hero-title: #0d2137;
@@ -3374,88 +3430,22 @@ a.poster-shot:focus-visible {
   --hero-rule: rgba(13, 33, 55, 0.16);
   --hero-accent: #c93a1c;
   --hero-art-ink: #16324f;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --hero-bg: #0f1826;
-    --hero-bg2: #16233a;
-    --hero-title: #f5f5f7;
-    --hero-body: #b9c7da;
-    --hero-mute: #93a2b8;
-    --hero-rule: rgba(255, 255, 255, 0.12);
-    --hero-accent: #ff8a75;
-    --hero-art-ink: #b9cbe4;
-  }
-}
-:root[data-theme="dark"] {
-  --hero-bg: #0f1826;
-  --hero-bg2: #16233a;
-  --hero-title: #f5f5f7;
-  --hero-body: #b9c7da;
-  --hero-mute: #93a2b8;
-  --hero-rule: rgba(255, 255, 255, 0.12);
-  --hero-accent: #ff8a75;
-  --hero-art-ink: #b9cbe4;
-}
-
-/* The three layers, on paper. Grouped under one selector per theme state so
-   the whole treatment moves together rather than a filter here and an opacity
-   there. */
-:root[data-theme="light"] .hero.has-art::before,
-:root:not([data-theme="dark"]) .hero.has-art::before {
-  /* A different file, not the same file lightened. hero.jpg is a dark
-     photograph and no amount of opacity or brightness turns that into a
-     picture on pale blue — it turns it into a grey stain, which is what the
-     first attempt here produced: the campus measured a standard deviation of
-     16.7 across the right half against about 40 on the dark hero.
-
-     hero-paper.jpg is the same photograph reduced the way the sheet reduces
-     its own: luminance, stretched to its own range, mapped onto a ramp from
-     the page's ink to just above the page's ground. Dark where the building
-     is, pale where the sky is, in the colours this hero is actually made of. */
-  background: url("hero-paper.jpg") var(--hero-focus) / var(--hero-size) no-repeat;
-  opacity: 0.62;
-  filter: none;
-}
-:root[data-theme="light"] .hero-art,
-:root:not([data-theme="dark"]) .hero-art {
-  /* And the glyphs are filled with that same duotone rather than with a flat
-     ink, which is what the dark hero does with the photograph and the reason
-     the two agree: the formulas are already dense where the building is, so
-     filling them with the picture's own tones puts the drawing and the picture
-     on top of each other instead of merely near each other. */
-  background: url("hero-paper.jpg") var(--hero-focus) / var(--hero-size) no-repeat;
-  filter: contrast(1.25) brightness(0.92);
-  opacity: 1;
-}
-:root[data-theme="light"] .hero.has-art::after,
-:root:not([data-theme="dark"]) .hero.has-art::after {
-  /* The same two scrims the dark hero uses — weighted left for the column the
-     type is in, and to the foot for the info bar — painted in paper rather
-     than in ink. */
-  background: linear-gradient(
+  --hero-photo: url("hero-paper.jpg");
+  --hero-photo-opacity: 0.62;
+  --hero-art-image: url("hero-paper-ink.jpg");
+  --hero-art-filter: contrast(1.35) brightness(0.88);
+  --hero-scrim: linear-gradient(
       to right,
-      rgba(207, 228, 245, 0.6) 0%,
-      rgba(207, 228, 245, 0.4) 34%,
-      rgba(207, 228, 245, 0.18) 55%,
-      rgba(207, 228, 245, 0.06) 72%
+      rgba(207, 228, 245, 0.62) 0%,
+      rgba(207, 228, 245, 0.34) 30%,
+      rgba(207, 228, 245, 0.08) 48%,
+      transparent 62%
     ),
     linear-gradient(
       to bottom,
-      rgba(207, 228, 245, 0.22) 0%,
-      rgba(207, 228, 245, 0.28) 30%,
-      rgba(203, 224, 242, 0.72) 58%,
-      rgba(199, 220, 240, 0.9) 100%
+      rgba(207, 228, 245, 0.14) 0%,
+      rgba(207, 228, 245, 0.2) 34%,
+      rgba(203, 224, 242, 0.6) 62%,
+      rgba(199, 220, 240, 0.86) 100%
     );
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .hero.has-art::before {
-    opacity: 0.28;
-    filter: none;
-  }
-  :root:not([data-theme="light"]) .hero-art {
-    background: url("hero.jpg") var(--hero-focus) / var(--hero-size) no-repeat;
-    filter: brightness(2.8) saturate(0.9);
-    opacity: 1;
-  }
 }
