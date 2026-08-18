@@ -686,11 +686,20 @@
             {% if sheet.full %}</a>{% else %}</span>{% endif %}
             <figcaption>
               {% if sheet.label %}<span class="poster-spec">{{ t(sheet.label, sheet.label_ko) }}</span>{% endif %}
-              {% if sheet.full %}
-              <a class="poster-get" href="{{ sheet.full }}" target="_blank" rel="noopener">
-                {{ t(site.poster.download, site.poster.download_ko) }}
-              </a>
-              {% endif %}
+              <span class="poster-gets">
+                {% if sheet.small %}
+                <a class="poster-get" href="{{ sheet.small | asset }}" download>
+                  {{ t(site.poster.download_small, site.poster.download_small_ko) }}
+                  <b>{{ sheet.small | weight }}</b>
+                </a>
+                {% endif %}
+                {% if sheet.full %}
+                <a class="poster-get" href="{{ sheet.full | asset }}" download>
+                  {{ t(site.poster.download, site.poster.download_ko) }}
+                  <b>{{ sheet.full | weight }}</b>
+                </a>
+                {% endif %}
+              </span>
             </figcaption>
           </figure>
           {% endfor %}
@@ -870,6 +879,31 @@
       </div>
     </dialog>
 
+    {% if site.hosts %}
+
+    <!-- ===== HOSTS =====
+         Last on the page, and a section rather than a strip in the footer. In
+         the footer they were chrome — 20px tall, dimmed, recoloured to one flat
+         tone — which is how you show a mark you are obliged to show. Given a
+         band of their own and their own colours they read as the institutions
+         behind the thing. -->
+    <section id="hosts" class="band">
+      <div class="wrap">
+        <h2>{{ t(site.hosts.title, site.hosts.title_ko) }}</h2>
+        {% if site.hosts.note %}
+        <p class="sub">{{ t(site.hosts.note, site.hosts.note_ko) }}</p>
+        {% endif %}
+        <div class="hosts-row">
+          {% for h in site.hosts.logos %}
+          <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
+            <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
     <footer>
       <div class="wrap footer-row">
         <div class="footer-text">
@@ -878,15 +912,6 @@
           {{ organizers.contact.name }} ·
           <a href="mailto:{{ organizers.contact.email }}">{{ organizers.contact.email }}</a>
         </div>
-        {% if site.hosts %}
-        <div class="hosts-row">
-          {% for h in site.hosts.logos %}
-          <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
-            <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
-          </a>
-          {% endfor %}
-        </div>
-        {% endif %}
       </div>
     </footer>
 

@@ -101,6 +101,15 @@ nav:
 # Prefer SVG, or a PNG at least 200px tall with a transparent background.
 # Delete this whole block and the strip disappears.
 hosts:
+  # Shown as a section of their own at the foot of the page rather than as a
+  # strip in the footer. In the footer they were chrome, at 20px and dimmed;
+  # here they are the last thing the page says, and they are shown as their
+  # owners drew them — a mark greyed out reads as a placeholder for a sponsor
+  # rather than as one.
+  title: Hosts
+  title_ko: 주최
+  note: With the support of
+  note_ko: 다음 기관의 지원으로 열립니다
   label: Host and participating institutions
   logos:
     - { name: KAIST, file: kaist.png, url: https://www.kaist.ac.kr/en/ }
@@ -212,12 +221,19 @@ poster:
   subtitle_ko: 인쇄해서 붙이고 나눠주세요.
   # Two sheets, the same poster printed either way round. `sheets` is what the
   # page shows; the first is the one that leads.
+  # Two downloads under each sheet, not one. The full-size file is 16MB, and a
+  # poster is often wanted as an attachment — on a travel claim, in a mail to a
+  # department — where 16MB is the difference between sending it and not. The
+  # smaller file is the one already on the page: 1200px, which still reads and
+  # still scans.
   sheets:
     - image: poster-2026.png
+      small: poster-2026.png
       full: poster-2026-large.png
       label: Dark
       label_ko: 어두운 판
     - image: poster-2026-light.png
+      small: poster-2026-light.png
       full: poster-2026-light-large.png
       label: Light
       label_ko: 밝은 판
@@ -230,8 +246,10 @@ poster:
   # on the page, next to the size, before anyone takes a copy away.
   caption: A2 · 420 × 594 mm · details are tentative
   caption_ko: A2 · 420 × 594 mm · 세부 사항은 변경될 수 있습니다
-  download: Open full size
-  download_ko: 원본 크기로 보기
+  download_small: Download
+  download_small_ko: 내려받기
+  download: Full size
+  download_ko: 원본 크기
 
 # ─────────────────────────────────────────────────────────────
 # Redirect stubs, written on every build. GitHub Pages has no

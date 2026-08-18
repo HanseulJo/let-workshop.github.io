@@ -179,6 +179,22 @@ def outbound(html: str) -> str:
     return html.replace('<a href="http', '<a target="_blank" rel="noopener" href="http')
 
 
+def file_weight(name: str) -> str:
+    """How big a download is, said next to the link that starts it.
+
+    A reader deciding between two copies of the same poster is deciding on
+    size, and a link that does not say its size makes them find out by
+    fetching it. One decimal below 10MB, none above — the difference between
+    1.2 and 1.3MB matters when you are attaching it to something; the
+    difference between 16 and 16.4 does not.
+    """
+    path = STATIC / name
+    if not path.exists():
+        return ""
+    mb = path.stat().st_size / 1e6
+    return f"{mb:.1f} MB" if mb < 10 else f"{mb:.0f} MB"
+
+
 @functools.lru_cache(maxsize=None)
 def asset_url(name: str) -> str:
     """A static file's name with a stamp of its contents on the end.
@@ -349,10 +365,14 @@ def fill_defaults(bundle: dict) -> None:
     bundle["program"].setdefault("title_ko", None)
     bundle["site"].setdefault("hero_background", "art")
     # No poster block at all is a legitimate site; the section disappears.
+    if bundle["site"].get("hosts"):
+        for key in ("title", "title_ko", "note", "note_ko"):
+            bundle["site"]["hosts"].setdefault(key, None)
     bundle["site"].setdefault("poster", None)
     if bundle["site"]["poster"]:
         for key in ("title_ko", "subtitle", "subtitle_ko",
                     "title_note", "title_note_ko",
+                    "download_small", "download_small_ko",
                     "caption", "caption_ko", "download", "download_ko"):
             bundle["site"]["poster"].setdefault(key, None)
         for sheet in bundle["site"]["poster"].setdefault("sheets", []):
@@ -801,6 +821,7 @@ def main() -> int:
     env.globals["t"] = bilingual
     env.filters["asset"] = asset_url
     env.filters["shipped"] = lambda name: (STATIC / name).exists()
+    env.filters["weight"] = file_weight
 
     wanted = args.variants or list(site["variants"])
     unknown = [v for v in wanted if v not in site["variants"]]

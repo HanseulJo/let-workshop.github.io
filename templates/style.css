@@ -604,9 +604,38 @@ body {
       rgba(11, 17, 28, 0.95) 100%
     );
 }
+/* The words get their own ground, and the picture keeps its own.
+
+   A full-frame scrim can only trade one against the other: turn it up and the
+   type reads while the campus goes to a pale wash, turn it down and the campus
+   returns and the type sits in the middle of it. Both were asked for, and the
+   way to have both is to stop buying contrast across the whole frame and buy
+   it only where the words are.
+
+   So the text column stands on a translucent plate, and the scrim over the
+   rest of the picture can be light. The plate is the same device the sheet
+   uses behind its QR and the page uses behind every card, which is why it does
+   not read as a new idea — it reads as the hero finally doing what the rest of
+   the page does. */
 .hero > .wrap {
   position: relative;
   z-index: 3;
+}
+.hero > .wrap::before {
+  content: "";
+  position: absolute;
+  inset: -22px -26px -26px -26px;
+  z-index: -1;
+  border-radius: 18px;
+  background: var(--hero-plate);
+  /* No blur. It was tried, and blurring what is behind the plate is the one
+     thing that cannot be done here: the drawing under the words is the same
+     drawing as everywhere else, and softening two thirds of it to sharpen the
+     type trades the picture away in a different currency. The plate tints; the
+     picture stays in focus. */
+  -webkit-backdrop-filter: var(--hero-plate-blur);
+  backdrop-filter: var(--hero-plate-blur);
+  pointer-events: none;
 }
 /* soft-light rather than plain opacity: it lifts the ground where a formula
    passes instead of painting grey on top, so the glyphs read as the scrim
@@ -2596,28 +2625,40 @@ h2 .note {
 .hosts-row {
   display: flex;
   align-items: center;
-  gap: 26px;
+  flex-wrap: wrap;
+  gap: 44px;
+  margin-top: 26px;
 }
 .hosts-row img {
   /* POSTECH is a 6.9:1 wordmark, KAIST 3.5:1 — matching them on height alone
      makes the wider one dominate, so cap the width too and let object-fit
      scale down rather than squash. */
-  height: 20px;
-  max-width: 140px;
+  height: 40px;
+  max-width: 240px;
   width: auto;
   object-fit: contain;
   display: block;
-  filter: var(--logo-filter);
-  opacity: 0.55;
-  transition:
-    filter 0.15s,
-    opacity 0.15s;
-}
-/* Hovering shows the mark as its owner drew it — except on black, where the
-   dark artwork would vanish, so there the inversion has to stay. */
-.hosts-row a:hover img {
-  filter: var(--logo-filter-hover);
+  /* Each mark in the colours its owner drew it in. Recolouring them to one flat
+     tone and dimming them to 55% is what you do to a logo you are obliged to
+     carry; these two are the institutions the workshop belongs to, and a greyed
+     mark reads as a placeholder waiting for a real one.
+
+     On the dark ground the plate behind them does the work the inversion used
+     to: a light card under the artwork, so a mark drawn for white paper has
+     white paper. */
+  filter: none;
   opacity: 1;
+}
+.hosts-row a {
+  display: block;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: var(--logo-plate);
+  transition: transform 0.15s ease;
+}
+.hosts-row a:hover,
+.hosts-row a:focus-visible {
+  transform: translateY(-2px);
 }
 
 footer {
@@ -3306,15 +3347,25 @@ a.poster-shot:focus-visible {
      sideways. The negative margin and the matching padding let the row bleed
      to the screen edges while the first sheet still starts on the text
      margin — without it the strip looks inset and the swipe reads as a bug. */
+  /* A carousel that shows one sheet edge to edge gives no sign there is a
+     second one; the only way to find out is to try. 84% leaves the neighbour
+     showing at the margin, which is the whole of the affordance.
+
+     And the vertical padding is for the shadow. overflow-x: auto makes the
+     other axis a scroll container too, so a shadow that reaches 44px below its
+     card is cut off square at the bottom of the strip. The padding gives it
+     room and the negative margin gives the space back to the layout. */
   .poster-set {
     grid-auto-flow: column;
-    grid-auto-columns: 100%;
+    grid-auto-columns: 84%;
     grid-template-columns: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 14px;
     margin-inline: calc(var(--pad) * -1);
     padding-inline: var(--pad);
+    padding-block: 10px 34px;
+    margin-block: -10px -34px;
     scrollbar-width: none;
   }
   .poster-set::-webkit-scrollbar {
@@ -3322,6 +3373,11 @@ a.poster-shot:focus-visible {
   }
   .poster-set > .poster {
     scroll-snap-align: center;
+  }
+  /* The full width was for one sheet per screen; with the neighbour peeking,
+     the image should still fill its own slide. */
+  .poster-set > .poster .poster-shot {
+    max-width: 100%;
   }
 }
 
@@ -3353,6 +3409,9 @@ a.poster-shot:focus-visible {
    which is the same division the dark hero gets for free from one file, an
    opacity and a brightness filter. */
 :root {
+  --logo-plate: rgba(255, 255, 255, 0.92);
+  --hero-plate: linear-gradient(to bottom, rgba(9, 15, 25, 0.38), rgba(9, 15, 25, 0.54));
+  --hero-plate-blur: none;
   --hero-photo: url("hero.jpg");
   --hero-photo-opacity: 0.28;
   --hero-photo-filter: none;
@@ -3397,10 +3456,10 @@ a.poster-shot:focus-visible {
        being too dark rather than as the picture being held back. */
     linear-gradient(
       to bottom,
-      rgba(13, 21, 34, 0.3) 0%,
-      rgba(13, 21, 34, 0.38) 30%,
-      rgba(12, 19, 31, 0.62) 58%,
-      rgba(11, 17, 28, 0.74) 100%
+      rgba(13, 21, 34, 0.14) 0%,
+      rgba(13, 21, 34, 0.2) 30%,
+      rgba(12, 19, 31, 0.34) 58%,
+      rgba(11, 17, 28, 0.44) 100%
     );
 }
 
@@ -3420,7 +3479,17 @@ a.poster-shot:focus-visible {
     --hero-rule: rgba(13, 33, 55, 0.16);
     --hero-accent: #c93a1c;
     --hero-art-ink: #16324f;
-    --hero-photo: url("hero-paper.jpg");
+    --logo-plate: rgba(255, 255, 255, 0.78);
+  --hero-plate: linear-gradient(to bottom, rgba(238, 246, 253, 0.56), rgba(228, 240, 251, 0.7));
+  --hero-plate-blur: none;
+    --hero-plate: linear-gradient(to bottom, rgba(238, 246, 253, 0.56), rgba(228, 240, 251, 0.7));
+    --hero-plate-blur: none;
+    --logo-plate: rgba(255, 255, 255, 0.78);
+  --hero-plate: linear-gradient(to bottom, rgba(238, 246, 253, 0.56), rgba(228, 240, 251, 0.7));
+  --hero-plate-blur: none;
+    --hero-plate: linear-gradient(to bottom, rgba(238, 246, 253, 0.56), rgba(228, 240, 251, 0.7));
+    --hero-plate-blur: none;
+  --hero-photo: url("hero-paper.jpg");
     --hero-photo-opacity: 0.62;
     --hero-art-image: url("hero-paper-ink.jpg");
     /* The density is the original contrast; what changed is the floor
@@ -3443,19 +3512,19 @@ a.poster-shot:focus-visible {
        spend contrast on, and the wash is the only thing buying it. */
     --hero-scrim-narrow: linear-gradient(
         to bottom,
-        rgba(232, 243, 252, 0.84) 0%,
-        rgba(222, 237, 250, 0.86) 26%,
-        rgba(203, 226, 244, 0.88) 52%,
-        rgba(184, 211, 236, 0.9) 100%
+        rgba(232, 243, 252, 0.3) 0%,
+        rgba(222, 237, 250, 0.34) 26%,
+        rgba(203, 226, 244, 0.4) 52%,
+        rgba(184, 211, 236, 0.46) 100%
       );
     --hero-scrim-narrow-art: linear-gradient(
         to bottom,
-        rgba(232, 243, 252, 0.86) 0%,
-        rgba(222, 237, 250, 0.88) 26%,
-        rgba(203, 226, 244, 0.9) 52%,
-        rgba(184, 211, 236, 0.92) 100%
+        rgba(232, 243, 252, 0.34) 0%,
+        rgba(222, 237, 250, 0.38) 26%,
+        rgba(203, 226, 244, 0.44) 52%,
+        rgba(184, 211, 236, 0.5) 100%
       );
-    --hero-art-opacity-narrow: 0.32;
+    --hero-art-opacity-narrow: 0.6;
     --hero-art-filter-narrow: contrast(1.15) brightness(1.02) url(#ink-floor);
     /* Let go much sooner across the frame than the dark one does. There the
        scrim can be heavy because the writing is bright against it; here the
@@ -3469,10 +3538,10 @@ a.poster-shot:focus-visible {
       ),
       linear-gradient(
         to bottom,
-        rgba(207, 228, 245, 0.06) 0%,
-        rgba(190, 214, 236, 0.24) 40%,
-        rgba(152, 186, 219, 0.56) 66%,
-        rgba(126, 166, 205, 0.74) 100%
+        rgba(207, 228, 245, 0.04) 0%,
+        rgba(190, 214, 236, 0.14) 40%,
+        rgba(160, 192, 222, 0.3) 66%,
+        rgba(136, 174, 211, 0.42) 100%
       );
   }
 }
@@ -3489,6 +3558,9 @@ a.poster-shot:focus-visible {
   --hero-rule: rgba(13, 33, 55, 0.16);
   --hero-accent: #c93a1c;
   --hero-art-ink: #16324f;
+  --logo-plate: rgba(255, 255, 255, 0.78);
+  --hero-plate: linear-gradient(to bottom, rgba(238, 246, 253, 0.56), rgba(228, 240, 251, 0.7));
+  --hero-plate-blur: none;
   --hero-photo: url("hero-paper.jpg");
   --hero-photo-opacity: 0.62;
   --hero-art-image: url("hero-paper-ink.jpg");
@@ -3508,19 +3580,19 @@ a.poster-shot:focus-visible {
   --hero-pill-bg: rgba(240, 247, 253, 0.72);
   --hero-scrim-narrow: linear-gradient(
       to bottom,
-      rgba(232, 243, 252, 0.84) 0%,
-      rgba(222, 237, 250, 0.86) 26%,
-      rgba(203, 226, 244, 0.88) 52%,
-      rgba(184, 211, 236, 0.9) 100%
+      rgba(232, 243, 252, 0.3) 0%,
+      rgba(222, 237, 250, 0.34) 26%,
+      rgba(203, 226, 244, 0.4) 52%,
+      rgba(184, 211, 236, 0.46) 100%
     );
   --hero-scrim-narrow-art: linear-gradient(
       to bottom,
-      rgba(232, 243, 252, 0.86) 0%,
-      rgba(222, 237, 250, 0.88) 26%,
-      rgba(203, 226, 244, 0.9) 52%,
-      rgba(184, 211, 236, 0.92) 100%
+      rgba(232, 243, 252, 0.34) 0%,
+      rgba(222, 237, 250, 0.38) 26%,
+      rgba(203, 226, 244, 0.44) 52%,
+      rgba(184, 211, 236, 0.5) 100%
     );
-  --hero-art-opacity-narrow: 0.32;
+  --hero-art-opacity-narrow: 0.6;
   --hero-art-filter-narrow: contrast(1.15) brightness(1.02) url(#ink-floor);
   --hero-scrim: linear-gradient(
       to right,
@@ -3531,9 +3603,9 @@ a.poster-shot:focus-visible {
     ),
     linear-gradient(
       to bottom,
-      rgba(207, 228, 245, 0.06) 0%,
-      rgba(190, 214, 236, 0.24) 40%,
-      rgba(152, 186, 219, 0.56) 66%,
-      rgba(126, 166, 205, 0.74) 100%
+      rgba(207, 228, 245, 0.04) 0%,
+      rgba(190, 214, 236, 0.14) 40%,
+      rgba(160, 192, 222, 0.3) 66%,
+      rgba(136, 174, 211, 0.42) 100%
     );
 }
