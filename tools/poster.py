@@ -754,7 +754,7 @@ FESTIVAL = """<!doctype html>
      begins. The rails are as large as their longest line lets them be, and
      that line is the one that decides. */
   .rail span {{
-    display:block; max-inline-size:228mm;
+    display:inline-block; max-inline-size:228mm; vertical-align:baseline;
     font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:6mm;
     font-weight:900; letter-spacing:-.014em; line-height:1.22; color:{hot};
   }}

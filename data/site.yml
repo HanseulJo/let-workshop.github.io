@@ -224,12 +224,12 @@ poster:
   # still scans.
   sheets:
     - image: poster-2026.png
-      small: poster-2026.png
+      small: poster-2026-small.jpg
       full: poster-2026-large.png
       label: Dark
       label_ko: 어두운 판
     - image: poster-2026-light.png
-      small: poster-2026-light.png
+      small: poster-2026-light-small.jpg
       full: poster-2026-light-large.png
       label: Light
       label_ko: 밝은 판

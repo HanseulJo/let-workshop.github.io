@@ -2528,6 +2528,7 @@ h2 .note {
 .room-name {
   display: block;
   font-family: var(--display);
+  font-size: 0.94rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--ink);
@@ -2535,7 +2536,7 @@ h2 .note {
 .room-detail {
   display: block;
   font-family: var(--mono);
-  font-size: 0.76rem;
+  font-size: 0.7rem;
   color: var(--muted);
   margin-top: 4px;
   font-variant-numeric: tabular-nums;
@@ -2543,19 +2544,18 @@ h2 .note {
 .venue-info address {
   font-style: normal;
   color: var(--muted);
-  font-size: 0.9em;
-  margin: 14px 0 0;
-  line-height: 1.55;
+  font-size: 0.82rem;
+  margin: 12px 0 0;
+  line-height: 1.5;
 }
 .venue-info address span {
   color: var(--muted);
 }
 .venue-travel {
   list-style: none;
-  margin: 14px 0 0;
+  margin: 0;
   padding: 0;
   color: var(--prose);
-  font-size: 0.94em;
 }
 .venue-travel li {
   padding: 6px 0;
@@ -2721,6 +2721,19 @@ footer a {
 }
 
 @media (max-width: 780px) {
+  /* The hosts stack rather than sit in a row, and larger for it. Side by side
+     on a phone each mark got half of a 350px column and came out smaller than
+     the body text beside it; one per line, they are the size a mark should be
+     when it is the last thing the page says. */
+  .hosts-row {
+    flex-direction: column;
+    gap: 26px;
+  }
+  .hosts-row img {
+    height: 54px;
+    max-width: 100%;
+  }
+
   .tabs {
     display: none;
   }
@@ -3122,95 +3135,62 @@ footer a {
 }
 
 
-/* ===== WHERE TO STAY =====
-   Under how-to-get-here, in the same card: the two questions arrive together
-   and the answer to the second depends on the first. The venue's own rooms are
-   set apart because they are the only ones we control; the rest is a list. */
-.stay {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-}
-/* One heading for each list in the card. The transport rows used to begin
-   straight under the address with nothing to say what they were, so the card
-   read as one undifferentiated run of facts.
-
-   The card's vertical rhythm is one gap, not three. It had grown 18px between
-   blocks, 20 plus 16 before the accommodation, and rows padded 10, 7 and 5 —
-   spacing that arrived a piece at a time as the card did. Every gap is 14px
-   between blocks and every row is padded the same, which takes 90px out of a
-   card whose content did not change. */
+/* One heading per group in the card, all in the same voice: the mono, tracked,
+   in the accent. Without them the groups ran together as one column of facts;
+   as plain headings they were larger than the facts they head. */
 .venue-h {
-  margin: 14px 0 7px;
+  margin: 16px 0 8px;
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
 }
-.venue-h + .venue-travel,
-.venue-h + .stay-first {
-  margin-top: 0;
-}
-/* The accommodation block already opens with its own rule and padding; the
-   heading's top margin then landed on top of that and made one gap in the card
-   half again as wide as every other. */
 .stay .venue-h {
   margin-top: 0;
 }
-.stay-first {
-  margin: 0 0 7px;
-  font-size: 0.9rem;
+
+/* ===== THE TRAVEL CARD =====
+   One rhythm for the whole card instead of four. It had grown a section at a
+   time — rooms, address, transport, beds — and each arrived with its own type
+   sizes and its own spacing, so the card read as a pile rather than a list.
+
+   Every group is now the same shape: a mono label in the accent, then rows of
+   one fact each, a bold term on the left and its particular ranged right. The
+   card is one column of that shape repeated, which is what makes it scannable
+   and what took a third of its height out. */
+.stay {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.stay-first,
+.stay-note {
+  margin: 0 0 8px;
+  font-size: 0.84rem;
   line-height: 1.5;
-  color: var(--prose);
+  color: var(--muted);
 }
 .stay-first b {
   color: var(--ink);
   font-weight: 600;
-}
-/* Korean breaks between any two syllables unless it is told not to, so a
-   narrow column splits words down the middle — 신청 / 순서 rather than a break
-   at the space. keep-all breaks at spaces, the way the Latin text already
-   does. */
-.t-ko,
-[lang="ko"] {
-  word-break: keep-all;
-}
-.stay-note {
-  margin: 0 0 7px;
-  font-size: 0.82rem;
-  line-height: 1.5;
-  color: var(--muted);
 }
 .stay-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-/* Name left, journey right, on one rule-free row each: it is a two-column fact
-   and the eye should be able to run down either column on its own. */
-/* Two lines per place: the name with how long it takes by car, and the bus
-   under it. A table was the other option and it is the wrong shape here — the
-   card is one column wide on a phone, and three columns of two-word cells wrap
-   into something harder to read than the sentence it replaced. */
 .stay-list li {
-  padding: 6px 0;
-  font-size: 0.88rem;
+  padding: 5px 0;
+  border-top: 1px solid var(--wash);
 }
 .stay-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-}
-.stay-transit {
-  display: block;
-  margin-top: 2px;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  line-height: 1.5;
-  color: var(--muted);
+  font-size: 0.86rem;
 }
 .stay-list b,
 .stay-list a {
@@ -3224,12 +3204,21 @@ footer a {
   color: var(--accent);
   border-bottom-color: currentColor;
 }
-.stay-head span {
+.stay-head span,
+.stay-transit {
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   color: var(--muted);
-  text-align: right;
   white-space: nowrap;
+}
+.stay-head span {
+  text-align: right;
+}
+.stay-transit {
+  display: block;
+  margin-top: 1px;
+  white-space: normal;
+  line-height: 1.5;
 }
 
 /* A qualifier beside a heading, not inside it: the same baseline so it reads
@@ -3310,6 +3299,14 @@ a.poster-shot:focus-visible {
 .poster-spec {
   font-family: var(--mono);
   letter-spacing: 0.04em;
+}
+.poster-gets {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.poster-sep {
+  color: var(--line);
 }
 .poster-get {
   font-weight: 600;
