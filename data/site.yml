@@ -246,8 +246,8 @@ poster:
   # on the page, next to the size, before anyone takes a copy away.
   caption: A2 · 420 × 594 mm · details are tentative
   caption_ko: A2 · 420 × 594 mm · 세부 사항은 변경될 수 있습니다
-  download_small: Download
-  download_small_ko: 내려받기
+  download_small: Small
+  download_small_ko: 작은 크기
   download: Full size
   download_ko: 원본 크기
 

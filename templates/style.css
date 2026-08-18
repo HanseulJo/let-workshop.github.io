@@ -3362,8 +3362,14 @@ a.poster-shot:focus-visible {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 14px;
-    margin-inline: calc(var(--pad) * -1);
-    padding-inline: var(--pad);
+    /* Room for the shadow on every side, given back to the layout by the
+       matching negative margins. --pad was used here and is not defined in
+       this scope, so both declarations were invalid and the strip had no inline
+       padding at all — which is why a shadow reaching 44px sideways was cut off
+       square at the first card's edge. A literal, because the number this needs
+       is the shadow's reach and nothing else. */
+    padding-inline: 30px;
+    margin-inline: -30px;
     padding-block: 10px 34px;
     margin-block: -10px -34px;
     scrollbar-width: none;
