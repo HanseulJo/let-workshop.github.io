@@ -2726,7 +2726,10 @@ footer a {
      it, KAIST is 3.5:1 and comes out taller, which is right. */
   .hosts-row {
     flex-direction: column;
-    align-items: stretch;
+    /* centre, not stretch: stretch makes each link fill the column and
+       leaves the mark at the start of it, so a row that is centred by
+       its own rule comes out left-aligned the moment it is a column. */
+    align-items: center;
     gap: 30px;
   }
   .hosts-row img {
