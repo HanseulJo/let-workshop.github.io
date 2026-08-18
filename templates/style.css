@@ -2908,26 +2908,14 @@ footer a {
      text, so it reaches its dark end sooner. Measured at 390px, this is what
      takes the theme line from 2.0:1 to a pass. */
   .hero::after {
-    background: linear-gradient(
-      to bottom,
-      rgba(15, 24, 38, 0.42) 0%,
-      rgba(15, 24, 38, 0.58) 26%,
-      rgba(13, 20, 33, 0.85) 52%,
-      rgba(11, 17, 28, 0.95) 100%
-    );
+    background: var(--hero-scrim-narrow);
   }
   /* Said again for the art hero rather than inherited: its own rule outranks
      the one above — two classes and a pseudo-element against one — so without
      this the phone would quietly fall back to the desktop pair, whose
      horizontal half does nothing here. */
   .hero.has-art::after {
-    background: linear-gradient(
-      to bottom,
-      rgba(13, 21, 34, 0.56) 0%,
-      rgba(13, 21, 34, 0.66) 26%,
-      rgba(12, 19, 31, 0.88) 52%,
-      rgba(11, 17, 28, 0.96) 100%
-    );
+    background: var(--hero-scrim-narrow-art);
   }
   /* The formulas run further down than on a laptop, not less far. The mask is a
      percentage of the hero, and a phone's hero is a much taller box holding the
@@ -2944,8 +2932,8 @@ footer a {
     filter: contrast(1.12);
   }
   .hero-art {
-    opacity: 0.5;
-    filter: brightness(2.2) saturate(0.9);
+    opacity: var(--hero-art-opacity-narrow);
+    filter: var(--hero-art-filter-narrow);
   }
   /* rem, not em. As an em it was measured against the title, which the clamp
      holds at its 46px floor on a phone — so 0.46em came out at 21px against the
@@ -3375,6 +3363,27 @@ a.poster-shot:focus-visible {
      for exactly one of the two heroes: on paper it put a dark lozenge on a
      pale sheet and then set dark type on top of it. */
   --hero-pill-bg: rgba(11, 18, 30, 0.55);
+  /* The narrow-screen scrims. They were written into the phone's media query
+     as navy literals, which meant the light hero got the dark one: a media
+     query is not a theme, and a colour written inside one belongs to neither.
+     On a phone in daylight that is the whole page — dark type on a dark ground,
+     with the theme switch appearing to do nothing. */
+  --hero-scrim-narrow: linear-gradient(
+      to bottom,
+      rgba(15, 24, 38, 0.42) 0%,
+      rgba(15, 24, 38, 0.58) 26%,
+      rgba(13, 20, 33, 0.72) 52%,
+      rgba(11, 17, 28, 0.8) 100%
+    );
+  --hero-scrim-narrow-art: linear-gradient(
+      to bottom,
+      rgba(13, 21, 34, 0.5) 0%,
+      rgba(13, 21, 34, 0.6) 26%,
+      rgba(12, 19, 31, 0.74) 52%,
+      rgba(11, 17, 28, 0.82) 100%
+    );
+  --hero-art-opacity-narrow: 0.5;
+  --hero-art-filter-narrow: brightness(2.2) saturate(0.9);
   --hero-scrim: linear-gradient(
       to right,
       rgba(15, 24, 38, 0.62) 0%,
@@ -3428,6 +3437,26 @@ a.poster-shot:focus-visible {
     holds 929 marks in one and 2408 in the other. */
     --hero-art-mask: url("hero-art-light.svg");
     --hero-pill-bg: rgba(240, 247, 253, 0.72);
+    /* On paper the narrow scrim is a pale wash, not a dark one, and it has to
+       be heavier than the desktop pair rather than lighter: a phone runs every
+       line the full width, so there is no right-hand half of the frame to
+       spend contrast on, and the wash is the only thing buying it. */
+    --hero-scrim-narrow: linear-gradient(
+        to bottom,
+        rgba(232, 243, 252, 0.84) 0%,
+        rgba(222, 237, 250, 0.86) 26%,
+        rgba(203, 226, 244, 0.88) 52%,
+        rgba(184, 211, 236, 0.9) 100%
+      );
+    --hero-scrim-narrow-art: linear-gradient(
+        to bottom,
+        rgba(232, 243, 252, 0.86) 0%,
+        rgba(222, 237, 250, 0.88) 26%,
+        rgba(203, 226, 244, 0.9) 52%,
+        rgba(184, 211, 236, 0.92) 100%
+      );
+    --hero-art-opacity-narrow: 0.32;
+    --hero-art-filter-narrow: contrast(1.15) brightness(1.02) url(#ink-floor);
     /* Let go much sooner across the frame than the dark one does. There the
        scrim can be heavy because the writing is bright against it; here the
        writing *is* the dark thing, and a heavy scrim rubs it out. */
@@ -3477,6 +3506,22 @@ a.poster-shot:focus-visible {
   holds 929 marks in one and 2408 in the other. */
   --hero-art-mask: url("hero-art-light.svg");
   --hero-pill-bg: rgba(240, 247, 253, 0.72);
+  --hero-scrim-narrow: linear-gradient(
+      to bottom,
+      rgba(232, 243, 252, 0.84) 0%,
+      rgba(222, 237, 250, 0.86) 26%,
+      rgba(203, 226, 244, 0.88) 52%,
+      rgba(184, 211, 236, 0.9) 100%
+    );
+  --hero-scrim-narrow-art: linear-gradient(
+      to bottom,
+      rgba(232, 243, 252, 0.86) 0%,
+      rgba(222, 237, 250, 0.88) 26%,
+      rgba(203, 226, 244, 0.9) 52%,
+      rgba(184, 211, 236, 0.92) 100%
+    );
+  --hero-art-opacity-narrow: 0.32;
+  --hero-art-filter-narrow: contrast(1.15) brightness(1.02) url(#ink-floor);
   --hero-scrim: linear-gradient(
       to right,
       rgba(207, 228, 245, 0.62) 0%,
