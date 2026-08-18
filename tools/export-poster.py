@@ -30,6 +30,7 @@ Needs Chrome and Pillow. Local tool only — the site build does not run this.
 """
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -42,14 +43,38 @@ from pathlib import Path
 # and a substitution looks like a poster right up until someone reads it.
 FACES = ("Satoshi", "JetBrains Mono", "Jost", "Inter Tight")
 
-FONT_PROBE = """<script>
-document.fonts.ready.then(() => {
+# And what it must be set inside. .wrap carries the sheet's margin as padding,
+# so nothing laid out within it may reach past its content box. The decorative
+# layers are siblings of .wrap and bleed on purpose, which is why the check
+# asks .wrap about its own descendants rather than the sheet about everything.
+PROBE = """<script>
+document.fonts.ready.then(() => setTimeout(() => {
   const got = new Set([...document.fonts].filter(f => f.status === 'loaded')
                                          .map(f => f.family));
+  const mm = 96 / 25.4, wrap = document.querySelector('.wrap');
+  const cs = getComputedStyle(wrap), b = wrap.getBoundingClientRect();
+  const pad = s => parseFloat(cs['padding' + s]);
+  const box = { l: b.left + pad('Left'), r: b.right - pad('Right'),
+                t: b.top + pad('Top'), o: b.bottom - pad('Bottom') };
+  const over = [];
+  wrap.querySelectorAll('*').forEach(e => {
+    // Only boxes that are laid out. A display:inline box is as tall as its
+    // line, which is taller than the letters in it — the 2026 in the mark
+    // reported 7.1mm over the top edge with every stroke of it well inside.
+    // Half-leading is not ink.
+    if (getComputedStyle(e).display === 'inline') return;
+    const r = e.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) return;
+    const d = Math.max(box.l - r.left, r.right - box.r,
+                       box.t - r.top, r.bottom - box.o) / mm;
+    if (d > 0.5) over.push(
+      (e.className || e.tagName).toString().split(' ')[0] + ' by ' + d.toFixed(1) + 'mm');
+  });
   const p = document.createElement('pre');
-  p.id = '__fonts'; p.textContent = [...got].join('|');
+  p.id = '__probe';
+  p.textContent = JSON.stringify({ fonts: [...got], over: over.slice(0, 6) });
   document.body.appendChild(p);
-});
+}, 400));
 </script>"""
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
@@ -135,18 +160,24 @@ def main():
             folder.mkdir(parents=True, exist_ok=True)
             url = f"http://localhost:{args.port}/{name}.html"
 
-            probe = work / f"{name}--fonts.html"
+            probe = work / f"{name}--probe.html"
             probe.write_text((work / f"{name}.html").read_text(encoding="utf-8")
-                             + FONT_PROBE, encoding="utf-8")
+                             + PROBE, encoding="utf-8")
             dom = run(CHROME, "--headless=new", "--disable-gpu",
                       "--window-size=1610,2268", "--virtual-time-budget=40000",
                       "--dump-dom", f"http://localhost:{args.port}/{probe.name}")
             probe.unlink()
-            m = re.search(r'<pre id="__fonts">(.*?)</pre>', dom, re.S)
-            loaded = set(m.group(1).split("|")) if m else set()
-            if not set(FACES) <= loaded:
+            m = re.search(r'<pre id="__probe">(.*?)</pre>', dom, re.S)
+            if not m:
+                sys.exit(f"  {name}: the probe did not report")
+            said = json.loads(m.group(1).replace("&quot;", '"').replace("&amp;", "&"))
+            missing = set(FACES) - set(said["fonts"])
+            if missing:
                 sys.exit(f"  {name} fell back to system type — did not load: "
-                         + ", ".join(sorted(set(FACES) - loaded)))
+                         + ", ".join(sorted(missing)))
+            if said["over"]:
+                sys.exit(f"  {name} runs past the sheet's margin:\n    "
+                         + "\n    ".join(said["over"]))
 
             run(CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
                 f"--print-to-pdf={folder / (stem + '.pdf')}",

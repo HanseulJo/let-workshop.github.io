@@ -703,7 +703,21 @@ FESTIVAL = """<!doctype html>
      the thing on the left they are actually read against is the date, which
      starts 66mm lower. Measured on the sheet: title bottom 61.3, date top
      403.9, so the midpoint is 232.6 and the rails were sitting at 199.8. */
-  .rails {{ display:flex; gap:4.5mm; margin:auto 0; position:relative; top:33mm; }}
+  /* Out of the column, not in it. The rails were a flex item with auto
+     margins, which centres them while there is room and pushes everything
+     below them once there is not — and past a certain rail length there is
+     not. That is what ate the sheet's bottom margin: 20mm on three sides and
+     7mm on the fourth, with the foot all but touching the trim, and nothing
+     said so because a poster that overflows still prints.
+
+     Taken out of the flow it cannot push anything, and its size is free to be
+     whatever the longest line needs. 223mm is where the auto margins were
+     putting it: centred in the band between the title and the panel, which
+     measured 52mm to 328mm, and then the same 33mm down. */
+  .rails {{
+    position:absolute; left:20mm; right:20mm; top:223mm;
+    transform:translateY(-50%); display:flex; gap:4.5mm;
+  }}
   .rail {{
     writing-mode:vertical-rl; transform:rotate(180deg);
     font-family:"Satoshi","Helvetica Neue",sans-serif; color:{hot};
@@ -809,8 +823,10 @@ FESTIVAL = """<!doctype html>
   /* Including its label. The size on .rail em is the display size the left
      edge is set at, and it reaches here too — this rail is one of the rails.
      The whole line is small, which is the point of it. */
-  /* The programme, against one right edge. */
-  .panel {{ margin-top:0; }}
+  /* The programme, against one right edge. It sits on the bottom padding: the
+     rails used to hold it there by filling the space above it, and they no
+     longer occupy any. */
+  .panel {{ margin-top:auto; }}
   .bill {{ margin:0 0 0 auto; text-align:right; }}
 
   /* The rule and the space between sessions live on the label, because a

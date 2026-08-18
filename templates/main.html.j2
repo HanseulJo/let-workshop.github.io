@@ -624,27 +624,30 @@
             {% if venue.getting_here_title %}
             <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}</h4>
             {% endif %}
-            <!-- Each journey as the stops it passes through: a dot per stop,
-                 a line between them, and the bus riding on the line. It is the
-                 shape a maps app draws, and it is drawn down the page rather
-                 than across it because the card is 314px wide on a phone and
-                 "Pohang Terminal (intercity)" does not fit under a dot in a
-                 third of that. -->
+            <!-- Each journey down the page with the rail between two
+                 columns: times on the left, stops and buses on the right. It
+                 is the shape a maps app uses for a route it has opened, and it
+                 is the one that survives a card 314px wide — a horizontal bar
+                 has to fit three stop names across that, and "Pohang Terminal
+                 (intercity)" alone is most of it.
+                 A leg carries a time only where that time is known on its own;
+                 the total sits against the stop it gets you to. -->
             <ol class="routes">
               {% for route in venue.getting_here %}
               <li class="route">
                 <ol class="route-stops">
                   <li class="stop is-first">
-                    <span>{{ t(route.from, route.from_ko) }}</span>
-                    {% if route.total %}<span class="route-total">{{ t(route.total, route.total_ko) }}</span>{% endif %}
+                    <span class="rt-time"></span>
+                    <span class="rt-name">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}</span>
                   </li>
                   {% for leg in route.legs %}
                   <li class="leg">
-                    <span class="leg-via">{{ t(leg.via, leg.via_ko) }}</span>
-                    {% if leg.time %}<span class="leg-time">{{ t(leg.time, leg.time_ko) }}</span>{% endif %}
+                    <span class="rt-time">{% if leg.time %}{{ t(leg.time, leg.time_ko) }}{% endif %}</span>
+                    <span class="rt-via">{{ t(leg.via, leg.via_ko) }}</span>
                   </li>
                   <li class="stop{{ ' is-change' if leg.change }}{{ ' is-last' if loop.last }}">
-                    {{ t(leg.to, leg.to_ko) }}
+                    <span class="rt-time">{% if loop.last and route.total %}<b>{{ t(route.total, route.total_ko) }}</b>{% endif %}</span>
+                    <span class="rt-name">{% if leg.icon %}<span class="rt-icon" aria-hidden="true">{{ leg.icon }}</span>{% endif %}{{ t(leg.to, leg.to_ko) }}</span>
                   </li>
                   {% endfor %}
                 </ol>

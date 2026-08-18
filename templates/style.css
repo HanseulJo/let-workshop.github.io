@@ -66,8 +66,7 @@
   --hero-body: #b9c7da;
   --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
   --hero-rule: rgba(255, 255, 255, 0.12);
-  --hero-meta-plate: rgba(13, 21, 35, 0.68);
-  --hero-meta-plate-line: rgba(255, 255, 255, 0.14);
+  --hero-meta-plate: transparent;
   --hero-accent: #ff8a75;
   /* The ink the formula art is drawn in. Cool and a step off white: the glyphs
      are tiny and packed, and at full white the field reads as glare rather
@@ -802,19 +801,33 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 22px 34px;
   margin: 34px 0 0;
-  /* On a plate of its own. Everything else in the hero — the mark, the theme,
-     the buttons — is large enough to hold its own against the drawing behind
-     it; this row is four labels at 0.66rem and four facts under them, and it
-     was the one place the picture and the type were competing. A hairline was
-     doing the separating, and a hairline has no inside, so the formulas ran
-     straight under the smallest type on the page.
-     The plate's own edge replaces that hairline: a box drawn under a rule
-     reads as two dividers stacked. */
-  padding: 24px 28px;
-  background: var(--hero-meta-plate);
-  border: 1px solid var(--hero-meta-plate-line);
-  border-radius: 14px;
+  /* The hairline stays — it is what tells this row apart from the theme line
+     above it, and taking it away to let a box do the same job cost more than
+     it bought. Under it, a wash rather than a card: enough to take the density
+     out of the drawing behind the smallest type on the page, not enough to be
+     a white panel sitting on the picture. */
+  position: relative;
+  padding: 22px 0 20px;
+  border-top: 1px solid var(--hero-rule);
   max-width: 900px;
+}
+/* The wash, bled 22px out to either side so it has room around the type
+   without the type moving — the row still starts on the same left edge as the
+   mark and the theme line above it. It begins at the padding edge, so the
+   hairline stays a hairline rather than the top of a panel.
+   In the dark it is transparent: there the drawing is the light thing and the
+   type is lighter still, so nothing was being rescued. */
+.hero-meta::before {
+  content: "";
+  position: absolute;
+  inset: 0 -22px;
+  background: var(--hero-meta-plate);
+  pointer-events: none;
+}
+/* Both are positioned, so the cells paint after the wash on DOM order alone
+   and no stacking index has to be invented. */
+.hero-meta > div {
+  position: relative;
 }
 .hero-meta dt {
   display: flex;
@@ -2571,43 +2584,33 @@ h2 .note {
   margin-right: 6px;
 }
 
-/* A journey, drawn the way a maps app draws one: a dot at every stop, a line
-   between them, and the bus riding on the line.
+/* A journey, drawn the way a maps app draws one when you open it: the rail
+   down the middle with a dot at every stop, times ranged against it on the
+   left and stops and buses on the right.
+
+   Two columns rather than one, because the two kinds of fact read differently.
+   Ranged right against the rail, the times line up as a column of numbers you
+   can total by eye; run inline with the bus they belong to, they were just
+   more words in the sentence.
 
    The line is drawn by the legs and not by the list. A rail down the whole
    container would run past the first dot and past the last, which is the one
-   detail that makes a route diagram look like a border: a route ends where it
-   ends. Each leg carries its own segment, stretched a few pixels past its own
-   box at each end so it meets the dots above and below it. */
+   detail that turns a route diagram into a border: a route ends where it ends.
+   Each leg carries its own segment, stretched a few pixels past its own box at
+   each end so it meets the dots above and below it. */
 .routes {
   list-style: none;
   margin: 0;
   padding: 0;
+  /* The width of the time column and the gutter the rail runs in. Named, so
+     the dot, the line and the two columns cannot drift apart. */
+  --rt-time: 46px;
+  --rt-gap: 22px;
 }
 .route + .route {
   margin-top: 18px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
-}
-/* The whole journey's time, on the line the journey starts on. It began as a
-   heading over the diagram with the origin repeated in it, which named the
-   same station twice a line apart — the diagram already says where you are
-   starting from, and this only has to say how long it takes from there. */
-.stop.is-first {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-.stop.is-first > span:first-child {
-  font-weight: 600;
-}
-.route-total {
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.04em;
-  color: var(--accent);
-  white-space: nowrap;
 }
 .route-stops {
   list-style: none;
@@ -2617,21 +2620,37 @@ h2 .note {
 .route-stops .stop,
 .route-stops .leg {
   position: relative;
-  padding-left: 22px;
+  display: grid;
+  grid-template-columns: var(--rt-time) 1fr;
+  column-gap: var(--rt-gap);
+  align-items: baseline;
 }
-.route-stops .stop {
+.rt-time {
+  justify-self: end;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+/* The whole journey, against the stop it gets you to. */
+.rt-time b {
+  font-weight: 500;
+  color: var(--accent);
+}
+.rt-name {
   font-size: 0.84rem;
   line-height: 1.35;
   color: var(--ink);
   word-break: keep-all;
 }
-/* The dot. Filled at the ends of the journey and hollow where you change,
-   which is the convention and also the useful distinction: the hollow one is
-   the stop you have to do something at. */
+/* The dot, in the gutter between the two columns. Filled at the ends of the
+   journey and hollow where you change, which is both the convention and the
+   useful distinction: the hollow one is the stop you have to do something at. */
 .route-stops .stop::before {
   content: "";
   position: absolute;
-  left: 1px;
+  left: calc(var(--rt-time) + 7px);
   top: 0.42em;
   width: 9px;
   height: 9px;
@@ -2644,18 +2663,13 @@ h2 .note {
   background: var(--card);
 }
 .route-stops .leg {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
   padding-top: 5px;
   padding-bottom: 5px;
-  font-size: 0.78rem;
-  color: var(--muted);
 }
 .route-stops .leg::before {
   content: "";
   position: absolute;
-  left: 4px;
+  left: calc(var(--rt-time) + 10px);
   top: -3px;
   bottom: -3px;
   width: 3px;
@@ -2663,22 +2677,25 @@ h2 .note {
   background: var(--accent);
   opacity: 0.42;
 }
-.leg-via {
+/* Sized against the name rather than left at whatever a colour emoji font
+   gives, and nudged down: emoji sit high on the line beside Latin text. */
+.rt-icon {
+  display: inline-block;
+  width: 1.25em;
+  margin-right: 3px;
+  font-size: 0.92em;
+  line-height: 1;
+  transform: translateY(0.06em);
+}
+.rt-via {
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.04em;
   color: var(--prose);
 }
-.leg-time {
-  font-size: 0.74rem;
-}
-.leg-time::before {
-  content: "·";
-  margin-right: 8px;
-}
 .route-alt {
   margin: 7px 0 0;
-  padding-left: 22px;
+  padding-left: calc(var(--rt-time) + var(--rt-gap));
   font-size: 0.78rem;
   color: var(--muted);
 }
@@ -3601,8 +3618,7 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
     --hero-rule: rgba(13, 33, 55, 0.16);
-    --hero-meta-plate: rgba(255, 255, 255, 0.8);
-    --hero-meta-plate-line: rgba(13, 33, 55, 0.09);
+    --hero-meta-plate: rgba(255, 255, 255, 0.3);
     /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
      ground needs, and at that hue the darkness reads as blood rather than
      as the coral the dark sheet uses. Walking the hue to 18 at the same
@@ -3678,8 +3694,7 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
   --hero-rule: rgba(13, 33, 55, 0.16);
-  --hero-meta-plate: rgba(255, 255, 255, 0.8);
-  --hero-meta-plate-line: rgba(13, 33, 55, 0.09);
+  --hero-meta-plate: rgba(255, 255, 255, 0.3);
   /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
      ground needs, and at that hue the darkness reads as blood rather than
      as the coral the dark sheet uses. Walking the hue to 18 at the same
