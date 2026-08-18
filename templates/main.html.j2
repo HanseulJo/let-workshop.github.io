@@ -138,9 +138,16 @@
              legibility that whitening the whole frame was being asked to buy,
              without flattening the drawing to get it. -->
         <feComponentTransfer>
-          <feFuncR type="linear" slope="0.70" intercept="0.24" />
-          <feFuncG type="linear" slope="0.72" intercept="0.29" />
-          <feFuncB type="linear" slope="0.76" intercept="0.39" />
+          <!-- Raised again, and the gap between the channels widened with it.
+               At 0.24/0.29/0.39 the floor was rgb(61,74,99) — a blue enough
+               grey, but still dark enough that the densest formulas read as
+               holes. 0.31/0.37/0.50 puts it at rgb(79,94,128), which is a
+               colour the eye takes as ink over a picture rather than as an
+               absence of one, and the 49-point spread between red and blue
+               keeps it plainly blue rather than merely cool. -->
+          <feFuncR type="linear" slope="0.66" intercept="0.31" />
+          <feFuncG type="linear" slope="0.67" intercept="0.37" />
+          <feFuncB type="linear" slope="0.70" intercept="0.50" />
         </feComponentTransfer>
       </filter>
       <symbol id="i-home" viewBox="0 0 24 24">

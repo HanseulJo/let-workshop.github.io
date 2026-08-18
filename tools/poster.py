@@ -753,13 +753,22 @@ FESTIVAL = """<!doctype html>
      letter there is, and on a busy drawing that is most of what legibility is:
      at 900 the rails put down 12.0% ink against 10.4% at 700, and the thicker
      stroke is what lets the strip behind them stay lighter. */
-  /* 7mm, which is what the longest of the three lines allows. The theme names
-     three fields now and set 264mm at 9mm — 33mm past where the programme
-     begins. The rails are as large as their longest line lets them be, and
-     that line is the one that decides. */
+  /* 8mm — as large as the sheet has room for, measured rather than guessed.
+     Two things stop it. The rails run down the left edge and must finish above
+     the date stack, which begins at 398mm; and the rails sit in auto margins,
+     so past a certain length they stop being absorbed and start pushing the
+     panel — and the foot with it — off the bottom of the sheet. At 8mm the
+     rail is 264mm and the stack moves 2mm; at 8.5mm it moves 17mm and at 9mm
+     the foot hangs 11mm past the trim.
+
+     The cap went with it. 228mm was cutting the theme into two lines at any
+     size worth reading, which is what made the edge small in the first place —
+     the line was being made to fit a number that no longer meant anything.
+     236mm is the theme's own length at 8mm plus a few millimetres, so a longer
+     theme still wraps rather than running off the paper. */
   .rail span {{
-    display:inline-block; max-inline-size:228mm; vertical-align:baseline;
-    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:6mm;
+    display:inline-block; max-inline-size:236mm; vertical-align:baseline;
+    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:8mm;
     font-weight:900; letter-spacing:-.014em; line-height:1.22; color:{hot};
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
@@ -876,13 +885,19 @@ FESTIVAL = """<!doctype html>
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
   .datesub {{ display:none; }}
-  /* When the doors open. The sheet gave two dates and no hour, and an hour is
-     what a travel claim needs from it — the rest of the timetable is on the
-     page the code leads to. */
-  .doors {{
+  /* When registration opens. The sheet gave two dates and no hour, and an
+     hour is what a travel claim needs from it — the rest of the timetable is
+     on the page the code leads to.
+
+     At the foot rather than under the date. Under the date it was a footnote
+     to a number; in the foot it sits in the same row as the code and the word
+     Register, which is the part of the sheet somebody reads when they are
+     working out whether they can get there. The middle of that row was empty
+     — two marks at one end, a code at the other — so it costs nothing. */
+  .foot .doors {{
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:400;
     letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
-    margin:2.5mm 0 0;
+    margin:0 0 1mm;
   }}
   .side {{ flex:none; }}
   .side h4 {{ margin-top:7mm; }}
@@ -950,7 +965,6 @@ FESTIVAL = """<!doctype html>
       <div class="dates">
         <div class="side">
           <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
-          <p class="doors">{doors}</p>
           <h4>Organizers</h4>
           <div class="orgs">{organisers}</div>
         </div>
@@ -958,6 +972,7 @@ FESTIVAL = """<!doctype html>
       </div>
       <div class="foot">
         <span class="marks">{logos}</span>
+        <p class="doors">{doors}</p>
         <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
       </div>
     </div>
@@ -1902,14 +1917,31 @@ GHOST_SIZE = {
 # between them rather than light marks on a dark field, so it needs its own
 # artwork from `formula-art.py --invert`. The veil almost disappears: it exists
 # to hold a photograph back from type on a dark ground, and over a pale one it
-# simply repaints the sheet in the ground colour. And the accent goes deeper,
-# because coral on pale blue is 1.4:1 — the same colour that carries a dark
-# sheet is nearly invisible on a light one.
+# simply repaints the sheet in the ground colour.
+#
+# The accent is the dark sheet's coral, unchanged. A deeper red was tried here,
+# on the reasoning that coral on pale blue measures 1.4:1 and a contrast ratio
+# that low is not a colour anyone can read — but the two sheets are one poster
+# printed either way round, and a poster whose accent changes with the paper is
+# two posters. The session labels it sets are the least of what the sheet says,
+# and the ratio is the price of the pair matching.
+#
+# What actually shipped lived in a --palette argument typed at a shell for a
+# while, and this dict drifted behind it. It is the same values now, which is
+# what makes tools/export-poster.py able to ask for the scheme by name.
 SCHEMES = {
     "light": {
-        "ground": "#cfe4f5", "ground2": "#b5d4ee", "band": "#b5d4ee",
-        "art_ink": "#16324f", "ink": "#0d2137", "cool": "#456080",
-            "hot": "#c93a1c",
+        "ground": "#cfe4f5", "ground2": "#b9d6ee", "band": "#b9d6ee",
+        "hot": "#ff8a75", "art_alpha": "1",
+        # The formulas, not the type. At #16324f the darkest strokes were very
+        # nearly black on paper and read as holes punched in the sheet rather
+        # than as writing over it; this is the same hue carried up out of
+        # the bottom of the range and turned further towards blue, so the
+        # densest part of the drawing is a colour rather than an absence.
+        # A stop further up, at #2c5480, the campus stopped being legible as a
+        # building — the drawing is the only thing carrying the picture on this
+        # sheet, and it has to stay dense enough to draw with.
+        "art_ink": "#234a75", "ink": "#0d2137", "cool": "#456080",
         "veil1": ".20", "veil2": "0", "veil3": "0", "veil4": ".74", "veil5": ".93",
         "veilx": ".10", "ghost_alpha": ".45",
         # The other four, turned over the same way: the veil almost gone where
@@ -2126,7 +2158,9 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     # the least of what it says; the short form is one.
     # The first thing that happens on the first day, said as an hour.
     opening = program["days"][0]["events"][0]
-    doors = esc(f'Doors {opening.get("start", "")}') if opening.get("start") else ""
+    day1 = re.sub(r"^\w+ \d+ · ", "", program["days"][0].get("label", "")).split(" (")[0]
+    doors = esc(" · ".join(x for x in (
+        f'Registration opens {opening["start"]}', day1) if x)) if opening.get("start") else ""
 
     short_dates = re.sub(r"^(\w{3})\w*", lambda m: m.group(1), site["dates"])
     as_url = lambda svg: "data:image/svg+xml;base64," + base64.b64encode(
@@ -2169,8 +2203,14 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     badge_cards += [badge_card("Participant", False) for _ in range(4)]
     badges = "".join(badge_cards)
 
+    # A room is its name and, quieter, where in the building it is and how
+    # many it holds. Reading `label` for the first half is what this used to do
+    # and it stopped existing when the site's travel card was rewritten — which
+    # took the whole export down, so the sheet quietly stayed at the version
+    # before it. `.get` on both halves, so a missing field costs a word rather
+    # than every poster.
     rooms = "<br>".join(
-        f'<b>{esc(r["label"])}</b> {esc(r["name"])}'
+        f'<b>{esc(r.get("name", ""))}</b> {esc(r.get("detail") or r.get("label") or "")}'
         for r in venue.get("rooms", [])) or esc(venue.get("address", ""))
 
     doc = tpl.format(

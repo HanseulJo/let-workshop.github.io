@@ -3,6 +3,10 @@
 # candidate shortlist and must never be committed.
 _site/
 
+# Rendered poster HTML, written by tools/export-poster.py on the way to the
+# PDFs and PNGs. The sources it is made from are in art/ and data/.
+_poster/
+
 __pycache__/
 *.pyc
 .venv/
