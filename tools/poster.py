@@ -904,6 +904,16 @@ FESTIVAL = """<!doctype html>
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:23mm;
     line-height:1.02; letter-spacing:-.03em; color:{hot};
   }}
+  /* The hour each day runs from and to, against the day it belongs to. A
+     travel claim wants the span and not just the dates, and the pair set on
+     their own lines says which hour goes with which day without a word of
+     explanation — which "09:00–17:15" under both dates would not.
+     In the mono at a third the size: they are a second fact about the date,
+     not a second date. */
+  .stack small {{
+    font-family:"JetBrains Mono",monospace; font-size:7mm; font-weight:400;
+    letter-spacing:.02em; color:{ink}; opacity:.66; margin-left:3mm;
+  }}
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
   .datesub {{ display:none; }}
@@ -986,7 +996,7 @@ FESTIVAL = """<!doctype html>
     <div class="panel">
       <div class="dates">
         <div class="side">
-          <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
+          <div class="stack">{yyyy}.<br>{md1}<small>{hour1}</small>–<br>{md2}<small>{hour2}</small></div>
           <h4>Organizers</h4>
           <div class="orgs">{organisers}</div>
         </div>
@@ -2189,6 +2199,23 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     # the least of what it says; the short form is one.
     # The first thing that happens on the first day, said as an hour.
     opening = program["days"][0]["events"][0]
+    # When each day starts and when the last one finishes. Read off the
+    # programme rather than written down here: a sheet that disagrees with the
+    # schedule it is advertising is worse than a sheet with no hours on it.
+    def _first(day):
+        for e in day["events"]:
+            if e.get("start"):
+                return e["start"]
+        return ""
+
+    def _last(day):
+        for e in reversed(day["events"]):
+            if e.get("end"):
+                return e["end"]
+        return ""
+
+    hour1 = esc(_first(program["days"][0]))
+    hour2 = esc(_last(program["days"][-1]))
     day1 = re.sub(r"^\w+ \d+ · ", "", program["days"][0].get("label", "")).split(" (")[0]
     doors = esc(" · ".join(x for x in (
         f'Registration opens {opening["start"]}', day1) if x)) if opening.get("start") else ""
@@ -2292,6 +2319,8 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),
         yyyy=esc(str(program["days"][0]["date"]).split("-")[0]),
         mon3=month[:3].upper(),
+        hour1=hour1,
+        hour2=hour2,
         md1=".".join(str(program["days"][0]["date"]).split("-")[1:]).lstrip("0").replace(".0", "."),
         md2=".".join(str(program["days"][-1]["date"]).split("-")[1:]).lstrip("0").replace(".0", "."),
         days_long=esc(site["dates"]),
