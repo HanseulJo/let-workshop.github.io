@@ -921,20 +921,6 @@ FESTIVAL = """<!doctype html>
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
   .datesub {{ display:none; }}
-  /* When registration opens. The sheet gave two dates and no hour, and an
-     hour is what a travel claim needs from it — the rest of the timetable is
-     on the page the code leads to.
-
-     At the foot rather than under the date. Under the date it was a footnote
-     to a number; in the foot it sits in the same row as the code and the word
-     Register, which is the part of the sheet somebody reads when they are
-     working out whether they can get there. The middle of that row was empty
-     — two marks at one end, a code at the other — so it costs nothing. */
-  .foot .doors {{
-    font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:400;
-    letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
-    margin:0 0 1mm;
-  }}
   .side {{ flex:none; }}
   .side h4 {{ margin-top:7mm; }}
   .cols h4 {{
@@ -1008,7 +994,6 @@ FESTIVAL = """<!doctype html>
       </div>
       <div class="foot">
         <span class="marks">{logos}</span>
-        <p class="doors">{doors}</p>
         <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
       </div>
     </div>
@@ -2201,8 +2186,6 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     # are on the programme, and two cards for one person is a card wasted.
     # "October 7-8, 2026" is three lines in the badge's corner and the month is
     # the least of what it says; the short form is one.
-    # The first thing that happens on the first day, said as an hour.
-    opening = program["days"][0]["events"][0]
     # When each day starts and when the last one finishes. Read off the
     # programme rather than written down here: a sheet that disagrees with the
     # schedule it is advertising is worse than a sheet with no hours on it.
@@ -2225,9 +2208,6 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     hh = lambda s: re.sub(r"^0", "", s)
     hour1 = esc(hh(_first(program["days"][0])))
     hour2 = esc(hh(_last(program["days"][-1])))
-    day1 = re.sub(r"^\w+ \d+ · ", "", program["days"][0].get("label", "")).split(" (")[0]
-    doors = esc(" · ".join(x for x in (
-        f'Registration opens {hh(opening["start"])}', day1) if x)) if opening.get("start") else ""
 
     short_dates = re.sub(r"^(\w{3})\w*", lambda m: m.group(1), site["dates"])
     as_url = lambda svg: "data:image/svg+xml;base64," + base64.b64encode(
@@ -2345,7 +2325,6 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             for w in site["full_name"].split())),
         reg_note=esc((site["hero_actions"][0].get("note") or "Opens soon")),
         badges=badges,
-        doors=doors,
         art_url=art_url,
         ghost_url=ghost_url,
         blurb=esc(site.get("blurb", "")),
