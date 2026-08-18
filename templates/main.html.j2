@@ -121,35 +121,6 @@
   <body>
     <!-- Icon sprite: inline so no icon files or icon-font requests ship -->
     <svg style="display: none" aria-hidden="true">
-      <!-- A floor under the ink, for the hero on paper.
-           The light hero draws its formulas by masking a photograph, so the
-           darkest marks are as dark as the darkest part of the picture, which
-           is near black — an ink nothing else on the page uses, and one that
-           reads as a hole rather than as a stroke.
-           brightness() lifts the whole range and takes the density with it;
-           this lifts only the bottom of it. A linear transfer of slope 0.82
-           with an intercept of 0.15 maps black to a deep blue-grey and leaves
-           everything above it where it was. -->
-      <filter id="ink-floor" color-interpolation-filters="sRGB">
-        <!-- The floor is blue, not grey. Lifting all three channels equally
-             turns the darkest formulas from black into charcoal, which is the
-             same hole a shade lighter; lifting blue further than red turns them
-             into a deep blue that belongs to the picture. It also buys the
-             legibility that whitening the whole frame was being asked to buy,
-             without flattening the drawing to get it. -->
-        <feComponentTransfer>
-          <!-- Raised again, and the gap between the channels widened with it.
-               At 0.24/0.29/0.39 the floor was rgb(61,74,99) — a blue enough
-               grey, but still dark enough that the densest formulas read as
-               holes. 0.31/0.37/0.50 puts it at rgb(79,94,128), which is a
-               colour the eye takes as ink over a picture rather than as an
-               absence of one, and the 49-point spread between red and blue
-               keeps it plainly blue rather than merely cool. -->
-          <feFuncR type="linear" slope="0.66" intercept="0.31" />
-          <feFuncG type="linear" slope="0.67" intercept="0.37" />
-          <feFuncB type="linear" slope="0.70" intercept="0.50" />
-        </feComponentTransfer>
-      </filter>
       <symbol id="i-home" viewBox="0 0 24 24">
         <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 9h-3a15.7 15.7 0 00-1.4-5.7A8 8 0 0118.9 11zM12 4c.8 1.2 1.7 3.5 1.9 7h-3.8c.2-3.5 1.1-5.8 1.9-7zM4.3 13h3c.2 2.2.7 4.1 1.4 5.7A8 8 0 014.3 13zm3-2h-3a8 8 0 014.4-5.7A15.7 15.7 0 007.3 11zM12 20c-.8-1.2-1.7-3.5-1.9-7h3.8c-.2 3.5-1.1 5.8-1.9 7zm3.3-1.3c.7-1.6 1.2-3.5 1.4-5.7h3a8 8 0 01-4.4 5.7z" />
       </symbol>
@@ -735,7 +706,10 @@
                    over — this is only the copy shown on the page. -->
               <picture>
                 {% if (sheet.image[:-4] ~ '.webp') | shipped %}
-                <source type="image/webp" srcset="{{ (sheet.image[:-4] ~ '.webp') | asset }}" />
+                {%- set stem = sheet.image[:-4] %}
+                <source type="image/webp"
+                        srcset="{% for w in [560, 900] %}{% if (stem ~ '-' ~ w ~ '.webp') | shipped %}{{ (stem ~ '-' ~ w ~ '.webp') | asset }} {{ w }}w, {% endif %}{% endfor %}{{ (stem ~ '.webp') | asset }} 1200w"
+                        sizes="(min-width: 1024px) 480px, (min-width: 781px) 470px, (min-width: 431px) 370px, 300px" />
                 {% endif %}
                 <img src="{{ sheet.image | asset }}"
                      alt="{{ site.poster.alt }}{% if sheet.label %} — {{ sheet.label }}{% endif %}"

@@ -204,6 +204,14 @@ def main():
             wide(1200).save(st / f"{name}.png", optimize=True)
             wide(2800).save(st / f"{name}-large.png", optimize=True)
             wide(1200).save(st / f"{name}.webp", format="WEBP", quality=92, method=6)
+            # The page shows the sheet between 277 and 480 CSS pixels wide, and
+            # was handing every screen the 1200. A picture costs its full
+            # decoded size in memory however small it is drawn — two sheets at
+            # 1200x1698 is 16MB of bitmap to show two thumbnails — so the
+            # browser is given something to choose from.
+            for px in (560, 900):
+                wide(px).save(st / f"{name}-{px}.webp", format="WEBP",
+                              quality=90, method=6)
             wide(1400).save(st / f"{name}-small.jpg", quality=88, optimize=True,
                             progressive=True)
             sizes = "  ".join(
