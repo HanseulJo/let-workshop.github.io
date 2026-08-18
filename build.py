@@ -352,6 +352,18 @@ def fill_defaults(bundle: dict) -> None:
     bundle["venue"].setdefault("rooms_title_ko", None)
     bundle["venue"].setdefault("getting_here_title", None)
     bundle["venue"].setdefault("getting_here_title_ko", None)
+    for route in bundle["venue"].setdefault("getting_here", []):
+        for key in ("from_ko", "total", "total_ko", "alt", "alt_ko"):
+            route.setdefault(key, None)
+        for leg in route.setdefault("legs", []):
+            for key in ("via_ko", "to_ko", "time", "time_ko"):
+                leg.setdefault(key, None)
+            # A stop is filled unless it is somewhere you get off to get on
+            # something else, which is how a map draws a transfer.
+            leg.setdefault("change", False)
+    for note in bundle["venue"].setdefault("getting_here_notes", []):
+        for key in ("label_ko", "detail_ko"):
+            note.setdefault(key, None)
     bundle["venue"].setdefault("accommodation", None)
     if bundle["venue"]["accommodation"]:
         acc = bundle["venue"]["accommodation"]

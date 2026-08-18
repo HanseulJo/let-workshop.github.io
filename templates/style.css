@@ -2571,6 +2571,121 @@ h2 .note {
   margin-right: 6px;
 }
 
+/* A journey, drawn the way a maps app draws one: a dot at every stop, a line
+   between them, and the bus riding on the line.
+
+   The line is drawn by the legs and not by the list. A rail down the whole
+   container would run past the first dot and past the last, which is the one
+   detail that makes a route diagram look like a border: a route ends where it
+   ends. Each leg carries its own segment, stretched a few pixels past its own
+   box at each end so it meets the dots above and below it. */
+.routes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.route + .route {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+/* The whole journey's time, on the line the journey starts on. It began as a
+   heading over the diagram with the origin repeated in it, which named the
+   same station twice a line apart — the diagram already says where you are
+   starting from, and this only has to say how long it takes from there. */
+.stop.is-first {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.stop.is-first > span:first-child {
+  font-weight: 600;
+}
+.route-total {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.route-stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.route-stops .stop,
+.route-stops .leg {
+  position: relative;
+  padding-left: 22px;
+}
+.route-stops .stop {
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: var(--ink);
+  word-break: keep-all;
+}
+/* The dot. Filled at the ends of the journey and hollow where you change,
+   which is the convention and also the useful distinction: the hollow one is
+   the stop you have to do something at. */
+.route-stops .stop::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0.42em;
+  width: 9px;
+  height: 9px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--accent);
+}
+.route-stops .stop.is-change::before {
+  background: var(--card);
+}
+.route-stops .leg {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.route-stops .leg::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -3px;
+  bottom: -3px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.42;
+}
+.leg-via {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--prose);
+}
+.leg-time {
+  font-size: 0.74rem;
+}
+.leg-time::before {
+  content: "·";
+  margin-right: 8px;
+}
+.route-alt {
+  margin: 7px 0 0;
+  padding-left: 22px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.routes + .venue-travel {
+  margin-top: 14px;
+}
+
 
 /* Organiser-only annotations — internal build only, never public */
 .staff-note {

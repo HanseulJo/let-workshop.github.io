@@ -110,6 +110,17 @@ map_links:
 # under the address with nothing saying what they were.
 getting_here_title: Transport
 getting_here_title_ko: 교통
+#
+# A journey is written out as the stops it passes through rather than as a
+# sentence about them. "Bus 5000 to Pohang Terminal (intercity), change to 207"
+# is a route with a transfer in the middle, and a reader arriving at Pohang
+# station has to parse the sentence back into one before it is any use; drawn
+# as stops and legs it is the shape they are already looking at in a maps app.
+#
+# `total` is door to door for the whole journey. A leg carries its own `time`
+# only where that time is known on its own — the 207 into campus is ten
+# minutes, and the rest of the first journey is one bus plus however long the
+# transfer takes, which is not two numbers we have.
 getting_here:
   # Bus numbers and times are POSTECH's own, from the 오시는 길 page at
   # postech.ac.kr/kor/university-introduction/direction.do.
@@ -117,16 +128,39 @@ getting_here:
   # name is 포항터미널, in Sangdo-dong, and the express one in Haedo-dong. The
   # 207 serves the intercity terminal, so it is named rather than left as "the
   # bus terminal", which is the ambiguous half of the pair.
-  - mode: From Pohang KTX station
-    mode_ko: 포항역에서
-    detail: Bus 5000 to Pohang Terminal (intercity), change to 207 · 1 hr · or taxi, 20–30 min
-    detail_ko: 5000번 → 포항터미널(시외) 환승 207번 · 1시간 · 또는 택시 20–30분
-  - mode: From Pohang Terminal (intercity)
-    mode_ko: 포항터미널(시외)에서
-    detail: Bus 207 to POSTECH · 10 min
-    detail_ko: 207번 · 10분
-  - mode: Parking
-    mode_ko: 주차
+  - from: Pohang KTX station
+    from_ko: 포항역
+    total: 1 hr
+    total_ko: 1시간
+    legs:
+      - via: Bus 5000
+        via_ko: 5000번
+        to: Pohang Terminal (intercity)
+        to_ko: 포항터미널(시외)
+        change: true # the transfer, drawn as a hollow stop
+      - via: Bus 207
+        via_ko: 207번
+        time: 10 min
+        time_ko: 10분
+        to: POSTECH
+        to_ko: 포항공과대학교
+    # The alternative to the whole journey, not to any one leg of it.
+    alt: or taxi, 20–30 min
+    alt_ko: 또는 택시 20–30분
+  - from: Pohang Terminal (intercity)
+    from_ko: 포항터미널(시외)
+    total: 10 min
+    total_ko: 10분
+    legs:
+      - via: Bus 207
+        via_ko: 207번
+        to: POSTECH
+        to_ko: 포항공과대학교
+
+# Everything about arriving that is not a route. Same list, no stops.
+getting_here_notes:
+  - label: Parking
+    label_ko: 주차
     detail: TBD
     detail_ko: 미정
 

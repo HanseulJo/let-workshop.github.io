@@ -624,11 +624,41 @@
             {% if venue.getting_here_title %}
             <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}</h4>
             {% endif %}
+            <!-- Each journey as the stops it passes through: a dot per stop,
+                 a line between them, and the bus riding on the line. It is the
+                 shape a maps app draws, and it is drawn down the page rather
+                 than across it because the card is 314px wide on a phone and
+                 "Pohang Terminal (intercity)" does not fit under a dot in a
+                 third of that. -->
+            <ol class="routes">
+              {% for route in venue.getting_here %}
+              <li class="route">
+                <ol class="route-stops">
+                  <li class="stop is-first">
+                    <span>{{ t(route.from, route.from_ko) }}</span>
+                    {% if route.total %}<span class="route-total">{{ t(route.total, route.total_ko) }}</span>{% endif %}
+                  </li>
+                  {% for leg in route.legs %}
+                  <li class="leg">
+                    <span class="leg-via">{{ t(leg.via, leg.via_ko) }}</span>
+                    {% if leg.time %}<span class="leg-time">{{ t(leg.time, leg.time_ko) }}</span>{% endif %}
+                  </li>
+                  <li class="stop{{ ' is-change' if leg.change }}{{ ' is-last' if loop.last }}">
+                    {{ t(leg.to, leg.to_ko) }}
+                  </li>
+                  {% endfor %}
+                </ol>
+                {% if route.alt %}<p class="route-alt">{{ t(route.alt, route.alt_ko) }}</p>{% endif %}
+              </li>
+              {% endfor %}
+            </ol>
+            {% if venue.getting_here_notes %}
             <ul class="venue-travel">
-              {% for row in venue.getting_here %}
-              <li><b>{{ t(row.mode, row.mode_ko) }}</b> {{ t(row.detail, row.detail_ko) }}</li>
+              {% for note in venue.getting_here_notes %}
+              <li><b>{{ t(note.label, note.label_ko) }}</b> {{ t(note.detail, note.detail_ko) }}</li>
               {% endfor %}
             </ul>
+            {% endif %}
             {% endif %}
             {% if venue.accommodation %}
             <!-- Somewhere to sleep, after how to arrive: the questions come in
