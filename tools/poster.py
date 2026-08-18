@@ -2218,11 +2218,16 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
                 return e["end"]
         return ""
 
-    hour1 = esc(_first(program["days"][0]))
-    hour2 = esc(_last(program["days"][-1]))
+    # Without the leading zero. The programme pads its hours so a column of
+    # them lines up; a sheet setting one hour beside a date has no column to
+    # line it up with, and 09:00 there is a timetable's habit rather than how
+    # the hour is said.
+    hh = lambda s: re.sub(r"^0", "", s)
+    hour1 = esc(hh(_first(program["days"][0])))
+    hour2 = esc(hh(_last(program["days"][-1])))
     day1 = re.sub(r"^\w+ \d+ · ", "", program["days"][0].get("label", "")).split(" (")[0]
     doors = esc(" · ".join(x for x in (
-        f'Registration opens {opening["start"]}', day1) if x)) if opening.get("start") else ""
+        f'Registration opens {hh(opening["start"])}', day1) if x)) if opening.get("start") else ""
 
     short_dates = re.sub(r"^(\w{3})\w*", lambda m: m.group(1), site["dates"])
     as_url = lambda svg: "data:image/svg+xml;base64," + base64.b64encode(
