@@ -3382,12 +3382,16 @@ a.poster-shot:focus-visible {
       rgba(15, 24, 38, 0.24) 55%,
       rgba(15, 24, 38, 0.12) 72%
     ),
+    /* The vertical scrim stops short of opacity. At 0.96 at the foot it was
+       not tempering the drawing, it was replacing it: the lower third went to
+       flat navy and the campus disappeared into it, which reads as the hero
+       being too dark rather than as the picture being held back. */
     linear-gradient(
       to bottom,
-      rgba(13, 21, 34, 0.42) 0%,
-      rgba(13, 21, 34, 0.5) 30%,
-      rgba(12, 19, 31, 0.86) 58%,
-      rgba(11, 17, 28, 0.96) 100%
+      rgba(13, 21, 34, 0.3) 0%,
+      rgba(13, 21, 34, 0.38) 30%,
+      rgba(12, 19, 31, 0.62) 58%,
+      rgba(11, 17, 28, 0.74) 100%
     );
 }
 
@@ -3395,18 +3399,27 @@ a.poster-shot:focus-visible {
    explicit choice, and the system default when nothing has been chosen. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --hero-bg: #cfe4f5;
-    --hero-bg2: #b9d6ee;
+    --hero-bg: #c8e1f8;
+    --hero-bg2: #aed0f1;
     --hero-title: #0d2137;
     --hero-body: #26405c;
-    --hero-mute: #456080;
+    /* Darkened from #456080 so the foot of the hero can be. The small
+     grey type is the weak link on paper: it was the one thing holding
+     the bottom of the scrim light, at 4.2:1 against the ground it
+     stands on. */
+  --hero-mute: #33506f;
     --hero-rule: rgba(13, 33, 55, 0.16);
     --hero-accent: #c93a1c;
     --hero-art-ink: #16324f;
     --hero-photo: url("hero-paper.jpg");
     --hero-photo-opacity: 0.62;
     --hero-art-image: url("hero-paper-ink.jpg");
-    --hero-art-filter: contrast(1.35) brightness(0.88);
+    /* The density is the original contrast; what changed is the floor
+       under it. brightness() alone lifts the whole range and takes the
+       ink with it — tried at 1.06 and the drawing nearly vanished — so
+       the black point is raised by a transfer function instead, and the
+       mid and upper range stay where they were. See #ink-floor. */
+    --hero-art-filter: contrast(1.32) brightness(0.92) url(#ink-floor);
     /* And the other solve. hero-art.svg places its formulas where the picture is
     bright, which is what a dark ground wants: there the marks are the light. On
     paper the marks are the ink, so they belong where the picture is dark — a
@@ -3427,26 +3440,35 @@ a.poster-shot:focus-visible {
       ),
       linear-gradient(
         to bottom,
-        rgba(207, 228, 245, 0.1) 0%,
-        rgba(207, 228, 245, 0.22) 40%,
-        rgba(203, 224, 242, 0.74) 66%,
-        rgba(199, 220, 240, 0.93) 100%
+        rgba(207, 228, 245, 0.06) 0%,
+        rgba(190, 214, 236, 0.24) 40%,
+        rgba(152, 186, 219, 0.56) 66%,
+        rgba(126, 166, 205, 0.74) 100%
       );
   }
 }
 :root[data-theme="light"] {
-  --hero-bg: #cfe4f5;
-  --hero-bg2: #b9d6ee;
+  --hero-bg: #c8e1f8;
+  --hero-bg2: #aed0f1;
   --hero-title: #0d2137;
   --hero-body: #26405c;
-  --hero-mute: #456080;
+  /* Darkened from #456080 so the foot of the hero can be. The small
+     grey type is the weak link on paper: it was the one thing holding
+     the bottom of the scrim light, at 4.2:1 against the ground it
+     stands on. */
+  --hero-mute: #33506f;
   --hero-rule: rgba(13, 33, 55, 0.16);
   --hero-accent: #c93a1c;
   --hero-art-ink: #16324f;
   --hero-photo: url("hero-paper.jpg");
   --hero-photo-opacity: 0.62;
   --hero-art-image: url("hero-paper-ink.jpg");
-  --hero-art-filter: contrast(1.35) brightness(0.88);
+  /* The density is the original contrast; what changed is the floor
+       under it. brightness() alone lifts the whole range and takes the
+       ink with it — tried at 1.06 and the drawing nearly vanished — so
+       the black point is raised by a transfer function instead, and the
+       mid and upper range stay where they were. See #ink-floor. */
+    --hero-art-filter: contrast(1.32) brightness(0.92) url(#ink-floor);
   /* And the other solve. hero-art.svg places its formulas where the picture is
   bright, which is what a dark ground wants: there the marks are the light. On
   paper the marks are the ink, so they belong where the picture is dark — a
@@ -3464,9 +3486,9 @@ a.poster-shot:focus-visible {
     ),
     linear-gradient(
       to bottom,
-      rgba(207, 228, 245, 0.1) 0%,
-      rgba(207, 228, 245, 0.22) 40%,
-      rgba(203, 224, 242, 0.74) 66%,
-      rgba(199, 220, 240, 0.93) 100%
+      rgba(207, 228, 245, 0.06) 0%,
+      rgba(190, 214, 236, 0.24) 40%,
+      rgba(152, 186, 219, 0.56) 66%,
+      rgba(126, 166, 205, 0.74) 100%
     );
 }

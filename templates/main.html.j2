@@ -121,6 +121,22 @@
   <body>
     <!-- Icon sprite: inline so no icon files or icon-font requests ship -->
     <svg style="display: none" aria-hidden="true">
+      <!-- A floor under the ink, for the hero on paper.
+           The light hero draws its formulas by masking a photograph, so the
+           darkest marks are as dark as the darkest part of the picture, which
+           is near black — an ink nothing else on the page uses, and one that
+           reads as a hole rather than as a stroke.
+           brightness() lifts the whole range and takes the density with it;
+           this lifts only the bottom of it. A linear transfer of slope 0.82
+           with an intercept of 0.15 maps black to a deep blue-grey and leaves
+           everything above it where it was. -->
+      <filter id="ink-floor" color-interpolation-filters="sRGB">
+        <feComponentTransfer>
+          <feFuncR type="linear" slope="0.82" intercept="0.15" />
+          <feFuncG type="linear" slope="0.82" intercept="0.16" />
+          <feFuncB type="linear" slope="0.82" intercept="0.19" />
+        </feComponentTransfer>
+      </filter>
       <symbol id="i-home" viewBox="0 0 24 24">
         <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 9h-3a15.7 15.7 0 00-1.4-5.7A8 8 0 0118.9 11zM12 4c.8 1.2 1.7 3.5 1.9 7h-3.8c.2-3.5 1.1-5.8 1.9-7zM4.3 13h3c.2 2.2.7 4.1 1.4 5.7A8 8 0 014.3 13zm3-2h-3a8 8 0 014.4-5.7A15.7 15.7 0 007.3 11zM12 20c-.8-1.2-1.7-3.5-1.9-7h3.8c-.2 3.5-1.1 5.8-1.9 7zm3.3-1.3c.7-1.6 1.2-3.5 1.4-5.7h3a8 8 0 01-4.4 5.7z" />
       </symbol>
