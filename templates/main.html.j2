@@ -1010,22 +1010,23 @@
       // a content hash on the URLs it writes, and stylesheet url()s do not go
       // through it — a stamped copy here would be a second cache entry and a
       // second download, warming nothing.
+      // Keyed by theme, then by which of the two the width actually paints.
       var THEME_ART = {
-        dark: ["hero-art.svg", "hero.jpg"],
-        light: ["hero-art-light.svg", "hero-paper.jpg", "hero-ink.jpg", "hero-ink-narrow.jpg"],
+        dark: {
+          wide: ["hero-art.svg", "hero.jpg"],
+          narrow: ["hero-art-narrow.svg", "hero.jpg"],
+        },
+        light: {
+          wide: ["hero-art-light.svg", "hero-paper.jpg", "hero-ink.jpg"],
+          narrow: ["hero-art-light-narrow.svg", "hero-paper.jpg", "hero-ink-narrow.jpg"],
+        },
       };
       function artFor(id) {
         var m = window.matchMedia;
         if (id === "auto") id = m && m("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        var urls = THEME_ART[id] || [];
-        // One of the two light plates, whichever this width paints.
-        if (id === "light" && m) {
-          var narrow = m("(max-width: 780px)").matches;
-          urls = urls.filter(function (u) {
-            return u.indexOf("hero-ink") < 0 || (u.indexOf("-narrow") > 0) === narrow;
-          });
-        }
-        return urls;
+        var set = THEME_ART[id];
+        if (!set) return [];
+        return set[m && m("(max-width: 780px)").matches ? "narrow" : "wide"];
       }
       var warmed = {};
       function warm(id, done) {

@@ -3119,6 +3119,22 @@ footer a {
   }
   .hero-art {
     background-image: var(--hero-art-image-narrow);
+    /* The slice, not the whole drawing. It is 2628x896 and this box is about
+       414x777; sized `cover`, filling a box that tall means drawing the whole
+       width at 2280x777 CSS pixels and then looking at 414 of them — 16
+       megapixels of alpha at a device ratio of 3, painted from seven thousand
+       glyphs, to show a fifth of it. The slice has the hero's own proportions,
+       so `cover` scales it to about the size of the box. See tools/crop-art.py. */
+    -webkit-mask-image: var(--hero-art-mask-narrow);
+    mask-image: var(--hero-art-mask-narrow);
+    /* And put it back where it was. The mask and the photograph under it share
+       one focus, which is what makes the glyphs land on the bright parts of the
+       picture; take a slice out of the middle of the mask and it no longer
+       means the same thing as 62% of the whole. 47% is where the slice's own
+       left edge falls when the whole drawing sits at 62% — exact at 414x777,
+       and within five pixels across the phone sizes either side of it. */
+    -webkit-mask-position: 47% 42%;
+    mask-position: 47% 42%;
     opacity: var(--hero-art-opacity-narrow);
     filter: var(--hero-art-filter-narrow);
   }
@@ -3574,6 +3590,7 @@ a.poster-shot:focus-visible {
   --hero-art-image-narrow: url("hero.jpg");
   --hero-art-filter: brightness(2.8) saturate(0.9);
   --hero-art-mask: url("hero-art.svg");
+--hero-art-mask-narrow: url("hero-art-narrow.svg");
   /* The pill's own ground. It was a hard-coded navy, which is the right ground
      for exactly one of the two heroes: on paper it put a dark lozenge on a
      pale sheet and then set dark type on top of it. */
@@ -3663,6 +3680,7 @@ a.poster-shot:focus-visible {
     two sheets differ. Counted across the two files, the top fifth of the frame
     holds 929 marks in one and 2408 in the other. */
     --hero-art-mask: url("hero-art-light.svg");
+    --hero-art-mask-narrow: url("hero-art-light-narrow.svg");
     --hero-pill-bg: rgba(240, 247, 253, 0.72);
     /* On paper the narrow scrim is a pale wash, not a dark one, and it has to
        be heavier than the desktop pair rather than lighter: a phone runs every
@@ -3743,6 +3761,7 @@ a.poster-shot:focus-visible {
   two sheets differ. Counted across the two files, the top fifth of the frame
   holds 929 marks in one and 2408 in the other. */
   --hero-art-mask: url("hero-art-light.svg");
+  --hero-art-mask-narrow: url("hero-art-light-narrow.svg");
   --hero-pill-bg: rgba(240, 247, 253, 0.72);
   --hero-scrim-narrow: linear-gradient(
       to bottom,

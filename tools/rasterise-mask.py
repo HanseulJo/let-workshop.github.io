@@ -41,6 +41,9 @@ def main():
     ap.add_argument("svg")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--width", type=int, default=2400, help="pixel width to bake at")
+    ap.add_argument("--crop", metavar="X,Y,W,H",
+                    help="a region of the drawing's own coordinates to bake "
+                         "instead of the whole of it")
     ap.add_argument("--port", type=int, default=8993)
     args = ap.parse_args()
 
@@ -55,6 +58,14 @@ def main():
     if not box:
         sys.exit(f"{svg} has no viewBox, so its aspect is unknown")
     vw, vh = (float(x) for x in box.group(1).split()[2:])
+    if args.crop:
+        # A phone shows a tall slice of a wide drawing, and asking it to draw
+        # the whole width in order to look at a fifth of it is the difference
+        # between an 11MB mask surface and a 64MB one. The slice is taken here
+        # instead, by moving the viewBox rather than by clipping — the paths
+        # outside it are never asked for.
+        x, y, vw, vh = (float(v) for v in args.crop.split(","))
+        markup = markup.replace(box.group(0), f'viewBox="{x} {y} {vw} {vh}"', 1)
     height = round(args.width * vh / vw)
 
     with tempfile.TemporaryDirectory() as tmp:
