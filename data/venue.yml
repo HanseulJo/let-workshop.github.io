@@ -14,12 +14,13 @@ address_ko: 경상북도 포항시 남구 청암로 77
 # by the 복지회 listing at dining.postech.ac.kr/store/. Note 98 seats, not the
 # round 100 this used to say — 98석 is the published figure.
 rooms:
-  - label: Sessions
-    name: Grand Conference Room · 대회의실
-    detail: 1F · 98 seats · Oct 7, 10:00–18:00 · Oct 8, 09:00–17:00
-  - label: Banquet
-    name: Banquet Hall · 연회장
-    detail: 2F · 200 seats · Oct 7, from 18:00
+  # One line each. The label, the name and the detail were three lines per room
+  # and the hours in them are the programme's job — the page carries the whole
+  # timetable a section above this.
+  - name: Grand Conference Room · 대회의실
+    detail: 1F · 98 seats
+  - name: Banquet Hall · 연회장
+    detail: 2F · 200 seats
 
 # Building centre from OpenStreetMap (Overpass): 포스코국제관 / POSCO
 # International Center, 36.0139836, 129.3209046.

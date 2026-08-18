@@ -138,9 +138,9 @@
              legibility that whitening the whole frame was being asked to buy,
              without flattening the drawing to get it. -->
         <feComponentTransfer>
-          <feFuncR type="linear" slope="0.78" intercept="0.16" />
-          <feFuncG type="linear" slope="0.80" intercept="0.20" />
-          <feFuncB type="linear" slope="0.84" intercept="0.30" />
+          <feFuncR type="linear" slope="0.70" intercept="0.24" />
+          <feFuncG type="linear" slope="0.72" intercept="0.29" />
+          <feFuncB type="linear" slope="0.76" intercept="0.39" />
         </feComponentTransfer>
       </filter>
       <symbol id="i-home" viewBox="0 0 24 24">
@@ -601,7 +601,6 @@
             <ul class="venue-rooms">
               {% for room in venue.rooms %}
               <li{% if not loop.first %} class="minor"{% endif %}>
-                <span class="room-label">{{ room.label }}</span>
                 <span class="room-name">{{ room.name }}</span>
                 <span class="room-detail">{{ room.detail }}</span>
               </li>

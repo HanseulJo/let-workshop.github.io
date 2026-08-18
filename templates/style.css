@@ -2528,6 +2528,13 @@ h2 .note {
   opacity: 0.72;
   margin-bottom: 5px;
 }
+/* Name and detail on one line, the detail set as the quiet half of it. */
+.venue-rooms li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
 .room-name {
   display: block;
   font-family: var(--display);
@@ -2537,11 +2544,9 @@ h2 .note {
   color: var(--ink);
 }
 .room-detail {
-  display: block;
   font-family: var(--mono);
   font-size: 0.7rem;
   color: var(--muted);
-  margin-top: 4px;
   font-variant-numeric: tabular-nums;
 }
 .venue-info address {
@@ -2561,8 +2566,9 @@ h2 .note {
   color: var(--prose);
 }
 .venue-travel li {
-  padding: 6px 0;
-  border-top: 1px solid var(--wash);
+  padding: 3px 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 .venue-travel b {
   color: var(--ink);
@@ -2728,12 +2734,21 @@ footer a {
      on a phone each mark got half of a 350px column and came out smaller than
      the body text beside it; one per line, they are the size a mark should be
      when it is the last thing the page says. */
+  /* Full width, one per line. A mark held at a fixed height is as large as
+     the shorter of the two wordmarks allows; letting each take the column and
+     scale to it is what actually makes them big — POSTECH is 6.9:1 and fills
+     it, KAIST is 3.5:1 and comes out taller, which is right. */
   .hosts-row {
     flex-direction: column;
-    gap: 26px;
+    align-items: stretch;
+    gap: 30px;
+  }
+  .hosts-row a {
+    width: 100%;
   }
   .hosts-row img {
-    height: 76px;
+    height: auto;
+    width: 100%;
     max-width: 100%;
   }
 
