@@ -1000,7 +1000,7 @@ FESTIVAL = """<!doctype html>
     <div class="panel">
       <div class="dates">
         <div class="side">
-          <div class="stack">{yyyy}.<br>{md1}<small>{hour1}</small>–<br>{md2}<small>{hour2}</small></div>
+          <div class="stack">{yyyy}.<br>{md1}<small>{hour1}</small> –<br>{md2}<small>{hour2}</small></div>
           <h4>Organizers</h4>
           <div class="orgs">{organisers}</div>
         </div>
