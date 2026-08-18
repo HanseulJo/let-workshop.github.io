@@ -30,11 +30,27 @@ Needs Chrome and Pillow. Local tool only — the site build does not run this.
 """
 
 import argparse
+import re
 import shutil
 import subprocess
 import sys
 import time
 from pathlib import Path
+
+# What the sheet must be set in. Checked on the rendered page rather than taken
+# on trust: a face that fails to load is not an error, it is a substitution,
+# and a substitution looks like a poster right up until someone reads it.
+FACES = ("Satoshi", "JetBrains Mono", "Jost", "Inter Tight")
+
+FONT_PROBE = """<script>
+document.fonts.ready.then(() => {
+  const got = new Set([...document.fonts].filter(f => f.status === 'loaded')
+                                         .map(f => f.family));
+  const p = document.createElement('pre');
+  p.id = '__fonts'; p.textContent = [...got].join('|');
+  document.body.appendChild(p);
+});
+</script>"""
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 ROOT = Path(__file__).resolve().parent.parent
@@ -84,11 +100,23 @@ def main():
     out = Path(args.out)
     sheets = [s for s in SHEETS if not args.only or s[0] == args.only]
 
+    # The sheet asks for its faces by relative path, so they have to sit beside
+    # it. A missing fonts/ is not an error anyone sees: Chrome falls back to a
+    # system face, the export succeeds, and the poster is simply set in the
+    # wrong type. It happened, so the files are copied and then checked.
+    shutil.copytree(ROOT / "static/fonts", work / "fonts", dirs_exist_ok=True)
+
     for name, art, extra in sheets:
         print(f"  {name}")
         run(sys.executable, ROOT / "tools/poster.py", "--art", ROOT / art,
             *[str(ROOT / e) if e.startswith("art/") else e for e in extra],
             "--layout", "festival", "-o", work / f"{name}.html", cwd=ROOT)
+        page = (work / f"{name}.html").read_text(encoding="utf-8")
+        missing = sorted({u for u in re.findall(r'url\("((?!data:)[^"]+)"\)', page)
+                          if not (work / u).exists()})
+        if missing:
+            sys.exit(f"  {name} asks for files that are not beside it:\n    "
+                     + "\n    ".join(missing))
 
     # Two servers on the same directory. Chrome is told which port to use;
     # poster-svg.py has 8997 written into it and reaches for the page itself.
@@ -106,6 +134,19 @@ def main():
             folder = out / folder
             folder.mkdir(parents=True, exist_ok=True)
             url = f"http://localhost:{args.port}/{name}.html"
+
+            probe = work / f"{name}--fonts.html"
+            probe.write_text((work / f"{name}.html").read_text(encoding="utf-8")
+                             + FONT_PROBE, encoding="utf-8")
+            dom = run(CHROME, "--headless=new", "--disable-gpu",
+                      "--window-size=1610,2268", "--virtual-time-budget=40000",
+                      "--dump-dom", f"http://localhost:{args.port}/{probe.name}")
+            probe.unlink()
+            m = re.search(r'<pre id="__fonts">(.*?)</pre>', dom, re.S)
+            loaded = set(m.group(1).split("|")) if m else set()
+            if not set(FACES) <= loaded:
+                sys.exit(f"  {name} fell back to system type — did not load: "
+                         + ", ".join(sorted(set(FACES) - loaded)))
 
             run(CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
                 f"--print-to-pdf={folder / (stem + '.pdf')}",
