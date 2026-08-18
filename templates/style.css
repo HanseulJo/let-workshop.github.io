@@ -2595,11 +2595,13 @@ h2 .note {
   margin-top: 30px;
 }
 .hosts-row img {
-  /* POSTECH is a 6.9:1 wordmark, KAIST 3.5:1 — matching them on height alone
-     makes the wider one dominate, so cap the width too and let object-fit
-     scale down rather than squash. */
+  /* Matched on height. POSTECH is a 6.9:1 wordmark and KAIST 3.5:1, so equal
+     height means unequal width and the wider one carries more of the row —
+     that is what matching heights costs, and it is the right cost here: two
+     marks set to different heights read as one being subordinate. The width
+     cap is gone, because a cap is what was quietly making them unequal. */
   height: 40px;
-  max-width: 240px;
+  max-width: none;
   width: auto;
   object-fit: contain;
   display: block;
@@ -2727,12 +2729,12 @@ footer a {
     align-items: stretch;
     gap: 30px;
   }
-  .hosts-row a {
-    width: 100%;
-  }
   .hosts-row img {
-    height: auto;
-    width: 100%;
+    /* Same height on a phone too, at the size the wider of the two can be
+       without running out of column: POSTECH at 44px is 303px of the 350
+       available. */
+    height: 44px;
+    width: auto;
     max-width: 100%;
   }
 
