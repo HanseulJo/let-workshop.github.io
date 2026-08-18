@@ -710,10 +710,10 @@
                 {% if (sheet.image[:-4] ~ '.webp') | shipped %}
                 {%- set stem = sheet.image[:-4] %}
                 <source type="image/webp"
-                        srcset="{% for w in [560, 900] %}{% if (stem ~ '-' ~ w ~ '.webp') | shipped %}{{ (stem ~ '-' ~ w ~ '.webp') | asset }} {{ w }}w, {% endif %}{% endfor %}{{ (stem ~ '.webp') | asset }} 1200w"
-                        sizes="(min-width: 1024px) 480px, (min-width: 781px) 470px, (min-width: 431px) 370px, 300px" />
+                        data-srcset="{% for w in [560, 900] %}{% if (stem ~ '-' ~ w ~ '.webp') | shipped %}{{ (stem ~ '-' ~ w ~ '.webp') | asset }} {{ w }}w, {% endif %}{% endfor %}{{ (stem ~ '.webp') | asset }} 1200w"
+                        sizes="(min-width: 1024px) 480px, (min-width: 781px) 470px, (min-width: 431px) 370px, 180px" />
                 {% endif %}
-                <img src="{{ sheet.image | asset }}"
+                <img data-src="{{ sheet.image | asset }}"
                      alt="{{ site.poster.alt }}{% if sheet.label %} — {{ sheet.label }}{% endif %}"
                      width="1200" height="1698" loading="lazy" decoding="async" />
               </picture>
@@ -778,6 +778,47 @@
     {% elif venue.map.resolved == 'kakao' %}
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{ venue.map.kakao_app_key }}"></script>
     <script>
+      // Two of the heaviest things here sit a long way down the page: the map
+      // and the two poster sheets. Both were being built the moment the page
+      // opened — the map is a library plus a grid of tiles decoded at the
+      // device's own pixel ratio, and the sheets are 1200px pictures shown at
+      // 300, held whether or not anybody scrolls that far. On a phone that is
+      // where the tab was being killed, and none of it is needed to read the
+      // top of the page.
+      //
+      // loading="lazy" was already on the images and did not save them: the
+      // distance at which a browser calls an image "near" is generous, and on
+      // a fast connection Chrome fetches most of a page's lazy images at once.
+      // Holding the URL back until the section is approached is the version
+      // that actually waits.
+      function whenNear(el, build) {
+        if (!el) return;
+        if (!window.IntersectionObserver) return build();
+        // 400px of warning, so it is usually there by the time it is reached.
+        var io = new IntersectionObserver(
+          function (es) {
+            if (!es.some(function (e) { return e.isIntersecting; })) return;
+            io.disconnect();
+            build();
+          },
+          { rootMargin: "400px" }
+        );
+        io.observe(el);
+      }
+
+      whenNear(document.getElementById("poster"), function () {
+        var host = document.getElementById("poster");
+        Array.prototype.forEach.call(
+          host.querySelectorAll("[data-srcset], [data-src]"),
+          function (el) {
+            if (el.dataset.srcset) el.srcset = el.dataset.srcset;
+            if (el.dataset.src) el.src = el.dataset.src;
+          }
+        );
+      });
+    </script>
+
+    <script>
       // Both map libraries measure their container once, at construction, and
       // keep drawing tiles for that size. The box changes height at the 720px
       // breakpoint and on any rotate, which would otherwise leave tiles short
@@ -835,7 +876,7 @@
         document.body.appendChild(js);
       }
 
-      (function () {
+      whenNear(document.getElementById("map"), function () {
         if (typeof kakao === "undefined" || !kakao.maps) return mapFallback();
         var at = new kakao.maps.LatLng({{ venue.lat }}, {{ venue.lon }});
         var map = new kakao.maps.Map(document.getElementById("map"), {
@@ -846,12 +887,37 @@
         map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
         // relayout() alone re-measures but drifts the centre off the venue.
         keepMapSized(function () { map.relayout(); map.setCenter(at); });
-      })();
+      });
     </script>
     {% else %}
-    <script src="vendor/leaflet/leaflet.js"></script>
     <script>
+      // Built when the map is nearly on screen, not when the page loads. It
+      // sits below the programme and the organisers, so on a phone it is a
+      // long way down — and a map is the most expensive thing here: the
+      // library, then a grid of tiles decoded at the device's own ratio, all
+      // of it held whether or not anybody scrolls that far. Loading it on
+      // approach takes that off the page's opening cost entirely.
       (function () {
+        function whenNear(el, build) {
+          if (!el) return;
+          if (!window.IntersectionObserver) return build();
+          var io = new IntersectionObserver(
+            function (es) {
+              if (!es.some(function (e) { return e.isIntersecting; })) return;
+              io.disconnect();
+              build();
+            },
+            { rootMargin: "400px" }
+          );
+          io.observe(el);
+        }
+        whenNear(document.getElementById("map"), function () {
+          var js = document.createElement("script");
+          js.src = "vendor/leaflet/leaflet.js";
+          js.onload = draw;
+          document.head.appendChild(js);
+        });
+        function draw() {
         if (typeof L === "undefined") return;
         var at = [{{ venue.lat }}, {{ venue.lon }}];
         var map = L.map("map", {
@@ -885,6 +951,7 @@
         map.on("click", function () {
           map.scrollWheelZoom.enable();
         });
+        }
       })();
     </script>
     {% endif %}

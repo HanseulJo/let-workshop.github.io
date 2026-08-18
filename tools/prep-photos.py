@@ -6,7 +6,9 @@
 
 Writes static/<organizers|speakers>/<slug>.jpg: centre-cropped to a square,
 biased upward so a portrait keeps the head rather than the chin, resized to
-512px and saved as JPEG. Needs Pillow, which is a local tool dependency only —
+320px and saved as JPEG. The card draws it at 145px; 512 was three and a
+half times that, and a phone holding twenty of them decoded is where the
+memory went. Needs Pillow, which is a local tool dependency only —
 the site build doesn't touch images.
 
 Someone who both speaks and organises needs the file in both folders, since the
@@ -22,8 +24,9 @@ from PIL import Image, ImageOps
 
 # The card photo fills the card's width — around 150 CSS px, so 300 device px
 # on a retina screen. 256 was cut for a 60px thumbnail and is fractionally short
-# of that; 512 clears it with room for wider cards later.
-SIZE = 512
+# of that. 512 cleared it with room to spare and paid four times the memory
+# for it: twenty avatars decoded is 21MB on a phone at 512 and 7MB at 320.
+SIZE = 320
 STATIC = Path(__file__).resolve().parent.parent / "static"
 FOLDERS = ("organizers", "speakers")
 
