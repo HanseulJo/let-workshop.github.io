@@ -800,6 +800,7 @@ def main() -> int:
     )
     env.globals["t"] = bilingual
     env.filters["asset"] = asset_url
+    env.filters["shipped"] = lambda name: (STATIC / name).exists()
 
     wanted = args.variants or list(site["variants"])
     unknown = [v for v in wanted if v not in site["variants"]]

@@ -653,9 +653,20 @@
             {% else %}
             <span class="poster-shot">
             {% endif %}
-              <img src="{{ sheet.image }}"
-                   alt="{{ site.poster.alt }}{% if sheet.label %} — {{ sheet.label }}{% endif %}"
-                   width="1200" height="1698" loading="lazy" decoding="async" />
+              <!-- WebP first, the PNG behind it. The sheet is a photographic
+                   texture and lossless is the wrong tool for one: the same
+                   1200px thumbnail is 3.6MB as PNG and 0.8MB at WebP q92, a
+                   mean difference of two levels out of 255. The PNG stays as
+                   the fallback, and it is still what the full-size link hands
+                   over — this is only the copy shown on the page. -->
+              <picture>
+                {% if (sheet.image[:-4] ~ '.webp') | shipped %}
+                <source type="image/webp" srcset="{{ (sheet.image[:-4] ~ '.webp') | asset }}" />
+                {% endif %}
+                <img src="{{ sheet.image | asset }}"
+                     alt="{{ site.poster.alt }}{% if sheet.label %} — {{ sheet.label }}{% endif %}"
+                     width="1200" height="1698" loading="lazy" decoding="async" />
+              </picture>
             {% if sheet.full %}</a>{% else %}</span>{% endif %}
             <figcaption>
               {% if sheet.label %}<span class="poster-spec">{{ t(sheet.label, sheet.label_ko) }}</span>{% endif %}
