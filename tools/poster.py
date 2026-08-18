@@ -611,7 +611,13 @@ FESTIVAL = """<!doctype html>
     background:{ground}; color:{ink}; font-family:"Satoshi","Helvetica Neue",sans-serif;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }}
-  .art {{ position:absolute; inset:0; overflow:hidden; opacity:{art_alpha}; }}
+  /* The drawing sets its own colour. Its strokes are currentColor, so with no
+     colour of its own here it inherited the sheet's — which on a dark ground
+     is white and happens to be right, and on paper is the near-black the type
+     is set in. That is why the light sheet's formulas stayed black however
+     often art_ink was changed: the palette value was reaching the recolour
+     pass, finding no white to replace, and never reaching the page. */
+  .art {{ position:absolute; inset:0; overflow:hidden; opacity:{art_alpha}; color:{art_ink}; }}
   .art svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
   .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:{ghost_alpha}; }}
   .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
@@ -1944,6 +1950,15 @@ SCHEMES = {
         "art_ink": "#234a75", "ink": "#0d2137", "cool": "#456080",
         "veil1": ".20", "veil2": "0", "veil3": "0", "veil4": ".74", "veil5": ".93",
         "veilx": ".10", "ghost_alpha": ".45",
+        # The photograph behind the formulas, printed in paper tones. The two
+        # defaults are for a dark ground — a near-black shadow and a pale blue
+        # highlight — and on paper that reads as a negative: the sky comes out
+        # heavier than the building in front of it. Here the dark end takes
+        # ink and the light end is the paper itself, driven a little harder
+        # than the default, because on a pale sheet the photograph has to carry
+        # the whole difference between a pale building and a pale sky.
+        "ghost_shadow": "#1b3a5c", "ghost_light": "#cfe4f5",
+        "ghost_contrast": "1.15",
         # The other four, turned over the same way: the veil almost gone where
         # the picture is and back at the ends where type has to be read off it,
         # and every rule and keyline in ink rather than in paper.

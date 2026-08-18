@@ -48,7 +48,8 @@ DPI300 = 3.125  # 96 * 3.125 = 300
 SHEETS = [
     # name           artwork            extra poster.py arguments
     ("poster-2026", "art/a2-dark.svg", ["--ghost", "art/campus.jpg"]),
-    ("poster-2026-light", "art/a2-light.svg", ["--scheme", "light"]),
+    ("poster-2026-light", "art/a2-light.svg", ["--scheme", "light",
+                                               "--ghost", "art/campus.jpg"]),
 ]
 
 PRINT_NAMES = {

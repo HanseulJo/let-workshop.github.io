@@ -3464,8 +3464,8 @@ a.poster-shot:focus-visible {
    explicit choice, and the system default when nothing has been chosen. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --hero-bg: #c8e1f8;
-    --hero-bg2: #aed0f1;
+    --hero-bg: #d4e8fa;
+    --hero-bg2: #c0daf4;
     --hero-title: #0d2137;
     --hero-body: #26405c;
     /* Darkened from #456080 so the foot of the hero can be. The small
@@ -3483,7 +3483,7 @@ a.poster-shot:focus-visible {
     --logo-plate: rgba(255, 255, 255, 0.78);
     --logo-plate: rgba(255, 255, 255, 0.78);
   --hero-photo: url("hero-paper.jpg");
-    --hero-photo-opacity: 0.62;
+    --hero-photo-opacity: 0.54;
     --hero-art-image: url("hero-paper-ink.jpg");
     /* The density is the original contrast; what changed is the floor
        under it. brightness() alone lifts the whole range and takes the
@@ -3505,17 +3505,17 @@ a.poster-shot:focus-visible {
        spend contrast on, and the wash is the only thing buying it. */
     --hero-scrim-narrow: linear-gradient(
         to bottom,
-        rgba(232, 243, 252, 0.84) 0%,
-        rgba(222, 237, 250, 0.86) 26%,
-        rgba(203, 226, 244, 0.88) 52%,
-        rgba(184, 211, 236, 0.9) 100%
+        rgba(237, 246, 253, 0.84) 0%,
+        rgba(229, 241, 251, 0.86) 26%,
+        rgba(214, 232, 246, 0.88) 52%,
+        rgba(200, 221, 240, 0.9) 100%
       );
     --hero-scrim-narrow-art: linear-gradient(
         to bottom,
-        rgba(232, 243, 252, 0.86) 0%,
-        rgba(222, 237, 250, 0.88) 26%,
-        rgba(203, 226, 244, 0.9) 52%,
-        rgba(184, 211, 236, 0.92) 100%
+        rgba(237, 246, 253, 0.86) 0%,
+        rgba(229, 241, 251, 0.88) 26%,
+        rgba(214, 232, 246, 0.9) 52%,
+        rgba(200, 221, 240, 0.92) 100%
       );
     --hero-art-opacity-narrow: 0.32;
     --hero-art-filter-narrow: contrast(1.15) brightness(1.02) url(#ink-floor);
@@ -3524,23 +3524,23 @@ a.poster-shot:focus-visible {
        writing *is* the dark thing, and a heavy scrim rubs it out. */
     --hero-scrim: linear-gradient(
         to right,
-        rgba(207, 228, 245, 0.62) 0%,
-        rgba(207, 228, 245, 0.34) 30%,
-        rgba(207, 228, 245, 0.08) 48%,
+        rgba(218, 234, 247, 0.62) 0%,
+        rgba(218, 234, 247, 0.34) 30%,
+        rgba(218, 234, 247, 0.08) 48%,
         transparent 62%
       ),
       linear-gradient(
         to bottom,
-        rgba(207, 228, 245, 0.06) 0%,
-        rgba(190, 214, 236, 0.24) 40%,
-        rgba(152, 186, 219, 0.56) 66%,
-        rgba(126, 166, 205, 0.74) 100%
+        rgba(218, 234, 247, 0.06) 0%,
+        rgba(204, 223, 240, 0.24) 40%,
+        rgba(175, 201, 227, 0.56) 66%,
+        rgba(154, 186, 216, 0.74) 100%
       );
   }
 }
 :root[data-theme="light"] {
-  --hero-bg: #c8e1f8;
-  --hero-bg2: #aed0f1;
+  --hero-bg: #d4e8fa;
+  --hero-bg2: #c0daf4;
   --hero-title: #0d2137;
   --hero-body: #26405c;
   /* Darkened from #456080 so the foot of the hero can be. The small
@@ -3557,7 +3557,7 @@ a.poster-shot:focus-visible {
   --hero-art-ink: #16324f;
   --logo-plate: rgba(255, 255, 255, 0.78);
   --hero-photo: url("hero-paper.jpg");
-  --hero-photo-opacity: 0.62;
+  --hero-photo-opacity: 0.54;
   --hero-art-image: url("hero-paper-ink.jpg");
   /* The density is the original contrast; what changed is the floor
        under it. brightness() alone lifts the whole range and takes the
@@ -3575,32 +3575,32 @@ a.poster-shot:focus-visible {
   --hero-pill-bg: rgba(240, 247, 253, 0.72);
   --hero-scrim-narrow: linear-gradient(
       to bottom,
-      rgba(232, 243, 252, 0.84) 0%,
-      rgba(222, 237, 250, 0.86) 26%,
-      rgba(203, 226, 244, 0.88) 52%,
-      rgba(184, 211, 236, 0.9) 100%
+      rgba(237, 246, 253, 0.84) 0%,
+      rgba(229, 241, 251, 0.86) 26%,
+      rgba(214, 232, 246, 0.88) 52%,
+      rgba(200, 221, 240, 0.9) 100%
     );
   --hero-scrim-narrow-art: linear-gradient(
       to bottom,
-      rgba(232, 243, 252, 0.86) 0%,
-      rgba(222, 237, 250, 0.88) 26%,
-      rgba(203, 226, 244, 0.9) 52%,
-      rgba(184, 211, 236, 0.92) 100%
+      rgba(237, 246, 253, 0.86) 0%,
+      rgba(229, 241, 251, 0.88) 26%,
+      rgba(214, 232, 246, 0.9) 52%,
+      rgba(200, 221, 240, 0.92) 100%
     );
   --hero-art-opacity-narrow: 0.32;
   --hero-art-filter-narrow: contrast(1.15) brightness(1.02) url(#ink-floor);
   --hero-scrim: linear-gradient(
       to right,
-      rgba(207, 228, 245, 0.62) 0%,
-      rgba(207, 228, 245, 0.34) 30%,
-      rgba(207, 228, 245, 0.08) 48%,
+      rgba(218, 234, 247, 0.62) 0%,
+      rgba(218, 234, 247, 0.34) 30%,
+      rgba(218, 234, 247, 0.08) 48%,
       transparent 62%
     ),
     linear-gradient(
       to bottom,
-      rgba(207, 228, 245, 0.06) 0%,
-      rgba(190, 214, 236, 0.24) 40%,
-      rgba(152, 186, 219, 0.56) 66%,
-      rgba(126, 166, 205, 0.74) 100%
+      rgba(218, 234, 247, 0.06) 0%,
+      rgba(204, 223, 240, 0.24) 40%,
+      rgba(175, 201, 227, 0.56) 66%,
+      rgba(154, 186, 216, 0.74) 100%
     );
 }
