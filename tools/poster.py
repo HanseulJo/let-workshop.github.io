@@ -281,7 +281,11 @@ def sessions(program):
         for e in day["events"]:
             if e.get("type") not in ("block", "tutorial", "keynote"):
                 continue
-            people = [s for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
+            named = [s for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
+            # A session with nobody named yet is still a session, and leaving it
+            # off the sheet makes the day look shorter than it is. It appears
+            # with its hour and its title and TBD where the names will go.
+            people = named or [{"name": "TBD", "affil": ""}] * len(e.get("speakers", []) or [])
             if not people:
                 continue
             blocks.append(
@@ -725,7 +729,7 @@ FESTIVAL = """<!doctype html>
      text runs along, whichever way that ends up pointing. */
   /* Field names — VENUE, THEME, HOMEPAGE, ORGANISERS, the stamps at the top —
      all speak in the mono at one size. They were set at 4mm, 3.8mm and, in the
-     case of Organisers, at whatever a browser gives an unstyled h4, which was
+     case of Organizers, at whatever a browser gives an unstyled h4, which was
      16px. Nothing was gained by any of the differences. */
   .rail b, .side h4, .stamps, .prog-grid i u small {{
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:400;
@@ -745,9 +749,14 @@ FESTIVAL = """<!doctype html>
      letter there is, and on a busy drawing that is most of what legibility is:
      at 900 the rails put down 12.0% ink against 10.4% at 700, and the thicker
      stroke is what lets the strip behind them stay lighter. */
+  /* 7mm, which is what the longest of the three lines allows. The theme names
+     three fields now and set 264mm at 9mm — 33mm past where the programme
+     begins. The rails are as large as their longest line lets them be, and
+     that line is the one that decides. */
   .rail span {{
-    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:9mm;
-    font-weight:900; letter-spacing:-.014em; color:{hot};
+    display:block; max-inline-size:168mm;
+    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:7.4mm;
+    font-weight:900; letter-spacing:-.014em; line-height:1.22; color:{hot};
   }}
   /* A third rail on the opposite edge. It is a member of the same flex row
      rather than its own absolute block, which is what makes the alignment
@@ -863,21 +872,16 @@ FESTIVAL = """<!doctype html>
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
   .datesub {{ display:none; }}
+  /* When the doors open. The sheet gave two dates and no hour, and an hour is
+     what a travel claim needs from it — the rest of the timetable is on the
+     page the code leads to. */
+  .doors {{
+    font-family:"JetBrains Mono",monospace; font-size:3.8mm; font-weight:400;
+    letter-spacing:.16em; text-transform:uppercase; color:{ink}; opacity:.72;
+    margin:2.5mm 0 0;
+  }}
   .side {{ flex:none; }}
   .side h4 {{ margin-top:7mm; }}
-  /* The name once more along the bottom, at the size the theme used to sit at
-     there. The mark states it in full at the top; down here it is the line
-     that signs the sheet off, so it takes the theme's size, not its own. */
-  /* Centred on the sheet rather than in the gap between the marks and the
-     code. In the flex row it sat wherever those two left it, which is not the
-     middle of anything; taken out of the flow it lands on the paper's centre
-     line, which is what a line signing the sheet off should do. */
-  .footname {{
-    position:absolute; left:50%; transform:translateX(-50%); bottom:20mm;
-    margin:0;
-    font-family:"JetBrains Mono",monospace; font-size:4.4mm; font-weight:500;
-    letter-spacing:.1em; text-transform:uppercase; color:{ink}; opacity:.46;
-  }}
   .cols h4 {{
     font-family:"JetBrains Mono",monospace; font-size:3.6mm; font-weight:500;
     letter-spacing:.16em; text-transform:uppercase; color:{hot}; margin:0 0 3mm;
@@ -899,7 +903,11 @@ FESTIVAL = """<!doctype html>
     text-transform:uppercase; color:{cool};
   }}
   .qr-plate {{ width:32mm; height:32mm; background:{art_ink}; padding:1.6mm; box-sizing:border-box; }}
-  .foot .cta {{ text-align:right; }}
+  /* Centred over the code rather than ranged with the sheet's right edge. It
+     is a label on the square below it, not a line of the foot: against the
+     edge it read as a third item in the row, over the middle of the code it
+     reads as its caption. */
+  .foot .cta {{ text-align:center; }}
   .foot .cta b {{ display:block; font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:4.6mm;
                   font-weight:700; color:{hot}; margin-bottom:2.5mm; letter-spacing:0;
                   text-transform:none; }}
@@ -938,14 +946,14 @@ FESTIVAL = """<!doctype html>
       <div class="dates">
         <div class="side">
           <div class="stack">{yyyy}.<br>{md1}–<br>{md2}</div>
-          <h4>Organisers</h4>
+          <p class="doors">{doors}</p>
+          <h4>Organizers</h4>
           <div class="orgs">{organisers}</div>
         </div>
         <div class="bill"><div class="prog-grid">{programme}</div></div>
       </div>
       <div class="foot">
         <span class="marks">{logos}</span>
-        <p class="footname">{long_name_ed}</p>
         <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
       </div>
     </div>
@@ -1409,7 +1417,7 @@ SOCIAL = """<!doctype html>
 <div class="card quiet">
   {ghost}<div class="art">{art}</div><div class="veil"></div><div class="frame"></div>
   <div class="pad">
-    <div class="head"><p class="kicker">Organisers</p><span class="num">6/6</span></div>
+    <div class="head"><p class="kicker">Organizers</p><span class="num">6/6</span></div>
     <div class="mid">
       <div class="orgs2">{organisers}</div>
       <div class="join">
@@ -1644,7 +1652,7 @@ ACADEMIC = """<!doctype html>
   </div>
   <div class="band">
     <div class="orgs">
-      <h4>Organisers</h4>
+      <h4>Organizers</h4>
       <ul>{organisers}</ul>
     </div>
     <div class="cta">
@@ -1739,7 +1747,7 @@ CIVIC = """<!doctype html>
     <div class="grp"><h4>Day 2 · {d2}</h4><ul>{day2}</ul></div>
   </div>
   <div class="side">
-    <h4>Organisers</h4><ul>{organisers}</ul>
+    <h4>Organizers</h4><ul>{organisers}</ul>
     <p>Programme and registration<br><a>{url}</a></p>
   </div>
   <div class="qr-plate">{qr}</div>
@@ -1837,7 +1845,11 @@ def festival_bits(program, organizers, site):
         for e in day["events"]:
             if e.get("type") not in ("block", "tutorial", "keynote"):
                 continue
-            people = [s for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
+            named = [s for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
+            # A session with nobody named yet is still a session, and leaving it
+            # off the sheet makes the day look shorter than it is. It appears
+            # with its hour and its title and TBD where the names will go.
+            people = named or [{"name": "TBD", "affil": ""}] * len(e.get("speakers", []) or [])
             if not people:
                 continue
             sess.append(f"<li>{esc(e['title'])}</li>")
@@ -2107,6 +2119,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     # are on the programme, and two cards for one person is a card wasted.
     # "October 7-8, 2026" is three lines in the badge's corner and the month is
     # the least of what it says; the short form is one.
+    # The first thing that happens on the first day, said as an hour.
+    opening = program["days"][0]["events"][0]
+    doors = esc(f'Doors {opening.get("start", "")}') if opening.get("start") else ""
+
     short_dates = re.sub(r"^(\w{3})\w*", lambda m: m.group(1), site["dates"])
     as_url = lambda svg: "data:image/svg+xml;base64," + base64.b64encode(
         svg.encode("utf-8")).decode("ascii")
@@ -2215,6 +2231,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             for w in site["full_name"].split())),
         reg_note=esc((site["hero_actions"][0].get("note") or "Opens soon")),
         badges=badges,
+        doors=doors,
         art_url=art_url,
         ghost_url=ghost_url,
         blurb=esc(site.get("blurb", "")),

@@ -110,12 +110,16 @@ getting_here_title_ko: 가는 방법
 getting_here:
   # Bus numbers and times are POSTECH's own, from the 오시는 길 page at
   # postech.ac.kr/kor/university-introduction/direction.do.
+  # Pohang has two bus terminals 2.5km apart — the intercity one, whose own
+  # name is 포항터미널, in Sangdo-dong, and the express one in Haedo-dong. The
+  # 207 serves the intercity terminal, so it is named rather than left as "the
+  # bus terminal", which is the ambiguous half of the pair.
   - mode: From Pohang KTX
     mode_ko: 포항역에서
-    detail: Bus 5000 to the intercity terminal, change to 207 · 1 hr · or taxi, 20–30 min
-    detail_ko: 5000번 → 시외버스터미널 환승 207번 · 1시간 · 또는 택시 20–30분
-  - mode: From the bus terminal
-    mode_ko: 시외버스터미널에서
+    detail: Bus 5000 to Pohang Terminal (intercity), change to 207 · 1 hr · or taxi, 20–30 min
+    detail_ko: 5000번 → 포항터미널(시외) 환승 207번 · 1시간 · 또는 택시 20–30분
+  - mode: From Pohang Terminal (intercity)
+    mode_ko: 포항터미널(시외)에서
     detail: Bus 207 to POSTECH · 10 min
     detail_ko: 207번 · 10분
   - mode: Parking
@@ -142,22 +146,28 @@ accommodation:
     note_ko: 행사장 건물. 객실 한정, 선착순.
   nearby_note: Otherwise book direct.
   nearby_note_ko: 그 외에는 직접 예약해 주세요.
+  # Two facts per place, not a table: how long by car, and the bus if there is
+  # one. 207 is the route that matters here — it runs the seafront to POSTECH —
+  # and every one of these is on it.
   nearby:
     - name: Hotel Yeongildae
       name_ko: 호텔영일대
-      # 207 runs 영일대 to 포항공과대학교 every 12-14 min, so this one has a bus
-      # worth naming. The other two are given a taxi time only: no route to
-      # them was verified, and an invented bus number is worse than none.
-      travel: bus 207 · taxi 5 min
-      travel_ko: 207번 · 택시 5분
+      travel: 5 min by car
+      travel_ko: 차량 약 5분
+      transit: Yeongildae stop, bus 207, about 4 stops
+      transit_ko: 영일대 정류장 → 207 → 포스텍, 약 4정거장
       map: https://map.naver.com/p/search/포항%20호텔영일대
-    - name: Apple Tree Hotel
-      name_ko: 애플트리호텔
-      travel: taxi 15 min
-      travel_ko: 택시 15분
-      map: https://map.naver.com/p/search/포항%20애플트리호텔
+    - name: Nobleon Hotel
+      name_ko: 노블리온 호텔
+      travel: 7 min by car
+      travel_ko: 차량 약 7분
+      transit: Pohang Terminal (intercity), bus 207, about 15 min
+      transit_ko: 포항터미널(시외) → 207 → 포스텍, 약 15분
+      map: https://map.naver.com/p/search/포항%20노블리온%20호텔
     - name: Hotel Lahan Pohang
       name_ko: 라한호텔 포항
-      travel: taxi 15 min
-      travel_ko: 택시 15분
+      travel: 15–20 min by car
+      travel_ko: 차량 약 15–20분
+      transit: Yeongildae Beach, bus 207, no change
+      transit_ko: 영일대해수욕장 → 207 → 포스텍, 환승 없음
       map: https://map.naver.com/p/search/라한호텔%20포항

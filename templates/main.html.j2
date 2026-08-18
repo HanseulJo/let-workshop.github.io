@@ -632,7 +632,17 @@
               {% endif %}
               <ul class="stay-list">
                 {% for place in venue.accommodation.nearby %}
-                <li>{% if place.map %}<a href="{{ place.map }}" target="_blank" rel="noopener">{{ t(place.name, place.name_ko) }}</a>{% else %}<b>{{ t(place.name, place.name_ko) }}</b>{% endif %}<span>{{ t(place.travel, place.travel_ko) }}</span></li>
+                <li>
+                  <span class="stay-head">
+                    {% if place.map %}
+                    <a href="{{ place.map }}" target="_blank" rel="noopener">{{ t(place.name, place.name_ko) }}</a>
+                    {% else %}<b>{{ t(place.name, place.name_ko) }}</b>{% endif %}
+                    <span>{{ t(place.travel, place.travel_ko) }}</span>
+                  </span>
+                  {% if place.transit %}
+                  <span class="stay-transit">{{ t(place.transit, place.transit_ko) }}</span>
+                  {% endif %}
+                </li>
                 {% endfor %}
               </ul>
               {% endif %}

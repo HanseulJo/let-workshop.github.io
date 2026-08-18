@@ -39,7 +39,7 @@ eyebrow_ko: 제1회 · 연례 모임
 # neither legible, and the picture disappears into the noise.
 hero_background: art
 
-theme: Bandits & Deep Learning Theory
+theme: Deep Learning Theory, Uncertainty Quantification, and Bandits
 dates: October 7–8, 2026
 venue: POSTECH
 city: Pohang
@@ -108,8 +108,6 @@ hosts:
   # rather than as one.
   title: Hosts
   title_ko: 주최
-  note: With the support of
-  note_ko: 다음 기관의 지원으로 열립니다
   label: Host and participating institutions
   logos:
     - { name: KAIST, file: kaist.png, url: https://www.kaist.ac.kr/en/ }
@@ -217,8 +215,6 @@ poster:
   # section and takes a copy away may never read the caption.
   title_note: details are tentative
   title_note_ko: 세부 사항은 변경될 수 있습니다
-  subtitle: Print it, pin it up, pass it on.
-  subtitle_ko: 인쇄해서 붙이고 나눠주세요.
   # Two sheets, the same poster printed either way round. `sheets` is what the
   # page shows; the first is the one that leads.
   # Two downloads under each sheet, not one. The full-size file is 16MB, and a

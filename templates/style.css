@@ -2625,9 +2625,10 @@ h2 .note {
 .hosts-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 44px;
-  margin-top: 26px;
+  gap: 56px;
+  margin-top: 30px;
 }
 .hosts-row img {
   /* POSTECH is a 6.9:1 wordmark, KAIST 3.5:1 — matching them on height alone
@@ -2649,11 +2650,11 @@ h2 .note {
   filter: none;
   opacity: 1;
 }
+/* No plate. Both marks are supplied with transparent backgrounds, so the card
+   behind them was adding a white rectangle that was not theirs — it read as
+   part of the logo rather than as the page. */
 .hosts-row a {
   display: block;
-  padding: 14px 20px;
-  border-radius: 12px;
-  background: var(--logo-plate);
   transition: transform 0.15s ease;
 }
 .hosts-row a:hover,
@@ -3218,13 +3219,27 @@ footer a {
 }
 /* Name left, journey right, on one rule-free row each: it is a two-column fact
    and the eye should be able to run down either column on its own. */
+/* Two lines per place: the name with how long it takes by car, and the bus
+   under it. A table was the other option and it is the wrong shape here — the
+   card is one column wide on a phone, and three columns of two-word cells wrap
+   into something harder to read than the sentence it replaced. */
 .stay-list li {
+  padding: 6px 0;
+  font-size: 0.88rem;
+}
+.stay-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  padding: 4px 0;
-  font-size: 0.88rem;
+}
+.stay-transit {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--muted);
 }
 .stay-list b,
 .stay-list a {
@@ -3238,7 +3253,7 @@ footer a {
   color: var(--accent);
   border-bottom-color: currentColor;
 }
-.stay-list span {
+.stay-head span {
   font-family: var(--mono);
   font-size: 0.74rem;
   color: var(--muted);

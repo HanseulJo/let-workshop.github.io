@@ -358,7 +358,8 @@ def fill_defaults(bundle: dict) -> None:
             for key in ("name_ko", "note", "note_ko"):
                 acc["first_come"].setdefault(key, None)
         for place in acc.setdefault("nearby", []):
-            for key in ("name_ko", "travel", "travel_ko", "map"):
+            for key in ("name_ko", "travel", "travel_ko", "map",
+                        "transit", "transit_ko"):
                 place.setdefault(key, None)
     bundle["venue"].setdefault("subtitle", None)
     bundle["venue"].setdefault("subtitle_ko", None)
