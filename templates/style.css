@@ -66,6 +66,8 @@
   --hero-body: #b9c7da;
   --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
   --hero-rule: rgba(255, 255, 255, 0.12);
+  --hero-meta-plate: rgba(13, 21, 35, 0.68);
+  --hero-meta-plate-line: rgba(255, 255, 255, 0.14);
   --hero-accent: #ff8a75;
   /* The ink the formula art is drawn in. Cool and a step off white: the glyphs
      are tiny and packed, and at full white the field reads as glare rather
@@ -800,8 +802,18 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 22px 34px;
   margin: 34px 0 0;
-  padding-top: 26px;
-  border-top: 1px solid var(--hero-rule);
+  /* On a plate of its own. Everything else in the hero — the mark, the theme,
+     the buttons — is large enough to hold its own against the drawing behind
+     it; this row is four labels at 0.66rem and four facts under them, and it
+     was the one place the picture and the type were competing. A hairline was
+     doing the separating, and a hairline has no inside, so the formulas ran
+     straight under the smallest type on the page.
+     The plate's own edge replaces that hairline: a box drawn under a rule
+     reads as two dividers stacked. */
+  padding: 24px 28px;
+  background: var(--hero-meta-plate);
+  border: 1px solid var(--hero-meta-plate-line);
+  border-radius: 14px;
   max-width: 900px;
 }
 .hero-meta dt {
@@ -3474,6 +3486,8 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
     --hero-rule: rgba(13, 33, 55, 0.16);
+    --hero-meta-plate: rgba(255, 255, 255, 0.8);
+    --hero-meta-plate-line: rgba(13, 33, 55, 0.09);
     /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
      ground needs, and at that hue the darkness reads as blood rather than
      as the coral the dark sheet uses. Walking the hue to 18 at the same
@@ -3549,6 +3563,8 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
   --hero-rule: rgba(13, 33, 55, 0.16);
+  --hero-meta-plate: rgba(255, 255, 255, 0.8);
+  --hero-meta-plate-line: rgba(13, 33, 55, 0.09);
   /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
      ground needs, and at that hue the darkness reads as blood rather than
      as the coral the dark sheet uses. Walking the hue to 18 at the same
