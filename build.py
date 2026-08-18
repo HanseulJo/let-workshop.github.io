@@ -348,6 +348,8 @@ def fill_defaults(bundle: dict) -> None:
     # No accommodation block is a legitimate page; the card simply omits it.
     for room in bundle["venue"].get("rooms", []):
         room.setdefault("label", None)
+    bundle["venue"].setdefault("rooms_title", None)
+    bundle["venue"].setdefault("rooms_title_ko", None)
     bundle["venue"].setdefault("getting_here_title", None)
     bundle["venue"].setdefault("getting_here_title_ko", None)
     bundle["venue"].setdefault("accommodation", None)

@@ -592,24 +592,27 @@
           <div class="venue-info">
             <div class="venue-name">{{ venue.name }} <span lang="ko">{{ venue.name_ko }}</span></div>
             <div class="venue-room">{{ venue.campus }}</div>
+            <address>
+              {{ venue.address }}<br />
+              <span lang="ko">{{ venue.address_ko }}</span>
+            </address>
             <div class="map-links">
               {% for link in venue.map_links %}
               <a href="{{ link.url }}" target="_blank" rel="noopener">
                 <svg aria-hidden="true"><use href="#i-{{ link.icon }}" /></svg>{{ link.label }}</a>
               {% endfor %}
             </div>
+            {% if venue.rooms_title %}
+            <h4 class="venue-h">{{ t(venue.rooms_title, venue.rooms_title_ko) }}</h4>
+            {% endif %}
             <ul class="venue-rooms">
               {% for room in venue.rooms %}
-              <li{% if not loop.first %} class="minor"{% endif %}>
+              <li>
                 <span class="room-name">{{ room.name }}</span>
                 <span class="room-detail">{{ room.detail }}</span>
               </li>
               {% endfor %}
             </ul>
-            <address>
-              {{ venue.address }}<br />
-              <span lang="ko">{{ venue.address_ko }}</span>
-            </address>
             {% if venue.getting_here %}
             {% if venue.getting_here_title %}
             <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}</h4>

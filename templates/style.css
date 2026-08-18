@@ -2491,31 +2491,15 @@ h2 .note {
    keep their rules because nothing else there separates one from the next. */
 .venue-rooms {
   list-style: none;
-  margin: 14px 0 0;
-  padding: 14px 0 0;
-  border-top: 1px solid var(--wash);
+  margin: 0;
+  padding: 0;
 }
 .venue-rooms li {
   padding: 0 0 5px;
 }
-.venue-rooms li.minor {
-  padding-top: 10px;
-}
 /* The room the sessions are in is what a reader is looking for; the banquet
    hall is where dinner happens and was being announced at the same volume.
    Same information, one step quieter. */
-.venue-rooms li.minor .room-name {
-  font-family: inherit;
-  font-weight: 500;
-  font-size: 0.88em;
-  color: var(--muted);
-}
-.venue-rooms li.minor .room-detail {
-  font-size: 0.72rem;
-}
-.venue-rooms li.minor .room-label {
-  opacity: 0.5;
-}
 .room-label {
   display: inline-block;
   margin-top: 1px;
@@ -2552,8 +2536,8 @@ h2 .note {
 .venue-info address {
   font-style: normal;
   color: var(--muted);
-  font-size: 0.82rem;
-  margin: 12px 0 0;
+  font-size: 0.8rem;
+  margin: 4px 0 12px;
   line-height: 1.5;
 }
 .venue-info address span {

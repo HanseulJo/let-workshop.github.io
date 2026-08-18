@@ -13,10 +13,12 @@ address_ko: 경상북도 포항시 남구 청암로 77
 # postech.ac.kr/kor/college-life/posco_international_hall.do and corroborated
 # by the 복지회 listing at dining.postech.ac.kr/store/. Note 98 seats, not the
 # round 100 this used to say — 98석 is the published figure.
+# A heading of its own, and both rooms set the same: the sessions room and the
+# hall dinner is in are two facts of one kind here, and the page ranks them by
+# order rather than by weight.
+rooms_title: Rooms
+rooms_title_ko: 공간
 rooms:
-  # One line each. The label, the name and the detail were three lines per room
-  # and the hours in them are the programme's job — the page carries the whole
-  # timetable a section above this.
   - name: Grand Conference Room · 대회의실
     detail: 1F · 98 seats
   - name: Banquet Hall · 연회장
@@ -106,8 +108,8 @@ map_links:
 # confirm the rate and the registration procedure, then say so here.
 # How to arrive. `title` heads the list; without one the rows sat straight
 # under the address with nothing saying what they were.
-getting_here_title: Getting here
-getting_here_title_ko: 가는 방법
+getting_here_title: Transport
+getting_here_title_ko: 교통
 getting_here:
   # Bus numbers and times are POSTECH's own, from the 오시는 길 page at
   # postech.ac.kr/kor/university-introduction/direction.do.
@@ -115,7 +117,7 @@ getting_here:
   # name is 포항터미널, in Sangdo-dong, and the express one in Haedo-dong. The
   # 207 serves the intercity terminal, so it is named rather than left as "the
   # bus terminal", which is the ambiguous half of the pair.
-  - mode: From Pohang KTX
+  - mode: From Pohang KTX station
     mode_ko: 포항역에서
     detail: Bus 5000 to Pohang Terminal (intercity), change to 207 · 1 hr · or taxi, 20–30 min
     detail_ko: 5000번 → 포항터미널(시외) 환승 207번 · 1시간 · 또는 택시 20–30분
@@ -138,13 +140,13 @@ getting_here:
 # says otherwise. No rates here on purpose: they move, and a stale price on a
 # programme page is worse than no price.
 accommodation:
-  title: Where to stay
+  title: Accommodation
   title_ko: 숙소
   first_come:
     name: POSCO International Center
     name_ko: 포스코국제관
-    note: In the venue. Limited rooms, first come.
-    note_ko: 행사장 건물. 객실 한정, 선착순.
+    note: Limited rooms provided for free, first come.
+    note_ko: 객실 한정, 무료 제공, 선착순.
   nearby_note: Otherwise book direct.
   nearby_note_ko: 그 외에는 직접 예약해 주세요.
   # Two facts per place, not a table: how long by car, and the bus if there is
