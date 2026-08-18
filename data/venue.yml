@@ -110,6 +110,9 @@ map_links:
 # under the address with nothing saying what they were.
 getting_here_title: Transport
 getting_here_title_ko: 교통
+# Appended to each `stop`, so the data holds the name and only the name.
+stop_word: stop
+stop_word_ko: 정류장
 #
 # A journey is written out as the stops it passes through rather than as a
 # sentence about them. "Bus 5000 to Pohang Terminal (intercity), change to 207"
@@ -135,6 +138,11 @@ getting_here:
     # column of the same picture, while the stops are a station, a terminal and
     # a campus — three different places, which is the thing worth marking.
     icon: "🚅"
+    # The stop itself, which is not the same as the place. Pohang station has
+    # more than one, and the one the 5000 leaves from is the city-bound side.
+    # Names are POSTECH's own, from the 오시는 길 page.
+    stop: Pohang Station, city-bound
+    stop_ko: 포항역(시내행)
     total: 1 hr
     total_ko: 1시간
     legs:
@@ -142,6 +150,8 @@ getting_here:
         via_ko: 5000번
         to: Pohang Terminal (intercity)
         to_ko: 포항터미널(시외)
+        stop: Intercity Bus Terminal
+        stop_ko: 시외버스터미널
         icon: "🚌"
         change: true # the transfer, drawn as a hollow stop
       - via: Bus 207
@@ -150,6 +160,8 @@ getting_here:
         time_ko: 10분
         to: POSTECH
         to_ko: 포항공과대학교
+        stop: POSTECH
+        stop_ko: 포스텍
         icon: "🏫"
     # The alternative to the whole journey, not to any one leg of it.
     alt: or taxi, 20–30 min
@@ -157,6 +169,8 @@ getting_here:
   - from: Pohang Terminal (intercity)
     from_ko: 포항터미널(시외)
     icon: "🚌"
+    stop: Intercity Bus Terminal
+    stop_ko: 시외버스터미널
     total: 10 min
     total_ko: 10분
     legs:
@@ -164,6 +178,8 @@ getting_here:
         via_ko: 207번
         to: POSTECH
         to_ko: 포항공과대학교
+        stop: POSTECH
+        stop_ko: 포스텍
         icon: "🏫"
 
 # Everything about arriving that is not a route. Same list, no stops.

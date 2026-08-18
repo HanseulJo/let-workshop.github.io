@@ -2677,6 +2677,19 @@ h2 .note {
   background: var(--accent);
   opacity: 0.42;
 }
+/* Which stop, under which place. They are not the same thing and the
+   difference is the part somebody standing there needs: Pohang station has
+   more than one stop and only the city-bound side has the 5000. Indented to
+   clear the emoji, so the two lines read as one entry. */
+.rt-stop {
+  display: block;
+  margin-left: 1.25em;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  word-break: keep-all;
+}
 /* Sized against the name rather than left at whatever a colour emoji font
    gives, and nudged down: emoji sit high on the line beside Latin text. */
 .rt-icon {

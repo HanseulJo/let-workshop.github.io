@@ -609,7 +609,8 @@
                 <ol class="route-stops">
                   <li class="stop is-first">
                     <span class="rt-time"></span>
-                    <span class="rt-name">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}</span>
+                    <span class="rt-name">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}
+                      {%- if route.stop %}<span class="rt-stop">{{ t(route.stop, route.stop_ko) }} {{ t(venue.stop_word, venue.stop_word_ko) }}</span>{% endif %}</span>
                   </li>
                   {% for leg in route.legs %}
                   <li class="leg">
@@ -618,7 +619,8 @@
                   </li>
                   <li class="stop{{ ' is-change' if leg.change }}{{ ' is-last' if loop.last }}">
                     <span class="rt-time">{% if loop.last and route.total %}<b>{{ t(route.total, route.total_ko) }}</b>{% endif %}</span>
-                    <span class="rt-name">{% if leg.icon %}<span class="rt-icon" aria-hidden="true">{{ leg.icon }}</span>{% endif %}{{ t(leg.to, leg.to_ko) }}</span>
+                    <span class="rt-name">{% if leg.icon %}<span class="rt-icon" aria-hidden="true">{{ leg.icon }}</span>{% endif %}{{ t(leg.to, leg.to_ko) }}
+                      {%- if leg.stop %}<span class="rt-stop">{{ t(leg.stop, leg.stop_ko) }} {{ t(venue.stop_word, venue.stop_word_ko) }}</span>{% endif %}</span>
                   </li>
                   {% endfor %}
                 </ol>
@@ -991,11 +993,96 @@
           /* ignore */
         }
       }
+      // The hero is a photograph masked by a drawing, and the two themes use
+      // different files for both — the light drawing places its formulas where
+      // the picture is dark, because there the marks are the ink. Together
+      // that is 1.2MB, and it was being fetched at the moment somebody pressed
+      // the button: the mask URL went to a file that had not arrived, so the
+      // mask stopped applying, the whole photograph flashed up unmasked, and
+      // the hero looked like it was reloading. On a phone it was also a second
+      // megabyte of drawing resident at once.
+      //
+      // So the theme is not applied until its pictures are in the cache. They
+      // are only *pictures* — a colour scheme that waited a second would be
+      // worse than a flash — so the wait is capped, and past the cap it flips
+      // anyway and accepts the flash it would have had regardless.
+      // Exactly the names style.css asks for, unstamped. The asset filter puts
+      // a content hash on the URLs it writes, and stylesheet url()s do not go
+      // through it — a stamped copy here would be a second cache entry and a
+      // second download, warming nothing.
+      var THEME_ART = {
+        dark: ["hero-art.svg", "hero.jpg"],
+        light: ["hero-art-light.svg", "hero-paper.jpg", "hero-ink.jpg", "hero-ink-narrow.jpg"],
+      };
+      function artFor(id) {
+        var m = window.matchMedia;
+        if (id === "auto") id = m && m("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        var urls = THEME_ART[id] || [];
+        // One of the two light plates, whichever this width paints.
+        if (id === "light" && m) {
+          var narrow = m("(max-width: 780px)").matches;
+          urls = urls.filter(function (u) {
+            return u.indexOf("hero-ink") < 0 || (u.indexOf("-narrow") > 0) === narrow;
+          });
+        }
+        return urls;
+      }
+      var warmed = {};
+      function warm(id, done) {
+        var urls = artFor(id).filter(function (u) { return !warmed[u]; });
+        if (!urls.length) return done();
+        var left = urls.length,
+          fired = false;
+        var finish = function () {
+          if (fired) return;
+          fired = true;
+          clearTimeout(cap);
+          done();
+        };
+        var cap = setTimeout(finish, 900);
+        urls.forEach(function (u) {
+          var im = new Image();
+          im.onload = im.onerror = function () {
+            warmed[u] = true;
+            if (--left === 0) finish();
+          };
+          im.src = u;
+        });
+      }
       function cycleTheme() {
         var now = document.documentElement.getAttribute("data-theme") || "auto";
         var i = THEMES.map(function (x) { return x.id; }).indexOf(now);
-        setTheme(THEMES[(i + 1) % THEMES.length].id);
+        var next = THEMES[(i + 1) % THEMES.length].id;
+        var btn = document.getElementById("theme-btn");
+        btn.setAttribute("aria-busy", "true");
+        warm(next, function () {
+          btn.removeAttribute("aria-busy");
+          setTheme(next);
+        });
       }
+      // And when nothing else is going on, fetch the other theme's pictures so
+      // the wait above is usually no wait at all. Not on a metered connection
+      // and not when the reader has asked for less data: a megabyte to make a
+      // button they may never press feel quicker is not a trade to make on
+      // their behalf.
+      (function () {
+        var c = navigator.connection || {};
+        if (c.saveData || /(^|[^4])[23]g/.test(c.effectiveType || "")) return;
+        var idle = window.requestIdleCallback || function (f) { setTimeout(f, 2500); };
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            idle(function () {
+              // The opposite of what is on screen, and only that. Auto is not a
+              // third set of pictures — it is one of these two — so warming all
+              // three entries would fetch one of them twice.
+              var m = window.matchMedia;
+              var showing = document.documentElement.getAttribute("data-theme");
+              if (!showing) showing = m && m("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+              warm(showing === "dark" ? "light" : "dark", function () {});
+            });
+          }, 2500);
+        });
+      })();
       (function () {
         var saved = null;
         try {
