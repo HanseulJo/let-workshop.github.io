@@ -3369,7 +3369,12 @@ a.poster-shot:focus-visible {
        square at the first card's edge. A literal, because the number this needs
        is the shadow's reach and nothing else. */
     padding-inline: 30px;
-    margin-inline: -30px;
+    /* The bleed matches the wrap's own gutter and no more. At -30 the strip
+       ran ten pixels past the viewport on each side and gave the whole page a
+       horizontal scrollbar — the padding may be as wide as the shadow needs,
+       but the margin that gives it back can only be as wide as the gutter it
+       is eating into. */
+    margin-inline: -20px;
     padding-block: 10px 34px;
     margin-block: -10px -34px;
     scrollbar-width: none;
