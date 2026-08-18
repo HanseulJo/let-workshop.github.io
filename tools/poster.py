@@ -907,12 +907,16 @@ FESTIVAL = """<!doctype html>
   /* The hour each day runs from and to, against the day it belongs to. A
      travel claim wants the span and not just the dates, and the pair set on
      their own lines says which hour goes with which day without a word of
-     explanation — which "09:00–17:15" under both dates would not.
-     In the mono at a third the size: they are a second fact about the date,
-     not a second date. */
+     explanation — which "09:00-17:15" under both dates would not.
+     The same face and the same colour as the figures they sit with, at 0.7 of
+     the size. Set small in the mono they read as an annotation on the date; at
+     this size and in this colour they are part of it, which is what they are —
+     the date is when, and the date is not complete without them. Not the full
+     23mm: "10.7 09:00" would then run 160mm and the block would stop being a
+     stack, which is the whole of its effect. */
   .stack small {{
-    font-family:"JetBrains Mono",monospace; font-size:7mm; font-weight:400;
-    letter-spacing:.02em; color:{ink}; opacity:.66; margin-left:3mm;
+    font-family:inherit; font-size:16mm; font-weight:700;
+    letter-spacing:-.03em; color:inherit; margin-left:4mm;
   }}
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
