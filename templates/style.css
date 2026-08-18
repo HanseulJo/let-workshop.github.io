@@ -3138,8 +3138,13 @@ footer a {
 /* One heading per group in the card, all in the same voice: the mono, tracked,
    in the accent. Without them the groups ran together as one column of facts;
    as plain headings they were larger than the facts they head. */
+/* A rule over every group, so the card reads as three sections rather than one
+   run of facts that happens to have coloured words in it. The accommodation
+   block used to carry its own; it takes this one now, or the two stack. */
 .venue-h {
-  margin: 13px 0 6px;
+  margin: 14px 0 7px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
   font-family: var(--mono);
   font-size: 0.62rem;
   font-weight: 500;
@@ -3147,9 +3152,7 @@ footer a {
   text-transform: uppercase;
   color: var(--accent);
 }
-.stay .venue-h {
-  margin-top: 0;
-}
+
 
 /* ===== THE TRAVEL CARD =====
    One rhythm for the whole card instead of four. It had grown a section at a
@@ -3161,9 +3164,7 @@ footer a {
    card is one column of that shape repeated, which is what makes it scannable
    and what took a third of its height out. */
 .stay {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
+  margin-top: 0;
 }
 .stay-first,
 .stay-note {
