@@ -2864,13 +2864,9 @@ footer a {
     align-items: flex-start;
     gap: 18px;
   }
-  .hosts-row {
-    gap: 20px;
-  }
-  .hosts-row img {
-    height: 16px;
-    max-width: 110px;
-  }
+    /* The marks used to sit in the footer, where 16px is right for chrome.
+       They are a section of their own now, and this rule was still shrinking
+       them to the size they were when they were furniture. */
   .venue-map,
   .venue-map iframe {
     min-height: 300px;
