@@ -2251,7 +2251,10 @@ h2 .note {
    cards that don't. */
 .spk-topic {
   margin-top: auto;
-  padding-top: 9px;
+  /* The rule belongs to the tag under it, and 9px put the tag almost on the
+     line. It reads as a caption on the card's foot, so it needs the space a
+     caption gets. */
+  padding-top: 14px;
   border-top: 1px solid var(--line);
   font-family: var(--mono);
   font-size: 0.66rem;
@@ -2376,7 +2379,7 @@ h2 .note {
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--wash);
-  min-height: 420px;
+  min-height: 320px;
   line-height: 0; /* no baseline gap under the iframe */
 }
 /* Pinned to the box rather than sized at 100% of it. A percentage height needs
@@ -2493,7 +2496,7 @@ h2 .note {
   border-top: 1px solid var(--wash);
 }
 .venue-rooms li {
-  padding: 0 0 7px;
+  padding: 0 0 5px;
 }
 .venue-rooms li.minor {
   padding-top: 10px;
@@ -2730,7 +2733,7 @@ footer a {
     gap: 26px;
   }
   .hosts-row img {
-    height: 54px;
+    height: 76px;
     max-width: 100%;
   }
 
@@ -3139,7 +3142,7 @@ footer a {
    in the accent. Without them the groups ran together as one column of facts;
    as plain headings they were larger than the facts they head. */
 .venue-h {
-  margin: 16px 0 8px;
+  margin: 13px 0 6px;
   font-family: var(--mono);
   font-size: 0.62rem;
   font-weight: 500;
@@ -3182,8 +3185,7 @@ footer a {
   list-style: none;
 }
 .stay-list li {
-  padding: 5px 0;
-  border-top: 1px solid var(--wash);
+  padding: 4px 0;
 }
 .stay-head {
   display: flex;

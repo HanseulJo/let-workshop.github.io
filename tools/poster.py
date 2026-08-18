@@ -92,6 +92,10 @@ PALETTE = {
     # plate under the campus wants them quieter, or the two together bury the
     # title.
     "art_alpha": "1",
+    # The photograph behind the formulas, as two tones and a drive.
+    "ghost_shadow": "#0a111d",
+    "ghost_light": "#b9cbe4",
+    "ghost_contrast": "0.92",
     # And how strongly the photograph behind the formulas is felt. On the dark
     # sheet it is there to hold the shape together between the marks and is
     # meant to be felt rather than seen. On paper it has more to do: the ground
@@ -1981,13 +1985,14 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         # between the marks. On a pale sheet the photograph has to carry the
         # difference between a pale building and a pale sky, and at the default
         # the two arrive within a few levels of each other.
+        # The two tones the photograph is printed in, and how hard it is driven.
+        # Palette values, because a sheet on paper wants them the other way up
+        # from a sheet on a dark ground and the layout alone cannot tell which
+        # of the two a scheme is.
         ghost_layer = (
             '<div class="ghost">'
-            + photo_svg(ghost,
-                        PALETTE["carbon"] if light_ground else "#0a111d",
-                        PALETTE["paper"] if light_ground else PALETTE["art_ink"],
-                        gw, gh,
-                        contrast=1.35 if light_ground else 0.92)
+            + photo_svg(ghost, PALETTE["ghost_shadow"], PALETTE["ghost_light"],
+                        gw, gh, contrast=float(PALETTE["ghost_contrast"]))
             + "</div>")
 
     if cutout:
