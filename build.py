@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the LET site from data/*.yml + content/*.md.
+"""Render the LeT site from data/*.yml + content/*.md.
 
     python3 build.py            # build every variant into _site/
     python3 build.py public     # just the page that gets deployed
