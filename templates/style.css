@@ -1013,12 +1013,20 @@ body {
 }
 /* The live one: the button keeps its own width. Stretched to the note's, as a
    column flex child is by default, "Registration" came out as wide as "Until
-   August 31" and read as a different, longer button. */
+   August 31" and read as a different, longer button.
+   The note centres on the button rather than ranging with it. It is a label on
+   that button and reads as one when it sits under its middle; ranged left it
+   looked like the start of another line of prose that had lost its sentence.
+   Centred on the button and not on the pair, so the note can be wider than the
+   button without moving it. */
 .btn-note {
-  align-items: flex-start;
+  align-items: center;
+  width: max-content;
 }
 .btn-note small {
-  padding-left: 2px;
+  /* Free to overhang the button on both sides, which "Until August 31" does. */
+  width: max-content;
+  max-width: none;
 }
 /* Barely dimmed. A filled pill dropped much below this stops reading as coral
    at all — the accent sinks into the navy behind it and goes grey-brown — so
