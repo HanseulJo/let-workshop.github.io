@@ -285,11 +285,16 @@ def sessions(program):
         for e in day["events"]:
             if e.get("type") not in ("block", "tutorial", "keynote"):
                 continue
-            named = [s for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
-            # A session with nobody named yet is still a session, and leaving it
-            # off the sheet makes the day look shorter than it is. It appears
-            # with its hour and its title and TBD where the names will go.
-            people = named or [{"name": "TBD", "affil": ""}] * len(e.get("speakers", []) or [])
+            # Every slot the session has, named or not. A session with nobody
+            # named yet is still a session, and leaving it off makes the day
+            # look shorter than it is; a session with one name and one slot
+            # still open is the same argument for the slot. Reading only the
+            # named ones dropped the second half of Bandits II the moment the
+            # first half was filled — the sheet quietly lost a talk.
+            people = [
+                s if s.get("name") and s["name"] != "TBD" else {"name": "TBD", "affil": ""}
+                for s in e.get("speakers", []) or []
+            ]
             if not people:
                 continue
             blocks.append(
@@ -1885,11 +1890,16 @@ def festival_bits(program, organizers, site):
         for e in day["events"]:
             if e.get("type") not in ("block", "tutorial", "keynote"):
                 continue
-            named = [s for s in e.get("speakers", []) if s.get("name") and s["name"] != "TBD"]
-            # A session with nobody named yet is still a session, and leaving it
-            # off the sheet makes the day look shorter than it is. It appears
-            # with its hour and its title and TBD where the names will go.
-            people = named or [{"name": "TBD", "affil": ""}] * len(e.get("speakers", []) or [])
+            # Every slot the session has, named or not. A session with nobody
+            # named yet is still a session, and leaving it off makes the day
+            # look shorter than it is; a session with one name and one slot
+            # still open is the same argument for the slot. Reading only the
+            # named ones dropped the second half of Bandits II the moment the
+            # first half was filled — the sheet quietly lost a talk.
+            people = [
+                s if s.get("name") and s["name"] != "TBD" else {"name": "TBD", "affil": ""}
+                for s in e.get("speakers", []) or []
+            ]
             if not people:
                 continue
             sess.append(f"<li>{esc(e['title'])}</li>")
