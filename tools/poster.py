@@ -842,6 +842,13 @@ FESTIVAL = """<!doctype html>
      longer occupy any. */
   .panel {{ margin-top:auto; }}
   .bill {{ margin:0 0 0 auto; text-align:right; }}
+  /* Named, like the organisers are. The block underneath was the only list on
+     the sheet a reader had to work out for themselves; the column opposite has
+     said Organizers over its names all along. Set against the right edge,
+     because that is the edge this half is set against. */
+  .bill h4 {{
+    color:{ink}; opacity:.72; margin:0 0 3mm; text-align:right;
+  }}
 
   /* The rule and the space between sessions live on the label, because a
      display:contents element cannot carry either. */
@@ -879,8 +886,12 @@ FESTIVAL = """<!doctype html>
   .prog-grid i.dayrow {{
     grid-column:1 / -1; justify-self:end; text-align:right; padding-top:0.5mm;
   }}
+  /* 10.4mm. The names are what the sheet is for and they were set smaller
+     than the date beside them; the list grows upward from a fixed foot, so the
+     size is bounded by where the panel begins rather than by the column, and
+     at 10.4 the block still opens 37mm below that. */
   .prog-grid em {{
-    font-style:normal; font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:8.6mm;
+    font-style:normal; font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:10.4mm;
     font-weight:700; line-height:1.34; letter-spacing:-.012em; color:{ink};
     white-space:nowrap;
   }}
@@ -1014,7 +1025,7 @@ FESTIVAL = """<!doctype html>
           <h4>Organizers</h4>
           <div class="orgs">{organisers}</div>
         </div>
-        <div class="bill"><div class="prog-grid">{programme}</div></div>
+        <div class="bill"><h4>Speakers</h4><div class="prog-grid">{programme}</div></div>
       </div>
       <div class="foot">
         <span class="marks">{logos}</span>

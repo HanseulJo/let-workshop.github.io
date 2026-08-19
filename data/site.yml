@@ -226,10 +226,6 @@ variants:
 poster:
   title: Poster
   title_ko: 포스터
-  # Beside the heading as well as under the sheet. Someone who scrolls to this
-  # section and takes a copy away may never read the caption.
-  title_note: details are tentative
-  title_note_ko: 세부 사항은 변경될 수 있습니다
   # Two sheets, the same poster printed either way round. `sheets` is what the
   # page shows; the first is the one that leads.
   # Two downloads under each sheet, not one. The full-size file is 16MB, and a
@@ -254,11 +250,8 @@ poster:
   # helper writes a pair of spans — markup inside an attribute ends it early and
   # spills the rest onto the page.
   alt: LET Workshop A2 poster — the POSTECH campus drawn in learning-theory formulas
-  # The sheet prints names, rooms and hours that are not settled yet, and a
-  # printed thing is the one form nobody comes back to check. The note says so
-  # on the page, next to the size, before anyone takes a copy away.
-  caption: A2 · 420 × 594 mm · details are tentative
-  caption_ko: A2 · 420 × 594 mm · 세부 사항은 변경될 수 있습니다
+  caption: A2 · 420 × 594 mm
+  caption_ko: A2 · 420 × 594 mm
   # No download row under the sheets any more — tapping one opens it, at the
   # size that opens quickly. These are the labels that row used, kept in case
   # it comes back rather than deleted along with it.
