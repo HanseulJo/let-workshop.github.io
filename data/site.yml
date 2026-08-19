@@ -71,9 +71,7 @@ analytics_id: G-DN4LGBW9YN
 hero_actions:
   - label: Registration
     label_ko: 참가 신청
-    href: ""
-    note: Opens soon
-    note_ko: 곧 열립니다
+    href: https://docs.google.com/forms/d/e/1FAIpQLSe4zlakGy6_rJ6KcT_ovDc1dD08mYEoOOFTeuiBm9hxfXGy-w/viewform
     primary: true
   - label: See speakers
     label_ko: 연사 보기
