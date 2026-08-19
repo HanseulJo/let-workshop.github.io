@@ -1309,15 +1309,17 @@ h2::before {
 
 /* Read in 가나다 order when the page is in Korean. The cards keep their place
    in the source; only how they are laid out changes, which is what `order` is
-   for. */
-[data-lang="ko"] /* The card is an <a> when the speaker has a page and a <button> when they do
+   for. Both halves of this selector on one line: written across two, the next
+   rule inserted above `.spk-card {` lands between them, and the ordering
+   applies in every language while the rule that was meant to go there ends up
+   scoped to Korean. Which is exactly what happened. */
+[data-lang="ko"] .spk-card { order: var(--ko-order); }
+
+/* The card is an <a> when the speaker has a page and a <button> when they do
    not, so it has to shed the styling a browser gives each of them. */
 a.spk-card {
   text-decoration: none;
   color: inherit;
-}
-.spk-card {
-  order: var(--ko-order);
 }
 /* Shares its definition with .spk-grid below. Two grids of portrait cards a
    screen apart looked mismatched because their minimums differed by 16px,
