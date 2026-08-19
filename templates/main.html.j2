@@ -674,6 +674,13 @@
             <ol class="routes">
               {% for route in venue.getting_here %}
               <li class="route">
+                {% if route.url %}
+                <!-- The whole journey handed to Naver with both ends already
+                     in it. A travel card that can be read and then followed is
+                     worth more than one that has to be copied out. -->
+                <a class="route-open" href="{{ route.url }}" target="_blank" rel="noopener"
+                   aria-label="{{ route.from }} → {{ venue.name }}">
+                {% endif %}
                 <ol class="route-stops">
                   <li class="stop is-first">
                     <span class="rt-time"></span>
@@ -692,6 +699,7 @@
                   </li>
                   {% endfor %}
                 </ol>
+                {% if route.url %}</a>{% endif %}
                 {% if route.alt %}<p class="route-alt">{{ t(route.alt, route.alt_ko) }}</p>{% endif %}
               </li>
               {% endfor %}

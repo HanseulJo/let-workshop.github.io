@@ -130,9 +130,19 @@ getting_here:
   # Pohang has two bus terminals 2.5km apart — the intercity one, whose own
   # name is 포항터미널, in Sangdo-dong, and the express one in Haedo-dong. The
   # 207 serves the intercity terminal, so it is named rather than left as "the
-  # bus terminal", which is the ambiguous half of the pair.
+  # bus terminal", which is the ambiguous half of the pair; and the express one
+  # gets a route of its own rather than being folded into it, because arriving
+  # at the wrong one of a pair 2.5km apart is exactly the mistake a travel page
+  # exists to prevent.
+  # lat/lon turn each journey into a link: build.py hands them to Naver's
+  # directions with both ends already filled in, so the card can be read and
+  # then followed. All three from OpenStreetMap (Overpass), the same source
+  # the venue's own pin came from. `mode` is what Naver should plan for.
   - from: Pohang KTX station
     from_ko: 포항역
+    lat: 36.0712333
+    lon: 129.3426784
+    naver_name: 포항역
     # One emoji per stop, saying what kind of place it is. On the stops rather
     # than on the legs: every leg here is a bus, so a bus on each of them is a
     # column of the same picture, while the stops are a station, a terminal and
@@ -166,9 +176,35 @@ getting_here:
     # The alternative to the whole journey, not to any one leg of it.
     alt: or taxi, 20–30 min
     alt_ko: 또는 택시 20–30분
+  # The other terminal, and it really is a taxi. The 207's stop list runs
+  # 죽도시장 · 포항터미널 · 대잠사거리 — it does not go near 해도동, and POSTECH's
+  # own page gives nothing but "택시로 20분" from here. Better to say that than
+  # to invent a connection: somebody standing at the wrong terminal with a
+  # made-up bus number is worse off than somebody told to take a taxi.
+  - from: Pohang Express Bus Terminal
+    from_ko: 포항고속버스터미널
+    icon: "🚌"
+    lat: 36.0280334
+    lon: 129.367615
+    naver_name: 포항고속버스터미널
+    mode: car # a taxi, so plan it as a drive rather than as a bus
+    total: 20 min
+    total_ko: 20분
+    legs:
+      - via: Taxi
+        via_ko: 택시
+        to: POSTECH
+        to_ko: 포항공과대학교
+        icon: "🏫"
+    alt: A different terminal from Pohang Terminal (intercity), 2.5 km away; the 207 does not serve it.
+    alt_ko: 포항터미널(시외)과는 2.5km 떨어진 다른 터미널이고, 207번은 지나지 않습니다.
+
   - from: Pohang Terminal (intercity)
     from_ko: 포항터미널(시외)
     icon: "🚌"
+    lat: 36.0134405
+    lon: 129.349645
+    naver_name: 포항시외버스터미널
     stop: Intercity Bus Terminal
     stop_ko: 시외버스터미널
     total: 10 min

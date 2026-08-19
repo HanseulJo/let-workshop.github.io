@@ -22,7 +22,7 @@ import sys
 from copy import deepcopy
 from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
-from urllib.parse import quote_plus
+from urllib.parse import quote, quote_plus
 
 try:
     import markdown as md
@@ -355,8 +355,23 @@ def fill_defaults(bundle: dict) -> None:
     bundle["venue"].setdefault("getting_here_title", None)
     bundle["venue"].setdefault("getting_here_title_ko", None)
     for route in bundle["venue"].setdefault("getting_here", []):
-        for key in ("from_ko", "total", "total_ko", "alt", "alt_ko", "icon", "stop", "stop_ko"):
+        for key in ("from_ko", "total", "total_ko", "alt", "alt_ko", "icon",
+                    "stop", "stop_ko", "lat", "lon", "naver_name", "mode"):
             route.setdefault(key, None)
+        # A journey the reader can follow rather than retype. Naver takes both
+        # ends as lng,lat,name in the path; the empty fields after the name are
+        # its place id and type, which it is happy to resolve for itself.
+        route["url"] = None
+        if route["lat"] and route["lon"]:
+            end = bundle["venue"]
+            leg = lambda lon, lat, name: f"{lon},{lat},{quote(name)},,"
+            route["url"] = (
+                "https://map.naver.com/p/directions/"
+                + leg(route["lon"], route["lat"], route["naver_name"] or route["from"])
+                + "/"
+                + leg(end["lon"], end["lat"], end.get("name_ko") or end["name"])
+                + f"/-/{route['mode'] or 'transit'}"
+            )
         for leg in route.setdefault("legs", []):
             for key in ("via_ko", "to_ko", "time", "time_ko", "icon",
                         "stop", "stop_ko"):

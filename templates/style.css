@@ -2666,6 +2666,23 @@ h2 .note {
   padding-top: 16px;
   border-top: 1px solid var(--line);
 }
+/* The whole diagram is the link. Not a button beside it: the thing a reader
+   wants to open is the journey, and the journey is what is drawn. It takes no
+   colour of its own — a route in link blue would read as a link about a route
+   rather than as the route — and says so on hover instead. */
+.route-open {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 8px;
+  margin: -6px -8px;
+  padding: 6px 8px;
+  transition: background-color 0.15s ease;
+}
+.route-open:hover,
+.route-open:focus-visible {
+  background: var(--wash);
+}
 .route-stops {
   list-style: none;
   margin: 0;
