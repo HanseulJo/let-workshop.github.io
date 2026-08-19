@@ -4,7 +4,8 @@
     python3 tools/make-wordmark.py
 
 Writes templates/wordmark.svg (letters only, inherits colour), and
-static/let-logo.svg + static/favicon.svg (navy rounded square).
+static/let-logo.svg (LET WS in a navy rounded square, for a profile
+picture) + static/favicon.svg (one letter, for 16px).
 
 Outlines are baked to paths rather than left as <text font-family="…">, because
 these files are used as a favicon, a GitHub avatar and an inline hero mark —
@@ -28,6 +29,10 @@ from fontTools.varLib import instancer
 ROOT = Path(__file__).resolve().parent.parent
 FONT = ROOT / "static" / "fonts" / "jost-latin.woff2"
 WORD = "LET"
+# What the square mark says. The wordmark is the name as it is set in running
+# text; this is the name as it has to survive being 40px wide next to somebody
+# else's avatar, where three letters on their own could be anything.
+SQUARE = ("LET", "WS")
 WEIGHT = 900
 TRACK = 30  # extra letterspacing in font units — a wordmark wants a little air
 NAVY = "#14213d"
@@ -80,7 +85,42 @@ def main() -> None:
             f"    {inner}\n  </g>\n</svg>\n"
         )
 
-    (ROOT / "static" / "let-logo.svg").write_text(boxed(paths, (x0, y0, x1, y1), 46), encoding="utf-8")
+    def stacked(words, target):
+        """Two words on two rows, at one scale, centred as a block.
+
+        The square mark says LET WS, not LET: on a profile the acronym on its
+        own is three letters that could be anything, and "workshop" is what
+        turns them into the name of a thing. Set on one line those six
+        characters would be a third the height they are here — a square wants
+        its content square, and two rows of three is the shape that fills it.
+
+        One scale for both rows rather than each fitted to the width, or LET
+        and WS would be set in two different sizes and read as two marks.
+        """
+        drawn = [draw(w) for w in words]
+        widths = [b[2] - b[0] for _, b in drawn]
+        heights = [b[3] - b[1] for _, b in drawn]
+        gap = max(heights) * 0.22
+        scale = min(target / max(widths), target / (sum(heights) + gap))
+        block_h = sum(heights) * scale + gap * scale
+        rows, y = [], (64 - block_h) / 2
+        for (gpaths, (bx0, by0, bx1, by1)), gw, gh in zip(drawn, widths, heights):
+            tx = (64 - gw * scale) / 2 - bx0 * scale
+            ty = y - by0 * scale
+            inner = "\n      ".join(f'<path d="{q}"/>' for q in gpaths)
+            rows.append(f'<g transform="translate({tx:.3f} {ty:.3f}) scale({scale:.5f})">'
+                        f"\n      {inner}\n    </g>")
+            y += gh * scale + gap * scale
+        body = "\n    ".join(rows)
+        return (
+            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" '
+            f'aria-label="{" ".join(words)}">\n'
+            f'  <rect x="2" y="2" width="60" height="60" rx="14" fill="{NAVY}"/>\n'
+            f"  <!-- Baked outlines — no font needed. Regenerate: tools/make-wordmark.py -->\n"
+            f'  <g fill="#ffffff">\n    {body}\n  </g>\n</svg>\n'
+        )
+
+    (ROOT / "static" / "let-logo.svg").write_text(stacked(SQUARE, 40), encoding="utf-8")
 
     # The favicon keeps the first letter — a whole word is illegible at 16px.
     k_paths, k_bounds = draw(WORD[0])

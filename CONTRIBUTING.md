@@ -136,15 +136,34 @@ touches images. Omit `photo:` and the card falls back to the person's initials.
 
 ### Tab icon
 
-`static/favicon.svg` is the existing KOLT monogram, carried over byte-for-byte
-from the old nick-jhlee.github.io/kolt/ page. `favicon-32.png` and
-`favicon-180.png` (apple-touch-icon) sit beside it, rasterised from the SVG, for
-browsers that don't take SVG icons — and because the SVG draws its K with
-`<text>`, which needs a font the renderer actually has.
+`tools/make-wordmark.py` writes all three marks from the display face, as baked
+outlines rather than `<text>`, so they render the same wherever they are used:
+
+| file | what it is |
+| --- | --- |
+| `templates/wordmark.svg` | the letters alone, inheriting colour — the hero and the top bar |
+| `static/let-logo.svg` | LET WS on two rows in a navy rounded square — the profile picture |
+| `static/favicon.svg` | one letter, because a word is illegible at 16px |
+
+The square mark says LET WS rather than LET: on a profile the acronym on its own
+is three letters that could be anything, and the second word is what makes them
+the name of a thing.
+
+`favicon-32.png`, `favicon-180.png` (apple-touch-icon) and `let-avatar.png` are
+rasterised from those SVGs for the places that will not take one — browsers with
+no SVG icon support, and GitHub, which wants a raster for an organisation
+picture. Re-cut them after re-running the tool:
+
+```sh
+python3 tools/make-wordmark.py
+# then, from a directory holding the SVG:
+#   chrome --headless=new --default-background-color=00000000 \
+#          --window-size=512,512 --screenshot=out.png page.html
+# and resize to 32, 180 and 512.
+```
 
 Everything in `static/` is copied both to the site root and next to the page, so
-the redirect stub gets the same icon. To rebrand, replace `favicon.svg` and
-re-rasterise the two PNGs from it.
+the redirect stub gets the same icon.
 
 ### Colours
 
