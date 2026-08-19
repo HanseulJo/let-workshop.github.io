@@ -76,6 +76,10 @@
   --meta-note-weight: 400;
   --hero-meta-plate: transparent;
   --hero-accent: #ff8a75;
+  /* Ink on the filled pill. Nearly black on the dark sheet's coral: at that
+     lightness the accent is bright enough to be paper, and white on it would
+     glare with no edge left to the letters. 7.6:1. */
+  --btn-primary-ink: #24160f;
   /* The ink the formula art is drawn in. Cool and a step off white: the glyphs
      are tiny and packed, and at full white the field reads as glare rather
      than as writing. */
@@ -990,12 +994,12 @@ body {
 .btn:hover {
   background: var(--hero-accent);
   border-color: var(--hero-accent);
-  color: #24160f;
+  color: var(--btn-primary-ink);
 }
 .btn-primary {
   background: var(--hero-accent);
   border-color: var(--hero-accent);
-  color: #24160f;
+  color: var(--btn-primary-ink);
   font-weight: 600;
 }
 .btn-primary:hover {
@@ -1045,7 +1049,7 @@ body {
 }
 .btn-wait .btn-primary:hover {
   background: var(--hero-accent);
-  color: #24160f;
+  color: var(--btn-primary-ink);
 }
 .btn-wait small,
 .btn-note small {
@@ -3879,6 +3883,11 @@ a.poster-shot:focus-visible {
        pale blue for 3.25:1, which is still over the 3:1 the large type it sets
        is held to. See SCHEMES["light"] in tools/poster.py. */
   --hero-accent: #db472c;
+  /* And white on paper. The light sheet's accent is a deep burnt orange,
+     dark enough that the near-black sat on it at 4.1:1 — a smudge rather
+     than type. White clears it by more than twice that, which is why the
+     two sheets are not one value. */
+  --btn-primary-ink: #fff;
     --hero-art-ink: #16324f;
     --logo-plate: rgba(255, 255, 255, 0.78);
     --logo-plate: rgba(255, 255, 255, 0.78);
@@ -3974,6 +3983,11 @@ a.poster-shot:focus-visible {
      value changed in one of them is a page that turns a different colour
      depending on how it was asked to. */
   --hero-accent: #db472c;
+  /* And white on paper. The light sheet's accent is a deep burnt orange,
+     dark enough that the near-black sat on it at 4.1:1 — a smudge rather
+     than type. White clears it by more than twice that, which is why the
+     two sheets are not one value. */
+  --btn-primary-ink: #fff;
   --hero-art-ink: #16324f;
   --logo-plate: rgba(255, 255, 255, 0.78);
   /* The same plate the drawing is filled with, not a second toning
