@@ -1076,8 +1076,9 @@
         <div class="footer-text">
           {{ site.name }} · {{ site.full_name }}<br />
           {{ site.venue }}, {{ site.city }} · {{ site.dates }} — {{ site.footer_note }}<br />
-          {{ organizers.contact.name }} ·
-          <a href="mailto:{{ organizers.contact.email }}">{{ organizers.contact.email }}</a>
+          {% for who in organizers.contact %}<span class="footer-who">{{ t(who.name, who.name_ko) }}{% if who.note %}
+            <span class="footer-role">({{ t(who.note, who.note_ko) }})</span>{% endif %}
+            <a href="mailto:{{ who.email }}">{{ who.email }}</a></span>{% endfor %}
         </div>
       </div>
     </footer>

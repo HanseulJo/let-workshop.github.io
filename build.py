@@ -179,6 +179,31 @@ def outbound(html: str) -> str:
     return html.replace('<a href="http', '<a target="_blank" rel="noopener" href="http')
 
 
+# The workshop's own name, set in the face the mark is drawn in rather than in
+# the body face around it. It is a name and the page has a way of writing it;
+# prose that spells it in the running face reads as though it were describing
+# some other workshop that happens to be called the same thing.
+#
+# Done on the rendered HTML rather than in the Markdown, so the source files
+# stay something an organiser can edit without knowing the class name.
+# No \b after Workshop: in Korean the name is followed straight away by a
+# particle — "LeT Workshop은" — and a word boundary does not fall between
+# "p" and "은", both being word characters. That left the Korean sentence
+# with LeT in the mark's face and Workshop in the body's.
+MARK_NAME = re.compile(r"\bLeT(?:\s+Workshop)?(?![A-Za-z])")
+
+
+def mark_name(html: str) -> str:
+    """Wrap the name, and only outside tags — an attribute is not prose."""
+    out, i = [], 0
+    for tag in re.finditer(r"<[^>]+>", html):
+        out.append(MARK_NAME.sub(r'<span class="mark-name">\g<0></span>', html[i:tag.start()]))
+        out.append(tag.group(0))
+        i = tag.end()
+    out.append(MARK_NAME.sub(r'<span class="mark-name">\g<0></span>', html[i:]))
+    return "".join(out)
+
+
 def file_weight(name: str) -> str:
     """How big a download is, said next to the link that starts it.
 
@@ -235,8 +260,8 @@ def render_about(about: dict, links: dict) -> dict:
         head, *rest = re.split(r"^### +(.+)$", source, flags=re.M)
 
         intro = [p.strip() for p in head.strip().split("\n\n") if p.strip()]
-        lang["lead"] = Markup(outbound(md.markdown(intro[0] + refs))) if intro else None
-        lang["standfirst"] = Markup(outbound(md.markdown(intro[1] + refs))) if len(intro) > 1 else None
+        lang["lead"] = Markup(mark_name(outbound(md.markdown(intro[0] + refs)))) if intro else None
+        lang["standfirst"] = Markup(mark_name(outbound(md.markdown(intro[1] + refs)))) if len(intro) > 1 else None
 
         blocks = []
         for heading, body in zip(rest[0::2], rest[1::2]):
@@ -261,7 +286,7 @@ def render_about(about: dict, links: dict) -> dict:
             blocks.append(
                 {
                     "heading": heading.strip(),
-                    "html": Markup(outbound(md.markdown("\n".join(prose) + refs))),
+                    "html": Markup(mark_name(outbound(md.markdown("\n".join(prose) + refs)))),
                     "groups": groups,
                 }
             )
@@ -397,6 +422,9 @@ def fill_defaults(bundle: dict) -> None:
                 place.setdefault(key, None)
     bundle["venue"].setdefault("subtitle", None)
     bundle["venue"].setdefault("subtitle_ko", None)
+    for who in bundle["organizers"].get("contact") or []:
+        for key in ("name_ko", "note", "note_ko"):
+            who.setdefault(key, None)
     bundle["program"].setdefault("title_ko", None)
     bundle["program"].setdefault("title_note", None)
     bundle["program"].setdefault("title_note_ko", None)

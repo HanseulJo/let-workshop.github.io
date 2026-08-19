@@ -1,6 +1,23 @@
+# Who to write to, in the footer. Three rather than one: a single address on a
+# workshop page is a single point of failure, and the three of us are running
+# different parts of it. `note` is for a distinction worth making — the site is
+# one person's to fix, and somebody reporting a broken link should not have to
+# guess which of us that is.
+#
+# Addresses are the ones each of us publishes on our own page, so this is not
+# a new disclosure.
 contact:
-  name: Junghyun Lee
-  email: jh_lee00@kaist.ac.kr
+  - name: Junghyun Lee
+    name_ko: 이정현
+    email: jh_lee00@kaist.ac.kr
+  - name: Hanseul Cho
+    name_ko: 조한슬
+    email: jhs4015@kaist.ac.kr
+  - name: Dongyeop Lee
+    name_ko: 이동엽
+    email: dongyeop.lee2@postech.ac.kr
+    note: webmaster
+    note_ko: 웹 관리
 
 # `photo` is a file in static/organizers/ — make one with
 #   python3 tools/prep-photos.py <source image> <slug>

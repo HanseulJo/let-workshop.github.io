@@ -2866,6 +2866,16 @@ h2 .note {
 }
 
 
+/* The workshop's own name inside running prose, set in the face the mark is
+   drawn in. Weight and size are the sentence's — this is the name written in
+   its own hand, not an emphasis — and Jost runs a little small against Inter
+   at the same size, so it is given back the difference. */
+.mark-name {
+  font-family: var(--wordmark);
+  font-size: 1.06em;
+  letter-spacing: -0.01em;
+}
+
 /* Organiser-only annotations — internal build only, never public */
 .staff-note {
   display: block;
@@ -2961,6 +2971,16 @@ footer {
 }
 footer a {
   color: var(--footer-link);
+}
+/* Three of them, wrapping as a group each rather than breaking between a name
+   and the address it belongs to. */
+.footer-who {
+  display: inline-block;
+  margin: 0 0.75rem;
+  white-space: nowrap;
+}
+.footer-role {
+  color: var(--faint);
 }
 
 /* ---------- Mobile ---------- */

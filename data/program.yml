@@ -105,7 +105,7 @@ days:
       - type: break
         title: Registration & Welcome Coffee
         emoji: "📝"
-        start: "10:30"
+        start: "10:00"
         end: "11:00"
         density: compact
 
@@ -371,8 +371,10 @@ days:
               with this slot (Wed 09:30); needs moving.
             home: https://sites.google.com/view/swyoon89
 
+      # No awards. There is nothing to give one for, and a line promising a
+      # prize is a thing people plan around.
       - type: keynote
-        title: Closing & Awards
+        title: Closing
         emoji: "🏆"
         start: "18:00"
         end: "18:10"
