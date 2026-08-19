@@ -402,7 +402,8 @@
     <!-- ===== PROGRAM ===== -->
     <section id="program" class="band">
       <div class="wrap">
-        <h2>{{ t(program.title, program.title_ko) }}</h2>
+        <h2>{{ t(program.title, program.title_ko) }}{% if program.title_note %}
+          <span class="h2-note">({{ t(program.title_note, program.title_note_ko) }})</span>{% endif %}</h2>
         {% set sub = program.subtitle_anon if variant.anonymize else program.subtitle %}
         {% if sub %}
         <p class="sub">{{ sub }}</p>

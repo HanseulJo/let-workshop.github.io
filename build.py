@@ -398,6 +398,8 @@ def fill_defaults(bundle: dict) -> None:
     bundle["venue"].setdefault("subtitle", None)
     bundle["venue"].setdefault("subtitle_ko", None)
     bundle["program"].setdefault("title_ko", None)
+    bundle["program"].setdefault("title_note", None)
+    bundle["program"].setdefault("title_note_ko", None)
     bundle["site"].setdefault("hero_background", "art")
     # No poster block at all is a legitimate site; the section disappears.
     if bundle["site"].get("sponsors"):

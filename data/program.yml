@@ -24,8 +24,16 @@
 #   calendar  set false to keep an event out of the .ics export
 # ─────────────────────────────────────────────────────────────
 
-title: Program (tentative)
-title_ko: 프로그램 (잠정)
+# "(tentative)" said the whole thing might move. It will not: the days, the
+# hours and the shape of them are settled. What is not settled is which talk
+# goes in which slot, which is a smaller and more useful thing to say — and it
+# is exactly what the grid is showing, every session reading "Invited talk ·
+# TBD". The note goes beside the heading rather than in it, so the section is
+# called what it is.
+title: Program
+title_ko: 프로그램
+title_note: speaker order to be confirmed
+title_note_ko: 연사 순서는 확정 전
 
 # The schedule shown in simple form: every talk reads "Invited talk" with its
 # hour and TBD, and the names, topics and chairs are held back. The tutorial is
