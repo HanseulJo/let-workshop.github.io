@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Bake the LET wordmark from the display font into SVG paths.
+"""Bake the LeT wordmark from the display font into SVG paths.
 
     python3 tools/make-wordmark.py
 
 Writes templates/wordmark.svg (letters only, inherits colour), and
-static/let-logo.svg (LET WS in a navy rounded square, for a profile
+static/let-logo.svg (LeT WS in a navy rounded square, for a profile
 picture) + static/favicon.svg (one letter, for 16px).
 
 Outlines are baked to paths rather than left as <text font-family="…">, because
@@ -28,11 +28,11 @@ from fontTools.varLib import instancer
 
 ROOT = Path(__file__).resolve().parent.parent
 FONT = ROOT / "static" / "fonts" / "jost-latin.woff2"
-WORD = "LET"
+WORD = "LeT"
 # What the square mark says. The wordmark is the name as it is set in running
 # text; this is the name as it has to survive being 40px wide next to somebody
 # else's avatar, where three letters on their own could be anything.
-SQUARE = ("LET", "WS")
+SQUARE = ("LeT", "WS")
 WEIGHT = 900
 TRACK = 30  # extra letterspacing in font units — a wordmark wants a little air
 NAVY = "#14213d"
@@ -88,13 +88,13 @@ def main() -> None:
     def stacked(words, target):
         """Two words on two rows, at one scale, centred as a block.
 
-        The square mark says LET WS, not LET: on a profile the acronym on its
+        The square mark says LeT WS, not LeT: on a profile the acronym on its
         own is three letters that could be anything, and "workshop" is what
         turns them into the name of a thing. Set on one line those six
         characters would be a third the height they are here — a square wants
         its content square, and two rows of three is the shape that fills it.
 
-        One scale for both rows rather than each fitted to the width, or LET
+        One scale for both rows rather than each fitted to the width, or LeT
         and WS would be set in two different sizes and read as two marks.
         """
         drawn = [draw(w) for w in words]

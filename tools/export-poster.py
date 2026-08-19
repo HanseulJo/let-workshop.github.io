@@ -190,7 +190,7 @@ def main():
             shutil.copy(work / f"{name}.html", folder / f"{stem}-source.html")
             print(run(sys.executable, ROOT / "tools/poster-svg.py", work / f"{name}.html",
                       "-o", folder / f"{stem}.svg",
-                      "--title", "LET 2026 — A2 poster").strip().splitlines()[-1])
+                      "--title", "LeT Workshop — A2 poster").strip().splitlines()[-1])
 
             # The website's copies, trimmed to the sheet: the bleed is for a
             # guillotine, and on screen it is 3mm of ground past the edge of

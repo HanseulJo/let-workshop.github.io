@@ -307,7 +307,7 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("page", help="a rendered poster .html, in a directory served on port %d" % PORT)
     ap.add_argument("-o", "--out", default="poster.svg")
-    ap.add_argument("--title", default="LET 2026 — A2 poster")
+    ap.add_argument("--title", default="LeT Workshop — A2 poster")
     args = ap.parse_args()
 
     if not Path(CHROME).exists():

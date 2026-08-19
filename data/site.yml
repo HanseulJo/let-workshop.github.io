@@ -3,7 +3,7 @@
 # info bar and the footer. Change it here, never in main.html.
 # ─────────────────────────────────────────────────────────────
 
-name: LET Workshop
+name: LeT Workshop
 # The capitals spell the acronym: LEarning Theory. Same trick the old
 # name used with its lowercase w, and the reason neither is title-cased.
 full_name: LEarning Theory workshop
@@ -53,7 +53,7 @@ url: https://let-workshop.github.io/2026/
 
 # One-liners reused across <meta> tags (search results, link previews).
 description: >-
-  LET Workshop — the LEarning Theory workshop. A meetup for the
+  LeT Workshop — the LEarning Theory workshop. A meetup for the
   machine learning theory community in Korea. POSTECH, Pohang · October 7–8, 2026.
 tagline: LEarning Theory workshop · POSTECH, Pohang · October 7–8, 2026
 blurb: A meetup for the machine learning theory community in Korea.
@@ -249,7 +249,7 @@ poster:
   # One language only, and plain text. `alt` is an attribute, and the bilingual
   # helper writes a pair of spans — markup inside an attribute ends it early and
   # spills the rest onto the page.
-  alt: LET Workshop A2 poster — the POSTECH campus drawn in learning-theory formulas
+  alt: LeT Workshop A2 poster — the POSTECH campus drawn in learning-theory formulas
   caption: A2 · 420 × 594 mm
   caption_ko: A2 · 420 × 594 mm
   # No download row under the sheets any more — tapping one opens it, at the
@@ -270,4 +270,4 @@ redirects:
   # a project path like /kolt-page-test-private/.
   - output: index.html
     to: 2026/
-    label: LET Workshop
+    label: LeT Workshop

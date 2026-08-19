@@ -237,7 +237,7 @@ def cutout_svg(source, shadow, highlight, width, height, contrast=0.95):
 def acronym_html(full_name, mark):
     """The full name with the letters that make the acronym picked out.
 
-    LET is spelled LEarning Theory workshop — the capitals inside the first
+    LeT is spelled LEarning Theory workshop — the capitals inside the first
     word are not a slip, they are what makes the E the second letter. Setting
     the name in capitals, which is what the sheets were doing, throws that
     away: it becomes three words in caps and the acronym is a coincidence
@@ -661,7 +661,7 @@ FESTIVAL = """<!doctype html>
      mark rather than as a line of its own, which is what it is — the mark
      spelled out. Held closer to the title and fainter for the same reason.
 
-     5.8mm, which is the size at which the line ends where the mark ends. LET
+     5.8mm, which is the size at which the line ends where the mark ends. LeT
      2026 sets 155mm. The face is monospaced, so the width goes with the
      character count and nothing else: at 6.5mm the shorter name set 154.7mm
      over 33 characters, and 1st adds four more.
@@ -1051,7 +1051,7 @@ FESTIVAL = """<!doctype html>
 
 BANNER = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>LET 2026 — banner, 5000x900mm</title>
+<title>LeT Workshop — banner, 5000x900mm</title>
 <style>
   @page {{ size: 5000mm 900mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
@@ -1164,7 +1164,7 @@ BANNER = """<!doctype html>
 
 XBANNER = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>LET 2026 — X-banner, 600x1800mm</title>
+<title>LeT Workshop — X-banner, 600x1800mm</title>
 <style>
   @page {{ size: 600mm 1800mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
@@ -1319,7 +1319,7 @@ XBANNER = """<!doctype html>
 
 SOCIAL = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>LET 2026 — square set</title>
+<title>LeT Workshop — square set</title>
 <style>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
@@ -1546,7 +1546,7 @@ SOCIAL = """<!doctype html>
 
 BADGE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>LET 2026 — name badges, 90x130mm</title>
+<title>LeT Workshop — name badges, 90x130mm</title>
 <style>
   @page {{ size: 90mm 130mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
@@ -1582,7 +1582,7 @@ BADGE = """<!doctype html>
   .pad {{ position:absolute; inset:0; padding:9mm 8mm 8mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; align-items:baseline; justify-content:space-between; gap:4mm; }}
   /* 9mm and unbreakable. At 11 the mark measured 53mm of the 74mm the card
-     has, the date column took the rest, and LET 2026 wrapped onto two lines —
+     has, the date column took the rest, and the mark wrapped onto two lines —
      a wordmark split across a line break stops being a wordmark. */
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:9mm; white-space:nowrap;
