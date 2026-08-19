@@ -380,9 +380,17 @@
         </h2>
         <div class="spk-grid">
           {% for s in roster %}
-          <!-- Name, affiliation and field. The session, day and time are the
-               schedule's job, and the card links there. -->
+          <!-- The card goes to the speaker's own page. It used to open their
+               session, which was worth a click while the grid named sessions
+               and said who was in them; it says "Invited talk · TBD" now, so
+               the click led from a person to a box with no person in it.
+               Whoever has no page keeps the session link — better a thin
+               destination than a card that looks clickable and is not. -->
+          {% if s.home %}
+          <a class="spk-card" style="--ko-order: {{ s.ko_order }}" href="{{ s.home }}" target="_blank" rel="noopener">
+          {% else %}
           <button class="spk-card" style="--ko-order: {{ s.ko_order }}" onclick="openEvent('{{ s.event_id }}')">
+          {% endif %}
             {% if s.photo %}
             <img class="spk-face" src="{{ s.photo }}" alt="" loading="lazy" width="256" height="256" />
             {% else %}
@@ -401,7 +409,7 @@
                  question the programme beside it refuses. It comes back with
                  the rest when `simple` goes off. -->
             {% if not program.simple %}<div class="spk-topic">{{ s.track }}</div>{% endif %}
-          </button>
+          {% if s.home %}</a>{% else %}</button>{% endif %}
           {% endfor %}
         </div>
       </div>
