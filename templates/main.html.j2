@@ -771,8 +771,8 @@
         <div class="poster-set">
           {% for sheet in site.poster.sheets %}
           <figure class="poster">
-            {% if sheet.full %}
-            <a class="poster-shot" href="{{ sheet.full }}" target="_blank" rel="noopener">
+            {% if sheet.small %}
+            <a class="poster-shot" href="{{ sheet.small | asset }}" target="_blank" rel="noopener">
             {% else %}
             <span class="poster-shot">
             {% endif %}
@@ -780,8 +780,7 @@
                    texture and lossless is the wrong tool for one: the same
                    1200px thumbnail is 3.6MB as PNG and 0.8MB at WebP q92, a
                    mean difference of two levels out of 255. The PNG stays as
-                   the fallback, and it is still what the full-size link hands
-                   over — this is only the copy shown on the page. -->
+                   the fallback. -->
               <picture>
                 {% if (sheet.image[:-4] ~ '.webp') | shipped %}
                 {%- set stem = sheet.image[:-4] %}
@@ -793,24 +792,9 @@
                      alt="{{ site.poster.alt }}{% if sheet.label %} — {{ sheet.label }}{% endif %}"
                      width="1200" height="1698" loading="lazy" decoding="async" />
               </picture>
-            {% if sheet.full %}</a>{% else %}</span>{% endif %}
+            {% if sheet.small %}</a>{% else %}</span>{% endif %}
             <figcaption>
               {% if sheet.label %}<span class="poster-spec">{{ t(sheet.label, sheet.label_ko) }}</span>{% endif %}
-              <span class="poster-gets">
-                {% if sheet.small %}
-                <a class="poster-get" href="{{ sheet.small | asset }}" download>
-                  {{ t(site.poster.download_small, site.poster.download_small_ko) }}
-                  <b>{{ sheet.small | weight }}</b>
-                </a>
-                {% endif %}
-                {% if sheet.small and sheet.full %}<span class="poster-sep">/</span>{% endif %}
-                {% if sheet.full %}
-                <a class="poster-get" href="{{ sheet.full | asset }}" download>
-                  {{ t(site.poster.download, site.poster.download_ko) }}
-                  <b>{{ sheet.full | weight }}</b>
-                </a>
-                {% endif %}
-              </span>
             </figcaption>
           </figure>
           {% endfor %}

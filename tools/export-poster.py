@@ -202,7 +202,6 @@ def main():
             wide = lambda px: im.resize((px, round(im.height * px / im.width)), Image.LANCZOS)
             st = ROOT / "static"
             wide(1200).save(st / f"{name}.png", optimize=True)
-            wide(2800).save(st / f"{name}-large.png", optimize=True)
             wide(1200).save(st / f"{name}.webp", format="WEBP", quality=92, method=6)
             # The page shows the sheet between 277 and 480 CSS pixels wide, and
             # was handing every screen the 1200. A picture costs its full
@@ -216,7 +215,7 @@ def main():
                             progressive=True)
             sizes = "  ".join(
                 f"{p.name} {p.stat().st_size / 1e6:.1f}MB"
-                for p in (st / f"{name}-large.png", st / f"{name}-small.jpg"))
+                for p in (st / f"{name}.png", st / f"{name}-small.jpg"))
             print(f"    {sizes}")
     finally:
         for s in servers:

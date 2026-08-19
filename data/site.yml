@@ -232,14 +232,16 @@ poster:
   # smaller file is the one already on the page: 1200px, which still reads and
   # still scans.
   sheets:
+    # `image` is what the page draws, `small` is what tapping it opens. The
+    # 2800px `full` files went with the download row: nothing linked to them,
+    # and shipping 34MB nobody can reach is worse than regenerating them —
+    # tools/export-poster.py writes them into the print folder either way.
     - image: poster-2026.png
       small: poster-2026-small.jpg
-      full: poster-2026-large.png
       label: Dark
       label_ko: 어두운 판
     - image: poster-2026-light.png
       small: poster-2026-light-small.jpg
-      full: poster-2026-light-large.png
       label: Light
       label_ko: 밝은 판
   # One language only, and plain text. `alt` is an attribute, and the bilingual
@@ -251,10 +253,13 @@ poster:
   # on the page, next to the size, before anyone takes a copy away.
   caption: A2 · 420 × 594 mm · details are tentative
   caption_ko: A2 · 420 × 594 mm · 세부 사항은 변경될 수 있습니다
-  download_small: Small
-  download_small_ko: 작은 크기
-  download: Full size
-  download_ko: 원본 크기
+  # No download row under the sheets any more — tapping one opens it, at the
+  # size that opens quickly. These are the labels that row used, kept in case
+  # it comes back rather than deleted along with it.
+  # download_small: Small
+  # download_small_ko: 작은 크기
+  # download: Full size
+  # download_ko: 원본 크기
 
 # ─────────────────────────────────────────────────────────────
 # Redirect stubs, written on every build. GitHub Pages has no

@@ -3551,24 +3551,6 @@ a.poster-shot:focus-visible {
   font-family: var(--mono);
   letter-spacing: 0.04em;
 }
-.poster-gets {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.poster-sep {
-  color: var(--line);
-}
-.poster-get {
-  font-weight: 600;
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-}
-.poster-get:hover,
-.poster-get:focus-visible {
-  border-bottom-color: currentColor;
-}
 
 @media (max-width: 720px) {
   .poster-shot {
@@ -3582,14 +3564,6 @@ a.poster-shot:focus-visible {
      something that wants 420 — so every item wrapped inside itself and the
      caption came out as five ragged part-lines. Which sheet on one line, the
      two files under it, and each file kept whole. */
-  .poster figcaption {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .poster-get {
-    white-space: nowrap;
-  }
   /* One track per sheet, each the width of the content column, scrolled
      sideways. The negative margin and the matching padding let the row bleed
      to the screen edges while the first sheet still starts on the text
