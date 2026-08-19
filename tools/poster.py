@@ -1195,9 +1195,13 @@ XBANNER = """<!doctype html>
      the same air is divided into equal parts and reads as a measure. */
   .facts {{ flex:1; display:flex; flex-direction:column; justify-content:space-evenly; margin:0; }}
   .fact {{ padding-top:12mm; border-top:.8mm solid {rule_soft}; }}
+  /* 100mm, not 132. The mark was cut when the name was four capitals over a
+     year; it is two words now and the second is long. Measured on the rendered
+     stand: at 132 the word "Workshop" set 532.6mm inside a 420mm column and
+     hung 68.6mm past the keyline the rest of the banner is set inside. */
   .mark {{
-    font-family:"Jost",sans-serif; font-weight:700; font-size:132mm;
-    line-height:.94; color:{ink}; letter-spacing:-.02em; margin:0;
+    font-family:"Jost",sans-serif; font-weight:700; font-size:100mm;
+    line-height:.98; color:{ink}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   /* 22mm. At 33 the name ran 565mm inside what was then a 474mm column and
@@ -1274,11 +1278,7 @@ XBANNER = """<!doctype html>
         <p class="field">Venue</p>
         <p class="line">{venue_name}<br>{city}</p>
       </div>
-      <div class="fact">
-        <p class="field">Theme {year}</p>
-        <p class="line">{theme}</p>
-      </div>
-      <div class="fact">
+{theme_fact}      <div class="fact">
         <p class="field">Dates</p>
         <p class="stack">{yyyy}.<br>{md1}<small>{hour1}</small> –<br>{md2}<small>{hour2}</small></p>
       </div>
@@ -2316,7 +2316,12 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         full_name=esc(site["full_name"]),
         theme_label=f"{site['year']} Theme",
         theme=esc(site.get("theme") or ""),
-        # An edition with no stated theme simply has one rail on that edge.
+        # An edition with no stated theme simply has one rail on that edge,
+        # and one fewer field on the stand. A field name over an empty line
+        # is worse than no field: it reads as something that failed to load.
+        theme_fact=(f'<div class="fact"><p class="field">Theme {esc(str(site["year"]))}</p>'
+                    f'<p class="line">{esc(site["theme"])}</p></div>'
+                    if site.get("theme") else ""),
         theme_rail=(f'<div class="rail"><b>Theme {esc(str(site["year"]))}</b>'
                     f'<span>{esc(site["theme"])}</span></div>'
                     if site.get("theme") else ""),

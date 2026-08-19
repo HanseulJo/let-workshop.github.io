@@ -306,12 +306,7 @@
                where a mark is decoration and the bytes are not free. -->
           <span class="hero-marks" aria-label="{{ site.sponsors.label }}">
             {% for h in site.sponsors.logos %}
-            <!-- The mark is the link's mask rather than an image inside it, so
-                 it can be filled in one flat colour. The <img> stays, hidden,
-                 and carries the alt text and the natural width the mask is
-                 sized from — a masked box has no intrinsic size of its own. -->
-            <a class="hero-mark" href="{{ h.url }}" target="_blank" rel="noopener"
-               title="{{ h.name }}" style="--mark: url('logos/{{ h.small }}')">
+            <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
               <img src="logos/{{ h.small }}" alt="{{ h.name }}" height="22" />
             </a>
             {% endfor %}

@@ -66,8 +66,8 @@
   --hero-body: #b9c7da;
   --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
   --hero-rule: rgba(255, 255, 255, 0.12);
-  --hero-marks-plate: rgba(13, 21, 35, 0.5);
-  --hero-marks-line: rgba(255, 255, 255, 0.12);
+  --hero-marks-plate: rgba(255, 255, 255, 0.9);
+  --hero-marks-line: rgba(255, 255, 255, 0.16);
   /* On a dark ground the type is the light thing against a darker one and
      wins already, so these are the sizes the row was drawn at. */
   --meta-label-weight: 500;
@@ -950,29 +950,17 @@ body {
   background: var(--hero-marks-plate);
   border: 1px solid var(--hero-marks-line);
 }
-/* One flat colour for all three, in both themes. Three institutions in three
-   brand palettes over a photograph is three arguments at 22px, and on the dark
-   hero the darkest of them — KAIST's navy — had nothing to stand against. The
-   sheet already does this at its foot for the same reason.
-   The section at the bottom of the page keeps them as their owners drew them.
-   That is where the marks are the subject; here they are a credit line beside
-   a button, and a credit line can be set in the page's own ink. */
-.hero-mark {
-  display: block;
-  height: 22px;
-  background: var(--hero-accent);
-  -webkit-mask: var(--mark) center / contain no-repeat;
-  mask: var(--mark) center / contain no-repeat;
-}
-/* The image is what gives the box its width — a masked element has no
-   intrinsic size — and what a screen reader and a no-CSS reader still get. */
+/* As their owners drew them, here as well as in the section at the foot. What
+   was hard to see on the dark hero was never the marks — it was the ground
+   they were standing on: the chip was filled with the hero's own near-black,
+   so KAIST's navy sat on navy. The chip goes pale in both themes and the marks
+   are left alone. */
 .hero-marks img {
   height: 22px;
   width: auto;
   display: block;
-  visibility: hidden;
 }
-.hero-mark:hover {
+.hero-marks a:hover img {
   opacity: 0.75;
 }
 /* Apple's pair: a full pill either way, filled for the action you want taken
@@ -3811,8 +3799,8 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
     --hero-rule: rgba(13, 33, 55, 0.16);
-    --hero-marks-plate: rgba(255, 255, 255, 0.6);
-    --hero-marks-line: rgba(13, 33, 55, 0.1);
+    --hero-marks-plate: rgba(255, 255, 255, 0.9);
+    --hero-marks-line: rgba(13, 33, 55, 0.08);
     --hero-meta-plate: transparent;
     --meta-label-weight: 600;
     --meta-fact-weight: 700;
@@ -3905,8 +3893,8 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
   --hero-rule: rgba(13, 33, 55, 0.16);
-  --hero-marks-plate: rgba(255, 255, 255, 0.6);
-  --hero-marks-line: rgba(13, 33, 55, 0.1);
+  --hero-marks-plate: rgba(255, 255, 255, 0.9);
+  --hero-marks-line: rgba(13, 33, 55, 0.08);
   --hero-meta-plate: transparent;
   --meta-label-weight: 600;
   --meta-fact-weight: 700;
