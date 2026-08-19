@@ -291,10 +291,10 @@
         <div class="hero-actions">
           {% for a in site.hero_actions %}
           {% if a.href %}
-          <!-- A live button can carry a note too. It used to say the form was
-               not open yet; now it says how long it will be, which is the same
-               question asked from the other end. -->
-          <span class="btn-wait{{ ' is-primary' if a.primary }}">
+          <!-- A live button can carry a note too, but not by borrowing the
+               waiting one's box: that one dims its button and gives it a
+               not-allowed cursor, which is exactly wrong on a link that works. -->
+          <span class="btn-note{{ ' is-primary' if a.primary }}">
             <a class="btn{{ ' btn-primary' if a.primary }}" href="{{ a.href }}"
                {% if a.href.startswith('http') %}target="_blank" rel="noopener"{% endif %}>{{ t(a.label, a.label_ko) }}</a>
             {% if a.note %}<small>{{ t(a.note, a.note_ko) }}</small>{% endif %}

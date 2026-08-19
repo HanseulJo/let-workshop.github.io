@@ -953,6 +953,17 @@ FESTIVAL = """<!doctype html>
     font-family:inherit; font-size:16mm; font-weight:700;
     letter-spacing:-.03em; color:inherit; margin-left:4mm;
   }}
+  /* What the first hour in the stack is. The stack gives a span — 10:00 to
+     18:10 across two days — and a span's opening figure reads as the edge of a
+     range rather than as an instruction to be somewhere. This says which it
+     is, in the mono the sheet names its fields with, so the number above it
+     stops being one end of a bracket. It comes from the programme's first
+     event, so it cannot drift from it. */
+  .opens {{
+    font-family:"JetBrains Mono",monospace; font-size:3.6mm; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:{cool};
+    margin:2.5mm 0 0;
+  }}
   /* The venue lives in the rail; the country is the one thing neither the rail
      nor the stack says, so it goes with the day. */
   .datesub {{ display:none; }}
@@ -973,8 +984,13 @@ FESTIVAL = """<!doctype html>
   .r {{ text-align:right; }}
   .marks {{ display:flex; align-items:flex-end; gap:9mm; }}
   .marks img {{ height:9mm; width:auto; display:block; opacity:.72; }}
+  /* The marks and the grant sit under both columns, and 9mm under a list set
+     at 5.2mm/1.42 is barely more than one of its own lines — the row read as
+     the last entry of the organisers' column rather than as the sheet's foot.
+     18mm is a gap that belongs to neither, which is what it is for. The row
+     itself is unchanged: this is space above it, not a bigger foot. */
   .foot {{
-    display:flex; justify-content:space-between; align-items:flex-end; margin-top:9mm; gap:10mm;
+    display:flex; justify-content:space-between; align-items:flex-end; margin-top:18mm; gap:10mm;
     font-family:"JetBrains Mono",monospace; font-size:3.8mm; letter-spacing:.14em;
     text-transform:uppercase; color:{cool};
   }}
@@ -1032,6 +1048,7 @@ FESTIVAL = """<!doctype html>
       <div class="dates">
         <div class="side">
           <div class="stack">{yyyy}.<br>{md1}<small>{hour1}</small> –<br>{md2}<small>{hour2}</small></div>
+          <p class="opens">{opens}</p>
           <h4>Organizers</h4>
           <div class="orgs">{organisers}</div>
         </div>
@@ -2285,6 +2302,18 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
                 return e["start"]
         return ""
 
+    def _first_title(prog):
+        """What the first hour of the first day actually is.
+
+        "Registration & Welcome Coffee" is the programme's own wording and is
+        too long for the sheet; what matters is the first word of it, which is
+        the thing a reader is being told to turn up for.
+        """
+        for e in prog["days"][0]["events"]:
+            if e.get("start"):
+                return (e.get("title") or "Doors").split(" &")[0].split(" and")[0]
+        return "Doors"
+
     def _last(day):
         for e in reversed(day["events"]):
             if e.get("end"):
@@ -2420,6 +2449,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         yyyy=esc(str(program["days"][0]["date"]).split("-")[0]),
         mon3=month[:3].upper(),
         hour1=hour1,
+        # Named from the programme rather than typed: the first event on day one
+        # is "Registration & Welcome Coffee" at 10:00, and if that moves the
+        # sheet moves with it.
+        opens=esc(f"{_first_title(program)} from {hour1}"),
         hour2=hour2,
         md1=".".join(str(program["days"][0]["date"]).split("-")[1:]).lstrip("0").replace(".0", "."),
         md2=".".join(str(program["days"][-1]["date"]).split("-")[1:]).lstrip("0").replace(".0", "."),

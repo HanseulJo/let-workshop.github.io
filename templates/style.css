@@ -1005,10 +1005,20 @@ body {
 /* Registration has nowhere to go yet. Disabled rather than hidden, so the
    thing people are looking for is visibly coming — with the reason next to it,
    since a dead button with no explanation reads as broken. */
-.btn-wait {
+.btn-wait,
+.btn-note {
   display: inline-flex;
   flex-direction: column;
   gap: 6px;
+}
+/* The live one: the button keeps its own width. Stretched to the note's, as a
+   column flex child is by default, "Registration" came out as wide as "Until
+   August 31" and read as a different, longer button. */
+.btn-note {
+  align-items: flex-start;
+}
+.btn-note small {
+  padding-left: 2px;
 }
 /* Barely dimmed. A filled pill dropped much below this stops reading as coral
    at all — the accent sinks into the navy behind it and goes grey-brown — so
@@ -1029,7 +1039,8 @@ body {
   background: var(--hero-accent);
   color: #24160f;
 }
-.btn-wait small {
+.btn-wait small,
+.btn-note small {
   font-family: var(--mono);
   font-size: 0.64rem;
   letter-spacing: 0.14em;
@@ -1039,7 +1050,8 @@ body {
   /* The tracking is for a line of Latin capitals. Hangul is already spaced by
      its own squares, and at 0.14em "8월 31일까지" comes apart into syllables. */
 }
-.btn-wait small .t-ko {
+.btn-wait small .t-ko,
+.btn-note small .t-ko {
   letter-spacing: 0.01em;
 }
 
@@ -3848,11 +3860,17 @@ a.poster-shot:focus-visible {
     --meta-fact-weight: 700;
     --meta-mono-weight: 500;
     --meta-note-weight: 500;
-    /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
-     ground needs, and at that hue the darkness reads as blood rather than
-     as the coral the dark sheet uses. Walking the hue to 18 at the same
-     lightness keeps 3.5:1 against the pale blue and reads warm. */
-  --hero-accent: #c9501c;
+    /* The light sheet's accent, exactly. This was #c9501c — hue 18, walked
+       there because at hue 10 a colour this dark was reading as blood rather
+       than as the coral the dark sheet uses. That judgement was made when the
+       hero was the only pale thing on the page. The poster section now shows
+       the light sheet directly under it, and two oranges nine degrees apart at
+       the same lightness, seen together, read as a mismatch rather than as a
+       palette. So the page follows the sheet: hue 9.3, the dark sheet's own,
+       with the saturation up and the value down. It costs 3.46:1 against the
+       pale blue for 3.25:1, which is still over the 3:1 the large type it sets
+       is held to. See SCHEMES["light"] in tools/poster.py. */
+  --hero-accent: #db472c;
     --hero-art-ink: #16324f;
     --logo-plate: rgba(255, 255, 255, 0.78);
     --logo-plate: rgba(255, 255, 255, 0.78);
@@ -3942,11 +3960,12 @@ a.poster-shot:focus-visible {
   --meta-fact-weight: 700;
   --meta-mono-weight: 500;
   --meta-note-weight: 500;
-  /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
-     ground needs, and at that hue the darkness reads as blood rather than
-     as the coral the dark sheet uses. Walking the hue to 18 at the same
-     lightness keeps 3.5:1 against the pale blue and reads warm. */
-  --hero-accent: #c9501c;
+  /* The light sheet's accent — see the note on the same variable in the
+     prefers-color-scheme: light block. Both copies or neither: this one is
+     what the explicit toggle uses and that one is what Auto uses, and a
+     value changed in one of them is a page that turns a different colour
+     depending on how it was asked to. */
+  --hero-accent: #db472c;
   --hero-art-ink: #16324f;
   --logo-plate: rgba(255, 255, 255, 0.78);
   /* The same plate the drawing is filled with, not a second toning
