@@ -950,13 +950,30 @@ body {
   background: var(--hero-marks-plate);
   border: 1px solid var(--hero-marks-line);
 }
+/* One flat colour for all three, in both themes. Three institutions in three
+   brand palettes over a photograph is three arguments at 22px, and on the dark
+   hero the darkest of them — KAIST's navy — had nothing to stand against. The
+   sheet already does this at its foot for the same reason.
+   The section at the bottom of the page keeps them as their owners drew them.
+   That is where the marks are the subject; here they are a credit line beside
+   a button, and a credit line can be set in the page's own ink. */
+.hero-mark {
+  display: block;
+  height: 22px;
+  background: var(--hero-accent);
+  -webkit-mask: var(--mark) center / contain no-repeat;
+  mask: var(--mark) center / contain no-repeat;
+}
+/* The image is what gives the box its width — a masked element has no
+   intrinsic size — and what a screen reader and a no-CSS reader still get. */
 .hero-marks img {
   height: 22px;
   width: auto;
   display: block;
+  visibility: hidden;
 }
-.hero-marks a:hover img {
-  opacity: 1;
+.hero-mark:hover {
+  opacity: 0.75;
 }
 /* Apple's pair: a full pill either way, filled for the action you want taken
    and a hairline outline for the other — both in the same hue, so they read as
