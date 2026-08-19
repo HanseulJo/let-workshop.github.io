@@ -209,7 +209,7 @@ days:
         end: "18:00"
 
       - type: internal
-        title: 과제 내부 워크숍
+        title: NRF Project Internal Meeting
         emoji: "🧩"
         start: "16:30"
         end: "18:00"
