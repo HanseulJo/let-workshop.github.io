@@ -237,12 +237,11 @@ def cutout_svg(source, shadow, highlight, width, height, contrast=0.95):
 def acronym_html(full_name, mark):
     """The full name with the letters that make the acronym picked out.
 
-    LeT is spelled LEarning Theory workshop — the capitals inside the first
-    word are not a slip, they are what makes the E the second letter. Setting
-    the name in capitals, which is what the sheets were doing, throws that
-    away: it becomes three words in caps and the acronym is a coincidence
-    again. In mixed case with the letters in the accent, the name shows its own
-    working.
+    The mark is LeT and the name is Learning Theory Workshop; the letters that
+    make the one out of the other are picked out in the accent. Setting the
+    name in capitals, which is what the sheets were doing, throws that away —
+    it becomes three words in caps and the acronym is a coincidence again. In
+    mixed case with those letters coloured, the name shows its own working.
     """
     want = list(mark.upper())
     out = []
@@ -2185,7 +2184,14 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     # down the column.
     people = [p2 for d in sessions(program) for b in d["blocks"] for p2 in b["people"]]
     seen, ordered = set(), []
-    for p2 in sorted(people, key=lambda x: x["name"].lower()):
+    # By family name, which on these is the last word — "Kwang-Sung Jun" files
+    # under J. Sorting on the whole string instead files it under K, which is
+    # alphabetical but not the alphabet anyone looks a speaker up in.
+    def filed_as(x):
+        parts = x["name"].split()
+        return (parts[-1].lower(), " ".join(parts[:-1]).lower()) if parts else ("", "")
+
+    for p2 in sorted(people, key=filed_as):
         if p2["name"] in seen:
             continue
         seen.add(p2["name"])
@@ -2367,9 +2373,6 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         logos=logo_row([h["name"] for h in site["sponsors"]["logos"]], PALETTE["cool"])
               if site.get("sponsors") else "",
         acronym_name=acronym_html(site["full_name"], mark),
-        # site.yml spells it "LEarning Theory workshop" so the letters of the
-        # acronym can be picked out; set as a plain line that casing reads as a
-        # typo, so it is normalised back here.
         long_name=esc(site["full_name"].title()),
         # The sheet says which one this is; the banners and the badges do not,
         # because a first edition is news on a poster and clutter on a name tag.

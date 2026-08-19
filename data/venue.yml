@@ -176,28 +176,51 @@ getting_here:
     # The alternative to the whole journey, not to any one leg of it.
     alt: or taxi, 20–30 min
     alt_ko: 또는 택시 20–30분
-  # The other terminal, and it really is a taxi. The 207's stop list runs
-  # 죽도시장 · 포항터미널 · 대잠사거리 — it does not go near 해도동, and POSTECH's
-  # own page gives nothing but "택시로 20분" from here. Better to say that than
-  # to invent a connection: somebody standing at the wrong terminal with a
-  # made-up bus number is worse off than somebody told to take a taxi.
+  # The other terminal, and the 207 does reach POSTECH from it — just not from
+  # the terminal itself. Its stop list has nothing in 해도동; you walk 573m to
+  # 홈플러스 and catch it there, which is why every route description that only
+  # reads stop lists concludes there is no bus and says "take a taxi".
+  #
+  # Forty-two minutes door to door, twenty-five of them walking, against about
+  # twenty in a taxi. Both are worth knowing and the sheet gives both.
   - from: Pohang Express Bus Terminal
     from_ko: 포항고속버스터미널
     icon: "🚌"
     lat: 36.0280334
     lon: 129.367615
     naver_name: 포항고속버스터미널
-    mode: car # a taxi, so plan it as a drive rather than as a bus
-    total: 20 min
-    total_ko: 20분
+    total: 42 min
+    total_ko: 42분
     legs:
-      - via: Taxi
-        via_ko: 택시
+      - via: On foot, 573 m
+        via_ko: 도보 573m
+        time: 11 min
+        time_ko: 11분
+        to: Homeplus
+        to_ko: 홈플러스
+        stop: Homeplus
+        stop_ko: 홈플러스
+        icon: "🚌"
+        change: true
+      - via: Bus 207
+        via_ko: 207번
+        time: 15 min
+        time_ko: 15분
         to: POSTECH
-        to_ko: 포항공과대학교
+        to_ko: 포스텍
+        stop: POSTECH
+        stop_ko: 포스텍
+        icon: "🚏"
+        change: true
+      - via: On foot, 758 m
+        via_ko: 도보 758m
+        time: 14 min
+        time_ko: 14분
+        to: POSCO International Center
+        to_ko: 포스코국제관
         icon: "🏫"
-    alt: A different terminal from Pohang Terminal (intercity), 2.5 km away; the 207 does not serve it.
-    alt_ko: 포항터미널(시외)과는 2.5km 떨어진 다른 터미널이고, 207번은 지나지 않습니다.
+    alt: A different terminal from Pohang Terminal (intercity), 2.5 km away. Twenty-five of those 42 minutes are on foot — a taxi is about 20.
+    alt_ko: 포항터미널(시외)과는 2.5km 떨어진 다른 터미널입니다. 42분 중 25분이 도보이며, 택시로는 약 20분입니다.
 
   - from: Pohang Terminal (intercity)
     from_ko: 포항터미널(시외)

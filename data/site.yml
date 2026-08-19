@@ -4,11 +4,9 @@
 # ─────────────────────────────────────────────────────────────
 
 name: LeT Workshop
-# The capitals spell the acronym: LEarning Theory. Same trick the old
-# name used with its lowercase w, and the reason neither is title-cased.
-full_name: LEarning Theory workshop
+full_name: Learning Theory Workshop
 year: 2026
-# Blank: the sheet said "1st LEarning Theory workshop" and the 1st is the same
+# Blank: the sheet said "1st Learning Theory Workshop" and the 1st is the same
 # claim the pill was making. Fill it in and the prefix comes back.
 edition: ""
 
@@ -53,9 +51,9 @@ url: https://let-workshop.github.io/2026/
 
 # One-liners reused across <meta> tags (search results, link previews).
 description: >-
-  LeT Workshop — the LEarning Theory workshop. A meetup for the
+  LeT Workshop — the Learning Theory Workshop. A meetup for the
   machine learning theory community in Korea. POSTECH, Pohang · October 7–8, 2026.
-tagline: LEarning Theory workshop · POSTECH, Pohang · October 7–8, 2026
+tagline: Learning Theory Workshop · POSTECH, Pohang · October 7–8, 2026
 blurb: A meetup for the machine learning theory community in Korea.
 
 analytics_id: G-DN4LGBW9YN
