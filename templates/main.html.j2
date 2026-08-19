@@ -28,12 +28,39 @@
       // Before first paint, or the page renders light and then snaps to dark.
       // "auto" stores nothing on the element so prefers-color-scheme decides.
       (function () {
+        var t = null;
         try {
-          var t = localStorage.getItem("kolt-theme");
+          t = localStorage.getItem("kolt-theme");
           if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
         } catch (e) {
           /* private browsing — the choice just doesn't persist */
         }
+
+        // Start the hero's two pictures here rather than let the stylesheet
+        // find them. A background image in CSS is not fetched when the rule is
+        // parsed — it is fetched when an element that uses it is laid out, so
+        // these were waiting on style and layout to finish before they were
+        // even asked for. They are the two largest things above the fold and
+        // the hero is not right without them.
+        //
+        // Which two depends on the theme and the width, which is why this is
+        // here and not a static <link>: the stored choice is only known to
+        // script, and a <link media> cannot ask about it.
+        var m = window.matchMedia;
+        if (t !== "light" && t !== "dark") {
+          t = m && m("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        var narrow = m && m("(max-width: 780px)").matches;
+        var mask = t === "dark" ? "hero-art" : "hero-art-light";
+        var plate = t === "dark" ? "hero" : narrow ? "hero-ink-narrow" : "hero-ink";
+        [mask + (narrow ? "-narrow" : "") + ".svg", plate + ".jpg"].forEach(function (u) {
+          var l = document.createElement("link");
+          l.rel = "preload";
+          l.as = "image";
+          l.href = u;
+          l.fetchPriority = "high";
+          document.head.appendChild(l);
+        });
       })();
     </script>
     <!-- Open Graph (Facebook, Slack, KakaoTalk, LinkedIn) -->
@@ -1084,8 +1111,8 @@
           narrow: ["hero-art-narrow.svg", "hero.jpg"],
         },
         light: {
-          wide: ["hero-art-light.svg", "hero-paper.jpg", "hero-ink.jpg"],
-          narrow: ["hero-art-light-narrow.svg", "hero-paper.jpg", "hero-ink-narrow.jpg"],
+          wide: ["hero-art-light.svg", "hero-ink.jpg"],
+          narrow: ["hero-art-light-narrow.svg", "hero-ink-narrow.jpg"],
         },
       };
       function artFor(id) {
@@ -1189,7 +1216,13 @@
         var c = navigator.connection || {};
         if (c.saveData || /(^|[^4])[23]g/.test(c.effectiveType || "")) return;
         if (!window.fetch) return;
-        var idle = window.requestIdleCallback || function (f) { setTimeout(f, 2500); };
+        // Straight after load rather than a few seconds into idle. The wait it
+        // removes is the one a reader feels — press the theme button before
+        // this has run and the drawing is away for as long as the fetch takes
+        // — and the number it was being held back for turned out to be wrong:
+        // the mask is 124KB over the wire, not the 600KB it is on disk, so the
+        // pair is about 250KB rather than the megabyte this was written for.
+        var idle = window.requestIdleCallback || function (f) { setTimeout(f, 200); };
         window.addEventListener("load", function () {
           setTimeout(function () {
             idle(function () {
@@ -1203,7 +1236,7 @@
                 fetch(u, { cache: "force-cache", priority: "low" }).catch(function () {});
               });
             });
-          }, 2500);
+          }, 200);
         });
       })();
       (function () {

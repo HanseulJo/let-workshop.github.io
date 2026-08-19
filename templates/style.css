@@ -3138,6 +3138,9 @@ footer a {
   }
   /* The picture reads, the writing recedes. */
   .hero.has-art::before {
+    /* Whichever plate this width already has for the drawing, so a phone
+       fetches and decodes one picture for the hero rather than two. */
+    background-image: var(--hero-art-image-narrow);
     opacity: 0.62;
     filter: contrast(1.12);
   }
@@ -3527,6 +3530,19 @@ a.poster-shot:focus-visible {
   .poster-shot img {
     max-height: none;
   }
+  /* The caption stacks. On a phone the sheet is 84% of a 390px screen, and a
+     row holding which sheet it is and both downloads has about 300px for
+     something that wants 420 — so every item wrapped inside itself and the
+     caption came out as five ragged part-lines. Which sheet on one line, the
+     two files under it, and each file kept whole. */
+  .poster figcaption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .poster-get {
+    white-space: nowrap;
+  }
   /* One track per sheet, each the width of the content column, scrolled
      sideways. The negative margin and the matching padding let the row bleed
      to the screen edges while the first sheet still starts on the text
@@ -3683,7 +3699,13 @@ a.poster-shot:focus-visible {
     --hero-art-ink: #16324f;
     --logo-plate: rgba(255, 255, 255, 0.78);
     --logo-plate: rgba(255, 255, 255, 0.78);
-  --hero-photo: url("hero-paper.jpg");
+  /* The same plate the drawing is filled with, not a second toning
+     of one photograph. They were two files of the same 1280x438
+     picture — 110KB over the wire and 2.2MB of decoded bitmap for a
+     layer that sits at 0.46 underneath another one, where the two
+     tonings cannot be told apart. Rendered side by side to check
+     before taking it out. */
+  --hero-photo: url("hero-ink.jpg");
     --hero-photo-opacity: 0.46;
     --hero-art-image: url("hero-ink.jpg");
   --hero-art-image-narrow: url("hero-ink-narrow.jpg");
@@ -3764,7 +3786,13 @@ a.poster-shot:focus-visible {
   --hero-accent: #c9501c;
   --hero-art-ink: #16324f;
   --logo-plate: rgba(255, 255, 255, 0.78);
-  --hero-photo: url("hero-paper.jpg");
+  /* The same plate the drawing is filled with, not a second toning
+     of one photograph. They were two files of the same 1280x438
+     picture — 110KB over the wire and 2.2MB of decoded bitmap for a
+     layer that sits at 0.46 underneath another one, where the two
+     tonings cannot be told apart. Rendered side by side to check
+     before taking it out. */
+  --hero-photo: url("hero-ink.jpg");
   --hero-photo-opacity: 0.46;
   --hero-art-image: url("hero-ink.jpg");
   --hero-art-image-narrow: url("hero-ink-narrow.jpg");
