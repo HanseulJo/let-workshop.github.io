@@ -439,6 +439,7 @@ def fill_defaults(bundle: dict) -> None:
             # A mark with no measurement is drawn box-to-box, as before.
             logo.setdefault("ratio", 1)
             logo.setdefault("baseline", 1)
+            logo.setdefault("nudge", 1)
             # No small variant means the hero simply falls back to the big one.
             logo.setdefault("small", logo.get("file"))
         for key in ("title", "title_ko", "note", "note_ko"):

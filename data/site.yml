@@ -136,11 +136,17 @@ sponsors:
   #             letter height and multiplies
   #   baseline  where the letters sit on their box, as a fraction from the top,
   #             so the three can be dropped onto one line
+  #   nudge     an optical correction on top of the measurement. Equal cap
+  #             heights are equal by measure, not to the eye: POSTECH's mark is
+  #             a very wide word and reads as the big one whatever its letters
+  #             measure, which leaves KAIST looking undersized beside it. This
+  #             is the only place to put that judgement, and it stays separate
+  #             from `ratio` so the measurement is never quietly overwritten.
   #
   # Both are measured, not guessed: tools/prep-logo.py prints them for whatever
   # you feed it.
   logos:
-    - { name: KAIST, file: kaist.webp, small: kaist-sm.webp, ratio: 1.618, baseline: 0.618, url: https://www.kaist.ac.kr/en/ }
+    - { name: KAIST, file: kaist.webp, small: kaist-sm.webp, ratio: 1.618, baseline: 0.618, nudge: 1.12, url: https://www.kaist.ac.kr/en/ }
     - { name: POSTECH, file: postech.webp, small: postech-sm.webp, ratio: 1.714, baseline: 0.583, url: https://www.postech.ac.kr/eng/ }
     - { name: NRF, file: nrf.webp, small: nrf-sm.webp, ratio: 2.779, baseline: 0.784, url: https://www.nrf.re.kr/eng/main }
 

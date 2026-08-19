@@ -209,7 +209,9 @@ def logo_row(logos, colour, cap=3.4, flat=True):
         # above its own bottom is pushed down by exactly that difference.
         ratio = float(logo.get("ratio") or 1)
         baseline = float(logo.get("baseline") or 1)
-        box = cap * ratio
+        # The optical correction the page applies, applied here too, or the
+        # sheet and the site would set the same three marks differently.
+        box = cap * ratio * float(logo.get("nudge") or 1)
         out.append(
             f'<img alt="{esc(name)}" style="height:{box:.2f}mm;'
             f'margin-bottom:{cap * 0.9 - (1 - baseline) * box:.2f}mm"'

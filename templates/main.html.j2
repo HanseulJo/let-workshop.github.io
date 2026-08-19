@@ -314,7 +314,7 @@
           <span class="hero-marks" aria-label="{{ site.sponsors.label }}">
             {% for h in site.sponsors.logos %}
             <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}"
-               style="--ratio: {{ h.ratio }}; --baseline: {{ h.baseline }}">
+               style="--ratio: {{ h.ratio }}; --baseline: {{ h.baseline }}; --nudge: {{ h.nudge }}">
               <img src="logos/{{ h.small }}" alt="{{ h.name }}" />
             </a>
             {% endfor %}
@@ -627,7 +627,7 @@
         <div class="sponsors-row">
           {% for h in site.sponsors.logos %}
           <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}"
-             style="--ratio: {{ h.ratio }}; --baseline: {{ h.baseline }}">
+             style="--ratio: {{ h.ratio }}; --baseline: {{ h.baseline }}; --nudge: {{ h.nudge }}">
             <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
           </a>
           {% endfor %}

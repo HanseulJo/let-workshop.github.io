@@ -966,19 +966,27 @@ body {
    exactly the difference. Both numbers come from data/site.yml, measured by
    tools/prep-logo.py, so the hero, the section at the foot and the printed
    sheet all draw the same proportions. */
-.hero-marks {
-  --cap: 13px;
-  align-items: flex-end;
-}
 .hero-marks a,
 .sponsors-row a {
-  --box: calc(var(--cap) * var(--ratio));
+  --box: calc(var(--cap) * var(--ratio) * var(--nudge, 1));
   margin-bottom: calc(var(--drop, 0px) - (1 - var(--baseline)) * var(--box));
 }
-.hero-marks img {
-  height: calc(var(--cap) * var(--ratio));
+.hero-marks img,
+.sponsors-row img {
+  height: var(--box);
   width: auto;
   display: block;
+}
+/* The chip has to sit in the row the buttons are in, and the tallest of the
+   three marks is 2.8 boxes per unit of letter — so the letter height is set by
+   what the NRF's arc leaves, not by what the lettering would like. At 9px the
+   chip comes to 41px against the button's 42; at 13 it was 48 and stood over
+   them. This is a credit line, and the size that keeps it one is the right one. */
+.hero-marks {
+  --cap: 9px;
+  --drop: 8px;
+  padding: 7px 16px;
+  align-items: flex-end;
 }
 .hero-marks a:hover img {
   opacity: 0.75;
@@ -2995,7 +3003,6 @@ h2 .note {
      and these three do, one of them being mostly an arc. The width follows
      from the height, so a 6.9:1 wordmark still takes more of the row than a
      3.5:1 one; that is what matching costs, and it is the right cost. */
-  height: calc(var(--cap) * var(--ratio));
   max-width: none;
   width: auto;
   object-fit: contain;
