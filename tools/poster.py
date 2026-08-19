@@ -852,7 +852,7 @@ FESTIVAL = """<!doctype html>
      poster is read standing up and what it has to deliver is who is speaking;
      the schedule belongs on the page the QR leads to. */
   .prog-grid {{
-    display:inline-grid; grid-template-columns:auto auto auto;
+    display:inline-grid; grid-template-columns:auto auto;
     column-gap:4mm; row-gap:0; justify-items:end; align-items:baseline;
     text-align:right;
   }}
@@ -1086,6 +1086,10 @@ BANNER = """<!doctype html>
     letter-spacing:-.01em; color:{ink}; opacity:.58; margin:26mm 0 0 13mm;
   }}
   .right {{ text-align:right; flex:none; }}
+  .stack small {{
+    font-family:"JetBrains Mono",monospace; font-size:.26em; font-weight:400;
+    letter-spacing:.06em; opacity:.66; margin-left:.18em;
+  }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:150mm;
   /* The accent goes on the small type, not the large. The mark is white here
@@ -1108,6 +1112,14 @@ BANNER = """<!doctype html>
   }}
   .marks {{ display:flex; justify-content:flex-end; gap:70mm; margin-top:40mm; }}
   .marks img {{ height:66mm; width:auto; display:block; opacity:.72; }}
+  /* The funder's own sentence. Smallest thing on a five-metre banner and the
+     only one nobody will read from across the courtyard, which is right: it is
+     there for the record, not for the passer-by. */
+  .grant {{
+    font-family:"JetBrains Mono",monospace; font-size:11mm; font-weight:400;
+    letter-spacing:.06em; line-height:1.5; color:{ink}; opacity:.5;
+    margin:22mm 0 0; max-width:900mm; text-align:right; margin-left:auto;
+  }}
 </style></head><body>
 <div class="sheet">
   {ghost}<div class="art">{art}</div>
@@ -1124,13 +1136,14 @@ BANNER = """<!doctype html>
   <div class="wrap">
     <div>
       <h1 class="mark">{mark} <span>{year}</span></h1>
-      <p class="longname">{long_name}</p>
+      <p class="longname">{long_name_ed}</p>
     </div>
     <div class="right">
-      <p class="stack">{yyyy}.{md1}–{md2}</p>
+      <p class="stack">{yyyy}.{md1}<small>{hour1}</small> – {md2}<small>{hour2}</small></p>
       <p class="field">Venue</p>
       <p class="where">{venue_name}, {city}</p>
       <span class="marks">{logos}</span>
+      <p class="grant">{grant}</p>
     </div>
   </div>
 </div>
@@ -1209,6 +1222,10 @@ XBANNER = """<!doctype html>
     font-family:"Satoshi",sans-serif; font-weight:700; font-size:27mm;
     letter-spacing:-.014em; color:{ink}; margin:0;
   }}
+  .stack small {{
+    font-family:"JetBrains Mono",monospace; font-size:.26em; font-weight:400;
+    letter-spacing:.06em; opacity:.66; margin-left:.16em;
+  }}
   .stack {{
     font-family:"Inter Tight",sans-serif; font-weight:700; font-size:96mm;
     line-height:1.02; letter-spacing:-.03em; color:{ink}; margin:0;
@@ -1229,6 +1246,11 @@ XBANNER = """<!doctype html>
   }}
   .qr-plate {{ width:110mm; height:110mm; background:{art_ink}; padding:5mm; box-sizing:border-box; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
+  .grant {{
+    font-family:"JetBrains Mono",monospace; font-size:5mm; font-weight:400;
+    letter-spacing:.06em; line-height:1.6; color:{ink}; opacity:.5;
+    margin:14mm 0 0;
+  }}
 </style></head><body>
 <div class="sheet">
   {ghost}<div class="art">{art}</div>
@@ -1245,7 +1267,7 @@ XBANNER = """<!doctype html>
   <div class="wrap">
     <div>
       <h1 class="mark">{mark}<br><span>{year}</span></h1>
-      <p class="longname">{long_name}</p>
+      <p class="longname">{long_name_ed}</p>
     </div>
     <div class="facts">
       <div class="fact">
@@ -1258,13 +1280,14 @@ XBANNER = """<!doctype html>
       </div>
       <div class="fact">
         <p class="field">Dates</p>
-        <p class="stack">{yyyy}.<br>{md1}–{md2}</p>
+        <p class="stack">{yyyy}.<br>{md1}<small>{hour1}</small> –<br>{md2}<small>{hour2}</small></p>
       </div>
     </div>
     <div class="foot">
       <span class="marks">{logos}</span>
       <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
     </div>
+    <p class="grant">{grant}</p>
   </div>
 </div>
 </body></html>
@@ -1419,7 +1442,7 @@ SOCIAL = """<!doctype html>
     <div class="mid"></div>
     <div>
       <h1 class="mark">{mark} <span>{year}</span></h1>
-      <p class="longname">{long_name}</p>
+      <p class="longname">{long_name_ed}</p>
     </div>
     <div class="foot"><span><b>{yyyy}.{md1}–{md2}</b></span><span>{venue_name}, {city}</span></div>
   </div>
@@ -2141,28 +2164,24 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             + (f' &middot; {esc(p["topic"])}' if p.get("topic") else "")
             + "</span></li>"
             for b in d["blocks"] for p in b["people"]))
-    slots = []
-    for d in sessions(program):
-        if slots:
-            slots.append('<hr class="dayrule">')
-        # The date only on the first line of its day: repeated down every row it
-        # would read as a stamp rather than as the thing that opens the group.
-        # "Day 1 · Oct 7 (Wed)" -> "Oct 7" with the weekday on its own line.
-        raw = d["label"].split("·")[-1].strip() if "·" in d["label"] else d["label"]
-        day, _, wd = raw.partition("(")
-        label = esc(day.strip()) + (f"<small>{esc(wd.rstrip(')'))}</small>" if wd else "")
-        first = True
-        for b in d["blocks"]:
-            for k, p2 in enumerate(b["people"]):
-                if k == 0 and first:
-                    slots.append(f'<i class="dayrow"><u>{label}</u></i>')
-                    first = False
-                key = f'<b>{esc(b["title"])}</b>' if k == 0 else ""
-                slots.append(
-                    f"<i>{key}</i>"
-                    f'<em>{esc(p2["name"])}</em>'
-                    f'<span>{esc(p2.get("affil", ""))}</span>')
-    programme_block = "".join(slots)
+    # One list, alphabetical, name and affiliation. It used to be grouped by
+    # day and by session — Oct 7 over four sessions, Oct 8 over three, each
+    # opened by its own label. That is a timetable, and a timetable is what the
+    # page the code leads to is for. On the sheet it asked a reader standing in
+    # front of it to hold a structure in their head before they could find the
+    # one thing they came to look for, which is whether someone they know is
+    # speaking. Sorted by name, that question is answered by running a finger
+    # down the column.
+    people = [p2 for d in sessions(program) for b in d["blocks"] for p2 in b["people"]]
+    seen, ordered = set(), []
+    for p2 in sorted(people, key=lambda x: x["name"].lower()):
+        if p2["name"] in seen:
+            continue
+        seen.add(p2["name"])
+        ordered.append(p2)
+    programme_block = "".join(
+        f'<em>{esc(p2["name"])}</em><span>{esc(p2.get("affil", ""))}</span>'
+        for p2 in ordered)
     names_flat = "".join(
         f'<li>{esc(p["name"].lower())}</li>'
         for d in sessions(program) for b in d["blocks"] for p in b["people"])

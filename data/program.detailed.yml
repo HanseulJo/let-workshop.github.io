@@ -302,11 +302,11 @@ days:
         start: "13:30"
         end: "14:50"
         speakers:
-          - name: Dabin Lee
+          - name: Dabeen Lee
             role: Prof.
             role_ko: 교수
             name_ko: 이다빈
-            photo: dabin-lee.jpg
+            photo: dabeen-lee.jpg
             affil: SNU
           # Confirmed 2026-08-19 from the shortlist for this slot. A
           # postdoc rather than a professor, so the card says Dr.

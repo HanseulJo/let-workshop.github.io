@@ -719,7 +719,6 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
     # Availability notes are organiser-only; `candidates` marks the same build.
     place_events(program, variant["anonymize"], notes=variant["candidates"])
 
-    ics = calendar(bundle["site"], program)
     types = program["types"]
 
     # The speaker roster is derived from the programme, never listed twice —
@@ -777,10 +776,15 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
                 e["title"] = label
                 e["chair"] = None
                 # One line where the names were, so the row keeps its shape and
-                # says what is missing rather than looking finished.
+                # says what is missing rather than looking finished. The same
+                # goes for the panel a row opens and for the calendar entry:
+                # three places drawing from one list, and a session that is
+                # "Invited talk · TBD" in the grid should not name six people
+                # the moment it is opened.
                 e["lines"] = ["TBD"]
                 e["talks"] = []
                 e["notes"] = []
+                e["speakers"] = [{"name": "TBD"}]
                 # A tutorial is a talk here, so it takes the talk's colour,
                 # its badge and its mark rather than keeping a legend row, a
                 # blue edge and a book where the others have a microphone.
@@ -793,6 +797,11 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
         # longer there.
         for day in program["days"]:
             day["theme"] = None
+
+    # After the simplification, so a downloaded calendar says what the page
+    # says. It was built before it and kept the real session names — which put
+    # the thing being held back into the one artefact that leaves the site.
+    ics = calendar(bundle["site"], program)
 
     detail = [
         {
