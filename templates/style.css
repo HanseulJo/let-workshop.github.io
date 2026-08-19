@@ -1068,6 +1068,7 @@ section {
 .band .agenda,
 .band .abs,
 .band .venue-info,
+.band .venue-transport,
 .band .view-panel,
 .band .org-card,
 .band .spk-card,
@@ -1080,6 +1081,7 @@ section {
 .band-alt .agenda,
 .band-alt .abs,
 .band-alt .venue-info,
+.band-alt .venue-transport,
 .band-alt .view-panel,
 .band-alt .org-card,
 .band-alt .spk-card,
@@ -2470,9 +2472,11 @@ h2 .note {
 }
 .venue-transport {
   grid-column: 1 / -1;
-  /* The same plate as the card above it, so the row reads as the other half of
-     one object rather than as loose text under it. */
-  background: var(--surface);
+  /* A card, on the same terms as the one above it. Every card here is the
+     opposite tone to the band it stands on, which is the whole of what makes
+     it read as a card; this one was given --surface instead and so followed
+     nothing — white on near-white, an edge you had to look for. The tone comes
+     from the .band / .band-alt pair above, like every other card's. */
   border-radius: var(--radius);
   padding: 6px 24px 22px;
 }
