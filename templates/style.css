@@ -66,6 +66,12 @@
   --hero-body: #b9c7da;
   --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
   --hero-rule: rgba(255, 255, 255, 0.12);
+  /* On a dark ground the type is the light thing against a darker one and
+     wins already, so these are the sizes the row was drawn at. */
+  --meta-label-weight: 500;
+  --meta-fact-weight: 600;
+  --meta-mono-weight: 400;
+  --meta-note-weight: 400;
   --hero-meta-plate: transparent;
   --hero-accent: #ff8a75;
   /* The ink the formula art is drawn in. Cool and a step off white: the glyphs
@@ -839,8 +845,11 @@ body {
    without the type moving — the row still starts on the same left edge as the
    mark and the theme line above it. It begins at the padding edge, so the
    hairline stays a hairline rather than the top of a panel.
-   In the dark it is transparent: there the drawing is the light thing and the
-   type is lighter still, so nothing was being rescued. */
+   Painted in neither theme now, and kept as a hook. What this row wanted
+   against a busy drawing was not a panel behind it but more ink in it — see
+   the weights below. A wash pale enough not to read as a box did too little,
+   and one heavy enough to work was a box. Give this a colour and it comes
+   back, correctly placed. */
 .hero-meta::before {
   content: "";
   position: absolute;
@@ -859,7 +868,7 @@ body {
   gap: 6px;
   font-family: var(--mono);
   font-size: 0.66rem;
-  font-weight: 500;
+  font-weight: var(--meta-label-weight);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--hero-mute);
@@ -878,7 +887,7 @@ body {
   margin: 0;
   font-family: var(--display);
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: var(--meta-fact-weight);
   letter-spacing: -0.01em;
   line-height: 1.3;
   color: var(--hero-title);
@@ -886,7 +895,7 @@ body {
 .hero-meta dd.is-mono {
   font-family: var(--mono);
   font-size: 0.95rem;
-  font-weight: 400;
+  font-weight: var(--meta-mono-weight);
   font-variant-numeric: tabular-nums;
 }
 /* The countdown is one token, not three — left to wrap it splits as
@@ -1017,7 +1026,7 @@ body {
   margin-top: 5px;
   font-family: var(--sans);
   font-size: 0.82rem;
-  font-weight: 400;
+  font-weight: var(--meta-note-weight);
   letter-spacing: 0;
   color: var(--hero-mute);
 }
@@ -3711,7 +3720,11 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
     --hero-rule: rgba(13, 33, 55, 0.16);
-    --hero-meta-plate: rgba(255, 255, 255, 0.3);
+    --hero-meta-plate: transparent;
+    --meta-label-weight: 600;
+    --meta-fact-weight: 700;
+    --meta-mono-weight: 500;
+    --meta-note-weight: 500;
     /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
      ground needs, and at that hue the darkness reads as blood rather than
      as the coral the dark sheet uses. Walking the hue to 18 at the same
@@ -3799,7 +3812,11 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
   --hero-rule: rgba(13, 33, 55, 0.16);
-  --hero-meta-plate: rgba(255, 255, 255, 0.3);
+  --hero-meta-plate: transparent;
+  --meta-label-weight: 600;
+  --meta-fact-weight: 700;
+  --meta-mono-weight: 500;
+  --meta-note-weight: 500;
   /* Orange, not red. #c93a1c sits at hue 10 with the lightness a light
      ground needs, and at that hue the darkness reads as blood rather than
      as the coral the dark sheet uses. Walking the hue to 18 at the same
