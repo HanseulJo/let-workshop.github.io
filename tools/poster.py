@@ -1434,7 +1434,7 @@ SOCIAL = """<!doctype html>
       <h2>{theme}</h2>
       <p class="body">{blurb}</p>
     </div>
-    <div class="foot"><span>kolt-workshop.github.io/{year}</span><span><b>Free to attend</b></span></div>
+    <div class="foot"><span>let-workshop.github.io/{year}</span><span><b>Free to attend</b></span></div>
   </div>
 </div>
 
@@ -1487,7 +1487,7 @@ SOCIAL = """<!doctype html>
       <div class="join">
         <div>
           <p class="kicker hot" style="margin-bottom:12px">Registration {reg_note}</p>
-          <p class="body" style="font-size:30px;margin:0 0 24px">kolt-workshop.github.io/{year}</p>
+          <p class="body" style="font-size:30px;margin:0 0 24px">let-workshop.github.io/{year}</p>
           <span class="marks">{logos}</span>
         </div>
         <div class="qr-plate">{qr}</div>

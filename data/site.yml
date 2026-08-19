@@ -47,9 +47,9 @@ country: South Korea
 # Fallback for local builds only. In CI the deployed URL is derived from
 # GITHUB_REPOSITORY, so the same commit is correct on every target — the live
 # repo and the staging repo do not need separate histories.
-#   live     https://kolt-workshop.github.io/2026/
+#   live     https://let-workshop.github.io/2026/
 #   staging  https://dongyeoplee2.github.io/kolt-page-test-private/2026/
-url: https://kolt-workshop.github.io/2026/
+url: https://let-workshop.github.io/2026/
 
 # One-liners reused across <meta> tags (search results, link previews).
 description: >-
