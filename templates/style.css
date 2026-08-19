@@ -969,7 +969,25 @@ body {
 .hero-marks a,
 .sponsors-row a {
   --box: calc(var(--cap) * var(--ratio) * var(--nudge, 1));
+  /* Where the middle of the lettering sits on the box, as a fraction from the
+     top. The cap is 1/ratio of the box by definition, so its middle is half
+     that above the baseline. */
+  --cap-mid: calc(var(--baseline) - 0.5 / var(--ratio));
+}
+.sponsors-row a {
   margin-bottom: calc(var(--drop, 0px) - (1 - var(--baseline)) * var(--box));
+}
+/* In the chip the lettering is centred rather than set on a line. A baseline
+   is right where marks sit in a row of their own; here they sit inside a pill
+   beside two buttons, and what the eye reads as the middle of that pill is the
+   middle of the letters — not the middle of the boxes, which would put KAIST
+   and POSTECH high and leave the NRF's arc hanging.
+   Margins rather than a transform, so the pill grows to hold what it moves:
+   a translated arc would simply hang outside it. */
+.hero-marks a {
+  --shift: calc((0.5 - var(--cap-mid)) * var(--box));
+  margin-top: max(0px, calc(2 * var(--shift)));
+  margin-bottom: max(0px, calc(-2 * var(--shift)));
 }
 .hero-marks img,
 .sponsors-row img {
@@ -984,9 +1002,12 @@ body {
    them. This is a credit line, and the size that keeps it one is the right one. */
 .hero-marks {
   --cap: 9px;
-  --drop: 8px;
-  padding: 7px 16px;
-  align-items: flex-end;
+  /* 5px, not 7. Centring the lettering pushes the NRF's arc up and the pill
+     grows to hold it — 46px against the buttons' 42. The room comes back off
+     the padding rather than off the letters: the arc is already inside the
+     pill's own rounding, so the space above it was doing nothing. */
+  padding: 5px 16px;
+  align-items: center;
 }
 .hero-marks a:hover img {
   opacity: 0.75;
