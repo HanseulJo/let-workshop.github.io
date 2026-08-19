@@ -3,8 +3,10 @@
 # info bar and the footer. Change it here, never in main.html.
 # ─────────────────────────────────────────────────────────────
 
-name: KOLT 2026
-full_name: Korean workshop On Learning Theory
+name: LET 2026
+# The capitals spell the acronym: LEarning Theory. Same trick the old
+# name used with its lowercase w, and the reason neither is title-cased.
+full_name: LEarning Theory workshop
 year: 2026
 edition: 1st
 
@@ -59,9 +61,9 @@ url: https://kolt-workshop.github.io/2026/
 
 # One-liners reused across <meta> tags (search results, link previews).
 description: >-
-  KOLT 2026 — the 1st Korean workshop On Learning Theory. A meetup for the
+  LET 2026 — the 1st LEarning Theory workshop. A meetup for the
   machine learning theory community in Korea. POSTECH, Pohang · October 7–8, 2026.
-tagline: 1st Korean workshop On Learning Theory · POSTECH, Pohang · October 7–8, 2026
+tagline: 1st LEarning Theory workshop · POSTECH, Pohang · October 7–8, 2026
 blurb: A meetup for the machine learning theory community in Korea.
 
 analytics_id: G-DN4LGBW9YN
@@ -106,21 +108,31 @@ nav:
 #   KAIST    https://www.kaist.ac.kr/kr/html/kaist/010801.html
 # Prefer SVG, or a PNG at least 200px tall with a transparent background.
 # Delete this whole block and the strip disappears.
-hosts:
+sponsors:
   # Shown as a section of their own at the foot of the page rather than as a
   # strip in the footer. In the footer they were chrome, at 20px and dimmed;
   # here they are the last thing the page says, and they are shown as their
   # owners drew them — a mark greyed out reads as a placeholder for a sponsor
   # rather than as one.
-  title: Hosts
-  title_ko: 주최
-  label: Host and participating institutions
+  title: Sponsors
+  title_ko: 후원
+  # The acknowledgement the grant requires, in the wording it requires. Under
+  # the marks rather than over them: the marks say who, this says under which
+  # grant, and nobody reads the second before the first.
+  note: >-
+    This workshop was supported by the National Research Foundation of Korea
+    (NRF) grant funded by the Korea government (MSIT) (RS-2026-25612350).
+  note_ko: >-
+    이 워크샵은 정부(과학기술정보통신부)의 재원으로 한국연구재단의 지원을 받아
+    수행된 연구임 (RS-2026-25612350)
+  label: Sponsoring and participating institutions
   # `file` is the 132px-tall mark this section draws at 44; `small` is the
   # 66px one the hero puts beside the buttons at 22. Both written by
   # tools/prep-logo.py, which takes one source and produces the pair.
   logos:
     - { name: KAIST, file: kaist.webp, small: kaist-sm.webp, url: https://www.kaist.ac.kr/en/ }
     - { name: POSTECH, file: postech.webp, small: postech-sm.webp, url: https://www.postech.ac.kr/eng/ }
+    - { name: NRF, file: nrf.webp, small: nrf-sm.webp, url: https://www.nrf.re.kr/eng/main }
 
 # The particulars under the hero title. `icon` names a symbol in the inline
 # sprite: cal, pin, globe, mic. `mono` sets the value in the monospace face —
@@ -248,7 +260,7 @@ poster:
   # One language only, and plain text. `alt` is an attribute, and the bilingual
   # helper writes a pair of spans — markup inside an attribute ends it early and
   # spills the rest onto the page.
-  alt: KOLT 2026 A2 poster — the POSTECH campus drawn in learning-theory formulas
+  alt: LET 2026 A2 poster — the POSTECH campus drawn in learning-theory formulas
   # The sheet prints names, rooms and hours that are not settled yet, and a
   # printed thing is the one form nobody comes back to check. The note says so
   # on the page, next to the size, before anyone takes a copy away.
@@ -272,4 +284,4 @@ redirects:
   # a project path like /kolt-page-test-private/.
   - output: index.html
     to: 2026/
-    label: KOLT 2026
+    label: LET 2026

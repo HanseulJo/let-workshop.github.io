@@ -1,7 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="LET">
   <rect x="2" y="2" width="60" height="60" rx="14" fill="#14213d"/>
   <!-- Baked outlines — no font needed. Regenerate: tools/make-wordmark.py -->
-  <g transform="translate(18.179 47.000) scale(0.04286)" fill="#ffffff">
+  <g transform="translate(7.231 40.846) scale(0.02527)" fill="#ffffff">
     <path d="M70 -700V0H575V-185H290V-700Z"/>
+    <path d="M827 0H1180V-175H827ZM827 -525H1180V-700H827ZM827 -275H1160V-445H827ZM675 -700V0H885V-700Z"/>
+    <path d="M1270 -505H1470V0H1690V-505H1890V-700H1270Z"/>
   </g>
 </svg>

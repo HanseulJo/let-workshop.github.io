@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the KOLT site from data/*.yml + content/*.md.
+"""Render the LET site from data/*.yml + content/*.md.
 
     python3 build.py            # build every variant into _site/
     python3 build.py public     # just the page that gets deployed
@@ -400,12 +400,12 @@ def fill_defaults(bundle: dict) -> None:
     bundle["program"].setdefault("title_ko", None)
     bundle["site"].setdefault("hero_background", "art")
     # No poster block at all is a legitimate site; the section disappears.
-    if bundle["site"].get("hosts"):
-        for logo in bundle["site"]["hosts"].get("logos", []):
+    if bundle["site"].get("sponsors"):
+        for logo in bundle["site"]["sponsors"].get("logos", []):
             # No small variant means the hero simply falls back to the big one.
             logo.setdefault("small", logo.get("file"))
         for key in ("title", "title_ko", "note", "note_ko"):
-            bundle["site"]["hosts"].setdefault(key, None)
+            bundle["site"]["sponsors"].setdefault(key, None)
     bundle["site"].setdefault("poster", None)
     if bundle["site"]["poster"]:
         for key in ("title_ko", "subtitle", "subtitle_ko",
@@ -436,14 +436,14 @@ def fill_defaults(bundle: dict) -> None:
         cell.setdefault("countdown", False)
         cell.setdefault("icon", None)
         cell.setdefault("mono", False)
-    bundle["site"].setdefault("hosts", None)
+    bundle["site"].setdefault("sponsors", None)
     # A logo entry with no file on disk would render a broken image.
-    if bundle["site"]["hosts"]:
-        present = [h for h in bundle["site"]["hosts"]["logos"] if (STATIC / "logos" / h["file"]).exists()]
-        missing = [h["name"] for h in bundle["site"]["hosts"]["logos"] if h not in present]
+    if bundle["site"]["sponsors"]:
+        present = [h for h in bundle["site"]["sponsors"]["logos"] if (STATIC / "logos" / h["file"]).exists()]
+        missing = [h["name"] for h in bundle["site"]["sponsors"]["logos"] if h not in present]
         if missing:
             print(f"  note: no logo file yet for {', '.join(missing)} — strip hidden")
-        bundle["site"]["hosts"] = {**bundle["site"]["hosts"], "logos": present} if present else None
+        bundle["site"]["sponsors"] = {**bundle["site"]["sponsors"], "logos": present} if present else None
 
     # Affiliations get their Korean form from the one lookup in site.yml.
     korean = bundle["site"].get("affiliations") or {}

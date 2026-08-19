@@ -17,7 +17,7 @@
   src: url("fonts/inter-tight-latin.woff2") format("woff2");
 }
 /* Jost, the wordmark face. Futura itself is Bauer's and cannot ship with the
-   page; Jost is the OFL geometric sans drawn after it, and it is what the KOLT
+   page; Jost is the OFL geometric sans drawn after it, and it is what the LET
    logo and favicon were already cut from — so the title now matches the mark
    instead of being set in the body face. Variable, 100–900. */
 @font-face {
@@ -323,7 +323,7 @@ html {
   padding: 10px 0;
 }
 /* The name in the sticky bar is the same wordmark, so it takes the same face —
-   two different cuts of "KOLT 2026" on one screen is the kind of thing you
+   two different cuts of "LET 2026" on one screen is the kind of thing you
    notice without being able to say why. */
 .brand {
   font-family: var(--wordmark);
@@ -2873,7 +2873,20 @@ h2 .note {
   text-align: left;
   line-height: 1.7;
 }
-.hosts-row {
+/* The grant acknowledgement, in the wording the grant requires. Small, wide
+   and centred under the marks: it is a legal line rather than a sentence
+   anybody came to read, and set at body size it would out-argue the marks it
+   is standing under. */
+.sponsors-grant {
+  max-width: 46rem;
+  margin: 26px auto 0;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--faint);
+  word-break: keep-all;
+}
+.sponsors-row {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2881,7 +2894,7 @@ h2 .note {
   gap: 56px;
   margin-top: 30px;
 }
-.hosts-row img {
+.sponsors-row img {
   /* Matched on height. POSTECH is a 6.9:1 wordmark and KAIST 3.5:1, so equal
      height means unequal width and the wider one carries more of the row —
      that is what matching heights costs, and it is the right cost here: two
@@ -2906,17 +2919,17 @@ h2 .note {
 /* No plate. Both marks are supplied with transparent backgrounds, so the card
    behind them was adding a white rectangle that was not theirs — it read as
    part of the logo rather than as the page. */
-.hosts-row a {
+.sponsors-row a {
   display: block;
   transition: transform 0.15s ease;
 }
-.hosts-row a:hover,
-.hosts-row a:focus-visible {
+.sponsors-row a:hover,
+.sponsors-row a:focus-visible {
   transform: translateY(-2px);
 }
 
 /* Part of the alternation rather than a plain strip after it. The bands run
-   about, speakers, program, organisers, hosts, venue, poster — and the poster
+   about, speakers, program, organisers, sponsors, venue, poster — and the poster
    is a plain one, so the footer takes the alternate tone and the run simply
    carries on to the bottom of the page instead of stopping one section short.
    The class does the colouring; .band-alt is the same tone the other alternate
@@ -3009,7 +3022,7 @@ footer a {
 }
 
 @media (max-width: 780px) {
-  /* The hosts stack rather than sit in a row, and larger for it. Side by side
+  /* The marks stack rather than sit in a row, and larger for it. Side by side
      on a phone each mark got half of a 350px column and came out smaller than
      the body text beside it; one per line, they are the size a mark should be
      when it is the last thing the page says. */
@@ -3017,7 +3030,7 @@ footer a {
      the shorter of the two wordmarks allows; letting each take the column and
      scale to it is what actually makes them big — POSTECH is 6.9:1 and fills
      it, KAIST is 3.5:1 and comes out taller, which is right. */
-  .hosts-row {
+  .sponsors-row {
     flex-direction: column;
     /* centre, not stretch: stretch makes each link fill the column and
        leaves the mark at the start of it, so a row that is centred by
@@ -3025,7 +3038,7 @@ footer a {
     align-items: center;
     gap: 30px;
   }
-  .hosts-row img {
+  .sponsors-row img {
     /* Same height on a phone too, at the size the wider of the two can be
        without running out of column: POSTECH at 44px is 303px of the 350
        available. */

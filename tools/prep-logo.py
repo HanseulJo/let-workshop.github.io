@@ -7,7 +7,7 @@ Writes static/logos/<slug>.webp and <slug>-sm.webp: near-white knocked out to
 transparent, empty margins trimmed, and scaled to a common cap height so logos
 of different proportions sit on the same optical baseline beside each other.
 
-Two sizes because the page shows them at two. The hosts section at the foot
+Two sizes because the page shows them at two. The sponsors section
 draws them at 44px, so it wants 132; the hero draws them at 22 beside the
 buttons, and 132 there would be six times what is on screen — and that one is
 above the fold, where a logo is decoration and the bytes are not.
@@ -24,10 +24,15 @@ ever removes what is already white. Needs Pillow, local tooling only; the site
 build never touches images.
 """
 
+import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 from PIL import Image
+
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # 3x what each is drawn at, so both stay crisp on a phone.
 HEIGHTS = {"": 132, "-sm": 66}
@@ -46,8 +51,46 @@ def knockout_white(im: Image.Image) -> Image.Image:
     return im
 
 
+def rasterise(svg: Path) -> Path:
+    """An SVG through Chrome, at a size the largest output can be cut from.
+
+    Marks arrive as vector as often as not, and PIL does not read SVG. Rendered
+    four times the tallest size this writes, so the crop and the two resizes
+    downsample rather than guess.
+    """
+    box = re.search(r'viewBox="[\d.\s-]*?([\d.]+)\s+([\d.]+)"', svg.read_text(encoding="utf-8"))
+    ratio = float(box.group(1)) / float(box.group(2)) if box else 3.0
+    height = max(HEIGHTS.values()) * 4
+    width = round(height * ratio)
+    tmp = Path(tempfile.mkdtemp())
+    (tmp / svg.name).write_bytes(svg.read_bytes())
+    (tmp / "page.html").write_text(
+        "<style>html,body{margin:0;background:transparent}"
+        f"img{{display:block;width:{width}px;height:{height}px}}</style>"
+        f'<img src="{svg.name}">', encoding="utf-8")
+    server = subprocess.Popen([sys.executable, "-m", "http.server", "8987"], cwd=tmp,
+                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        import time
+        time.sleep(1.5)
+        shot = tmp / "shot.png"
+        subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars",
+                        "--default-background-color=00000000",
+                        f"--window-size={width},{height}", "--virtual-time-budget=20000",
+                        f"--screenshot={shot}", "http://localhost:8987/page.html"],
+                       capture_output=True, timeout=120)
+    finally:
+        server.terminate()
+    if not shot.exists():
+        sys.exit(f"could not render {svg}")
+    return shot
+
+
 def main(source: str, slug: str) -> None:
-    im = knockout_white(Image.open(source).convert("RGBA"))
+    src = Path(source)
+    if src.suffix.lower() == ".svg":
+        src = rasterise(src)
+    im = knockout_white(Image.open(src).convert("RGBA"))
 
     box = im.getbbox()  # bbox of the non-transparent pixels
     if box:

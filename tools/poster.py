@@ -237,11 +237,12 @@ def cutout_svg(source, shadow, highlight, width, height, contrast=0.95):
 def acronym_html(full_name, mark):
     """The full name with the letters that make the acronym picked out.
 
-    KOLT is spelled Korean workshop On Learning Theory — the lowercase w is not
-    a slip, it is what makes the O of "On" the second letter. Setting the name
-    in capitals, which is what the sheets were doing, throws that away: it
-    becomes four words in caps and the acronym is a coincidence again. In mixed
-    case with the four letters in the accent, the name shows its own working.
+    LET is spelled LEarning Theory workshop — the capitals inside the first
+    word are not a slip, they are what makes the E the second letter. Setting
+    the name in capitals, which is what the sheets were doing, throws that
+    away: it becomes three words in caps and the acronym is a coincidence
+    again. In mixed case with the letters in the accent, the name shows its own
+    working.
     """
     want = list(mark.upper())
     out = []
@@ -477,7 +478,7 @@ TEMPLATE = """<!doctype html>
           <div class="qr-say"><b>{cta}</b><span>{url}</span></div>
         </div>
       </div>
-      <div class="tail"><span>{hosts}</span><span>{venue_short}</span></div>
+      <div class="tail"><span>{sponsors}</span><span>{venue_short}</span></div>
     </div>
   </div>
 </div>
@@ -660,7 +661,7 @@ FESTIVAL = """<!doctype html>
      mark rather than as a line of its own, which is what it is — the mark
      spelled out. Held closer to the title and fainter for the same reason.
 
-     5.8mm, which is the size at which the line ends where the mark ends. KOLT
+     5.8mm, which is the size at which the line ends where the mark ends. LET
      2026 sets 155mm. The face is monospaced, so the width goes with the
      character count and nothing else: at 6.5mm the shorter name set 154.7mm
      over 33 characters, and 1st adds four more.
@@ -1029,7 +1030,7 @@ FESTIVAL = """<!doctype html>
 
 BANNER = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>KOLT 2026 — banner, 5000x900mm</title>
+<title>LET 2026 — banner, 5000x900mm</title>
 <style>
   @page {{ size: 5000mm 900mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
@@ -1129,7 +1130,7 @@ BANNER = """<!doctype html>
 
 XBANNER = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>KOLT 2026 — X-banner, 600x1800mm</title>
+<title>LET 2026 — X-banner, 600x1800mm</title>
 <style>
   @page {{ size: 600mm 1800mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
@@ -1274,7 +1275,7 @@ XBANNER = """<!doctype html>
 
 SOCIAL = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>KOLT 2026 — square set</title>
+<title>LET 2026 — square set</title>
 <style>
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
@@ -1501,7 +1502,7 @@ SOCIAL = """<!doctype html>
 
 BADGE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>KOLT 2026 — name badges, 90x130mm</title>
+<title>LET 2026 — name badges, 90x130mm</title>
 <style>
   @page {{ size: 90mm 130mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
@@ -1537,7 +1538,7 @@ BADGE = """<!doctype html>
   .pad {{ position:absolute; inset:0; padding:9mm 8mm 8mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; align-items:baseline; justify-content:space-between; gap:4mm; }}
   /* 9mm and unbreakable. At 11 the mark measured 53mm of the 74mm the card
-     has, the date column took the rest, and KOLT 2026 wrapped onto two lines —
+     has, the date column took the rest, and LET 2026 wrapped onto two lines —
      a wordmark split across a line break stops being a wordmark. */
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:9mm; white-space:nowrap;
@@ -1713,7 +1714,7 @@ ACADEMIC = """<!doctype html>
       <b>{cta_short}</b>
     </div>
   </div>
-  <div class="site"><span>{hosts}</span><b>{url}</b></div>
+  <div class="site"><span>{sponsors}</span><b>{url}</b></div>
 </div>
 """
 
@@ -1886,7 +1887,7 @@ BAUHAUS = """<!doctype html>
   <p class="tickets">programme &amp; registration<br><b>{url}</b></p>
   <div class="swatch"></div>
   <div class="dots">{dots}</div>
-  <div class="credit">{hosts}</div>
+  <div class="credit">{sponsors}</div>
 </div>
 """
 
@@ -2296,7 +2297,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         url=esc(site["url"].split("//")[-1].rstrip("/")),
         cta="Programme &amp; registration",
         qr=qr_svg(site["url"], dark=PALETTE["ground2"], light=None),
-        hosts=esc(" · ".join(h["name"] for h in site["hosts"]["logos"])) if site.get("hosts") else "",
+        sponsors=esc(" · ".join(h["name"] for h in site["sponsors"]["logos"])) if site.get("sponsors") else "",
         listing=listing_html(program),
         month=month,
         stamp=f"{d0[1]}.{d0[0]}",
@@ -2314,17 +2315,16 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         city=esc(site["city"]),
         country=esc(site["country"]),
         cta_short="Register",
-        logos=logo_row([h["name"] for h in site["hosts"]["logos"]], PALETTE["cool"])
-              if site.get("hosts") else "",
+        logos=logo_row([h["name"] for h in site["sponsors"]["logos"]], PALETTE["cool"])
+              if site.get("sponsors") else "",
         acronym_name=acronym_html(site["full_name"], mark),
-        # site.yml spells it "Korean workshop On Learning Theory" so the four
-        # letters of the acronym can be picked out; set as a plain line that
-        # casing reads as a typo, so it is normalised back here.
-        long_name=esc(site["full_name"].title().replace(" On ", " on ")),
+        # site.yml spells it "LEarning Theory workshop" so the letters of the
+        # acronym can be picked out; set as a plain line that casing reads as a
+        # typo, so it is normalised back here.
+        long_name=esc(site["full_name"].title()),
         # The sheet says which one this is; the banners and the badges do not,
         # because a first edition is news on a poster and clutter on a name tag.
-        long_name_ed=esc(f'{site["edition"]} '
-                         + site["full_name"].title().replace(" On ", " on ")),
+        long_name_ed=esc(f'{site["edition"]} ' + site["full_name"].title()),
         ghost=ghost_layer,
         d1=esc(str(program["days"][0]["date"]).split("-")[-1]),
         d2=esc(str(program["days"][-1]["date"]).split("-")[-1]),

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Bake the KOLT wordmark from the display font into SVG paths.
+"""Bake the LET wordmark from the display font into SVG paths.
 
     python3 tools/make-wordmark.py
 
 Writes templates/wordmark.svg (letters only, inherits colour), and
-static/kolt-logo.svg + static/favicon.svg (navy rounded square).
+static/let-logo.svg + static/favicon.svg (navy rounded square).
 
 Outlines are baked to paths rather than left as <text font-family="…">, because
 these files are used as a favicon, a GitHub avatar and an inline hero mark —
@@ -27,7 +27,7 @@ from fontTools.varLib import instancer
 
 ROOT = Path(__file__).resolve().parent.parent
 FONT = ROOT / "static" / "fonts" / "jost-latin.woff2"
-WORD = "KOLT"
+WORD = "LET"
 WEIGHT = 900
 TRACK = 30  # extra letterspacing in font units — a wordmark wants a little air
 NAVY = "#14213d"
@@ -80,13 +80,13 @@ def main() -> None:
             f"    {inner}\n  </g>\n</svg>\n"
         )
 
-    (ROOT / "static" / "kolt-logo.svg").write_text(boxed(paths, (x0, y0, x1, y1), 46), encoding="utf-8")
+    (ROOT / "static" / "let-logo.svg").write_text(boxed(paths, (x0, y0, x1, y1), 46), encoding="utf-8")
 
-    # The favicon keeps a single K — four letters are illegible at 16px.
-    k_paths, k_bounds = draw("K")
+    # The favicon keeps the first letter — a whole word is illegible at 16px.
+    k_paths, k_bounds = draw(WORD[0])
     (ROOT / "static" / "favicon.svg").write_text(boxed(k_paths, k_bounds, 30), encoding="utf-8")
 
-    print(f"wordmark {w:.0f}x{h:.0f} units -> templates/wordmark.svg, static/kolt-logo.svg, static/favicon.svg")
+    print(f"wordmark {w:.0f}x{h:.0f} units -> templates/wordmark.svg, static/let-logo.svg, static/favicon.svg")
 
 
 if __name__ == "__main__":

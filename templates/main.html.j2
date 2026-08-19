@@ -1,5 +1,5 @@
 {#- The name, split on its last space so the year can sit back from it. Used by
-    both the hero title and the sticky bar: two different cuts of "KOLT 2026" on
+    both the hero title and the sticky bar: two different cuts of "LET 2026" on
     one screen is the kind of thing you notice without being able to say why. A
     name with no space just renders whole. -#}
 {%- macro wordmark(name) -%}
@@ -299,13 +299,13 @@
           </span>
           {% endif %}
           {% endfor %}
-          {% if site.hosts and site.hosts.logos %}
+          {% if site.sponsors and site.sponsors.logos %}
           <!-- The two institutions, at the far end of the row the buttons are
                in. Small, and the small files: the section at the foot draws
                them at 44px and these at 22, and this pair is above the fold
                where a mark is decoration and the bytes are not free. -->
-          <span class="hero-marks" aria-label="{{ site.hosts.label }}">
-            {% for h in site.hosts.logos %}
+          <span class="hero-marks" aria-label="{{ site.sponsors.label }}">
+            {% for h in site.sponsors.logos %}
             <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
               <img src="logos/{{ h.small }}" alt="{{ h.name }}" height="22" />
             </a>
@@ -364,11 +364,10 @@
       <div class="wrap">
         <!-- The order is by surname, not by billing. Said beside the heading so
              it is read before the grid rather than after it. -->
-        <!-- "(not final)" belongs in the title: the roster is drawn from the
-             programme, so it is exactly as provisional as the programme is,
-             and the programme already says so in its own heading. -->
+        <!-- It said "(not final)" while there were still empty slots on the
+             programme. There are none; every session is named. -->
         <h2>
-          <span class="t-en">Speakers (not final)</span><span class="t-ko">연사 (확정 아님)</span>
+          <span class="t-en">Speakers</span><span class="t-ko">연사</span>
           <span class="note">
             <span class="t-en">Alphabetical by surname</span>
             <span class="t-ko">성 기준 알파벳순</span>
@@ -582,9 +581,9 @@
         </div>
       </div>
     </section>
-    {% if site.hosts %}
+    {% if site.sponsors %}
 
-    <!-- ===== HOSTS =====
+    <!-- ===== SPONSORS =====
          Under the organisers, whose institutions these are — the two sections
          answer the same question and had a programme, a travel card and a
          poster standing between them. A section rather than a strip in the
@@ -593,19 +592,21 @@
          tone — which is how you show a mark you are obliged to show. Given a
          band of their own and their own colours they read as the institutions
          behind the thing. -->
-    <section id="hosts" class="band">
+    <section id="sponsors" class="band">
       <div class="wrap">
-        <h2>{{ t(site.hosts.title, site.hosts.title_ko) }}</h2>
-        {% if site.hosts.note %}
-        <p class="sub">{{ t(site.hosts.note, site.hosts.note_ko) }}</p>
-        {% endif %}
-        <div class="hosts-row">
-          {% for h in site.hosts.logos %}
+        <h2>{{ t(site.sponsors.title, site.sponsors.title_ko) }}</h2>
+        <div class="sponsors-row">
+          {% for h in site.sponsors.logos %}
           <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
             <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
           </a>
           {% endfor %}
         </div>
+        {% if site.sponsors.note %}
+        <!-- Under the marks, not over them: the marks say who, this says under
+             which grant, and nobody reads the second before the first. -->
+        <p class="sponsors-grant">{{ t(site.sponsors.note, site.sponsors.note_ko) }}</p>
+        {% endif %}
       </div>
     </section>
     {% endif %}
@@ -1474,7 +1475,7 @@
         var targets = Array.prototype.slice
           .call(
             document.querySelectorAll(
-              // .hosts-row is deliberately absent. It is the last thing on the page, and
+              // .sponsors-row is deliberately absent. It is the last thing on the page, and
               // a reveal holds it 12px lower than its layout position until it fires —
               // a transform does not move the layout box but it does extend the
               // scrollable area, so the page scrolled past its own end by exactly that
