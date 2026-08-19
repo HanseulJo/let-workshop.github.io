@@ -2867,11 +2867,13 @@ h2 .note {
 
 
 /* The workshop's own name inside running prose, set in the face the mark is
-   drawn in. Weight and size are the sentence's — this is the name written in
-   its own hand, not an emphasis — and Jost runs a little small against Inter
-   at the same size, so it is given back the difference. */
+   drawn in and heavier than the sentence around it — the mark itself is drawn
+   at 900, and at the sentence's own weight the name read as a font change
+   rather than as the name. Jost runs a little small against Inter at the same
+   size, so it is given back the difference. */
 .mark-name {
   font-family: var(--wordmark);
+  font-weight: 700;
   font-size: 1.06em;
   letter-spacing: -0.01em;
 }

@@ -109,7 +109,7 @@ def run(*cmd, **kw):
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--out", default=str(Path.home() / "Downloads/kolt-poster-a2"),
+    ap.add_argument("--out", default=str(Path.home() / "Downloads/let-poster-a2"),
                     help="where the print files go")
     ap.add_argument("--port", type=int, default=8992)
     ap.add_argument("--only", choices=[s[0] for s in SHEETS], help="just one sheet")

@@ -177,7 +177,11 @@ affiliations:
   CAU: 중앙대학교
   KIST: 한국과학기술연구원
 
-footer_note: program subject to change.
+# The footer used to end "— program subject to change." The programme is not
+# subject to change any more: the days and the hours are settled and the one
+# thing still open says so for itself, beside the Program heading. Give this a
+# value and the em dash and the note come back.
+footer_note: ~
 
 # ─────────────────────────────────────────────────────────────
 # Build variants. Paths are relative to the build directory

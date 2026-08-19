@@ -106,7 +106,7 @@ PALETTE = {
     # The veils and rules of the other four pieces, so a scheme can turn them
     # over too. Each piece veils a different shape at a different reading
     # distance, so they are separate values rather than one shared set.
-    "veil_b_mid1": ".62", "veil_b_mid2": ".70", "veil_b_end": ".93",
+    "veil_b_mid1": ".74", "veil_b_mid2": ".46", "veil_b_end": ".93",
     "veil_x1": ".52", "veil_x2": ".66", "veil_x3": ".80", "veil_x4": ".97",
     "scrim1": "rgba(15,24,38,.62)", "scrim2": "rgba(15,24,38,.42)",
     "scrim3": "rgba(15,24,38,.70)", "scrim4": "rgba(15,24,38,.96)",
@@ -1050,9 +1050,9 @@ FESTIVAL = """<!doctype html>
 
 BANNER = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<title>LeT Workshop — banner, 5000x900mm</title>
+<title>LeT Workshop — banner, 6000x900mm</title>
 <style>
-  @page {{ size: 5000mm 900mm; margin: 0; }}
+  @page {{ size: 6000mm 900mm; margin: 0; }}
   @font-face {{ font-family:"Jost"; font-weight:100 900; src:url("fonts/jost-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"Inter Tight"; font-weight:100 900; src:url("fonts/inter-tight-latin.woff2") format("woff2"); }}
   @font-face {{ font-family:"JetBrains Mono"; font-weight:400 600; src:url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }}
@@ -1063,7 +1063,7 @@ BANNER = """<!doctype html>
   @font-face {{ font-family:"Satoshi"; font-weight:900; src:url("fonts/satoshi-900.woff2") format("woff2"); }}
   html, body {{ margin:0; padding:0; }}
   .sheet {{
-    position:relative; width:5000mm; height:900mm; overflow:hidden;
+    position:relative; width:6000mm; height:900mm; overflow:hidden;
     background:{ground}; color:{ink}; font-family:"Satoshi",sans-serif;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }}
@@ -1082,53 +1082,56 @@ BANNER = """<!doctype html>
     position:absolute; inset:56mm; border:1.4mm solid {keyline};
     pointer-events:none;
   }}
+  /* Everything the banner says is set against the left edge, in one column:
+     the name, then the credit line under it. The right of the cloth is left to
+     the drawing, because that is where the clock tower falls and a banner with
+     type across its whole width has nothing to look at from a distance.
+     `align-items:flex-start` keeps the blocks their own width rather than the
+     column\'s, so the credit line does not stretch to meet the mark. */
   .wrap {{
-    position:absolute; inset:56mm; padding:70mm 120mm;
-    display:flex; align-items:center; justify-content:space-between; gap:120mm;
+    position:absolute; inset:56mm; padding:74mm 120mm 66mm;
+    display:flex; flex-direction:column; align-items:flex-start;
+    justify-content:space-between;
   }}
+  /* The mark takes the accent here, as it does on the sheet. On the banner it
+     used to be white with the accent spent on the date, on the reasoning that
+     the loudest element should not also carry the colour — but the banner no
+     longer has a date the size of the name to compete with, and a five-metre
+     cloth read at forty metres is one word before it is anything else. */
   .mark {{
-    font-family:"Jost",sans-serif; font-weight:700; font-size:290mm;
-    line-height:.92; color:{ink}; letter-spacing:-.02em; margin:0;
+    font-family:"Jost",sans-serif; font-weight:700; font-size:360mm;
+    line-height:.92; color:{hot}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   .longname {{
-    font-family:"Satoshi",sans-serif; font-weight:500; font-size:62mm;
-    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:26mm 0 0 13mm;
+    font-family:"Satoshi",sans-serif; font-weight:500; font-size:76mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:30mm 0 0 16mm;
   }}
-  .right {{ text-align:right; flex:none; }}
-  .stack small {{
-    font-family:"JetBrains Mono",monospace; font-size:.26em; font-weight:400;
-    letter-spacing:.06em; opacity:.66; margin-left:.18em;
+  /* The credit line every Korean banner carries: when, where, and under whose
+     marks — one row, at the foot, in the order someone reads them. The hosts
+     are their logos and nothing else. A row of marks needs no label: a
+     university crest on a banner is already the sentence "run by", and the
+     word in front of it only takes room from the marks themselves. */
+  .strip {{ display:flex; align-items:center; gap:54mm; margin-left:13mm; }}
+  .fact {{
+    display:flex; align-items:baseline; gap:20mm;
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:58mm;
+    letter-spacing:-.014em; color:{ink};
   }}
-  .stack {{
-    font-family:"Inter Tight",sans-serif; font-weight:700; font-size:150mm;
-  /* The accent goes on the small type, not the large. The mark is white here
-     and the date is the biggest thing on the piece; painting that the accent
-     colour too left the loudest element carrying the colour while the name of
-     the workshop stayed quiet, which is the hierarchy upside down. The accent
-     is worth more on a field name that would otherwise disappear.
-     The sheet does it the other way round because there the mark is the accent
-     and the largest thing on the page. */
-    line-height:1.02; letter-spacing:-.03em; color:{ink}; margin:0;
-  }}
-  .field {{
-    font-family:"JetBrains Mono",monospace; font-size:34mm; font-weight:400;
+  .fact b {{
+    font-family:"JetBrains Mono",monospace; font-size:27mm; font-weight:400;
     letter-spacing:.16em; text-transform:uppercase; color:{hot};
-    margin:34mm 0 8mm;
   }}
-  .where {{
-    font-family:"Satoshi",sans-serif; font-weight:700; font-size:66mm;
-    letter-spacing:-.014em; color:{ink}; margin:0;
-  }}
-  .marks {{ display:flex; justify-content:flex-end; gap:70mm; margin-top:40mm; }}
-  .marks img {{ height:66mm; width:auto; display:block; opacity:.72; }}
-  /* The funder's own sentence. Smallest thing on a five-metre banner and the
+  .rule {{ width:1.1mm; height:52mm; background:{ink}; opacity:.24; }}
+  .marks {{ display:flex; align-items:center; gap:50mm; margin-left:20mm; }}
+  .marks img {{ height:72mm; width:auto; display:block; opacity:.72; }}
+  /* The funder\'s own sentence. Smallest thing on a six-metre banner and the
      only one nobody will read from across the courtyard, which is right: it is
      there for the record, not for the passer-by. */
   .grant {{
     font-family:"JetBrains Mono",monospace; font-size:11mm; font-weight:400;
     letter-spacing:.06em; line-height:1.5; color:{ink}; opacity:.5;
-    margin:22mm 0 0; max-width:900mm; text-align:right; margin-left:auto;
+    margin:24mm 0 0 13mm; max-width:2400mm;
   }}
 </style></head><body>
 <div class="sheet">
@@ -1136,23 +1139,26 @@ BANNER = """<!doctype html>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="{ground}" stop-opacity="{veil_b_end}"/>
-      <stop offset=".34" stop-color="{ground}" stop-opacity="{veil_b_mid1}"/>
-      <stop offset=".66" stop-color="{ground}" stop-opacity="{veil_b_mid2}"/>
+      <stop offset=".44" stop-color="{ground}" stop-opacity="{veil_b_mid1}"/>
+      <stop offset=".70" stop-color="{ground}" stop-opacity="{veil_b_mid2}"/>
       <stop offset="1" stop-color="{ground}" stop-opacity="{veil_b_end}"/>
     </linearGradient></defs>
     <rect width="100" height="10" fill="url(#v)"/>
   </svg></div>
   <div class="frame"></div>
   <div class="wrap">
-    <div>
+    <div class="lead">
       <h1 class="mark">{mark} <span>{year}</span></h1>
       <p class="longname">{long_name_ed}</p>
     </div>
-    <div class="right">
-      <p class="stack">{yyyy}.{md1}<small>{hour1}</small> – {md2}<small>{hour2}</small></p>
-      <p class="field">Venue</p>
-      <p class="where">{venue_name}, {city}</p>
-      <span class="marks">{logos}</span>
+    <div class="foot">
+      <div class="strip">
+        <span class="fact"><b>Date</b>{dates_long}</span>
+        <span class="rule"></span>
+        <span class="fact"><b>Venue</b>{venue_name}, {city}</span>
+        <span class="rule"></span>
+        <span class="marks">{logos}</span>
+      </div>
       <p class="grant">{grant}</p>
     </div>
   </div>
@@ -1463,9 +1469,7 @@ SOCIAL = """<!doctype html>
   <div class="pad">
     <div class="head"><p class="kicker">What it is</p><span class="num">2/6</span></div>
     <div class="mid">
-      <p class="kicker hot" style="margin-bottom:14px">Theme {year}</p>
-      <h2>{theme}</h2>
-      <p class="body">{blurb}</p>
+      {theme_social}<p class="body">{blurb}</p>
     </div>
     <div class="foot"><span>{url}</span><span><b>Free to attend</b></span></div>
   </div>
@@ -1985,7 +1989,7 @@ GHOST_SIZE = {
     "civic": (1700, 820),
     "listing": (1700, 1520),
     "bauhaus": (1000, 1360),
-    "banner": (3400, 612),      # 5000 x 900mm, from the pre-cut band
+    "banner": (3400, 510),      # 6000 x 900mm, from the pre-cut band
     "xbanner": (900, 2700),     # 600 x 1800mm
     "social": (1400, 1400),     # 1080 x 1080 square
     "badge": (900, 1300),       # 90 x 130mm
@@ -2039,7 +2043,7 @@ SCHEMES = {
         # The other four, turned over the same way: the veil almost gone where
         # the picture is and back at the ends where type has to be read off it,
         # and every rule and keyline in ink rather than in paper.
-        "veil_b_mid1": ".18", "veil_b_mid2": ".26", "veil_b_end": ".80",
+        "veil_b_mid1": ".60", "veil_b_mid2": ".14", "veil_b_end": ".80",
         "veil_x1": ".10", "veil_x2": ".20", "veil_x3": ".60", "veil_x4": ".88",
         "scrim1": "rgba(207,228,245,.30)", "scrim2": "rgba(207,228,245,.10)",
         "scrim3": "rgba(207,228,245,.34)", "scrim4": "rgba(203,224,242,.92)",
@@ -2339,6 +2343,15 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         theme_fact=(f'<div class="fact"><p class="field">Theme {esc(str(site["year"]))}</p>'
                     f'<p class="line">{esc(site["theme"])}</p></div>'
                     if site.get("theme") else ""),
+        # `Theme {year}` was here, and {year} is the second word of the name
+        # rather than a year — with the workshop renamed from "KOLT 2026" to
+        # "LeT Workshop" the slide printed "Theme Workshop" in the accent
+        # colour over an empty heading, which is the failure the sheet's
+        # theme_fact was written to avoid. Same guard, same reason: a field
+        # name over an empty line reads as something that failed to load.
+        theme_social=(f'<p class="kicker hot" style="margin-bottom:14px">'
+                      f'{esc(str(site["year"]))} Theme</p><h2>{esc(site["theme"])}</h2>'
+                      if site.get("theme") else ""),
         theme_rail=(f'<div class="rail"><b>Theme {esc(str(site["year"]))}</b>'
                     f'<span>{esc(site["theme"])}</span></div>'
                     if site.get("theme") else ""),

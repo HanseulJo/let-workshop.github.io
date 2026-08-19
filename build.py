@@ -445,6 +445,7 @@ def fill_defaults(bundle: dict) -> None:
             for key in ("small", "label", "label_ko"):
                 sheet.setdefault(key, None)
     # No eyebrow at all is a legitimate hero — the pill simply disappears.
+    bundle["site"].setdefault("footer_note", None)
     bundle["site"].setdefault("eyebrow", None)
     bundle["site"].setdefault("eyebrow_ko", None)
     if bundle["site"].get("nav_cta"):
