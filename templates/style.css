@@ -916,6 +916,27 @@ body {
   animation: heroReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: 0.44s;
 }
+/* The two institutions, at the far end of the button row. margin-left:auto
+   pushes them there and gives up first when the row wraps, so on a phone they
+   drop to their own line under the buttons rather than squeezing them.
+   Held back a little: they are an attribution beside a call to action, and at
+   full strength two coloured wordmarks out-shout the pill they sit next to. */
+.hero-marks {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
+  padding-top: 6px;
+  opacity: 0.85;
+}
+.hero-marks img {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+.hero-marks a:hover img {
+  opacity: 1;
+}
 /* Apple's pair: a full pill either way, filled for the action you want taken
    and a hairline outline for the other — both in the same hue, so they read as
    one control with two weights rather than two unrelated buttons. Ours takes

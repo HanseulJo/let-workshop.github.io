@@ -980,7 +980,7 @@ FESTIVAL = """<!doctype html>
     </div>
     <div class="rails">
       <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
-      <div class="rail"><b>Theme {year}</b><span>{theme}</span></div>
+      {theme_rail}
       <div class="rail rail-right"><b>Homepage</b><span>{url}</span></div>
     </div>
     <div class="panel">
@@ -2267,7 +2267,11 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         year=esc(year),
         full_name=esc(site["full_name"]),
         theme_label=f"{site['year']} Theme",
-        theme=esc(site["theme"]),
+        theme=esc(site.get("theme") or ""),
+        # An edition with no stated theme simply has one rail on that edge.
+        theme_rail=(f'<div class="rail"><b>Theme {esc(str(site["year"]))}</b>'
+                    f'<span>{esc(site["theme"])}</span></div>'
+                    if site.get("theme") else ""),
         eyebrow=esc(site.get("eyebrow") or ""),
         facts=facts,
         prog=programme_html(program, site.get("affiliations", {})),

@@ -1,16 +1,27 @@
 #!/usr/bin/env python3
-"""Normalise an institution logo for the footer strip.
+"""Normalise an institution logo, in the two sizes the page shows it at.
 
     python3 tools/prep-logo.py ~/Downloads/some-logo.png postech
 
-Writes static/logos/<slug>.png: near-white knocked out to transparent, empty
-margins trimmed, and scaled to a common cap height so logos of different
-proportions sit on the same optical baseline in the strip.
+Writes static/logos/<slug>.webp and <slug>-sm.webp: near-white knocked out to
+transparent, empty margins trimmed, and scaled to a common cap height so logos
+of different proportions sit on the same optical baseline beside each other.
+
+Two sizes because the page shows them at two. The hosts section at the foot
+draws them at 44px, so it wants 132; the hero draws them at 22 beside the
+buttons, and 132 there would be six times what is on screen — and that one is
+above the fold, where a logo is decoration and the bytes are not.
+
+WebP rather than PNG. These are flat wordmarks with a soft gradient in one of
+them, and PNG spends most of its size on the gradient: the pair comes to 99KB
+as PNG and 59KB as WebP at the same dimensions, with nothing to see between
+them at 44px.
 
 Knocking out the white matters — a logo saved on an opaque white background
-reads as a pale rectangle on the footer, which is what gives a sponsor row that
-"pasted on" look. Needs Pillow, local tooling only; the site build never touches
-images.
+reads as a pale rectangle, which is what gives a sponsor row that "pasted on"
+look. A source that already has an alpha channel keeps it; the knockout only
+ever removes what is already white. Needs Pillow, local tooling only; the site
+build never touches images.
 """
 
 import sys
@@ -18,7 +29,8 @@ from pathlib import Path
 
 from PIL import Image
 
-HEIGHT = 120  # 3x the ~40px the strip displays, so it stays crisp on retina
+# 3x what each is drawn at, so both stay crisp on a phone.
+HEIGHTS = {"": 132, "-sm": 66}
 WHITE_CUTOFF = 238  # anything lighter than this in all channels becomes clear
 OUT = Path(__file__).resolve().parent.parent / "static" / "logos"
 
@@ -41,13 +53,14 @@ def main(source: str, slug: str) -> None:
     if box:
         im = im.crop(box)
 
-    w, h = im.size
-    im = im.resize((round(w * HEIGHT / h), HEIGHT), Image.LANCZOS)
-
     OUT.mkdir(parents=True, exist_ok=True)
-    out = OUT / f"{slug}.png"
-    im.save(out, "PNG", optimize=True)
-    print(f"{source} -> {out.relative_to(OUT.parent.parent)}  {im.size}  ({out.stat().st_size // 1024} KB)")
+    w, h = im.size
+    for suffix, height in HEIGHTS.items():
+        one = im.resize((round(w * height / h), height), Image.LANCZOS)
+        out = OUT / f"{slug}{suffix}.webp"
+        one.save(out, "WEBP", quality=90, method=6)
+        print(f"{source} -> {out.relative_to(OUT.parent.parent)}  {one.size}  "
+              f"({out.stat().st_size / 1024:.1f} KB)")
 
 
 if __name__ == "__main__":

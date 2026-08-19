@@ -268,7 +268,7 @@
           <span class="wordmark">{{ wordmark(site.name) }}</span>
           <span class="acronym">{{ site.full_name }}</span>
         </h1>
-        <p class="theme">{{ site.year }} Theme · <b>{{ site.theme }}</b></p>
+        {% if site.theme %}<p class="theme">{{ site.year }} Theme · <b>{{ site.theme }}</b></p>{% endif %}
 
         <!-- The particulars sit on the hero itself, under a hairline, rather
              than in a card that floats over it. -->
@@ -299,6 +299,19 @@
           </span>
           {% endif %}
           {% endfor %}
+          {% if site.hosts and site.hosts.logos %}
+          <!-- The two institutions, at the far end of the row the buttons are
+               in. Small, and the small files: the section at the foot draws
+               them at 44px and these at 22, and this pair is above the fold
+               where a mark is decoration and the bytes are not free. -->
+          <span class="hero-marks" aria-label="{{ site.hosts.label }}">
+            {% for h in site.hosts.logos %}
+            <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
+              <img src="logos/{{ h.small }}" alt="{{ h.name }}" height="22" />
+            </a>
+            {% endfor %}
+          </span>
+          {% endif %}
         </div>
         {% endif %}
       </div>
@@ -569,8 +582,36 @@
         </div>
       </div>
     </section>
+    {% if site.hosts %}
+
+    <!-- ===== HOSTS =====
+         Under the organisers, whose institutions these are — the two sections
+         answer the same question and had a programme, a travel card and a
+         poster standing between them. A section rather than a strip in the
+         footer, still. In
+         the footer they were chrome — 20px tall, dimmed, recoloured to one flat
+         tone — which is how you show a mark you are obliged to show. Given a
+         band of their own and their own colours they read as the institutions
+         behind the thing. -->
+    <section id="hosts" class="band">
+      <div class="wrap">
+        <h2>{{ t(site.hosts.title, site.hosts.title_ko) }}</h2>
+        {% if site.hosts.note %}
+        <p class="sub">{{ t(site.hosts.note, site.hosts.note_ko) }}</p>
+        {% endif %}
+        <div class="hosts-row">
+          {% for h in site.hosts.logos %}
+          <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
+            <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
     <!-- ===== VENUE ===== -->
-    <section id="venue" class="band">
+    <section id="venue" class="band band-alt">
       <div class="wrap">
         <h2>{{ t(venue.title, venue.title_ko) }}</h2>
         {% if venue.subtitle %}
@@ -707,7 +748,7 @@
          said everything the poster says, so it is here as a thing to take away
          rather than as a thing to read. It links to the full-size file instead
          of shipping the 48MB print PDF into the repository. -->
-    <section id="poster" class="band band-alt">
+    <section id="poster" class="band">
       <div class="wrap">
         <h2>{{ t(site.poster.title, site.poster.title_ko) }}{% if site.poster.title_note %}
           <span class="h2-note">({{ t(site.poster.title_note, site.poster.title_note_ko) }})</span>{% endif %}</h2>
@@ -1008,30 +1049,6 @@
       </div>
     </dialog>
 
-    {% if site.hosts %}
-
-    <!-- ===== HOSTS =====
-         Last on the page, and a section rather than a strip in the footer. In
-         the footer they were chrome — 20px tall, dimmed, recoloured to one flat
-         tone — which is how you show a mark you are obliged to show. Given a
-         band of their own and their own colours they read as the institutions
-         behind the thing. -->
-    <section id="hosts" class="band">
-      <div class="wrap">
-        <h2>{{ t(site.hosts.title, site.hosts.title_ko) }}</h2>
-        {% if site.hosts.note %}
-        <p class="sub">{{ t(site.hosts.note, site.hosts.note_ko) }}</p>
-        {% endif %}
-        <div class="hosts-row">
-          {% for h in site.hosts.logos %}
-          <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
-            <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
-          </a>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-    {% endif %}
 
     <footer>
       <div class="wrap footer-row">

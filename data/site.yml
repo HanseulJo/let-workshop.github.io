@@ -39,7 +39,13 @@ eyebrow_ko: 제1회 · 연례 모임
 # neither legible, and the picture disappears into the noise.
 hero_background: art
 
-theme: Deep Learning Theory, Uncertainty Quantification, and Bandits
+# No stated theme this edition. The programme says what the workshop is
+# about better than a line above it did, and the line was competing with
+# the name for the same glance. Fill this in and it comes back in both
+# places at once — under the title on the page, and as the second rail
+# down the poster's left edge.
+# theme: Deep Learning Theory, Uncertainty Quantification, and Bandits
+theme: ""
 dates: October 7–8, 2026
 venue: POSTECH
 city: Pohang
@@ -109,9 +115,12 @@ hosts:
   title: Hosts
   title_ko: 주최
   label: Host and participating institutions
+  # `file` is the 132px-tall mark this section draws at 44; `small` is the
+  # 66px one the hero puts beside the buttons at 22. Both written by
+  # tools/prep-logo.py, which takes one source and produces the pair.
   logos:
-    - { name: KAIST, file: kaist.png, url: https://www.kaist.ac.kr/en/ }
-    - { name: POSTECH, file: postech.png, url: https://www.postech.ac.kr/eng/ }
+    - { name: KAIST, file: kaist.webp, small: kaist-sm.webp, url: https://www.kaist.ac.kr/en/ }
+    - { name: POSTECH, file: postech.webp, small: postech-sm.webp, url: https://www.postech.ac.kr/eng/ }
 
 # The particulars under the hero title. `icon` names a symbol in the inline
 # sprite: cal, pin, globe, mic. `mono` sets the value in the monospace face —

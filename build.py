@@ -386,6 +386,9 @@ def fill_defaults(bundle: dict) -> None:
     bundle["site"].setdefault("hero_background", "art")
     # No poster block at all is a legitimate site; the section disappears.
     if bundle["site"].get("hosts"):
+        for logo in bundle["site"]["hosts"].get("logos", []):
+            # No small variant means the hero simply falls back to the big one.
+            logo.setdefault("small", logo.get("file"))
         for key in ("title", "title_ko", "note", "note_ko"):
             bundle["site"]["hosts"].setdefault(key, None)
     bundle["site"].setdefault("poster", None)
