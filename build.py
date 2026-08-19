@@ -479,7 +479,10 @@ def fill_defaults(bundle: dict) -> None:
         day.setdefault("short", day["label"].split("·")[0].strip())
         for e in day["events"]:
             e.setdefault("calendar", True)
-            for key in ("chair", "density", "time_label", "anon_note"):
+            # `track` puts an event in one half of its day instead of across
+            # it, for the hours when two things run at once. Nothing else has
+            # to know: an event without it spans both halves as before.
+            for key in ("chair", "density", "time_label", "anon_note", "track"):
                 e.setdefault(key, None)
             for key in ("bare", "time_in_title"):
                 e.setdefault(key, False)

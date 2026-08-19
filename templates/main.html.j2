@@ -512,12 +512,12 @@
         <div id="view-grid" class="view-panel schedule-scroll">
           <div
             class="schedule-container"
-            style="grid-template-columns: {{ grid.time_column_width }} repeat({{ program.days | length }}, 1fr); min-width: {{ grid.min_width }}"
+            style="grid-template-columns: {{ grid.time_column_width }} repeat({{ program.days | length * 2 }}, 1fr); min-width: {{ grid.min_width }}"
           >
             <!-- Column headers -->
             <div class="header" style="grid-column: 1; grid-row: 1 / span {{ grid.header_rows }}">Time</div>
             {% for day in program.days %}
-            <div class="header" style="grid-column: {{ loop.index + 1 }}; grid-row: 1 / span {{ grid.header_rows }}">
+            <div class="header" style="grid-column: {{ loop.index0 * 2 + 2 }} / span 2; grid-row: 1 / span {{ grid.header_rows }}">
               {{ day.label }}{% if day.theme %}<span class="theme">{{ day.theme }}</span>{% endif %}
             </div>
             {% endfor %}
@@ -529,9 +529,13 @@
             {% for day in program.days %}
 
             <!-- ===== {{ day.label }} — {{ day.theme }} ===== -->
-            {% set col = loop.index + 1 %}
+            <!-- Two columns per day, so a session that runs alongside another
+                 can sit beside it instead of being described in a line of text
+                 underneath. Everything else spans both, which is what makes
+                 the pair read as one day rather than as two narrow ones. -->
+            {% set col = loop.index0 * 2 + 2 %}
             {% for e in day.events %}
-            <div id="cell-{{ e.id }}" class="event bg-{{ e.type }}{{ ' ' ~ e.density if e.density }}" data-begins="{{ e.begins_iso }}" data-ends="{{ e.ends_iso }}" style="grid-column: {{ col }}; grid-row: {{ e.row }} / span {{ e.span }}" onclick="openEvent('{{ e.id }}')">
+            <div id="cell-{{ e.id }}" class="event bg-{{ e.type }}{{ ' ' ~ e.density if e.density }}" data-begins="{{ e.begins_iso }}" data-ends="{{ e.ends_iso }}" style="grid-column: {% if e.track %}{{ col + e.track - 1 }}{% else %}{{ col }} / span 2{% endif %}; grid-row: {{ e.row }} / span {{ e.span }}" onclick="openEvent('{{ e.id }}')">
               {% if e.bare %}
               {% if e.emoji %}<span class="emoji" aria-hidden="true">{{ e.emoji }}</span>{% endif %}{{ e.title }}
               {% else %}

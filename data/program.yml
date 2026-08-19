@@ -90,6 +90,10 @@ types:
   poster: { label: Poster session, color: "#f57c00", short: Poster, emoji: "📌" }
   social: { label: Social / Meals, color: "#1976d2", short: Social, emoji: "🥂" }
   break: { label: Break, color: "#9e9e9e", emoji: "☕" }
+  # Runs alongside the poster session rather than instead of it, and is not
+  # open — the label has to say so, because a coloured box on a programme reads
+  # as an invitation.
+  internal: { label: Closed session, color: "#7b1fa2", short: Closed, emoji: "🧩" }
 
 days:
   # ═══════════════ DAY 1 ═══════════════
@@ -197,15 +201,23 @@ days:
             note: Wednesday only — satisfied here.
             home: https://sangdon.github.io/
 
+      # Two things in the same hours, in the two halves of the day's column.
       - type: poster
         title: Poster Session
-        # Two things in the same hours. The grid places events by their time,
-        # so a parallel track written as its own event would be drawn on top
-        # of this one; it is a line on the session instead.
-        notes:
-          - In parallel · 과제 내부 워크숍
+        track: 1
         start: "16:30"
         end: "18:00"
+
+      - type: internal
+        title: 과제 내부 워크숍
+        emoji: "🧩"
+        start: "16:30"
+        end: "18:00"
+        track: 2
+        density: compact
+        notes:
+          - Project members only
+        calendar: false
 
       - type: social
         title: Grand Banquet [Provided]
@@ -298,16 +310,16 @@ days:
             home: https://jongyeong.github.io
 
       - type: break
-        title: Coffee Break (20 min)
+        title: Coffee Break (15 min)
         start: "14:50"
-        end: "15:10"
+        end: "15:05"
         bare: true
 
       - type: block
         title: Offline RL
         chair: TBD
-        start: "15:10"
-        end: "16:30"
+        start: "15:05"
+        end: "16:25"
         speakers:
           - name: Kyoungseok Jang
             role: Prof.
@@ -327,8 +339,8 @@ days:
             note: Thursday only (teaching) — satisfied here.
 
       - type: break
-        title: Coffee Break (10 min)
-        start: "16:30"
+        title: Coffee Break (15 min)
+        start: "16:25"
         end: "16:40"
         bare: true
 
