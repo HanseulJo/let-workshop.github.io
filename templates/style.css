@@ -66,6 +66,8 @@
   --hero-body: #b9c7da;
   --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
   --hero-rule: rgba(255, 255, 255, 0.12);
+  --hero-marks-plate: rgba(13, 21, 35, 0.5);
+  --hero-marks-line: rgba(255, 255, 255, 0.12);
   /* On a dark ground the type is the light thing against a darker one and
      wins already, so these are the sizes the row was drawn at. */
   --meta-label-weight: 500;
@@ -935,8 +937,18 @@ body {
   align-items: center;
   gap: 18px;
   margin-left: auto;
-  padding-top: 6px;
-  opacity: 0.85;
+  /* Not a box — a chip. Two coloured wordmarks over a photograph need
+     something to stand on, and a rectangle beside two pill-shaped buttons
+     reads as a panel that wandered in from another design. The buttons' own
+     radius makes it a member of the row instead, and the fill is the hero's
+     own ground rather than white, so it reads as the hero holding them up
+     rather than a card laid over it.
+     At full strength on their plate — they were dimmed to 0.85 to stop them
+     shouting over the picture, which is the job the plate now does. */
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--hero-marks-plate);
+  border: 1px solid var(--hero-marks-line);
 }
 .hero-marks img {
   height: 22px;
@@ -2446,11 +2458,54 @@ h2 .note {
 }
 
 /* ---------- Venue ---------- */
+/* Map and card across the top, transport on a row of its own beneath them.
+   Three route diagrams are a list of journeys, not another fact about the
+   building, and inside the card they had a third of the width with the stop
+   names wrapping in it. Given the whole width they stand side by side. */
 .venue {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   gap: 20px;
   align-items: stretch;
+}
+.venue-transport {
+  grid-column: 1 / -1;
+  /* The same plate as the card above it, so the row reads as the other half of
+     one object rather than as loose text under it. */
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 6px 24px 22px;
+}
+/* Its heading opens the box, so it needs no rule over it — the box's own edge
+   is already the separation the rule was drawing. */
+.venue-transport > .venue-h:first-child {
+  border-top: 0;
+  padding-top: 16px;
+}
+/* Side by side while there is room for them, and never narrower than the
+   width a stop name needs — below that they stack rather than wrap. */
+.venue-transport .routes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0 28px;
+}
+/* The rule between journeys is what separates them in a column. Side by side
+   they are separated by being side by side, and a rule above the second and
+   third would read as a rule over nothing. */
+.venue-transport .route + .route {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
+@media (max-width: 620px) {
+  .venue-transport .routes {
+    grid-template-columns: 1fr;
+  }
+  .venue-transport .route + .route {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
 }
 .venue-map {
   filter: var(--map-filter);
@@ -2856,6 +2911,12 @@ h2 .note {
   transform: translateY(-2px);
 }
 
+/* Part of the alternation rather than a plain strip after it. The bands run
+   about, speakers, program, organisers, hosts, venue, poster — and the poster
+   is a plain one, so the footer takes the alternate tone and the run simply
+   carries on to the bottom of the page instead of stopping one section short.
+   The class does the colouring; .band-alt is the same tone the other alternate
+   sections use. */
 footer {
   text-align: center;
   color: var(--faint);
@@ -3578,7 +3639,7 @@ a.poster-shot:focus-visible {
      room and the negative margin gives the space back to the layout. */
   .poster-set {
     grid-auto-flow: column;
-    grid-auto-columns: 84%;
+    grid-auto-columns: 88%;
     grid-template-columns: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -3601,17 +3662,22 @@ a.poster-shot:focus-visible {
     padding-block: 28px 34px;
     margin-block: -28px -34px;
     scrollbar-width: none;
+    justify-items: stretch;
   }
   .poster-set::-webkit-scrollbar {
     display: none;
   }
   .poster-set > .poster {
     scroll-snap-align: center;
+    width: 100%;
   }
-  /* The full width was for one sheet per screen; with the neighbour peeking,
-     the image should still fill its own slide. */
+  /* Each sheet fills its own slide. The base grid centres its items, which
+     sizes them to their content — and the content is an image at width:100%,
+     so it settled wherever the intrinsic negotiation left it: 180px of a
+     277px slide, with the remainder reading as margin. */
   .poster-set > .poster .poster-shot {
     max-width: 100%;
+    width: 100%;
   }
 }
 
@@ -3711,6 +3777,8 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
     --hero-rule: rgba(13, 33, 55, 0.16);
+    --hero-marks-plate: rgba(255, 255, 255, 0.6);
+    --hero-marks-line: rgba(13, 33, 55, 0.1);
     --hero-meta-plate: transparent;
     --meta-label-weight: 600;
     --meta-fact-weight: 700;
@@ -3803,6 +3871,8 @@ a.poster-shot:focus-visible {
      stands on. */
   --hero-mute: #33506f;
   --hero-rule: rgba(13, 33, 55, 0.16);
+  --hero-marks-plate: rgba(255, 255, 255, 0.6);
+  --hero-marks-line: rgba(13, 33, 55, 0.1);
   --hero-meta-plate: transparent;
   --meta-label-weight: 600;
   --meta-fact-weight: 700;
@@ -3874,4 +3944,11 @@ a.poster-shot:focus-visible {
       rgba(191, 212, 233, 0.56) 66%,
       rgba(174, 200, 224, 0.74) 100%
     );
+}
+
+@media (max-width: 780px) {
+  .hero-marks {
+    margin-left: 0;
+    align-self: center;
+  }
 }

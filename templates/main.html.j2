@@ -659,6 +659,46 @@
               </li>
               {% endfor %}
             </ul>
+            {% if venue.accommodation %}
+            <!-- Somewhere to sleep, after how to arrive: the questions come in
+                 that order, and the answer to the second depends on the first. -->
+            <div class="stay">
+              <h4 class="venue-h">{{ t(venue.accommodation.title, venue.accommodation.title_ko) }}</h4>
+              {% if venue.accommodation.first_come %}
+              <p class="stay-first">
+                <b>{{ t(venue.accommodation.first_come.name, venue.accommodation.first_come.name_ko) }}</b>
+                {{ t(venue.accommodation.first_come.note, venue.accommodation.first_come.note_ko) }}
+              </p>
+              {% endif %}
+              {% if venue.accommodation.nearby %}
+              {% if venue.accommodation.nearby_note %}
+              <p class="stay-note">{{ t(venue.accommodation.nearby_note, venue.accommodation.nearby_note_ko) }}</p>
+              {% endif %}
+              <ul class="stay-list">
+                {% for place in venue.accommodation.nearby %}
+                <li>
+                  <span class="stay-head">
+                    {% if place.map %}
+                    <a href="{{ place.map }}" target="_blank" rel="noopener">{{ t(place.name, place.name_ko) }}</a>
+                    {% else %}<b>{{ t(place.name, place.name_ko) }}</b>{% endif %}
+                    <span>{{ t(place.travel, place.travel_ko) }}</span>
+                  </span>
+                  {% if place.transit %}
+                  <span class="stay-transit">{{ t(place.transit, place.transit_ko) }}</span>
+                  {% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+          <!-- Transport on a row of its own, under the map and the card.
+               Three route diagrams are a list of journeys, not another fact
+               about the building, and inside the card they were a third of the
+               width with the stop names wrapping in it. Across the full width
+               they can stand side by side. -->
+          <div class="venue-transport">
             {% if venue.getting_here %}
             {% if venue.getting_here_title %}
             <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}</h4>
@@ -711,39 +751,6 @@
               {% endfor %}
             </ul>
             {% endif %}
-            {% endif %}
-            {% if venue.accommodation %}
-            <!-- Somewhere to sleep, after how to arrive: the questions come in
-                 that order, and the answer to the second depends on the first. -->
-            <div class="stay">
-              <h4 class="venue-h">{{ t(venue.accommodation.title, venue.accommodation.title_ko) }}</h4>
-              {% if venue.accommodation.first_come %}
-              <p class="stay-first">
-                <b>{{ t(venue.accommodation.first_come.name, venue.accommodation.first_come.name_ko) }}</b>
-                {{ t(venue.accommodation.first_come.note, venue.accommodation.first_come.note_ko) }}
-              </p>
-              {% endif %}
-              {% if venue.accommodation.nearby %}
-              {% if venue.accommodation.nearby_note %}
-              <p class="stay-note">{{ t(venue.accommodation.nearby_note, venue.accommodation.nearby_note_ko) }}</p>
-              {% endif %}
-              <ul class="stay-list">
-                {% for place in venue.accommodation.nearby %}
-                <li>
-                  <span class="stay-head">
-                    {% if place.map %}
-                    <a href="{{ place.map }}" target="_blank" rel="noopener">{{ t(place.name, place.name_ko) }}</a>
-                    {% else %}<b>{{ t(place.name, place.name_ko) }}</b>{% endif %}
-                    <span>{{ t(place.travel, place.travel_ko) }}</span>
-                  </span>
-                  {% if place.transit %}
-                  <span class="stay-transit">{{ t(place.transit, place.transit_ko) }}</span>
-                  {% endif %}
-                </li>
-                {% endfor %}
-              </ul>
-              {% endif %}
-            </div>
             {% endif %}
           </div>
         </div>
@@ -1042,7 +1049,7 @@
     </dialog>
 
 
-    <footer>
+    <footer class="band-alt">
       <div class="wrap footer-row">
         <div class="footer-text">
           {{ site.name }} · {{ site.full_name }}<br />

@@ -172,9 +172,17 @@ def logo_row(names, colour, height=54):
     """
     out = []
     for name in names:
-        f = ROOT / "static" / "logos" / f"{name.lower()}.png"
-        if not f.exists():
-            continue
+        # Whichever extension the mark is shipped in. It was written as .png,
+        # and when the site moved its logos to WebP the sheet stopped finding
+        # them and printed a foot with no institutions on it — silently, since
+        # a missing file was something to skip past. Now it is something to
+        # say out loud.
+        for f in (ROOT / "static" / "logos" / f"{name.lower()}{ext}"
+                  for ext in (".webp", ".png", ".jpg")):
+            if f.exists():
+                break
+        else:
+            raise SystemExit(f"  no logo for {name} in static/logos/")
         im = ImageOps.exif_transpose(Image.open(f)).convert("RGBA")
         rgb = tuple(int(colour.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
         flat = Image.new("RGBA", im.size, rgb + (0,))

@@ -292,6 +292,7 @@ days:
             role: Prof.
             role_ko: 교수
             name_ko: 이다빈
+            photo: dabin-lee.jpg
             affil: SNU
           - name: TBD
             # Not published — `note` shows on the internal build only. Named

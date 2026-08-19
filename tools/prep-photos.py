@@ -40,9 +40,15 @@ def square(im: Image.Image) -> Image.Image:
     return im.crop((left, top, left + side, top + side))
 
 
-def main(source: str, slug: str, folders: list[str]) -> None:
+def main(source: str, slug: str, folders: list[str], crop: str | None = None) -> None:
     im = ImageOps.exif_transpose(Image.open(source)).convert("RGB")
-    face = square(im).resize((SIZE, SIZE), Image.LANCZOS)
+    if crop:
+        # A square given outright, for a photograph the rule above gets wrong.
+        # It assumes the subject is in the middle of the frame; when they are
+        # off to one side, taking the middle takes half a face.
+        x, y, side = (int(v) for v in crop.split(","))
+        im = im.crop((x, y, x + side, y + side))
+    face = (im if im.width == im.height else square(im)).resize((SIZE, SIZE), Image.LANCZOS)
     if min(im.size) < SIZE:
         print(f"  note: {Path(source).name} is only {im.size[0]}x{im.size[1]} — upscaled")
     for folder in folders:
@@ -57,5 +63,8 @@ if __name__ == "__main__":
     ap.add_argument("source")
     ap.add_argument("slug")
     ap.add_argument("--to", nargs="+", choices=FOLDERS, default=["organizers"])
+    ap.add_argument("--crop", metavar="X,Y,SIDE",
+                    help="the square to take, in the source's own pixels, for a "
+                         "photograph whose subject is not in the middle of it")
     args = ap.parse_args()
-    main(args.source, args.slug, args.to)
+    main(args.source, args.slug, args.to, args.crop)
