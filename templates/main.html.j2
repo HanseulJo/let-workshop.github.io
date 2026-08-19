@@ -390,9 +390,12 @@
               <span class="affil">{{ t(s.affil, s.affil_ko) }}</span>
             </div>
             <!-- The session's subject, not the talk's — "Bandits" rather than
-                 "heavy-tailed". The fine topic belongs to the talk and is in
-                 the schedule; here it is what field the speaker is here for. -->
-            <div class="spk-topic">{{ s.track }}</div>
+                 "heavy-tailed". Held back while the schedule is: it is read off
+                 the session a speaker is in, and the grid is not saying which
+                 session anybody is in yet, so the card would be answering a
+                 question the programme beside it refuses. It comes back with
+                 the rest when `simple` goes off. -->
+            {% if not program.simple %}<div class="spk-topic">{{ s.track }}</div>{% endif %}
           </button>
           {% endfor %}
         </div>
