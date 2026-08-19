@@ -161,14 +161,22 @@ def photo_svg(source, shadow, highlight, width, height, contrast=0.92):
     )
 
 
-def logo_row(names, colour, height=54):
-    """The host marks, recoloured to one flat tone and embedded.
+def logo_row(names, colour, height=54, flat=True):
+    """The host marks, embedded — flattened to one tone, or as their owners drew them.
 
     Logos arrive in their own brand colours, which on a sheet built from one
-    ink is three palettes fighting. The alpha channel carries the shape, so the
-    art is discarded and the silhouette refilled — that also sidesteps the
-    reproduction rules both universities publish, which govern the mark in its
-    own colours, not a monotone courtesy credit.
+    ink is three palettes fighting. With `flat`, the alpha channel carries the
+    shape, the art is discarded and the silhouette refilled — that also
+    sidesteps the reproduction rules both universities publish, which govern
+    the mark in its own colours, not a monotone courtesy credit.
+
+    The banner asks for `flat=False`. A credit line at the foot of a six-metre
+    cloth is not a sheet's monotone courtesy credit — it is the row that says
+    who is running this, read from a few metres by people who know these marks
+    by their colour before they can read the letters. Greyed out at that size
+    a crest reads as a placeholder for a logo rather than as one. Rendering
+    them as published means the published rules apply: clear space, minimum
+    size, no recolouring — which is what this branch does.
     """
     out = []
     for name in names:
@@ -184,13 +192,16 @@ def logo_row(names, colour, height=54):
         else:
             raise SystemExit(f"  no logo for {name} in static/logos/")
         im = ImageOps.exif_transpose(Image.open(f)).convert("RGBA")
-        rgb = tuple(int(colour.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
-        flat = Image.new("RGBA", im.size, rgb + (0,))
-        flat.putalpha(im.getchannel("A"))
-        if im.height > height * 4:
-            flat.thumbnail((im.width, height * 4), Image.LANCZOS)
+        if flat:
+            rgb = tuple(int(colour.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+            mark = Image.new("RGBA", im.size, rgb + (0,))
+            mark.putalpha(im.getchannel("A"))
+        else:
+            mark = im
+        if mark.height > height * 4:
+            mark.thumbnail((mark.width, height * 4), Image.LANCZOS)
         buf = io.BytesIO()
-        flat.save(buf, "PNG", optimize=True)
+        mark.save(buf, "PNG", optimize=True)
         data = base64.b64encode(buf.getvalue()).decode("ascii")
         out.append(f'<img alt="{esc(name)}" src="data:image/png;base64,{data}">')
     return "".join(out)
@@ -1089,7 +1100,7 @@ BANNER = """<!doctype html>
      `align-items:flex-start` keeps the blocks their own width rather than the
      column\'s, so the credit line does not stretch to meet the mark. */
   .wrap {{
-    position:absolute; inset:56mm; padding:74mm 120mm 66mm;
+    position:absolute; inset:56mm; padding:70mm 120mm 62mm;
     display:flex; flex-direction:column; align-items:flex-start;
     justify-content:space-between;
   }}
@@ -1105,26 +1116,28 @@ BANNER = """<!doctype html>
   .mark span {{ font-weight:300; }}
   .longname {{
     font-family:"Satoshi",sans-serif; font-weight:500; font-size:76mm;
-    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:30mm 0 0 16mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:26mm 0 0 16mm;
   }}
   /* The credit line every Korean banner carries: when, where, and under whose
      marks — one row, at the foot, in the order someone reads them. The hosts
      are their logos and nothing else. A row of marks needs no label: a
      university crest on a banner is already the sentence "run by", and the
      word in front of it only takes room from the marks themselves. */
-  .strip {{ display:flex; align-items:center; gap:54mm; margin-left:13mm; }}
+  .strip {{ display:flex; align-items:center; gap:64mm; margin-left:13mm; }}
   .fact {{
-    display:flex; align-items:baseline; gap:20mm;
-    font-family:"Satoshi",sans-serif; font-weight:700; font-size:58mm;
+    display:flex; align-items:baseline; gap:26mm;
+    font-family:"Satoshi",sans-serif; font-weight:700; font-size:78mm;
     letter-spacing:-.014em; color:{ink};
   }}
   .fact b {{
-    font-family:"JetBrains Mono",monospace; font-size:27mm; font-weight:400;
+    font-family:"JetBrains Mono",monospace; font-size:34mm; font-weight:400;
     letter-spacing:.16em; text-transform:uppercase; color:{hot};
   }}
-  .rule {{ width:1.1mm; height:52mm; background:{ink}; opacity:.24; }}
-  .marks {{ display:flex; align-items:center; gap:50mm; margin-left:20mm; }}
-  .marks img {{ height:72mm; width:auto; display:block; opacity:.72; }}
+  .rule {{ width:1.3mm; height:70mm; background:{ink}; opacity:.24; }}
+  .marks {{ display:flex; align-items:center; gap:62mm; margin-left:26mm; }}
+  /* As published, at full strength. See logo_row's `flat` switch for why a
+     credit row is not the place for a silhouette. */
+  .marks img {{ height:104mm; width:auto; display:block; }}
   /* The funder\'s own sentence. Smallest thing on a six-metre banner and the
      only one nobody will read from across the courtyard, which is right: it is
      there for the record, not for the passer-by. */
@@ -1139,8 +1152,8 @@ BANNER = """<!doctype html>
   <div class="veil"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none">
     <defs><linearGradient id="v" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="{ground}" stop-opacity="{veil_b_end}"/>
-      <stop offset=".44" stop-color="{ground}" stop-opacity="{veil_b_mid1}"/>
-      <stop offset=".70" stop-color="{ground}" stop-opacity="{veil_b_mid2}"/>
+      <stop offset=".70" stop-color="{ground}" stop-opacity="{veil_b_mid1}"/>
+      <stop offset=".84" stop-color="{ground}" stop-opacity="{veil_b_mid2}"/>
       <stop offset="1" stop-color="{ground}" stop-opacity="{veil_b_end}"/>
     </linearGradient></defs>
     <rect width="100" height="10" fill="url(#v)"/>
@@ -1157,7 +1170,7 @@ BANNER = """<!doctype html>
         <span class="rule"></span>
         <span class="fact"><b>Venue</b>{venue_name}, {city}</span>
         <span class="rule"></span>
-        <span class="marks">{logos}</span>
+        <span class="marks">{logos_colour}</span>
       </div>
       <p class="grant">{grant}</p>
     </div>
@@ -2006,12 +2019,20 @@ GHOST_SIZE = {
 # to hold a photograph back from type on a dark ground, and over a pale one it
 # simply repaints the sheet in the ground colour.
 #
-# The accent is the dark sheet's coral, unchanged. A deeper red was tried here,
-# on the reasoning that coral on pale blue measures 1.4:1 and a contrast ratio
-# that low is not a colour anyone can read — but the two sheets are one poster
-# printed either way round, and a poster whose accent changes with the paper is
-# two posters. The session labels it sets are the least of what the sheet says,
-# and the ratio is the price of the pair matching.
+# The accent is the dark sheet's coral, carried down. It used to be the same
+# value in both, on the reasoning that the two sheets are one poster printed
+# either way round and a poster whose accent changes with the paper is two
+# posters. That held while the accent only set session labels. It stopped
+# holding when the accent took the name: measured against the ground actually
+# behind it, #ff8a75 is 1.75:1 on the sheet and 1.66:1 on the banner, and six
+# metres of cloth read at forty is one word before it is anything else.
+#
+# So it is deepened rather than replaced. Same hue — 9.1 degrees, to the
+# decimal — with the saturation up and the value down, which is what "the same
+# coral, printed heavier" means numerically. That lands at 3.25:1 on the sheet
+# and 3.07:1 on the banner, over the 3:1 the large type it sets is held to.
+# The dark sheet keeps #ff8a75: there it measures 6.2:1 and has nothing to
+# apologise for.
 #
 # What actually shipped lived in a --palette argument typed at a shell for a
 # while, and this dict drifted behind it. It is the same values now, which is
@@ -2019,7 +2040,7 @@ GHOST_SIZE = {
 SCHEMES = {
     "light": {
         "ground": "#cfe4f5", "ground2": "#b9d6ee", "band": "#b9d6ee",
-        "hot": "#ff8a75", "art_alpha": "1",
+        "hot": "#db472c", "art_alpha": "1",
         # The formulas, not the type. At #16324f the darkest strokes were very
         # nearly black on paper and read as holes punched in the sheet rather
         # than as writing over it; this is the same hue carried up out of
@@ -2385,6 +2406,9 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         cta_short="Register",
         logos=logo_row([h["name"] for h in site["sponsors"]["logos"]], PALETTE["cool"])
               if site.get("sponsors") else "",
+        logos_colour=logo_row([h["name"] for h in site["sponsors"]["logos"]],
+                              PALETTE["cool"], height=120, flat=False)
+                     if site.get("sponsors") else "",
         acronym_name=acronym_html(site["full_name"], mark),
         long_name=esc(site["full_name"].title()),
         # The sheet says which one this is; the banners and the badges do not,

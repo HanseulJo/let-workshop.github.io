@@ -291,7 +291,14 @@
         <div class="hero-actions">
           {% for a in site.hero_actions %}
           {% if a.href %}
-          <a class="btn{{ ' btn-primary' if a.primary }}" href="{{ a.href }}">{{ t(a.label, a.label_ko) }}</a>
+          <!-- A live button can carry a note too. It used to say the form was
+               not open yet; now it says how long it will be, which is the same
+               question asked from the other end. -->
+          <span class="btn-wait{{ ' is-primary' if a.primary }}">
+            <a class="btn{{ ' btn-primary' if a.primary }}" href="{{ a.href }}"
+               {% if a.href.startswith('http') %}target="_blank" rel="noopener"{% endif %}>{{ t(a.label, a.label_ko) }}</a>
+            {% if a.note %}<small>{{ t(a.note, a.note_ko) }}</small>{% endif %}
+          </span>
           {% else %}
           <span class="btn-wait{{ ' is-primary' if a.primary }}">
             <button class="btn{{ ' btn-primary' if a.primary }}" disabled>{{ t(a.label, a.label_ko) }}</button>

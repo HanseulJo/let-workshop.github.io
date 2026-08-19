@@ -98,7 +98,13 @@ PROBE = r"""
                          src: el.src, op: alpha(el), seq: seq++});
         return;
       }
-      if (solid(cs.backgroundColor) && r.width > 0 && r.height > 0) {
+      // Not <body>. Its background is the browser's window, not the piece's
+      // ground — every layout paints its own, on .sheet or on each .card — and
+      // on the strips, where the cards are 90mm or 1080px wide inside whatever
+      // window the probe happens to use, taking body's box made the piece as
+      // wide as the window.
+      if (solid(cs.backgroundColor) && r.width > 0 && r.height > 0
+          && el !== document.body && el !== document.documentElement) {
         out.rects.push({x: px(r.x), y: px(r.y), w: px(r.width), h: px(r.height),
                         fill: cs.backgroundColor, op: alpha(el), seq: seq++});
       }
@@ -238,10 +244,24 @@ def fam(css_family):
 
 
 def to_svg(data, out_path, title):
-    W, H = 420 * PX_PER_MM, 594 * PX_PER_MM
+    # The canvas was A2 whatever it was drawing. That is right for nothing,
+    # quite: the sheet is 426x600 with its bleed and the SVG cropped 6mm off
+    # it, and the banner is 6000mm across, so all but the left 420mm fell
+    # outside the viewBox and Illustrator opened a sliver. The coordinates
+    # were always correct — the probe measures the page's own layout — so the
+    # extent of what was painted is the size of the piece, and that holds for
+    # the strips too, where there is no single page box to read.
+    W = H = 0.0
+    for group in ("rects", "svgs", "images", "texts"):
+        for e in data.get(group, []):
+            W = max(W, float(e["x"]) + float(e["w"]))
+            H = max(H, float(e["y"]) + float(e["h"]))
+    if not (W and H):
+        W, H = 426 * PX_PER_MM, 600 * PX_PER_MM
     parts = [
         '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-        f'width="420mm" height="594mm" viewBox="0 0 {W:.2f} {H:.2f}">',
+        f'width="{W / PX_PER_MM:.2f}mm" height="{H / PX_PER_MM:.2f}mm" '
+        f'viewBox="0 0 {W:.2f} {H:.2f}">',
         f"<title>{esc(title)}</title>",
     ]
 

@@ -1036,7 +1036,13 @@ body {
   text-transform: uppercase;
   color: var(--hero-mute);
   text-align: center;
+  /* The tracking is for a line of Latin capitals. Hangul is already spaced by
+     its own squares, and at 0.14em "8월 31일까지" comes apart into syllables. */
 }
+.btn-wait small .t-ko {
+  letter-spacing: 0.01em;
+}
+
 
 .hero-meta small {
   display: block;
