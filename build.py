@@ -763,6 +763,37 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
         # such order to borrow, so it sorts by family name, the last token in
         # these romanisations.
         roster.sort(key=lambda s: (s["name"].split()[-1].lower(), s["name"].lower()))
+    # The schedule, said plainly. Applied here rather than in the data because
+    # the data is still true: the Speakers section above is built from the same
+    # sessions, and it needs their real names to group by. Applied after that
+    # roster is built, and before the modal and the table are, so those two
+    # agree with the grid.
+    if program.get("simple"):
+        label = program.get("simple_label") or "Invited talk"
+        for day in program["days"]:
+            for e in day["events"]:
+                if e["type"] not in ("block", "tutorial"):
+                    continue
+                e["title"] = label
+                e["chair"] = None
+                # One line where the names were, so the row keeps its shape and
+                # says what is missing rather than looking finished.
+                e["lines"] = ["TBD"]
+                e["talks"] = []
+                e["notes"] = []
+                # A tutorial is a talk here, so it takes the talk's colour,
+                # its badge and its mark rather than keeping a legend row, a
+                # blue edge and a book where the others have a microphone.
+                e["type"] = "block"
+                e["emoji"] = types["block"].get("emoji")
+        types.pop("tutorial", None)
+        # The day subtitles named the subjects each day was grouped by. The
+        # sessions are not grouped by subject any more, and one of the talks
+        # has moved between days, so they describe an arrangement that is no
+        # longer there.
+        for day in program["days"]:
+            day["theme"] = None
+
     detail = [
         {
             "id": e["id"],

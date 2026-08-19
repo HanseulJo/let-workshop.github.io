@@ -240,8 +240,16 @@ accommodation:
   first_come:
     name: POSCO International Center
     name_ko: 포스코국제관
-    note: Limited rooms provided for free, first come.
-    note_ko: 객실 한정, 무료 제공, 선착순.
+    # Who gets a room, in the order it is decided: speakers are housed either
+    # way, so "first come" is about everybody else, and among them the poster
+    # presenters are taken first. Saying only "first come" made it sound like a
+    # single queue that speakers were also standing in.
+    note: >-
+      Rooms are provided free. Speakers aside, they are allocated first come,
+      first served — poster presenters first.
+    note_ko: >-
+      객실은 무료로 제공됩니다. 연사를 제외하면 선착순 배정이며, 포스터 발표자를
+      우선합니다.
   nearby_note: Otherwise book direct.
   nearby_note_ko: 그 외에는 직접 예약해 주세요.
   # Two facts per place, not a table: how long by car, and the bus if there is

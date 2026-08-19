@@ -1,4 +1,18 @@
 # ─────────────────────────────────────────────────────────────
+# NOT READ BY THE BUILD. This is the programme as it stood on
+# 2026-08-19, with every session named, its topics, its chairs and
+# its speakers — kept so the detail can be put back when the
+# schedule is settled rather than typed out again.
+#
+# data/program.yml carries the same speakers (the Speakers section
+# is built from them) but shows the schedule in simple form: every
+# talk is "Invited talk" with the hour and TBD. Turning `simple`
+# off there brings the names, topics and chairs back into the
+# grid; this file is the older shape, with the sessions and times
+# as they were before the 2026-08-19 rearrangement.
+# ─────────────────────────────────────────────────────────────
+
+# ─────────────────────────────────────────────────────────────
 # The programme. Every event is placed on the grid purely from its
 # `start`/`end` — build.py computes the CSS grid rows, so you never
 # touch a row number again. Just edit the times.
@@ -26,19 +40,6 @@
 
 title: Program (tentative)
 title_ko: 프로그램 (잠정)
-
-# The schedule shown in simple form: every talk reads "Invited talk" with its
-# hour and TBD, and the names, topics and chairs are held back. The tutorial is
-# drawn as a talk like the rest.
-#
-# Nothing is deleted to do it. The speakers are still in this file and the
-# Speakers section is still built from them — this only governs what the grid
-# and the list say. Set it false and the sessions get their own names, their
-# chairs and their speakers back in one move. data/program.detailed.yml is the
-# shape the programme had before the times were rearranged, kept for the same
-# reason.
-simple: true
-simple_label: Invited talk
 
 # Public page shows no subtitle. The invite build keeps `subtitle_anon`, which
 # has to explain the session shape to someone being asked to speak.
@@ -93,17 +94,49 @@ days:
       - type: break
         title: Registration & Welcome Coffee
         emoji: "📝"
-        start: "10:30"
-        end: "11:00"
+        start: "09:00"
+        end: "09:20"
         density: compact
 
       - type: keynote
         title: Opening Remarks
         emoji: "🎬"
-        start: "11:00"
-        end: "11:10"
+        start: "09:20"
+        end: "09:30"
         density: tiny
         time_in_title: true
+
+      - type: block
+        title: DL Theory I
+        chair: TBD
+        start: "09:30"
+        end: "10:50"
+        speakers:
+          - name: Jaeho Lee
+            role: Prof.
+            role_ko: 교수
+            name_ko: 이재호
+            photo: jaeho-lee.jpg
+            affil: POSTECH
+            topic: theory of KD
+            home: https://jaeho-lee.github.io/
+          - name: Sung Whan Yoon
+            role: Prof.
+            role_ko: 교수
+            name_ko: 윤성환
+            photo: sung-whan-yoon.jpg
+            affil: UNIST
+            topic: flatness
+            note: >-
+              Childcare — Wed only after 14:00–15:00, or any time Thu. CLASHES
+              with this slot (Wed 09:30); needs moving.
+            home: https://sites.google.com/view/swyoon89
+
+      - type: break
+        title: Coffee Break (20 min)
+        start: "10:50"
+        end: "11:10"
+        bare: true
 
       - type: block
         title: DL Theory II
@@ -129,7 +162,7 @@ days:
             home: https://namhoonlee.github.io/
 
       - type: break
-        title: Lunch Break [Provided]
+        title: Lunch Break [On Your Own]
         emoji: "🍽"
         start: "12:30"
         end: "13:30"
@@ -160,7 +193,7 @@ days:
             home: https://coallaoh.github.io/
 
       - type: break
-        title: Coffee Break · put your poster up
+        title: Coffee Break (20 min)
         start: "14:50"
         end: "15:10"
         bare: true
@@ -191,11 +224,6 @@ days:
 
       - type: poster
         title: Poster Session
-        # Two things in the same hours. The grid places events by their time,
-        # so a parallel track written as its own event would be drawn on top
-        # of this one; it is a line on the session instead.
-        notes:
-          - In parallel · 과제 내부 워크숍
         start: "16:30"
         end: "18:00"
 
@@ -318,42 +346,16 @@ days:
             topic: offline RL
             note: Thursday only (teaching) — satisfied here.
 
-      - type: break
-        title: Coffee Break (10 min)
+      - type: social
+        title: Free Discussion (TBD)
+        emoji: "💬"
         start: "16:30"
-        end: "16:40"
-        bare: true
-
-      - type: block
-        title: DL Theory I
-        chair: TBD
-        start: "16:40"
-        end: "18:00"
-        speakers:
-          - name: Jaeho Lee
-            role: Prof.
-            role_ko: 교수
-            name_ko: 이재호
-            photo: jaeho-lee.jpg
-            affil: POSTECH
-            topic: theory of KD
-            home: https://jaeho-lee.github.io/
-          - name: Sung Whan Yoon
-            role: Prof.
-            role_ko: 교수
-            name_ko: 윤성환
-            photo: sung-whan-yoon.jpg
-            affil: UNIST
-            topic: flatness
-            note: >-
-              Childcare — Wed only after 14:00–15:00, or any time Thu. CLASHES
-              with this slot (Wed 09:30); needs moving.
-            home: https://sites.google.com/view/swyoon89
+        end: "17:05"
 
       - type: keynote
         title: Closing & Awards
         emoji: "🏆"
-        start: "18:00"
-        end: "18:10"
+        start: "17:05"
+        end: "17:15"
         density: tiny
         time_in_title: true

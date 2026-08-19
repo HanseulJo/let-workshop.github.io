@@ -962,7 +962,17 @@ FESTIVAL = """<!doctype html>
      is a label on the square below it, not a line of the foot: against the
      edge it read as a third item in the row, over the middle of the code it
      reads as its caption. */
-  .foot .cta {{ text-align:center; }}
+  .top .cta {{ text-align:center; }}
+  /* The acknowledgement, in the wording the grant requires. It takes the width
+     the marks leave and sets small: it is a condition of funding rather than a
+     line anybody reads the poster for, and at any larger size it would be
+     arguing with the programme. */
+  .grant {{
+    flex:1; margin:0; align-self:flex-end;
+    font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:3.1mm;
+    font-weight:400; line-height:1.42; color:{ink}; opacity:.62;
+    text-align:right; word-break:keep-all;
+  }}
   .foot .cta b {{ display:block; font-family:"Satoshi","Helvetica Neue",sans-serif; font-size:4.6mm;
                   font-weight:700; color:{hot}; margin-bottom:2.5mm; letter-spacing:0;
                   text-transform:none; }}
@@ -990,7 +1000,7 @@ FESTIVAL = """<!doctype html>
     <div class="top">
       <div><h1 class="mark">{mark} <span>{year}</span></h1>
         <p class="longname">{long_name_ed}</p></div>
-      <div class="stamps">{eyebrow}</div>
+      <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
     </div>
     <div class="rails">
       <div class="rail"><b>Venue</b><span>{venue_name}, {city}</span></div>
@@ -1008,7 +1018,7 @@ FESTIVAL = """<!doctype html>
       </div>
       <div class="foot">
         <span class="marks">{logos}</span>
-        <div class="cta"><b>{cta_short}</b><div class="qr-plate">{qr}</div></div>
+        <p class="grant">{grant}</p>
       </div>
     </div>
   </div>
@@ -2292,6 +2302,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
                     f'<span>{esc(site["theme"])}</span></div>'
                     if site.get("theme") else ""),
         eyebrow=esc(site.get("eyebrow") or ""),
+        # The funder's own sentence, printed as given. English only on the
+        # sheet: the Korean runs to two more lines than the foot has, and the
+        # page carries both.
+        grant=esc(((site.get("sponsors") or {}).get("note") or "").strip()),
         facts=facts,
         prog=programme_html(program, site.get("affiliations", {})),
         url=esc(site["url"].split("//")[-1].rstrip("/")),
