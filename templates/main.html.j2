@@ -1216,6 +1216,27 @@
         setTheme(saved || "auto");
       })();
 
+      // The same hiding, on the way in. A mask that has not arrived yet is not
+      // a mask: the layer draws unmasked until the file lands, so the hero
+      // opened with the whole photograph showing through and then snapped to
+      // formulas — which reads as the drawing loading slowly when what was
+      // slow was watching it arrive.
+      //
+      // Hidden by script rather than in the stylesheet, so a reader without
+      // JavaScript gets the drawing rather than a permanently blank layer, and
+      // released by the same cap as a theme change: 1000ms and it comes back
+      // regardless.
+      (function () {
+        var hero = document.querySelector(".hero");
+        if (!hero || !hero.querySelector(".hero-art")) return;
+        var now = document.documentElement.getAttribute("data-theme") || "auto";
+        hero.classList.add("art-swap");
+        var mine = ++swapping;
+        warm(now, function () {
+          if (mine === swapping) hero.classList.remove("art-swap");
+        });
+      })();
+
       (function () {
         var saved = null;
         try {
