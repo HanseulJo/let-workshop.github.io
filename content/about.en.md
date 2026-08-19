@@ -1,24 +1,29 @@
 ### Purpose
 
-Despite the explosive growth of AI, theoretical research in the field has become
-relatively small, particularly in Korea. Researchers and graduate students often
-find themselves isolated within their own labs, with few opportunities to connect
-with colleagues from neighboring groups.
+Despite the explosive growth of AI, the research community in machine learning
+(ML) and AI theory remains small and geographically and institutionally
+dispersed. In Korea, ML/AI theory researchers, especially graduate students,
+often find themselves isolated within their own labs, with limited opportunities
+to interact with researchers from other groups.
 
-KOLT is an annual gathering that brings these researchers together to showcase
-their work, discuss the unique challenges of theoretical research, and initiate
-collaborations. It is strongly inspired by a
-[previous bandit workshop held at KAIST (Hongneung Campus)][prev_workshop], as
-well as internationally successful initiatives such as the [ITA Workshop][ita],
-[COLT][colt], [ALT][alt], [AISTATS][aistats], and
-[Simons Institute programs][simons], while remaining rooted in South Korea. In
-the long run, we hope to build a sense of belonging to a Korean theory community,
-which we believe is the most durable way to nurture the next generation of
-brilliant researchers.
+LeT Workshop aims to promote exchange and collaboration among ML/AI theory
+researchers across Korea, while providing a venue for sharing their latest
+research. Internationally, active exchange among researchers has helped build
+strong research communities that have served as important hubs for advancing AI
+theory (e.g., [ITA Workshop][ita], [COLT][colt], [ALT][alt],
+[AISTATS][aistats], & [Simons Institute programs][simons]). This workshop aims
+to provide a similar forum in Korea where such a community can grow.
+
+In line with this goal, this workshop is supported by the National Research
+Foundation of Korea (NRF) through the R&D project “Development of an End-to-End
+Design and Validation Framework for Mathematically Principled Next-Generation AI
+Architectures and Learning Algorithms.” Through this effort, we hope to
+strengthen the foundation for a self-sustaining ML/AI theory research community
+in Korea and advance foundational technologies for next-generation AI.
 
 ### Scope
 
-KOLT broadly covers theoretical research in machine learning and deep learning,
+LeT broadly covers theoretical research in machine learning and deep learning,
 situated at the crossroads of computer science, statistics, mathematics, and
 related disciplines. We welcome work that primarily advances theoretical analysis
 and guarantees. Key topics include, but are not limited to:
