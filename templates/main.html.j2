@@ -1096,6 +1096,9 @@
         return set[m && m("(max-width: 780px)").matches ? "narrow" : "wide"];
       }
       var warmed = {};
+      // Ready to paint, not merely arrived. decode() is the difference between
+      // the bytes being in the cache and the picture being able to go on screen
+      // this frame, which is exactly the moment the drawing should come back.
       function warm(id, done) {
         var urls = artFor(id).filter(function (u) { return !warmed[u]; });
         if (!urls.length) return done();
@@ -1107,35 +1110,85 @@
           clearTimeout(cap);
           done();
         };
-        var cap = setTimeout(finish, 900);
+        // A ceiling, not a wait: nothing on screen is blocked on this, it only
+        // decides how long the drawing is absent before it comes back anyway.
+        var cap = setTimeout(finish, 1000);
         urls.forEach(function (u) {
           var im = new Image();
-          im.onload = im.onerror = function () {
+          var once = false;
+          var settle = function () {
+            if (once) return;
+            once = true;
             warmed[u] = true;
             if (--left === 0) finish();
+          };
+          im.onerror = settle;
+          im.onload = function () {
+            // decode() is the better signal — it means the picture can go on
+            // screen this frame rather than merely having arrived — but it
+            // needs the page to be rasterising, and a tab that is not will
+            // leave the promise unsettled. Whichever answers first.
+            if (im.decode) {
+              im.decode().then(settle, settle);
+              setTimeout(settle, 60);
+            } else {
+              settle();
+            }
           };
           im.src = u;
         });
       }
+      // The colours change on the press. Nothing waits for a picture.
+      //
+      // They used to: the theme was held back until the other theme's drawing
+      // was in the cache, which on a phone is 600KB of mask, and the button sat
+      // there doing nothing for most of a second. Holding a whole colour scheme
+      // hostage to a background texture is the wrong way round.
+      //
+      // So the drawing steps out of the way instead. It fades to nothing in
+      // 120ms, the theme flips underneath it, and it fades back when the new
+      // one can be painted. The hero keeps its photograph and its wash
+      // throughout, so what a reader sees is the formulas dissolving and
+      // reforming — which is a transition, where a blank flash was a fault.
+      // It also means the two drawings are never both on screen: no cross-fade,
+      // no second mask surface, nothing held that is not being looked at.
+      var swapping = 0;
       function cycleTheme() {
         var now = document.documentElement.getAttribute("data-theme") || "auto";
         var i = THEMES.map(function (x) { return x.id; }).indexOf(now);
         var next = THEMES[(i + 1) % THEMES.length].id;
-        var btn = document.getElementById("theme-btn");
-        btn.setAttribute("aria-busy", "true");
+        var hero = document.querySelector(".hero");
+        var same = artFor(next).join() === artFor(now).join();
+        // auto -> light with the system already light changes no picture at
+        // all, and fading one out to bring the same one back is a flicker
+        // bought for nothing.
+        if (!hero || same) return setTheme(next);
+        // Both in the same tick: the drawing is hidden and the theme applied
+        // before the browser paints either, so there is no frame in which a
+        // half-loaded mask can be seen and no wait before the colours change.
+        hero.classList.add("art-swap");
+        setTheme(next);
+        // Only the most recent press may bring the drawing back. Pressed twice
+        // quickly, the first swap's pictures arrive while the second is still
+        // fetching, and without this the drawing would return as the one the
+        // reader has already moved past.
+        var mine = ++swapping;
         warm(next, function () {
-          btn.removeAttribute("aria-busy");
-          setTheme(next);
+          if (mine === swapping) hero.classList.remove("art-swap");
         });
       }
-      // And when nothing else is going on, fetch the other theme's pictures so
-      // the wait above is usually no wait at all. Not on a metered connection
-      // and not when the reader has asked for less data: a megabyte to make a
-      // button they may never press feel quicker is not a trade to make on
-      // their behalf.
+      // And when nothing else is going on, put the other theme's pictures in
+      // the cache, so that fade is usually over before it is noticed. As bytes
+      // and not as pictures: fetch() fills the cache without decoding anything,
+      // which is the whole difference between a warm cache and a second copy of
+      // a drawing sitting in memory for a button nobody has pressed.
+      //
+      // Not on a metered connection and not when the reader has asked for less
+      // data: that is not a trade to make on their behalf.
       (function () {
         var c = navigator.connection || {};
         if (c.saveData || /(^|[^4])[23]g/.test(c.effectiveType || "")) return;
+        if (!window.fetch) return;
         var idle = window.requestIdleCallback || function (f) { setTimeout(f, 2500); };
         window.addEventListener("load", function () {
           setTimeout(function () {
@@ -1146,7 +1199,9 @@
               var m = window.matchMedia;
               var showing = document.documentElement.getAttribute("data-theme");
               if (!showing) showing = m && m("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-              warm(showing === "dark" ? "light" : "dark", function () {});
+              artFor(showing === "dark" ? "light" : "dark").forEach(function (u) {
+                fetch(u, { cache: "force-cache", priority: "low" }).catch(function () {});
+              });
             });
           }, 2500);
         });

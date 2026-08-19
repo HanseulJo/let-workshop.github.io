@@ -548,6 +548,14 @@ body {
     mask-position: 0% 100%;
   }
 }
+/* Asked for less movement: the drawing still has to leave and come back,
+   because the file it is drawn from changes, but it does it at once. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-art,
+  .hero.art-swap .hero-art {
+    transition: none;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-flow {
     animation: none;
@@ -560,7 +568,23 @@ body {
   opacity: 0.3;
 }
 
+/* Out of the way while the theme changes, and back when the new drawing can be
+   painted. The two themes are drawn from different files — the light one puts
+   its formulas where the picture is dark, because there the marks are the ink
+   — so a swap is a fetch, and the layer used to go blank in the middle of it.
+
+   Out at once, in on a fade. Fading out first would mean holding the colour
+   change back until the fade finished, which is the delay this is meant to
+   remove; and for the first frames of that fade the layer would be showing an
+   unmasked photograph, which is the flash it is meant to prevent. Gone is not
+   something a reader notices about a background texture at 0.56. Arriving is,
+   so that part is eased. */
+.hero.art-swap .hero-art {
+  opacity: 0;
+  transition: none;
+}
 .hero-art {
+  transition: opacity 0.24s ease-out;
   position: absolute;
   inset: -12px;
   z-index: 0; /* above ::before, below the scrim — later sibling, same layer */
