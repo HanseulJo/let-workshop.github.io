@@ -767,6 +767,16 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
         # such order to borrow, so it sorts by family name, the last token in
         # these romanisations.
         roster.sort(key=lambda s: (s["name"].split()[-1].lower(), s["name"].lower()))
+        # And again in 가나다 order, kept as a number on each card rather than as
+        # a second list. Precomposed Hangul sits in 가나다 order in Unicode, so
+        # plain string comparison is the order — and a Korean name puts the
+        # surname first, so the whole name is already the key the romanised
+        # list has to build out of its last token. Anyone with no Korean name
+        # sorts by the romanised one and lands among the Latin letters, after
+        # the Hangul.
+        ko = sorted(roster, key=lambda s: (s.get("name_ko") or "\uffff") + s["name"].lower())
+        for i, s in enumerate(ko):
+            s["ko_order"] = i
     # The schedule, said plainly. Applied here rather than in the data because
     # the data is still true: the Speakers section above is built from the same
     # sessions, and it needs their real names to group by. Applied after that

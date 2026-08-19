@@ -363,21 +363,26 @@
     <section id="speakers" class="band band-alt">
       <div class="wrap">
         <!-- The order is by surname, not by billing. Said beside the heading so
-             it is read before the grid rather than after it. -->
+             it is read before the grid rather than after it.
+             Two orders, one grid: the cards are written in the romanised order
+             and carry their 가나다 position as a number, which the Korean view
+             reads back through `order`. A second copy of the grid would be
+             fifteen more cards in the document for a difference that is only
+             an arrangement of the ones already there. -->
         <!-- It said "(not final)" while there were still empty slots on the
              programme. There are none; every session is named. -->
         <h2>
           <span class="t-en">Speakers</span><span class="t-ko">연사</span>
           <span class="note">
             <span class="t-en">Alphabetical by surname</span>
-            <span class="t-ko">성 기준 알파벳순</span>
+            <span class="t-ko">성 기준 가나다순</span>
           </span>
         </h2>
         <div class="spk-grid">
           {% for s in roster %}
           <!-- Name, affiliation and field. The session, day and time are the
                schedule's job, and the card links there. -->
-          <button class="spk-card" onclick="openEvent('{{ s.event_id }}')">
+          <button class="spk-card" style="--ko-order: {{ s.ko_order }}" onclick="openEvent('{{ s.event_id }}')">
             {% if s.photo %}
             <img class="spk-face" src="{{ s.photo }}" alt="" loading="lazy" width="256" height="256" />
             {% else %}
