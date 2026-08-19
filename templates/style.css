@@ -959,8 +959,24 @@ body {
    they were standing on: the chip was filled with the hero's own near-black,
    so KAIST's navy sat on navy. The chip goes pale in both themes and the marks
    are left alone. */
+/* Sized by the letters, not by the box. --cap is how tall the lettering
+   should be; each mark's own --ratio turns that into the height of its file,
+   and --baseline drops the three onto one line: the row aligns their bottoms,
+   so a mark whose letters sit high above its own bottom edge is pushed down by
+   exactly the difference. Both numbers come from data/site.yml, measured by
+   tools/prep-logo.py, so the hero, the section at the foot and the printed
+   sheet all draw the same proportions. */
+.hero-marks {
+  --cap: 13px;
+  align-items: flex-end;
+}
+.hero-marks a,
+.sponsors-row a {
+  --box: calc(var(--cap) * var(--ratio));
+  margin-bottom: calc(var(--drop, 0px) - (1 - var(--baseline)) * var(--box));
+}
 .hero-marks img {
-  height: 22px;
+  height: calc(var(--cap) * var(--ratio));
   width: auto;
   display: block;
 }
@@ -2856,6 +2872,19 @@ h2 .note {
   background: var(--accent);
   opacity: 0.42;
 }
+/* A leg you walk, drawn as dots rather than a line — the difference between
+   being carried and carrying yourself, which is the one thing about a journey
+   a reader wants to know before they read the numbers. Dots down the same
+   3px column: a repeating gradient, so it needs no second element and stays
+   on the rail the solid legs are on. */
+.route-stops .leg.is-walk::before {
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--accent) 0 3px,
+    transparent 3px 7px
+  );
+  opacity: 0.55;
+}
 /* Which stop, under which place. They are not the same thing and the
    difference is the part somebody standing there needs: Pohang station has
    more than one stop and only the city-bound side has the 5000. Indented to
@@ -2949,19 +2978,24 @@ h2 .note {
 }
 .sponsors-row {
   display: flex;
-  align-items: center;
+  /* Bottoms, not middles: the marks are put on one baseline by the rule above,
+     and centring them would undo it. --drop is the room the tallest of them
+     needs under the line for whatever it carries below the letters. */
+  align-items: flex-end;
   justify-content: center;
   flex-wrap: wrap;
   gap: 56px;
   margin-top: 30px;
+  --cap: 26px;
+  --drop: 26px;
 }
 .sponsors-row img {
-  /* Matched on height. POSTECH is a 6.9:1 wordmark and KAIST 3.5:1, so equal
-     height means unequal width and the wider one carries more of the row —
-     that is what matching heights costs, and it is the right cost here: two
-     marks set to different heights read as one being subordinate. The width
-     cap is gone, because a cap is what was quietly making them unequal. */
-  height: 40px;
+  /* Matched on the letters rather than on the box. Equal box heights read as
+     one mark being subordinate whenever the marks carry different furniture —
+     and these three do, one of them being mostly an arc. The width follows
+     from the height, so a 6.9:1 wordmark still takes more of the row than a
+     3.5:1 one; that is what matching costs, and it is the right cost. */
+  height: calc(var(--cap) * var(--ratio));
   max-width: none;
   width: auto;
   object-fit: contain;

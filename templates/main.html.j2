@@ -313,8 +313,9 @@
                where a mark is decoration and the bytes are not free. -->
           <span class="hero-marks" aria-label="{{ site.sponsors.label }}">
             {% for h in site.sponsors.logos %}
-            <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
-              <img src="logos/{{ h.small }}" alt="{{ h.name }}" height="22" />
+            <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}"
+               style="--ratio: {{ h.ratio }}; --baseline: {{ h.baseline }}">
+              <img src="logos/{{ h.small }}" alt="{{ h.name }}" />
             </a>
             {% endfor %}
           </span>
@@ -625,7 +626,8 @@
         <h2>{{ t(site.sponsors.title, site.sponsors.title_ko) }}</h2>
         <div class="sponsors-row">
           {% for h in site.sponsors.logos %}
-          <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}">
+          <a href="{{ h.url }}" target="_blank" rel="noopener" title="{{ h.name }}"
+             style="--ratio: {{ h.ratio }}; --baseline: {{ h.baseline }}">
             <img src="logos/{{ h.file }}" alt="{{ h.name }}" loading="lazy" />
           </a>
           {% endfor %}
@@ -757,7 +759,7 @@
                       {%- if route.stop %}<span class="rt-stop">{{ t(route.stop, route.stop_ko) }} {{ t(venue.stop_word, venue.stop_word_ko) }}</span>{% endif %}</span>
                   </li>
                   {% for leg in route.legs %}
-                  <li class="leg">
+                  <li class="leg{{ ' is-walk' if leg.walk }}">
                     <span class="rt-time">{% if leg.time %}{{ t(leg.time, leg.time_ko) }}{% endif %}</span>
                     <span class="rt-via">{{ t(leg.via, leg.via_ko) }}</span>
                   </li>

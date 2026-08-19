@@ -401,6 +401,10 @@ def fill_defaults(bundle: dict) -> None:
             for key in ("via_ko", "to_ko", "time", "time_ko", "icon",
                         "stop", "stop_ko"):
                 leg.setdefault(key, None)
+            # A leg you walk is drawn as a dotted rail rather than a solid one,
+            # which is how a maps app draws the difference between being
+            # carried and carrying yourself.
+            leg.setdefault("walk", False)
             # A stop is filled unless it is somewhere you get off to get on
             # something else, which is how a map draws a transfer.
             leg.setdefault("change", False)
@@ -432,6 +436,9 @@ def fill_defaults(bundle: dict) -> None:
     # No poster block at all is a legitimate site; the section disappears.
     if bundle["site"].get("sponsors"):
         for logo in bundle["site"]["sponsors"].get("logos", []):
+            # A mark with no measurement is drawn box-to-box, as before.
+            logo.setdefault("ratio", 1)
+            logo.setdefault("baseline", 1)
             # No small variant means the hero simply falls back to the big one.
             logo.setdefault("small", logo.get("file"))
         for key in ("title", "title_ko", "note", "note_ko"):

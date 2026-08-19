@@ -124,10 +124,25 @@ sponsors:
   # `file` is the 132px-tall mark this section draws at 44; `small` is the
   # 66px one the hero puts beside the buttons at 22. Both written by
   # tools/prep-logo.py, which takes one source and produces the pair.
+  # `ratio` and `baseline` are what let the three be drawn with their letters
+  # the same size rather than their boxes the same height — which is what a row
+  # of logos usually does, and is wrong here because the marks carry different
+  # furniture. KAIST's letters are 62% of its box, POSTECH's 58% (there is a
+  # line of small type under the word) and the NRF's 36%, most of its box being
+  # the arc above them. Set to one height the NRF read at half the size of the
+  # other two.
+  #
+  #   ratio     box height per unit of letter height — the page asks for a
+  #             letter height and multiplies
+  #   baseline  where the letters sit on their box, as a fraction from the top,
+  #             so the three can be dropped onto one line
+  #
+  # Both are measured, not guessed: tools/prep-logo.py prints them for whatever
+  # you feed it.
   logos:
-    - { name: KAIST, file: kaist.webp, small: kaist-sm.webp, url: https://www.kaist.ac.kr/en/ }
-    - { name: POSTECH, file: postech.webp, small: postech-sm.webp, url: https://www.postech.ac.kr/eng/ }
-    - { name: NRF, file: nrf.webp, small: nrf-sm.webp, url: https://www.nrf.re.kr/eng/main }
+    - { name: KAIST, file: kaist.webp, small: kaist-sm.webp, ratio: 1.618, baseline: 0.618, url: https://www.kaist.ac.kr/en/ }
+    - { name: POSTECH, file: postech.webp, small: postech-sm.webp, ratio: 1.714, baseline: 0.583, url: https://www.postech.ac.kr/eng/ }
+    - { name: NRF, file: nrf.webp, small: nrf-sm.webp, ratio: 2.779, baseline: 0.784, url: https://www.nrf.re.kr/eng/main }
 
 # The particulars under the hero title. `icon` names a symbol in the inline
 # sprite: cal, pin, globe, mic. `mono` sets the value in the monospace face —

@@ -193,6 +193,7 @@ getting_here:
     total_ko: 42분
     legs:
       - via: On foot, 573 m
+        walk: true
         via_ko: 도보 573m
         time: 11 min
         time_ko: 11분
@@ -213,6 +214,7 @@ getting_here:
         icon: "🚏"
         change: true
       - via: On foot, 758 m
+        walk: true
         via_ko: 도보 758m
         time: 14 min
         time_ko: 14분

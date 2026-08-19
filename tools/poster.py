@@ -161,7 +161,7 @@ def photo_svg(source, shadow, highlight, width, height, contrast=0.92):
     )
 
 
-def logo_row(names, colour, height=54, flat=True):
+def logo_row(logos, colour, cap=3.4, flat=True):
     """The host marks, embedded — flattened to one tone, or as their owners drew them.
 
     Logos arrive in their own brand colours, which on a sheet built from one
@@ -179,7 +179,8 @@ def logo_row(names, colour, height=54, flat=True):
     size, no recolouring — which is what this branch does.
     """
     out = []
-    for name in names:
+    for logo in logos:
+        name = logo["name"]
         # Whichever extension the mark is shipped in. It was written as .png,
         # and when the site moved its logos to WebP the sheet stopped finding
         # them and printed a foot with no institutions on it — silently, since
@@ -198,12 +199,21 @@ def logo_row(names, colour, height=54, flat=True):
             mark.putalpha(im.getchannel("A"))
         else:
             mark = im
-        if mark.height > height * 4:
-            mark.thumbnail((mark.width, height * 4), Image.LANCZOS)
         buf = io.BytesIO()
         mark.save(buf, "PNG", optimize=True)
         data = base64.b64encode(buf.getvalue()).decode("ascii")
-        out.append(f'<img alt="{esc(name)}" src="data:image/png;base64,{data}">')
+        # Sized by its letters and dropped onto one line with the others, from
+        # the two numbers in data/site.yml — the same pair the page uses, so
+        # the sheet and the site draw the marks in the same proportions. The
+        # row is aligned on its bottom edge, so a mark whose letters sit high
+        # above its own bottom is pushed down by exactly that difference.
+        ratio = float(logo.get("ratio") or 1)
+        baseline = float(logo.get("baseline") or 1)
+        box = cap * ratio
+        out.append(
+            f'<img alt="{esc(name)}" style="height:{box:.2f}mm;'
+            f'margin-bottom:{cap * 0.9 - (1 - baseline) * box:.2f}mm"'
+            f' src="data:image/png;base64,{data}">')
     return "".join(out)
 
 
@@ -983,7 +993,9 @@ FESTIVAL = """<!doctype html>
   .mid ul li {{ text-transform:none; font-weight:500; }}
   .r {{ text-align:right; }}
   .marks {{ display:flex; align-items:flex-end; gap:9mm; }}
-  .marks img {{ height:9mm; width:auto; display:block; opacity:.72; }}
+  /* Height comes from logo_row, one mark at a time: the marks are matched
+     on their letters, not on their boxes. */
+  .marks img {{ width:auto; display:block; opacity:.72; }}
   /* The marks and the grant sit under both columns, and 9mm under a list set
      at 5.2mm/1.42 is barely more than one of its own lines — the row read as
      the last entry of the organisers' column rather than as the sheet's foot.
@@ -1154,7 +1166,7 @@ BANNER = """<!doctype html>
   .marks {{ display:flex; align-items:center; gap:62mm; margin-left:26mm; }}
   /* As published, at full strength. See logo_row's `flat` switch for why a
      credit row is not the place for a silhouette. */
-  .marks img {{ height:104mm; width:auto; display:block; }}
+  .marks img {{ width:auto; display:block; }}
   /* The funder\'s own sentence. Smallest thing on a six-metre banner and the
      only one nobody will read from across the courtyard, which is right: it is
      there for the record, not for the passer-by. */
@@ -1288,7 +1300,7 @@ XBANNER = """<!doctype html>
      386 + 30 of gap + 110 of code = 526mm inside a 420mm column, so the code
      hung 62mm off the edge of the banner. */
   .marks {{ display:flex; align-items:flex-end; gap:24mm; }}
-  .marks img {{ height:22mm; width:auto; display:block; opacity:.72; }}
+  .marks img {{ width:auto; display:block; opacity:.72; }}
   .cta {{ text-align:right; }}
   .cta b {{
     display:block; font-family:"Satoshi",sans-serif; font-size:16mm;
@@ -1475,7 +1487,7 @@ SOCIAL = """<!doctype html>
   .orgs2 b {{ font-size:36px; font-weight:700; color:{ink}; line-height:1.52; white-space:nowrap; }}
   .orgs2 span {{ font-size:28px; font-weight:400; color:{cool}; text-align:right; white-space:nowrap; }}
   .marks {{ display:flex; align-items:flex-end; gap:38px; }}
-  .marks img {{ height:42px; width:auto; display:block; opacity:.72; }}
+  .marks img {{ width:auto; display:block; opacity:.72; }}
   .qr-plate {{ width:186px; height:186px; background:{art_ink}; padding:9px; box-sizing:border-box; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
   .join {{ display:flex; align-items:flex-end; justify-content:space-between; gap:30px; margin-top:34px; }}
@@ -2433,10 +2445,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         city=esc(site["city"]),
         country=esc(site["country"]),
         cta_short="Register",
-        logos=logo_row([h["name"] for h in site["sponsors"]["logos"]], PALETTE["cool"])
+        logos=logo_row(site["sponsors"]["logos"], PALETTE["cool"])
               if site.get("sponsors") else "",
-        logos_colour=logo_row([h["name"] for h in site["sponsors"]["logos"]],
-                              PALETTE["cool"], height=120, flat=False)
+        logos_colour=logo_row(site["sponsors"]["logos"],
+                              PALETTE["cool"], cap=8.0, flat=False)
                      if site.get("sponsors") else "",
         acronym_name=acronym_html(site["full_name"], mark),
         long_name=esc(site["full_name"].title()),
