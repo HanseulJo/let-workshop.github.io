@@ -142,12 +142,15 @@ outlines rather than `<text>`, so they render the same wherever they are used:
 | file | what it is |
 | --- | --- |
 | `templates/wordmark.svg` | the letters alone, inheriting colour — the hero and the top bar |
-| `static/let-logo.svg` | LET WS on two rows, full-bleed navy — the profile picture |
+| `static/let-logo.svg` | LeT on one row, full-bleed navy — the profile picture |
 | `static/favicon.svg` | one letter, because a word is illegible at 16px |
 
-The square mark says LET WS rather than LET: on a profile the acronym on its own
-is three letters that could be anything, and the second word is what makes them
-the name of a thing.
+The square mark says LeT and nothing else. It carried a second row, WS, on the
+argument that three letters alone could be anything — but a profile picture is
+never seen alone. It sits beside the name it belongs to everywhere GitHub draws
+it, so the second row answered a question the line next to it had already
+answered, and halved the letters that do the work to do it. On one row they
+fill three quarters of the square.
 
 `favicon-32.png`, `favicon-180.png` (apple-touch-icon) and `let-avatar.png` are
 rasterised from those SVGs for the places that will not take one — browsers with

@@ -29,10 +29,13 @@ from fontTools.varLib import instancer
 ROOT = Path(__file__).resolve().parent.parent
 FONT = ROOT / "static" / "fonts" / "jost-latin.woff2"
 WORD = "LeT"
-# What the square mark says. The wordmark is the name as it is set in running
-# text; this is the name as it has to survive being 40px wide next to somebody
-# else's avatar, where three letters on their own could be anything.
-SQUARE = ("LeT", "WS")
+# What the square mark says. It said "LeT WS" on two rows, on the argument that
+# three letters alone could be anything and the second word is what makes them
+# the name of a thing. A profile picture is not read on its own, though — it
+# sits beside the name it belongs to, everywhere GitHub draws it — so the
+# second row was answering a question the page next to it had already answered,
+# at the cost of halving the letters that do the work.
+SQUARE = "LeT"
 WEIGHT = 900
 TRACK = 30  # extra letterspacing in font units — a wordmark wants a little air
 NAVY = "#14213d"
@@ -70,7 +73,21 @@ def main() -> None:
         encoding="utf-8",
     )
 
-    def boxed(glyph_paths, bbox, target):
+    def ground(full_bleed):
+        """The square under the letters.
+
+        Full-bleed for anything someone else masks. GitHub rounds an
+        organisation's picture at about 9% of the side and a person's into a
+        circle, then composites it onto the page; a mark that rounds its own
+        corners at 22% and keeps a transparent margin inside them arrives
+        smaller than every other avatar in the list, in a gap, with corners
+        rounder than the interface. A favicon is drawn onto the tab and owns
+        its own shape, so that one keeps the rounding.
+        """
+        return (f'<rect width="64" height="64" fill="{NAVY}"/>' if full_bleed
+                else f'<rect x="2" y="2" width="60" height="60" rx="14" fill="{NAVY}"/>')
+
+    def boxed(glyph_paths, bbox, target, full_bleed=False, label=WORD):
         gx0, gy0, gx1, gy1 = bbox
         gw, gh = gx1 - gx0, gy1 - gy0
         scale = target / max(gw, gh)
@@ -78,67 +95,21 @@ def main() -> None:
         ty = (64 - gh * scale) / 2 - gy0 * scale
         inner = "\n    ".join(f'<path d="{p}"/>' for p in glyph_paths)
         return (
-            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="{WORD}">\n'
-            f'  <rect x="2" y="2" width="60" height="60" rx="14" fill="{NAVY}"/>\n'
+            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="{label}">\n'
+            f'  {ground(full_bleed)}\n'
             f"  <!-- Baked outlines — no font needed. Regenerate: tools/make-wordmark.py -->\n"
             f'  <g transform="translate({tx:.3f} {ty:.3f}) scale({scale:.5f})" fill="#ffffff">\n'
             f"    {inner}\n  </g>\n</svg>\n"
         )
 
-    def stacked(words, target, full_bleed=False):
-        """Two words on two rows, at one scale, centred as a block.
-
-        `full_bleed` fills the whole square and rounds nothing. That is what a
-        GitHub picture wants: GitHub masks the image itself, with a corner
-        radius of about 9% of the side for an organisation, and it composites
-        the result straight onto the page. An image that rounds its own corners
-        at 22% and holds a 3% transparent margin inside them — which is what
-        this drew — arrives as a tile visibly smaller than every other avatar
-        in the list, set in a gap, with corners rounder than the rest of the
-        interface; and on the dark theme the margin and the corners are the
-        page showing through, so the mark reads as a navy blob rather than as a
-        square. The rounding belongs to whoever is displaying it.
-
-        The square mark says LeT WS, not LeT: on a profile the acronym on its
-        own is three letters that could be anything, and "workshop" is what
-        turns them into the name of a thing. Set on one line those six
-        characters would be a third the height they are here — a square wants
-        its content square, and two rows of three is the shape that fills it.
-
-        One scale for both rows rather than each fitted to the width, or LeT
-        and WS would be set in two different sizes and read as two marks.
-        """
-        drawn = [draw(w) for w in words]
-        widths = [b[2] - b[0] for _, b in drawn]
-        heights = [b[3] - b[1] for _, b in drawn]
-        gap = max(heights) * 0.22
-        scale = min(target / max(widths), target / (sum(heights) + gap))
-        block_h = sum(heights) * scale + gap * scale
-        rows, y = [], (64 - block_h) / 2
-        for (gpaths, (bx0, by0, bx1, by1)), gw, gh in zip(drawn, widths, heights):
-            tx = (64 - gw * scale) / 2 - bx0 * scale
-            ty = y - by0 * scale
-            inner = "\n      ".join(f'<path d="{q}"/>' for q in gpaths)
-            rows.append(f'<g transform="translate({tx:.3f} {ty:.3f}) scale({scale:.5f})">'
-                        f"\n      {inner}\n    </g>")
-            y += gh * scale + gap * scale
-        body = "\n    ".join(rows)
-        ground = ('<rect width="64" height="64" fill="%s"/>' % NAVY if full_bleed
-                  else '<rect x="2" y="2" width="60" height="60" rx="14" fill="%s"/>' % NAVY)
-        return (
-            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" '
-            f'aria-label="{" ".join(words)}">\n'
-            f'  {ground}\n'
-            f"  <!-- Baked outlines — no font needed. Regenerate: tools/make-wordmark.py -->\n"
-            f'  <g fill="#ffffff">\n    {body}\n  </g>\n</svg>\n'
-        )
-
-    # 42 of 64 rather than 40: the two units of inset are gone, and the block
-    # still sits inside the inscribed circle — half its diagonal is 29.7
-    # against a radius of 32 — so it survives a round crop as well as a
-    # rounded-square one.
+    # One row, so the width is what fits and 48 of 64 is three quarters of the
+    # square. The letters come out about a fifth of the side tall, which at the
+    # 40px GitHub usually draws is 12px of Jost 900 — heavy enough to hold. The
+    # block's half-diagonal is 25.8 against a radius of 32, so a circular crop
+    # cannot reach it either.
+    sq_paths, sq_bounds = draw(SQUARE)
     (ROOT / "static" / "let-logo.svg").write_text(
-        stacked(SQUARE, 42, full_bleed=True), encoding="utf-8")
+        boxed(sq_paths, sq_bounds, 48, full_bleed=True, label=SQUARE), encoding="utf-8")
 
     # The favicon keeps the first letter — a whole word is illegible at 16px.
     k_paths, k_bounds = draw(WORD[0])
