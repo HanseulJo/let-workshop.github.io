@@ -240,7 +240,14 @@ days:
 
       - type: tutorial
         title: Tutorial
-        chair: TBD
+        # Confirmed, so it is exempt from the plain rendering above: it keeps
+        # its own name, its colour and its speaker while every other session
+        # still reads "Invited talk · TBD". One session settling should not
+        # have to wait for the rest.
+        simple: false
+        # No chair line. A tutorial is one person for an hour, and "(Chair:
+        # TBD)" on the only row that names anybody reads as a second thing
+        # still missing rather than as a thing not needed.
         start: "09:50"
         end: "10:50"
         speakers:

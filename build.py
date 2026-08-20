@@ -519,7 +519,8 @@ def fill_defaults(bundle: dict) -> None:
             # `track` puts an event in one half of its day instead of across
             # it, for the hours when two things run at once. Nothing else has
             # to know: an event without it spans both halves as before.
-            for key in ("chair", "density", "time_label", "anon_note", "track"):
+            for key in ("chair", "density", "time_label", "anon_note", "track",
+                        "simple"):
                 e.setdefault(key, None)
             for key in ("bare", "time_in_title"):
                 e.setdefault(key, False)
@@ -821,9 +822,15 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
     # agree with the grid.
     if program.get("simple"):
         label = program.get("simple_label") or "Invited talk"
+        kept = set()
         for day in program["days"]:
             for e in day["events"]:
                 if e["type"] not in ("block", "tutorial"):
+                    continue
+                # An event can opt out once it is settled, and keeps its name,
+                # its colour and its people while the rest stay plain.
+                if e.get("simple") is False:
+                    kept.add(e["type"])
                     continue
                 e["title"] = label
                 e["chair"] = None
@@ -842,7 +849,9 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
                 # blue edge and a book where the others have a microphone.
                 e["type"] = "block"
                 e["emoji"] = types["block"].get("emoji")
-        types.pop("tutorial", None)
+        # The legend keeps a row only while something is still drawn in it.
+        if "tutorial" not in kept:
+            types.pop("tutorial", None)
         # The day subtitles named the subjects each day was grouped by. The
         # sessions are not grouped by subject any more, and one of the talks
         # has moved between days, so they describe an arrangement that is no
