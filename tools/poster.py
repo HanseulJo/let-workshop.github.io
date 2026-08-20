@@ -1145,9 +1145,15 @@ BANNER = """<!doctype html>
     line-height:.92; color:{hot}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
+  /* Beside the name, not under it. Six metres is a long line and a banner is
+     read across rather than down: set below, the long name was a second row
+     the eye had to come back for, and it is the same words as the mark said
+     already. On the baseline it reads as the name's own expansion — "LeT
+     Workshop, which is the Learning Theory Workshop" — in one pass. */
+  .lead {{ display:flex; align-items:baseline; gap:70mm; }}
   .longname {{
     font-family:"Satoshi",sans-serif; font-weight:500; font-size:76mm;
-    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:26mm 0 0 16mm;
+    letter-spacing:-.01em; color:{ink}; opacity:.58; margin:0;
   }}
   /* The credit line every Korean banner carries: when, where, and under whose
      marks — one row, at the foot, in the order someone reads them. The hosts
@@ -1165,9 +1171,15 @@ BANNER = """<!doctype html>
     letter-spacing:.16em; text-transform:uppercase; color:{hot};
   }}
   .rule {{ width:1.3mm; height:70mm; background:{ink}; opacity:.24; }}
-  .marks {{ display:flex; align-items:center; gap:62mm; margin-left:26mm; }}
+  /* Bottom-aligned, because that is what logo_row's margins assume: it sets
+     every mark to the same cap height and then pushes each one down by the
+     distance its letters sit above its own bottom edge. Centred, that
+     correction is applied to a row that has already been re-centred, and the
+     letters come out on three different lines. */
+  .marks {{ display:flex; align-items:flex-end; gap:62mm; margin-left:26mm; }}
   /* As published, at full strength. See logo_row's `flat` switch for why a
-     credit row is not the place for a silhouette. */
+     credit row is not the place for a silhouette. Height is not set here —
+     logo_row writes it per mark, from the ratios in data/site.yml. */
   .marks img {{ width:auto; display:block; }}
   /* The funder\'s own sentence. Smallest thing on a six-metre banner and the
      only one nobody will read from across the courtyard, which is right: it is
@@ -2449,8 +2461,14 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         cta_short="Register",
         logos=logo_row(site["sponsors"]["logos"], PALETTE["cool"])
               if site.get("sponsors") else "",
+        # A six-metre cloth, not a sheet's foot: the letters in the marks are
+        # set at 44mm, which puts KAIST at 80mm tall, POSTECH at 75 and the
+        # NRF's stacked mark at 122. They differ because they are different
+        # marks — matching their letters is what makes them look like one row,
+        # and forcing all three to the same box height is what made KAIST's
+        # letters half again the size of the NRF's.
         logos_colour=logo_row(site["sponsors"]["logos"],
-                              PALETTE["cool"], cap=8.0, flat=False)
+                              PALETTE["cool"], cap=44.0, flat=False)
                      if site.get("sponsors") else "",
         acronym_name=acronym_html(site["full_name"], mark),
         long_name=esc(site["full_name"].title()),

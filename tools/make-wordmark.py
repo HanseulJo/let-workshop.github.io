@@ -85,8 +85,19 @@ def main() -> None:
             f"    {inner}\n  </g>\n</svg>\n"
         )
 
-    def stacked(words, target):
+    def stacked(words, target, full_bleed=False):
         """Two words on two rows, at one scale, centred as a block.
+
+        `full_bleed` fills the whole square and rounds nothing. That is what a
+        GitHub picture wants: GitHub masks the image itself, with a corner
+        radius of about 9% of the side for an organisation, and it composites
+        the result straight onto the page. An image that rounds its own corners
+        at 22% and holds a 3% transparent margin inside them — which is what
+        this drew — arrives as a tile visibly smaller than every other avatar
+        in the list, set in a gap, with corners rounder than the rest of the
+        interface; and on the dark theme the margin and the corners are the
+        page showing through, so the mark reads as a navy blob rather than as a
+        square. The rounding belongs to whoever is displaying it.
 
         The square mark says LeT WS, not LeT: on a profile the acronym on its
         own is three letters that could be anything, and "workshop" is what
@@ -112,15 +123,22 @@ def main() -> None:
                         f"\n      {inner}\n    </g>")
             y += gh * scale + gap * scale
         body = "\n    ".join(rows)
+        ground = ('<rect width="64" height="64" fill="%s"/>' % NAVY if full_bleed
+                  else '<rect x="2" y="2" width="60" height="60" rx="14" fill="%s"/>' % NAVY)
         return (
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" '
             f'aria-label="{" ".join(words)}">\n'
-            f'  <rect x="2" y="2" width="60" height="60" rx="14" fill="{NAVY}"/>\n'
+            f'  {ground}\n'
             f"  <!-- Baked outlines — no font needed. Regenerate: tools/make-wordmark.py -->\n"
             f'  <g fill="#ffffff">\n    {body}\n  </g>\n</svg>\n'
         )
 
-    (ROOT / "static" / "let-logo.svg").write_text(stacked(SQUARE, 40), encoding="utf-8")
+    # 42 of 64 rather than 40: the two units of inset are gone, and the block
+    # still sits inside the inscribed circle — half its diagonal is 29.7
+    # against a radius of 32 — so it survives a round crop as well as a
+    # rounded-square one.
+    (ROOT / "static" / "let-logo.svg").write_text(
+        stacked(SQUARE, 42, full_bleed=True), encoding="utf-8")
 
     # The favicon keeps the first letter — a whole word is illegible at 16px.
     k_paths, k_bounds = draw(WORD[0])

@@ -142,7 +142,7 @@ outlines rather than `<text>`, so they render the same wherever they are used:
 | file | what it is |
 | --- | --- |
 | `templates/wordmark.svg` | the letters alone, inheriting colour — the hero and the top bar |
-| `static/let-logo.svg` | LET WS on two rows in a navy rounded square — the profile picture |
+| `static/let-logo.svg` | LET WS on two rows, full-bleed navy — the profile picture |
 | `static/favicon.svg` | one letter, because a word is illegible at 16px |
 
 The square mark says LET WS rather than LET: on a profile the acronym on its own
@@ -152,7 +152,19 @@ the name of a thing.
 `favicon-32.png`, `favicon-180.png` (apple-touch-icon) and `let-avatar.png` are
 rasterised from those SVGs for the places that will not take one — browsers with
 no SVG icon support, and GitHub, which wants a raster for an organisation
-picture. Re-cut them after re-running the tool:
+picture.
+
+The profile picture is the one that fills its square edge to edge and rounds
+nothing. Everywhere it is shown, the thing showing it does the rounding —
+GitHub masks an organisation's picture at about 9% of the side, and rounds a
+person's into a circle — so a mark that rounds its own corners at 22% and keeps
+a transparent margin inside them arrives smaller than every other avatar in the
+list, sitting in a gap, with corners rounder than the rest of the page. The
+letters are kept within 229px of the centre of 512, so a circular crop cannot
+reach them either. `favicon.svg` keeps its rounded square, because a favicon is
+drawn onto the tab and owns its own shape.
+
+Re-cut them after re-running the tool:
 
 ```sh
 python3 tools/make-wordmark.py
