@@ -3058,23 +3058,94 @@ h2 .note {
    The class does the colouring; .band-alt is the same tone the other alternate
    sections use. */
 footer {
-  text-align: center;
   color: var(--faint);
   font-size: 0.85em;
-  padding: 40px 20px 60px;
+  padding: 52px 20px 64px;
 }
 footer a {
   color: var(--footer-link);
+  text-decoration: none;
 }
-/* Three of them, wrapping as a group each rather than breaking between a name
-   and the address it belongs to. */
-.footer-who {
-  display: inline-block;
-  margin: 0 0.75rem;
-  white-space: nowrap;
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* What this is, who to write to, where else to go. Three columns while there
+   is room and a stack when there is not; the first is given more of the width
+   because it holds the name, which is the one thing here that is set rather
+   than listed. */
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 32px 48px;
+  align-items: start;
+  text-align: left;
+}
+.footer-id p {
+  margin: 0;
+}
+.footer-mark {
+  font-family: var(--wordmark);
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+/* The year half of the mark is set lighter in the hero; here the second word
+   is a word, so it takes the same weight as the first. */
+.footer-mark .year {
+  font-weight: inherit;
+  color: inherit;
+}
+.footer-full {
+  margin-top: 2px !important;
+  color: var(--muted);
+}
+.footer-when {
+  margin-top: 14px !important;
+  line-height: 1.6;
+}
+.footer-h {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.footer-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.footer-list li {
+  padding: 3px 0;
+  line-height: 1.5;
+}
+/* Name over address rather than beside it: three names and three addresses on
+   one line was a paragraph you had to parse before you could write to anybody. */
+.footer-name {
+  display: block;
+  color: var(--prose);
 }
 .footer-role {
+  font-family: var(--mono);
+  font-size: 0.78em;
+  letter-spacing: 0.06em;
   color: var(--faint);
+}
+.footer-list a {
+  word-break: break-all;
+}
+
+@media (max-width: 720px) {
+  /* Stacked, and the name column keeps its own line rather than sharing one
+     with a list — at this width three columns give each about a hundred
+     pixels, which is narrower than an email address. */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
 }
 
 /* ---------- Mobile ---------- */

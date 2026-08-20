@@ -1080,14 +1080,49 @@
     </dialog>
 
 
+    <!-- ===== FOOTER =====
+         Three things a reader might still want at the bottom of a page they
+         have read to the end of: what this is and when, who to write to, and
+         the two or three destinations that are not sections of the page. It
+         was one paragraph of grey text with the addresses run together, which
+         is what a footer looks like when nobody has decided what it is for. -->
     <footer class="band-alt">
-      <div class="wrap footer-row">
-        <div class="footer-text">
-          {{ site.name }} · {{ site.full_name }}<br />
-          {{ site.venue }}, {{ site.city }} · {{ site.dates }}{% if site.footer_note %} — {{ site.footer_note }}{% endif %}<br />
-          {% for who in organizers.contact %}<span class="footer-who">{{ t(who.name, who.name_ko) }}{% if who.note %}
-            <span class="footer-role">({{ t(who.note, who.note_ko) }})</span>{% endif %}
-            <a href="mailto:{{ who.email }}">{{ who.email }}</a></span>{% endfor %}
+      <div class="wrap footer-grid">
+        <div class="footer-id">
+          <p class="footer-mark">{{ wordmark(site.name) }}</p>
+          <p class="footer-full">{{ site.full_name }}</p>
+          <p class="footer-when">
+            {{ site.venue }}, {{ site.city }}<br />
+            {{ site.dates }}
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-h"><span class="t-en">Contact</span><span class="t-ko">문의</span></h4>
+          <ul class="footer-list">
+            {% for who in organizers.contact %}
+            <li>
+              <span class="footer-name">{{ t(who.name, who.name_ko) }}{% if who.note %}
+                <span class="footer-role">{{ t(who.note, who.note_ko) }}</span>{% endif %}</span>
+              <a href="mailto:{{ who.email }}">{{ who.email }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-h"><span class="t-en">Elsewhere</span><span class="t-ko">바로가기</span></h4>
+          <ul class="footer-list">
+            {% set reg = site.hero_actions | selectattr('href') | first %}
+            {% if reg and reg.href.startswith('http') %}
+            <li><a href="{{ reg.href }}" target="_blank" rel="noopener">{{ t(reg.label, reg.label_ko) }}</a></li>
+            {% endif %}
+            <li><a href="{{ ics_file }}" download><span class="t-en">Programme (.ics)</span><span class="t-ko">일정 내려받기 (.ics)</span></a></li>
+            {% if site.poster %}
+            <li><a href="#poster">{{ t(site.poster.title, site.poster.title_ko) }}</a></li>
+            {% endif %}
+            <li><a href="#venue">{{ t(venue.title, venue.title_ko) }}</a></li>
+          </ul>
         </div>
       </div>
     </footer>
