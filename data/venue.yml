@@ -102,16 +102,6 @@ map_links:
 
 # Each entry becomes a row under the map. Add rail/bus/air details here once
 # they are settled — leave the list empty and the block disappears.
-#
-# On parking: POSTECH began charging for parking campus-wide on 1 September
-# 2026, so the workshop falls under the paid scheme. The rate reported when it
-# was announced was 30 minutes free, then 200 won per 10 minutes, capped at
-# 10,000 won a day — but that came from the student paper paraphrasing 총무팀
-# three months before it took effect, there is no public official notice, and
-# nothing anywhere documents whether a visitor has to register the car first.
-# So this line says the scheme exists and points at the desk rather than
-# printing a figure that could be wrong on the day. Call 054-279-8500 to
-# confirm the rate and the registration procedure, then say so here.
 # How to arrive. `title` heads the list; without one the rows sat straight
 # under the address with nothing saying what they were.
 getting_here_title: Transport
@@ -250,11 +240,15 @@ getting_here:
         icon: "🏫"
 
 # Everything about arriving that is not a route. Same list, no stops.
-getting_here_notes:
-  - label: Parking
-    label_ko: 주차
-    detail: TBD
-    detail_ko: 미정
+#
+# Parking used to sit here reading "TBD", which is the one thing a row can say
+# that is worse than saying nothing: it takes a line of the card to tell you it
+# has no answer. POSTECH charges campus-wide since 1 September 2026, and the
+# only rate anyone has published came from the student paper paraphrasing 총무팀
+# months before it took effect — no official notice, nothing on whether a
+# visitor registers the car first. Call 054-279-8500, and when there is a real
+# figure it can come back as a row that says it.
+getting_here_notes: []
 
 # Where to sleep. The pattern every recent POSTECH workshop has used: a small
 # block of rooms in the building the workshop is in, given out until they run
