@@ -65,6 +65,11 @@
   --hero-title: #f5f5f7;
   --hero-body: #b9c7da;
   --hero-mute: #93a2b8; /* lifted half a step: the hero's ground is lighter now that the campus shows */
+  /* The shut button's pill and rule: the muted ink at two strengths, so a
+     disabled control is the note's own colour rather than a colour of its
+     own. Kept beside --hero-mute because they are only ever that value. */
+  --wait-fill: rgba(147, 162, 184, 0.16);
+  --wait-line: rgba(147, 162, 184, 0.42);
   --hero-rule: rgba(255, 255, 255, 0.12);
   --hero-marks-plate: rgba(255, 255, 255, 0.9);
   --hero-marks-line: rgba(255, 255, 255, 0.16);
@@ -1084,20 +1089,31 @@ body {
    Centred on the button and not on the pair, so the note can be wider than the
    button without moving it. */
 
-/* Barely dimmed. A filled pill dropped much below this stops reading as coral
-   at all — the accent sinks into the navy behind it and goes grey-brown — so
-   the colour is not what says it is shut.
-   The hatch is. It is the same 45-degree rule the Now card draws over itself
-   before the programme starts — the convention for "not in service yet" — at
-   the same 1.5px on 6px, because a second inactive-looking pattern would be a
-   second thing to learn rather than the same one seen twice. */
+/* Out of the accent altogether. It was the coral pill at 88% with a hatch over
+   it, and at a glance that is a live button with a texture on it — the one
+   thing on the page drawn in the colour that means "press this" was the thing
+   that could not be pressed. Dimming the coral does not fix it either: taken
+   far enough down to read as off, the accent sinks into the navy and turns a
+   muddy grey-brown, which is a broken colour rather than an inactive one.
+   So it is drawn in the hero's own muted ink instead — the same colour as the
+   "OPENS AUGUST 24" line under it, which is the thing actually speaking while
+   the button cannot. Grey pill, grey label, grey rule, and the accent held
+   back for the button beside it that works. */
 .btn-wait .btn {
   position: relative;
   /* The stripes are a rectangle; the button is a pill. Without this they run
      out to the corners the rounding cuts away. */
   overflow: hidden;
   cursor: not-allowed;
-  opacity: 0.88;
+  background: var(--wait-fill);
+  border-color: var(--wait-line);
+  color: var(--hero-mute);
+}
+.btn-wait .btn-primary {
+  background: var(--wait-fill);
+  border-color: var(--wait-line);
+  color: var(--hero-mute);
+  font-weight: 600;
 }
 /* The card's own --hatch-line, so the two are the same ink as well as the same
    angle — and so the stripes move the pill away from its label rather than
@@ -1116,16 +1132,13 @@ body {
   background: repeating-linear-gradient(45deg,
     var(--hatch-line) 0 1.5px, transparent 1.5px 6px);
 }
-/* A dead button that lights up on hover is a lie about being clickable, so the
-   hover state is cancelled back to the resting look. */
-.btn-wait .btn:hover {
-  background: none;
-  border-color: var(--hero-accent);
-  color: var(--hero-accent);
-}
+/* A dead button that lights up on hover is a lie about being clickable, so
+   both hover states are cancelled back to the resting look. */
+.btn-wait .btn:hover,
 .btn-wait .btn-primary:hover {
-  background: var(--hero-accent);
-  color: var(--btn-primary-ink);
+  background: var(--wait-fill);
+  border-color: var(--wait-line);
+  color: var(--hero-mute);
 }
 .btn-wait small,
 .btn-note small {
@@ -3785,6 +3798,8 @@ a.poster-shot:focus-visible {
      the bottom of the scrim light, at 4.2:1 against the ground it
      stands on. */
   --hero-mute: #33506f;
+  --wait-fill: rgba(51, 80, 111, 0.12);
+  --wait-line: rgba(51, 80, 111, 0.38);
     --hero-rule: rgba(13, 33, 55, 0.16);
     --hero-marks-plate: rgba(255, 255, 255, 0.9);
     --hero-marks-line: rgba(13, 33, 55, 0.08);
@@ -3890,6 +3905,8 @@ a.poster-shot:focus-visible {
      the bottom of the scrim light, at 4.2:1 against the ground it
      stands on. */
   --hero-mute: #33506f;
+  --wait-fill: rgba(51, 80, 111, 0.12);
+  --wait-line: rgba(51, 80, 111, 0.38);
   --hero-rule: rgba(13, 33, 55, 0.16);
   --hero-marks-plate: rgba(255, 255, 255, 0.9);
   --hero-marks-line: rgba(13, 33, 55, 0.08);
