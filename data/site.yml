@@ -69,11 +69,15 @@ analytics_id: G-DN4LGBW9YN
 hero_actions:
   - label: Registration
     label_ko: 참가 신청
-    href: https://docs.google.com/forms/d/e/1FAIpQLSe4zlakGy6_rJ6KcT_ovDc1dD08mYEoOOFTeuiBm9hxfXGy-w/viewform
-    # The deadline, under the button. A form with no closing date reads as one
-    # you can come back to, and this one cannot be.
-    note: Until August 31
-    note_ko: 8월 31일까지
+    # Shut again until the 24th. An empty href is what disables the button —
+    # the form is still here, one line down, so opening it is moving the URL up
+    # rather than finding it again.
+    href: ""
+    # href: https://docs.google.com/forms/d/e/1FAIpQLSe4zlakGy6_rJ6KcT_ovDc1dD08mYEoOOFTeuiBm9hxfXGy-w/viewform
+    # A date, not "soon". "Soon" asks the reader to come back and keep
+    # guessing; a date lets them write it down once and stop thinking about it.
+    note: Opens August 24
+    note_ko: 8월 24일 오픈
     primary: true
   - label: See speakers
     label_ko: 연사 보기
