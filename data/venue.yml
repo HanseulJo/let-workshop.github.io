@@ -262,11 +262,23 @@ getting_here_notes:
 accommodation:
   title: Accommodation
   title_ko: 숙소
+  # Beside the heading, in the small type Transport uses for the same job: what
+  # the list under it is. Nothing here is booked for anybody, so "숙소" alone
+  # left it open whether these were arrangements or suggestions.
+  #
+  # 숙소 rather than 호텔 on the Korean side: the first entry is the guest house
+  # on the campus, which is not a hotel.
+  note: hotel recommendations
+  note_ko: 추천 숙소
   # No block of rooms is held any more. `first_come` used to say one was, and
   # deleting it is the whole of the change: the guest house is now simply the
   # nearest of the places you can book, and it is listed as one.
-  nearby_note: Book direct.
-  nearby_note_ko: 직접 예약해 주세요.
+  #
+  # And no line telling anybody to book direct. With nothing held there is
+  # nothing else it could mean — a list of hotels under the word Accommodation
+  # is already a list of places to book. Give this a value and it comes back.
+  nearby_note: ~
+  nearby_note_ko: ~
   # Two facts per place, not a table: how long by car, and the bus if there is
   # one. 207 is the route that matters here — it runs the seafront to POSTECH —
   # and every one of these is on it.

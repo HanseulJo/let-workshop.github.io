@@ -414,7 +414,7 @@ def fill_defaults(bundle: dict) -> None:
     bundle["venue"].setdefault("accommodation", None)
     if bundle["venue"]["accommodation"]:
         acc = bundle["venue"]["accommodation"]
-        for key in ("title_ko", "nearby_note", "nearby_note_ko"):
+        for key in ("title_ko", "nearby_note", "nearby_note_ko", "note", "note_ko"):
             acc.setdefault(key, None)
         acc.setdefault("first_come", None)
         if acc["first_come"]:
