@@ -18,10 +18,16 @@ address_ko: 경상북도 포항시 남구 청암로 77
 # order rather than by weight.
 rooms_title: Rooms
 rooms_title_ko: 공간
+# The mark is what the room is for, and it matches the programme's: the talks
+# are 🎤 there and the banquet 🥂, so the same two say which room is which here.
+# Without them these two rows were the only ones in the card with nothing on
+# the left, next to a transport list where every line opens with a vehicle.
 rooms:
   - name: Grand Conference Room · 대회의실
+    icon: "🎤"
     detail: 1F · 98 seats
   - name: Banquet Hall · 연회장
+    icon: "🥂"
     detail: 2F · 200 seats
 
 # Building centre from OpenStreetMap (Overpass): 포스코국제관 / POSCO
@@ -287,12 +293,14 @@ accommodation:
     # to the venue from.
     - name: POSCO International Center
       name_ko: 포스코국제관
+      icon: "🏫"
       travel: on campus
       travel_ko: 교내
       transit: the venue itself
       transit_ko: 워크숍이 열리는 건물
       map: https://map.naver.com/p/search/포스코국제관
     - name: Hotel Yeongildae
+      icon: "🏨"
       name_ko: 호텔영일대
       travel: 5 min by car
       travel_ko: 차량 약 5분
@@ -300,6 +308,7 @@ accommodation:
       transit_ko: 영일대 정류장 → 207 → 포스텍, 약 4정거장
       map: https://map.naver.com/p/search/포항%20호텔영일대
     - name: Nobleon Hotel
+      icon: "🏨"
       name_ko: 노블리온 호텔
       travel: 7 min by car
       travel_ko: 차량 약 7분
@@ -307,6 +316,7 @@ accommodation:
       transit_ko: 포항터미널(시외) → 207 → 포스텍, 약 15분
       map: https://map.naver.com/p/search/포항%20노블리온%20호텔
     - name: Hotel Lahan Pohang
+      icon: "🏨"
       name_ko: 라한호텔 포항
       travel: 15–20 min by car
       travel_ko: 차량 약 15–20분

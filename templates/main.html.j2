@@ -692,7 +692,7 @@
             <ul class="facts">
               {% for room in venue.rooms %}
               <li class="fact">
-                <span class="fact-name">{{ room.name }}</span>
+                <span class="fact-name">{% if room.icon %}<span class="fact-icon" aria-hidden="true">{{ room.icon }}</span>{% endif %}{{ room.name }}</span>
                 <span class="fact-figure">{{ room.detail }}</span>
               </li>
               {% endfor %}
@@ -732,7 +732,7 @@
               {% for place in venue.accommodation.nearby %}
               <li class="fact{{ ' is-link' if place.map }}">
                 {% if place.map %}<a href="{{ place.map }}" target="_blank" rel="noopener">{% endif %}
-                <span class="fact-name">{{ t(place.name, place.name_ko) }}</span>
+                <span class="fact-name">{% if place.icon %}<span class="fact-icon" aria-hidden="true">{{ place.icon }}</span>{% endif %}{{ t(place.name, place.name_ko) }}</span>
                 <span class="fact-figure">{{ t(place.travel, place.travel_ko) }}</span>
                 {% if place.map %}</a>{% endif %}
                 {% if place.transit %}
