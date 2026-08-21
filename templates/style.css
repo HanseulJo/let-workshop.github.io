@@ -1086,11 +1086,35 @@ body {
 
 /* Barely dimmed. A filled pill dropped much below this stops reading as coral
    at all — the accent sinks into the navy behind it and goes grey-brown — so
-   the "opens soon" note below carries the fact that it is not live, not the
-   colour. */
+   the colour is not what says it is shut.
+   The hatch is. It is the same 45-degree rule the Now card draws over itself
+   before the programme starts — the convention for "not in service yet" — at
+   the same 1.5px on 6px, because a second inactive-looking pattern would be a
+   second thing to learn rather than the same one seen twice. */
 .btn-wait .btn {
+  position: relative;
+  /* The stripes are a rectangle; the button is a pill. Without this they run
+     out to the corners the rounding cuts away. */
+  overflow: hidden;
   cursor: not-allowed;
   opacity: 0.88;
+}
+/* The card's own --hatch-line, so the two are the same ink as well as the same
+   angle — and so the stripes move the pill away from its label rather than
+   towards it. currentColor was the first try and it does the opposite: on the
+   light theme the label is white, so white stripes lifted the coral under it
+   and dropped the label from 3.9:1 to 3.0:1 on a quarter of its area. The
+   variable is dark where the label is light and light where the label is dark,
+   which is the direction that reads.
+   Drawn over the label, not under it — a hatch that stops at every glyph is a
+   texture on the background rather than a mark on the thing. */
+.btn-wait .btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(45deg,
+    var(--hatch-line) 0 1.5px, transparent 1.5px 6px);
 }
 /* A dead button that lights up on hover is a lie about being clickable, so the
    hover state is cancelled back to the resting look. */
