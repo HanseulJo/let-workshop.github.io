@@ -690,6 +690,36 @@
               </li>
               {% endfor %}
             </ul>
+            <!-- Transport, and what it is for: every origin opens the journey
+                 in Naver with both ends already in it. Three lines, so it sits
+                 in the card with the rooms and the beds rather than taking a
+                 row of its own — it needed that row while it was drawing a
+                 diagram per journey, and it no longer draws one. -->
+            {% if venue.getting_here %}
+            {% if venue.getting_here_title %}
+            <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}
+              <span class="venue-h-note"><span class="t-en">opens in Naver Map</span><span class="t-ko">네이버 지도로 열립니다</span></span>
+            </h4>
+            {% endif %}
+            <ul class="routes">
+              {% for route in venue.getting_here %}
+              <li>
+                <a href="{{ route.url }}" target="_blank" rel="noopener"
+                   aria-label="{{ route.from }} → {{ venue.name }}">
+                  <span class="route-from">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}</span>
+                  {% if route.total %}<span class="route-total">{{ t(route.total, route.total_ko) }}</span>{% endif %}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% if venue.getting_here_notes %}
+            <ul class="venue-travel">
+              {% for note in venue.getting_here_notes %}
+              <li><b>{{ t(note.label, note.label_ko) }}</b> {{ t(note.detail, note.detail_ko) }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            {% endif %}
             {% if venue.accommodation %}
             <!-- Somewhere to sleep, after how to arrive: the questions come in
                  that order, and the answer to the second depends on the first. -->
@@ -722,42 +752,6 @@
               </ul>
               {% endif %}
             </div>
-            {% endif %}
-          </div>
-          <!-- Transport, and what it is for: every origin opens the journey
-               in Naver with both ends already in it. That is the whole of the
-               section's job — a travel card can describe a route or it can
-               hand it over, and handing it over is worth more than any amount
-               of describing.
-               It used to describe: a diagram per journey with every stop, the
-               bus on each leg, the walking ones dotted. All of it is still in
-               data/venue.yml, and all of it was a second, worse copy of what
-               is on the other side of the link. -->
-          <div class="venue-transport">
-            {% if venue.getting_here %}
-            {% if venue.getting_here_title %}
-            <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}
-              <span class="venue-h-note"><span class="t-en">opens in Naver Map</span><span class="t-ko">네이버 지도로 열립니다</span></span>
-            </h4>
-            {% endif %}
-            <ul class="routes">
-              {% for route in venue.getting_here %}
-              <li>
-                <a href="{{ route.url }}" target="_blank" rel="noopener"
-                   aria-label="{{ route.from }} → {{ venue.name }}">
-                  <span class="route-from">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}</span>
-                  {% if route.total %}<span class="route-total">{{ t(route.total, route.total_ko) }}</span>{% endif %}
-                </a>
-              </li>
-              {% endfor %}
-            </ul>
-            {% if venue.getting_here_notes %}
-            <ul class="venue-travel">
-              {% for note in venue.getting_here_notes %}
-              <li><b>{{ t(note.label, note.label_ko) }}</b> {{ t(note.detail, note.detail_ko) }}</li>
-              {% endfor %}
-            </ul>
-            {% endif %}
             {% endif %}
           </div>
         </div>

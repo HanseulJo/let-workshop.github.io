@@ -1155,7 +1155,6 @@ section {
 .band .agenda,
 .band .abs,
 .band .venue-info,
-.band .venue-transport,
 .band .view-panel,
 .band .org-card,
 .band .spk-card,
@@ -1168,7 +1167,6 @@ section {
 .band-alt .agenda,
 .band-alt .abs,
 .band-alt .venue-info,
-.band-alt .venue-transport,
 .band-alt .view-panel,
 .band-alt .org-card,
 .band-alt .spk-card,
@@ -2561,31 +2559,14 @@ h2 .note {
 }
 
 /* ---------- Venue ---------- */
-/* Map and card across the top, transport on a row of its own beneath them.
-   Three route diagrams are a list of journeys, not another fact about the
-   building, and inside the card they had a third of the width with the stop
-   names wrapping in it. Given the whole width they stand side by side. */
+/* Map on one side, the card on the other. Transport had a row of its own
+   underneath while it was drawing a diagram per journey and needed the width;
+   it is three lines now and belongs in the card with the rooms and the beds. */
 .venue {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   gap: 20px;
   align-items: stretch;
-}
-.venue-transport {
-  grid-column: 1 / -1;
-  /* A card, on the same terms as the one above it. Every card here is the
-     opposite tone to the band it stands on, which is the whole of what makes
-     it read as a card; this one was given --surface instead and so followed
-     nothing — white on near-white, an edge you had to look for. The tone comes
-     from the .band / .band-alt pair above, like every other card's. */
-  border-radius: var(--radius);
-  padding: 6px 24px 22px;
-}
-/* Its heading opens the box, so it needs no rule over it — the box's own edge
-   is already the separation the rule was drawing. */
-.venue-transport > .venue-h:first-child {
-  border-top: 0;
-  padding-top: 16px;
 }
 
 .venue-map {
