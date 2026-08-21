@@ -724,57 +724,33 @@
             </div>
             {% endif %}
           </div>
-          <!-- Transport on a row of its own, under the map and the card.
-               Three route diagrams are a list of journeys, not another fact
-               about the building, and inside the card they were a third of the
-               width with the stop names wrapping in it. Across the full width
-               they can stand side by side. -->
+          <!-- Transport, and what it is for: every origin opens the journey
+               in Naver with both ends already in it. That is the whole of the
+               section's job — a travel card can describe a route or it can
+               hand it over, and handing it over is worth more than any amount
+               of describing.
+               It used to describe: a diagram per journey with every stop, the
+               bus on each leg, the walking ones dotted. All of it is still in
+               data/venue.yml, and all of it was a second, worse copy of what
+               is on the other side of the link. -->
           <div class="venue-transport">
             {% if venue.getting_here %}
             {% if venue.getting_here_title %}
-            <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}</h4>
+            <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}
+              <span class="venue-h-note"><span class="t-en">opens in Naver Map</span><span class="t-ko">네이버 지도로 열립니다</span></span>
+            </h4>
             {% endif %}
-            <!-- Each journey down the page with the rail between two
-                 columns: times on the left, stops and buses on the right. It
-                 is the shape a maps app uses for a route it has opened, and it
-                 is the one that survives a card 314px wide — a horizontal bar
-                 has to fit three stop names across that, and "Pohang Terminal
-                 (intercity)" alone is most of it.
-                 A leg carries a time only where that time is known on its own;
-                 the total sits against the stop it gets you to. -->
-            <ol class="routes">
+            <ul class="routes">
               {% for route in venue.getting_here %}
-              <li class="route">
-                {% if route.url %}
-                <!-- The whole journey handed to Naver with both ends already
-                     in it. A travel card that can be read and then followed is
-                     worth more than one that has to be copied out. -->
-                <a class="route-open" href="{{ route.url }}" target="_blank" rel="noopener"
+              <li>
+                <a href="{{ route.url }}" target="_blank" rel="noopener"
                    aria-label="{{ route.from }} → {{ venue.name }}">
-                {% endif %}
-                <ol class="route-stops">
-                  <li class="stop is-first">
-                    <span class="rt-time"></span>
-                    <span class="rt-name">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}
-                      {%- if route.stop %}<span class="rt-stop">{{ t(route.stop, route.stop_ko) }} {{ t(venue.stop_word, venue.stop_word_ko) }}</span>{% endif %}</span>
-                  </li>
-                  {% for leg in route.legs %}
-                  <li class="leg{{ ' is-walk' if leg.walk }}">
-                    <span class="rt-time">{% if leg.time %}{{ t(leg.time, leg.time_ko) }}{% endif %}</span>
-                    <span class="rt-via">{{ t(leg.via, leg.via_ko) }}</span>
-                  </li>
-                  <li class="stop{{ ' is-change' if leg.change }}{{ ' is-last' if loop.last }}">
-                    <span class="rt-time">{% if loop.last and route.total %}<b>{{ t(route.total, route.total_ko) }}</b>{% endif %}</span>
-                    <span class="rt-name">{% if leg.icon %}<span class="rt-icon" aria-hidden="true">{{ leg.icon }}</span>{% endif %}{{ t(leg.to, leg.to_ko) }}
-                      {%- if leg.stop %}<span class="rt-stop">{{ t(leg.stop, leg.stop_ko) }} {{ t(venue.stop_word, venue.stop_word_ko) }}</span>{% endif %}</span>
-                  </li>
-                  {% endfor %}
-                </ol>
-                {% if route.url %}</a>{% endif %}
-                {% if route.alt %}<p class="route-alt">{{ t(route.alt, route.alt_ko) }}</p>{% endif %}
+                  <span class="route-from">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}</span>
+                  {% if route.total %}<span class="route-total">{{ t(route.total, route.total_ko) }}</span>{% endif %}
+                </a>
               </li>
               {% endfor %}
-            </ol>
+            </ul>
             {% if venue.getting_here_notes %}
             <ul class="venue-travel">
               {% for note in venue.getting_here_notes %}

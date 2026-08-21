@@ -2587,31 +2587,7 @@ h2 .note {
   border-top: 0;
   padding-top: 16px;
 }
-/* Side by side while there is room for them, and never narrower than the
-   width a stop name needs — below that they stack rather than wrap. */
-.venue-transport .routes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 0 28px;
-}
-/* The rule between journeys is what separates them in a column. Side by side
-   they are separated by being side by side, and a rule above the second and
-   third would read as a rule over nothing. */
-.venue-transport .route + .route {
-  border-top: 0;
-  padding-top: 0;
-  margin-top: 0;
-}
-@media (max-width: 620px) {
-  .venue-transport .routes {
-    grid-template-columns: 1fr;
-  }
-  .venue-transport .route + .route {
-    margin-top: 18px;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-  }
-}
+
 .venue-map {
   filter: var(--map-filter);
   position: relative;
@@ -2798,163 +2774,67 @@ h2 .note {
   margin-right: 6px;
 }
 
-/* A journey, drawn the way a maps app draws one when you open it: the rail
-   down the middle with a dot at every stop, times ranged against it on the
-   left and stops and buses on the right.
-
-   Two columns rather than one, because the two kinds of fact read differently.
-   Ranged right against the rail, the times line up as a column of numbers you
-   can total by eye; run inline with the bus they belong to, they were just
-   more words in the sentence.
-
-   The line is drawn by the legs and not by the list. A rail down the whole
-   container would run past the first dot and past the last, which is the one
-   detail that turns a route diagram into a border: a route ends where it ends.
-   Each leg carries its own segment, stretched a few pixels past its own box at
-   each end so it meets the dots above and below it. */
+/* A journey is one line: where you are starting from, how long it takes, and a
+   link that opens it in Naver with both ends filled in. The section used to
+   draw each one as a diagram — every stop, the bus on each leg, the walking
+   ones dotted — which was a second and worse copy of what is on the other side
+   of that link. The detail is still in data/venue.yml. */
 .routes {
   list-style: none;
   margin: 0;
   padding: 0;
-  /* The width of the time column and the gutter the rail runs in. Named, so
-     the dot, the line and the two columns cannot drift apart. */
-  --rt-time: 46px;
-  --rt-gap: 22px;
 }
-.route + .route {
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-}
-/* The whole diagram is the link. Not a button beside it: the thing a reader
-   wants to open is the journey, and the journey is what is drawn. It takes no
-   colour of its own — a route in link blue would read as a link about a route
-   rather than as the route — and says so on hover instead. */
-.route-open {
-  display: block;
+.routes a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  margin: 0 -10px;
+  border-radius: 8px;
   color: inherit;
   text-decoration: none;
-  border-radius: 8px;
-  margin: -6px -8px;
-  padding: 6px 8px;
   transition: background-color 0.15s ease;
 }
-.route-open:hover,
-.route-open:focus-visible {
+.routes li + li a {
+  border-top: 1px solid var(--line);
+}
+.routes a:hover,
+.routes a:focus-visible {
   background: var(--wash);
 }
-.route-stops {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.route-stops .stop,
-.route-stops .leg {
-  position: relative;
-  display: grid;
-  grid-template-columns: var(--rt-time) 1fr;
-  column-gap: var(--rt-gap);
-  align-items: baseline;
-}
-.rt-time {
-  justify-self: end;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
-  color: var(--muted);
-  white-space: nowrap;
-}
-/* The whole journey, against the stop it gets you to. */
-.rt-time b {
-  font-weight: 500;
-  color: var(--accent);
-}
-.rt-name {
-  font-size: 0.84rem;
-  line-height: 1.35;
+.route-from {
+  font-size: 0.9rem;
   color: var(--ink);
   word-break: keep-all;
 }
-/* The dot, in the gutter between the two columns. Filled at the ends of the
-   journey and hollow where you change, which is both the convention and the
-   useful distinction: the hollow one is the stop you have to do something at. */
-.route-stops .stop::before {
-  content: "";
-  position: absolute;
-  left: calc(var(--rt-time) + 7px);
-  top: 0.42em;
-  width: 9px;
-  height: 9px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--accent);
-}
-.route-stops .stop.is-change::before {
-  background: var(--card);
-}
-.route-stops .leg {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-.route-stops .leg::before {
-  content: "";
-  position: absolute;
-  left: calc(var(--rt-time) + 10px);
-  top: -3px;
-  bottom: -3px;
-  width: 3px;
-  border-radius: 2px;
-  background: var(--accent);
-  opacity: 0.42;
-}
-/* A leg you walk, drawn as dots rather than a line — the difference between
-   being carried and carrying yourself, which is the one thing about a journey
-   a reader wants to know before they read the numbers. Dots down the same
-   3px column: a repeating gradient, so it needs no second element and stays
-   on the rail the solid legs are on. */
-.route-stops .leg.is-walk::before {
-  background: repeating-linear-gradient(
-    to bottom,
-    var(--accent) 0 3px,
-    transparent 3px 7px
-  );
-  opacity: 0.55;
-}
-/* Which stop, under which place. They are not the same thing and the
-   difference is the part somebody standing there needs: Pohang station has
-   more than one stop and only the city-bound side has the 5000. Indented to
-   clear the emoji, so the two lines read as one entry. */
-.rt-stop {
-  display: block;
-  margin-left: 1.25em;
+.route-total {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   letter-spacing: 0.02em;
-  color: var(--muted);
-  word-break: keep-all;
+  color: var(--accent);
+  white-space: nowrap;
 }
 /* Sized against the name rather than left at whatever a colour emoji font
    gives, and nudged down: emoji sit high on the line beside Latin text. */
 .rt-icon {
   display: inline-block;
   width: 1.25em;
-  margin-right: 3px;
+  margin-right: 4px;
   font-size: 0.92em;
   line-height: 1;
   transform: translateY(0.06em);
 }
-.rt-via {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  color: var(--prose);
-}
-.route-alt {
-  margin: 7px 0 0;
-  padding-left: calc(var(--rt-time) + var(--rt-gap));
-  font-size: 0.78rem;
-  color: var(--muted);
+/* What the section is for, said beside its own heading rather than under the
+   list where it would be read after the thing it explains. */
+.venue-h-note {
+  margin-left: 8px;
+  font-family: var(--sans);
+  font-size: 0.92em;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--faint);
 }
 .routes + .venue-travel {
   margin-top: 14px;
