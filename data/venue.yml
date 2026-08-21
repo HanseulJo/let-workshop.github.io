@@ -262,29 +262,24 @@ getting_here_notes:
 accommodation:
   title: Accommodation
   title_ko: 숙소
-  first_come:
-    name: POSCO International Center
-    name_ko: 포스코국제관
-    # What is actually true, in the order it is decided: a block of rooms has
-    # been held, it is not large, and it goes to poster presenters first.
-    #
-    # Not "provided free" — that was a promise the workshop has not made, and a
-    # room somebody turns up expecting to be free is the worst way to find out.
-    # And not a single queue either: speakers are housed either way, so first
-    # come is about everybody else.
-    note: >-
-      A limited number of rooms has been held. Speakers aside, they are
-      allocated first come, first served, with poster presenters given
-      priority.
-    note_ko: >-
-      확보된 객실이 한정되어 있습니다. 연사를 제외하면 포스터 발표자를 우선으로
-      선착순 배정합니다.
-  nearby_note: Otherwise book direct.
-  nearby_note_ko: 그 외에는 직접 예약해 주세요.
+  # No block of rooms is held any more. `first_come` used to say one was, and
+  # deleting it is the whole of the change: the guest house is now simply the
+  # nearest of the places you can book, and it is listed as one.
+  nearby_note: Book direct.
+  nearby_note_ko: 직접 예약해 주세요.
   # Two facts per place, not a table: how long by car, and the bus if there is
   # one. 207 is the route that matters here — it runs the seafront to POSTECH —
   # and every one of these is on it.
   nearby:
+    # On the campus, so it leads the list — the only one of these you can walk
+    # to the venue from.
+    - name: POSCO International Center
+      name_ko: 포스코국제관
+      travel: on campus
+      travel_ko: 교내
+      transit: the venue itself
+      transit_ko: 워크숍이 열리는 건물
+      map: https://map.naver.com/p/search/포스코국제관
     - name: Hotel Yeongildae
       name_ko: 호텔영일대
       travel: 5 min by car
