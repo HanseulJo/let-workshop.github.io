@@ -2680,55 +2680,6 @@ h2 .note {
   fill: currentColor;
 }
 
-/* One rule to open the group, none between the rooms. Each room already
-   announces itself with its label in the accent — SESSIONS, BANQUET — so a
-   rule between them says the same thing a second time, and it says it in the
-   language the card uses for peers, which these two are not. The travel rows
-   keep their rules because nothing else there separates one from the next. */
-.venue-rooms {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.venue-rooms li {
-  padding: 0 0 5px;
-}
-/* The room the sessions are in is what a reader is looking for; the banquet
-   hall is where dinner happens and was being announced at the same volume.
-   Same information, one step quieter. */
-.room-label {
-  display: inline-block;
-  margin-top: 1px;
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--accent);
-  opacity: 0.72;
-  margin-bottom: 5px;
-}
-/* Name and detail on one line, the detail set as the quiet half of it. */
-.venue-rooms li {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0 8px;
-}
-.room-name {
-  display: block;
-  font-family: var(--display);
-  font-size: 0.94rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-.room-detail {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
 .venue-info address {
   font-style: normal;
   color: var(--muted);
@@ -2739,66 +2690,79 @@ h2 .note {
 .venue-info address span {
   color: var(--muted);
 }
-.venue-travel {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  color: var(--prose);
-}
-.venue-travel li {
-  padding: 3px 0;
-  font-size: 0.84rem;
-  line-height: 1.5;
-}
-.venue-travel b {
-  color: var(--ink);
-  margin-right: 6px;
-}
 
-/* A journey is one line: where you are starting from, how long it takes, and a
-   link that opens it in Naver with both ends filled in. The section used to
-   draw each one as a diagram — every stop, the bus on each leg, the walking
-   ones dotted — which was a second and worse copy of what is on the other side
-   of that link. The detail is still in data/venue.yml. */
-.routes {
+/* ---------- One fact, one row ----------
+   Rooms, transport and somewhere to sleep answer three questions asked in that
+   order, and each was written as its own shape: a name with the detail run on
+   after it, a link with a total ranged right, a name over a second line of
+   mono. A card that changes its mind about what a row looks like three times
+   in three inches reads as three cards that happen to be touching.
+   One shape for all of them. The thing on the left, its one number on the
+   right, and a quieter line underneath where there is more to say. */
+.facts {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.routes a {
+.fact {
+  padding: 7px 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+/* The rule belongs to the row above it, so a group never opens or closes on
+   one — the heading's own rule already separates the groups. */
+.fact + .fact {
+  border-top: 1px solid var(--line);
+}
+.fact > a,
+.fact:not(.is-link) {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
-  padding: 9px 10px;
-  margin: 0 -10px;
-  border-radius: 8px;
+  gap: 14px;
+}
+/* A row that leads somewhere is clickable across its whole width, padding and
+   all, rather than only on the words. */
+.fact.is-link > a {
+  margin: -7px -8px;
+  padding: 7px 8px;
+  border-radius: 7px;
   color: inherit;
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
-.routes li + li a {
-  border-top: 1px solid var(--line);
-}
-.routes a:hover,
-.routes a:focus-visible {
+.fact.is-link > a:hover,
+.fact.is-link > a:focus-visible {
   background: var(--wash);
 }
-.route-from {
-  font-size: 0.9rem;
+.fact-name {
   color: var(--ink);
+  font-weight: 600;
   word-break: keep-all;
 }
-.route-total {
+/* Every number in the card in one voice — 98 seats, 42 minutes, 1F are the
+   same kind of thing said about three different subjects. */
+.fact-figure {
+  flex: none;
   font-family: var(--mono);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   letter-spacing: 0.02em;
-  color: var(--accent);
+  color: var(--muted);
+  text-align: right;
   white-space: nowrap;
+}
+/* Whatever did not fit on the line, under it and quieter still. */
+.fact-sub {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--faint);
 }
 /* Sized against the name rather than left at whatever a colour emoji font
    gives, and nudged down: emoji sit high on the line beside Latin text. */
-.rt-icon {
+.fact-icon {
   display: inline-block;
   width: 1.25em;
   margin-right: 4px;
@@ -2806,6 +2770,7 @@ h2 .note {
   line-height: 1;
   transform: translateY(0.06em);
 }
+
 /* What the section is for, said beside its own heading rather than under the
    list where it would be read after the thing it explains. */
 .venue-h-note {
@@ -2816,9 +2781,6 @@ h2 .note {
   letter-spacing: 0;
   text-transform: none;
   color: var(--faint);
-}
-.routes + .venue-travel {
-  margin-top: 14px;
 }
 
 
@@ -3555,72 +3517,6 @@ footer a:hover {
 }
 
 
-/* ===== THE TRAVEL CARD =====
-   One rhythm for the whole card instead of four. It had grown a section at a
-   time — rooms, address, transport, beds — and each arrived with its own type
-   sizes and its own spacing, so the card read as a pile rather than a list.
-
-   Every group is now the same shape: a mono label in the accent, then rows of
-   one fact each, a bold term on the left and its particular ranged right. The
-   card is one column of that shape repeated, which is what makes it scannable
-   and what took a third of its height out. */
-.stay {
-  margin-top: 0;
-}
-.stay-first,
-.stay-note {
-  margin: 0 0 8px;
-  font-size: 0.84rem;
-  line-height: 1.5;
-  color: var(--muted);
-}
-.stay-first b {
-  color: var(--ink);
-  font-weight: 600;
-}
-.stay-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.stay-list li {
-  padding: 4px 0;
-}
-.stay-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 0.86rem;
-}
-.stay-list b,
-.stay-list a {
-  font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--line);
-}
-.stay-list a:hover,
-.stay-list a:focus-visible {
-  color: var(--accent);
-  border-bottom-color: currentColor;
-}
-.stay-head span,
-.stay-transit {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.stay-head span {
-  text-align: right;
-}
-.stay-transit {
-  display: block;
-  margin-top: 1px;
-  white-space: normal;
-  line-height: 1.5;
-}
 
 /* A qualifier beside a heading, not inside it: the same baseline so it reads
    as part of the line, but at body size and in the muted colour so it does not

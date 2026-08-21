@@ -679,82 +679,68 @@
                 <svg aria-hidden="true"><use href="#i-{{ link.icon }}" /></svg>{{ link.label }}</a>
               {% endfor %}
             </div>
+            <!-- Rooms, transport, somewhere to sleep: three answers to three
+                 questions asked in that order, and until now three different
+                 shapes of answer. One row shape for all of them — the thing on
+                 the left, its one number on the right, and a quieter line
+                 underneath where there is more to say. A card that changes its
+                 mind about how a row looks three times in three inches reads as
+                 three cards that happen to be touching. -->
             {% if venue.rooms_title %}
             <h4 class="venue-h">{{ t(venue.rooms_title, venue.rooms_title_ko) }}</h4>
             {% endif %}
-            <ul class="venue-rooms">
+            <ul class="facts">
               {% for room in venue.rooms %}
-              <li>
-                <span class="room-name">{{ room.name }}</span>
-                <span class="room-detail">{{ room.detail }}</span>
+              <li class="fact">
+                <span class="fact-name">{{ room.name }}</span>
+                <span class="fact-figure">{{ room.detail }}</span>
               </li>
               {% endfor %}
             </ul>
-            <!-- Transport, and what it is for: every origin opens the journey
-                 in Naver with both ends already in it. Three lines, so it sits
-                 in the card with the rooms and the beds rather than taking a
-                 row of its own — it needed that row while it was drawing a
-                 diagram per journey, and it no longer draws one. -->
+
             {% if venue.getting_here %}
             {% if venue.getting_here_title %}
             <h4 class="venue-h">{{ t(venue.getting_here_title, venue.getting_here_title_ko) }}
               <span class="venue-h-note"><span class="t-en">opens in Naver Map</span><span class="t-ko">네이버 지도로 열립니다</span></span>
             </h4>
             {% endif %}
-            <ul class="routes">
+            <ul class="facts">
               {% for route in venue.getting_here %}
-              <li>
+              <li class="fact is-link">
                 <a href="{{ route.url }}" target="_blank" rel="noopener"
                    aria-label="{{ route.from }} → {{ venue.name }}">
-                  <span class="route-from">{% if route.icon %}<span class="rt-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}</span>
-                  {% if route.total %}<span class="route-total">{{ t(route.total, route.total_ko) }}</span>{% endif %}
+                  <span class="fact-name">{% if route.icon %}<span class="fact-icon" aria-hidden="true">{{ route.icon }}</span>{% endif %}{{ t(route.from, route.from_ko) }}</span>
+                  {% if route.total %}<span class="fact-figure">{{ t(route.total, route.total_ko) }}</span>{% endif %}
                 </a>
               </li>
               {% endfor %}
-            </ul>
-            {% if venue.getting_here_notes %}
-            <ul class="venue-travel">
               {% for note in venue.getting_here_notes %}
-              <li><b>{{ t(note.label, note.label_ko) }}</b> {{ t(note.detail, note.detail_ko) }}</li>
+              <li class="fact">
+                <span class="fact-name">{{ t(note.label, note.label_ko) }}</span>
+                <span class="fact-figure">{{ t(note.detail, note.detail_ko) }}</span>
+              </li>
               {% endfor %}
             </ul>
             {% endif %}
-            {% endif %}
+
             {% if venue.accommodation %}
-            <!-- Somewhere to sleep, after how to arrive: the questions come in
-                 that order, and the answer to the second depends on the first. -->
-            <div class="stay">
-              <h4 class="venue-h">{{ t(venue.accommodation.title, venue.accommodation.title_ko) }}
-                {% if venue.accommodation.note %}
-                <span class="venue-h-note">{{ t(venue.accommodation.note, venue.accommodation.note_ko) }}</span>{% endif %}
-              </h4>
-              {% if venue.accommodation.first_come %}
-              <p class="stay-first">
-                <b>{{ t(venue.accommodation.first_come.name, venue.accommodation.first_come.name_ko) }}</b>
-                {{ t(venue.accommodation.first_come.note, venue.accommodation.first_come.note_ko) }}
-              </p>
-              {% endif %}
-              {% if venue.accommodation.nearby %}
-              {% if venue.accommodation.nearby_note %}
-              <p class="stay-note">{{ t(venue.accommodation.nearby_note, venue.accommodation.nearby_note_ko) }}</p>
-              {% endif %}
-              <ul class="stay-list">
-                {% for place in venue.accommodation.nearby %}
-                <li>
-                  <span class="stay-head">
-                    {% if place.map %}
-                    <a href="{{ place.map }}" target="_blank" rel="noopener">{{ t(place.name, place.name_ko) }}</a>
-                    {% else %}<b>{{ t(place.name, place.name_ko) }}</b>{% endif %}
-                    <span>{{ t(place.travel, place.travel_ko) }}</span>
-                  </span>
-                  {% if place.transit %}
-                  <span class="stay-transit">{{ t(place.transit, place.transit_ko) }}</span>
-                  {% endif %}
-                </li>
-                {% endfor %}
-              </ul>
-              {% endif %}
-            </div>
+            <h4 class="venue-h">{{ t(venue.accommodation.title, venue.accommodation.title_ko) }}
+              {% if venue.accommodation.note %}
+              <span class="venue-h-note">{{ t(venue.accommodation.note, venue.accommodation.note_ko) }}</span>{% endif %}
+            </h4>
+            <ul class="facts">
+              {% for place in venue.accommodation.nearby %}
+              <li class="fact{{ ' is-link' if place.map }}">
+                {% if place.map %}<a href="{{ place.map }}" target="_blank" rel="noopener">{% endif %}
+                <span class="fact-name">{{ t(place.name, place.name_ko) }}</span>
+                <span class="fact-figure">{{ t(place.travel, place.travel_ko) }}</span>
+                {% if place.map %}</a>{% endif %}
+                {% if place.transit %}
+                <span class="fact-sub">{{ t(place.transit, place.transit_ko) }}</span>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
             {% endif %}
           </div>
         </div>
