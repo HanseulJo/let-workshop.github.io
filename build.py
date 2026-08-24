@@ -940,6 +940,10 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
             "photo": s.get("photo"),
             "slides": s.get("slides"),
             "home": s.get("home"),
+            # Where this card stands in the Korean arrangement. The cards are
+            # written once and reordered by CSS, so previous/next has to be
+            # told the other order rather than reading it off the document.
+            "ko": s["ko_order"],
         }
         for s in roster
     ]

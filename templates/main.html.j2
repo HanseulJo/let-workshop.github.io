@@ -1069,12 +1069,15 @@
       </div>
     </dialog>
 
-    <!-- One person. Deliberately without the session ribbon and the previous/
-         next arrows the sheet above it has: those step through a timetable,
-         and this panel is not on the timetable — it is who somebody is and
-         what they are giving. When the schedule names its speakers, a line
-         pointing at their session belongs here; until then it would point at
-         a box saying TBD. -->
+    <!-- Two windows, because they answer two questions. This one is who
+         somebody is — face, name, affiliation, the paragraph about them — and
+         it ends with a door to the other, which is what they are giving.
+         An abstract is four hundred words about a piece of work; standing
+         under a bio it made the bio look like the opening of it.
+
+         The arrows step between speakers, not between sessions: this panel is
+         deliberately off the timetable while the timetable does not say who is
+         when, so there is no ribbon and no link into the grid. -->
     <dialog id="speaker-modal" aria-label="Speaker detail">
       <div class="modal-head">
         <div>
@@ -1083,6 +1086,26 @@
         <form method="dialog"><button class="modal-x" aria-label="Close">&times;</button></form>
       </div>
       <div id="speaker-body"></div>
+      <div class="modal-nav">
+        <button class="pill" id="spk-prev">&larr; <span class="t-en">Previous</span><span class="t-ko">이전</span></button>
+        <span id="spk-count"></span>
+        <button class="pill" id="spk-next"><span class="t-en">Next</span><span class="t-ko">다음</span> &rarr;</button>
+      </div>
+    </dialog>
+
+    <!-- And the talk. It opens in place of the speaker window rather than on
+         top of it: two backdrops stacked make the page behind twice as dark
+         for a step that is sideways, not deeper. The way back is the first
+         thing in it, and it carries the name, so the button says where it
+         goes instead of only that it goes back. -->
+    <dialog id="talk-modal" aria-label="Talk detail">
+      <div class="modal-head">
+        <div>
+          <span class="badge"><span class="t-en">Talk</span><span class="t-ko">발표</span></span>
+        </div>
+        <form method="dialog"><button class="modal-x" aria-label="Close">&times;</button></form>
+      </div>
+      <div id="talk-body"></div>
     </dialog>
 
 
@@ -2164,20 +2187,101 @@
 
       // Card order, not id: the cards are written in one order and rearranged
       // by CSS for the Korean view, so an index into the list they were
-      // written from survives the rearranging. speakerHtml is the same
-      // function the session sheet uses — a person is rendered one way on this
-      // page, whichever window they turn up in.
+      // written from survives the rearranging.
       var PEOPLE = {{ people | tojson }};
       var SPEAKER_MODAL = document.getElementById("speaker-modal");
+      var TALK_MODAL = document.getElementById("talk-modal");
+      var spkAt = 0;
+
+      // Who this is. Not the session sheet's speakerHtml — that renders a
+      // person inside a talk, with the talk's own material under them, which
+      // is the arrangement this window exists to undo.
+      function speakerPanel(s, i) {
+        var head = s.photo
+          ? '<img class="sp-photo" src="' + esc(s.photo) + '" alt="" loading="lazy" />'
+          : '<div class="sp-photo sp-blank" aria-hidden="true"></div>';
+        var name = s.home
+          ? '<a href="' + esc(s.home) + '" target="_blank" rel="noopener">' + s.nameHtml + "</a>"
+          : s.nameHtml;
+        var bits = '<div class="sp-name">' + name;
+        if (s.affil) bits += " <em>" + s.affilHtml + "</em>";
+        bits += "</div>";
+        bits += s.bio
+          ? '<div class="sp-bio">' + s.bio + "</div>"
+          : '<div class="sp-bio is-todo">' + tbd("Speaker bio to be added", "연사 소개 준비 중") + "</div>";
+        // A door while there is something behind it, and the same shape saying
+        // so while there is not — a button that opens an empty room is worse
+        // than a line that says the room is empty.
+        var label = '<span class="sp-talk-kicker">' + tbd("Talk", "발표") + "</span>";
+        bits += s.talk
+          ? '<button class="sp-talk-link" onclick="openTalk(' + i + ')">' + label +
+            '<span class="sp-talk-name">' + esc(s.talk) + "</span></button>"
+          : '<div class="sp-talk-link is-todo">' + label +
+            '<span class="sp-talk-name">' + tbd("Title to be announced", "발표 제목 미정") + "</span></div>";
+        return '<div class="sp">' + head + "<div>" + bits + "</div></div>";
+      }
+
+      function talkPanel(s, i) {
+        var who = s.nameHtml + (s.affil ? ' <em>' + s.affilHtml + "</em>" : "");
+        var bits = '<button class="tk-back" onclick="openSpeaker(' + i + ')">' +
+                   '<span aria-hidden="true">&larr;</span> ' + who + "</button>";
+        bits += '<h4 class="tk-title">' + esc(s.talk) + "</h4>";
+        bits += s.abstract
+          ? '<div class="sp-abstract">' + s.abstract + "</div>"
+          : '<div class="sp-abstract is-todo">' + tbd("Abstract to be announced", "초록 준비 중") + "</div>";
+        bits += s.slides
+          ? '<a class="sp-slides" href="' + esc(s.slides) + '" target="_blank" rel="noopener">' +
+            tbd("Slides (PDF)", "발표자료 (PDF)") + "</a>"
+          : '<span class="sp-slides is-todo">' + tbd("Slides after the talk", "발표 후 자료 공개") + "</span>";
+        return bits;
+      }
+
+      // The order the arrows walk. Whichever order the cards are being shown
+      // in — the arrows should land on the card next to the one you came
+      // from, not on the next line of an array the reader cannot see.
+      function speakerOrder() {
+        var idx = PEOPLE.map(function (_, i) { return i; });
+        if (document.documentElement.getAttribute("data-lang") === "ko")
+          idx.sort(function (a, b) { return PEOPLE[a].ko - PEOPLE[b].ko; });
+        return idx;
+      }
+
       function openSpeaker(i) {
         var s = PEOPLE[i];
         if (!s) return;
-        document.getElementById("speaker-body").innerHTML = speakerHtml(s);
-        SPEAKER_MODAL.showModal();
+        spkAt = i;
+        document.getElementById("speaker-body").innerHTML = speakerPanel(s, i);
+        var order = speakerOrder(), pos = order.indexOf(i);
+        document.getElementById("spk-count").textContent = pos + 1 + " / " + order.length;
+        document.getElementById("spk-prev").disabled = pos === 0;
+        document.getElementById("spk-next").disabled = pos === order.length - 1;
+        if (TALK_MODAL.open) TALK_MODAL.close();
+        if (!SPEAKER_MODAL.open) SPEAKER_MODAL.showModal();
       }
-      // Clicking the backdrop closes it, as on the session sheet.
-      SPEAKER_MODAL.addEventListener("click", function (ev) {
-        if (ev.target === SPEAKER_MODAL) SPEAKER_MODAL.close();
+
+      function openTalk(i) {
+        var s = PEOPLE[i];
+        if (!s || !s.talk) return;
+        spkAt = i;
+        document.getElementById("talk-body").innerHTML = talkPanel(s, i);
+        if (SPEAKER_MODAL.open) SPEAKER_MODAL.close();
+        if (!TALK_MODAL.open) TALK_MODAL.showModal();
+      }
+
+      function stepSpeaker(d) {
+        var order = speakerOrder(), pos = order.indexOf(spkAt) + d;
+        if (pos < 0 || pos >= order.length) return;
+        openSpeaker(order[pos]);
+      }
+      document.getElementById("spk-prev").onclick = function () { stepSpeaker(-1); };
+      document.getElementById("spk-next").onclick = function () { stepSpeaker(1); };
+      SPEAKER_MODAL.addEventListener("keydown", function (ev) {
+        if (ev.key === "ArrowLeft") stepSpeaker(-1);
+        if (ev.key === "ArrowRight") stepSpeaker(1);
+      });
+      // Clicking the backdrop closes either, as on the session sheet.
+      [SPEAKER_MODAL, TALK_MODAL].forEach(function (d) {
+        d.addEventListener("click", function (ev) { if (ev.target === d) d.close(); });
       });
 
       function openEvent(id) {

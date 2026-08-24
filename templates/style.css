@@ -1659,7 +1659,8 @@ a.spk-card {
    the cursor. Pinning the bottom edge holds the footer still and lets the top
    edge do the moving, which is the half nobody is aiming at. */
 #event-modal,
-#speaker-modal {
+#speaker-modal,
+#talk-modal {
   width: min(660px, calc(100% - 32px));
   max-height: min(86vh, 760px);
   margin: auto auto 0;
@@ -1671,7 +1672,8 @@ a.spk-card {
   overflow: hidden;
 }
 #event-modal::backdrop,
-#speaker-modal::backdrop {
+#speaker-modal::backdrop,
+#talk-modal::backdrop {
   background: rgba(20, 33, 61, 0.45);
 }
 /* The two-day ribbon above the dialog's head. Sits flush to the top edge and
@@ -1784,16 +1786,105 @@ a.spk-card {
   margin: 6px 20px 2px;
 }
 #modal-body,
-#speaker-body {
+#speaker-body,
+#talk-body {
   padding: 4px 20px 6px;
   overflow-y: auto;
   max-height: 52vh;
 }
-/* The speaker sheet has no footer under it — no ribbon, no arrows — so its
-   body ends at the window's edge and needs the room the footer was giving. */
-#speaker-body {
+/* Neither of the two person windows carries a ribbon, so both have more room
+   for the body than the session sheet does. The talk window has no footer at
+   all and its body ends at the window's edge, which is where the padding the
+   footer would have given has to come back. */
+#speaker-body,
+#talk-body {
+  max-height: 68vh;
+}
+#talk-body {
   padding-bottom: 20px;
-  max-height: 72vh;
+}
+
+/* The talk, as a door rather than as more prose. The speaker window answers
+   who this is; what they are giving is a second question, and an abstract
+   standing under a bio made the bio read as the first paragraph of it. */
+.sp-talk-link {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--wash);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition: border-color 0.15s ease;
+}
+button.sp-talk-link {
+  cursor: pointer;
+}
+button.sp-talk-link:hover,
+button.sp-talk-link:focus-visible {
+  border-color: var(--accent);
+}
+/* Same shape, no door. A button that opens an empty room is worse than a line
+   saying the room is empty. */
+.sp-talk-link.is-todo {
+  border-style: dashed;
+  background: none;
+  opacity: 0.8;
+}
+.sp-talk-kicker {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-style: normal;
+}
+.sp-talk-name {
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.sp-talk-link.is-todo .sp-talk-name {
+  font-weight: 400;
+  color: var(--muted);
+}
+/* The way back, carrying the name: a button that says where it goes rather
+   than only that it goes back. */
+.tk-back {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 4px 0 12px;
+  padding: 5px 12px 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.tk-back:hover,
+.tk-back:focus-visible {
+  color: var(--ink);
+  border-color: var(--accent);
+}
+.tk-back em {
+  font-style: normal;
+  color: var(--faint);
+}
+.tk-title {
+  margin: 0 0 12px;
+  font-size: 1.06rem;
+  line-height: 1.35;
+  color: var(--ink);
 }
 .sp {
   display: flex;
@@ -3170,7 +3261,8 @@ footer a:hover {
     margin: 0 0 0 10px;
   }
   #event-modal,
-  #speaker-modal {
+  #speaker-modal,
+  #talk-modal {
     /* No padding. It is a leftover from when the dialog laid its own content
        out; the head, the body and the footer each carry their own padding now,
        and 18px here inset all three from the card edge — so the day ribbon
@@ -3473,13 +3565,15 @@ footer a:hover {
   }
 
   #event-modal,
-  #speaker-modal {
+  #speaker-modal,
+  #talk-modal {
     width: 100%;
     max-width: 100%;
     max-height: 92vh;
   }
   #modal-body,
-  #speaker-body {
+  #speaker-body,
+  #talk-body {
     max-height: 58vh;
   }
   .modal-nav .pill {

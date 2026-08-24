@@ -375,6 +375,7 @@ days:
             role: Dr.
             role_ko: 박사
             name_ko: 이종영
+            photo: jongyeong-lee.jpg
             affil: KIST
             talk: "Toward Simple Best-of-Both-Worlds Algorithms: Insights from Follow-the-Perturbed-Leader"
             abstract: >-
