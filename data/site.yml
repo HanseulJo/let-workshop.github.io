@@ -76,14 +76,15 @@ hero_actions:
   - label: Registration
     label_ko: 참가 신청
     href: https://docs.google.com/forms/d/e/1FAIpQLSe4zlakGy6_rJ6KcT_ovDc1dD08mYEoOOFTeuiBm9hxfXGy-w/viewform
-    # Local time, with the offset written out: the reader's device decides, and
-    # a bare "18:00" would mean six in the evening wherever they happen to be.
-    opens_at: 2026-08-24T18:00:00+09:00
-    # A date and an hour, not "soon". "Soon" asks the reader to come back and
-    # keep guessing; a time lets them write it down once and stop thinking
-    # about it.
-    shut_note: Opens August 24, 18:00
-    shut_note_ko: 8월 24일 18시 오픈
+    # Open now, so there is no hour to wait for. The two lines that schedule it
+    # stay here rather than in the history: setting them again is what shuts
+    # the button until a stated time, and the offset is the part that is easy
+    # to leave off — a bare "18:00" means six in the evening wherever the
+    # reader happens to be.
+    #
+    # opens_at: 2026-08-24T18:00:00+09:00
+    # shut_note: Opens August 24, 18:00
+    # shut_note_ko: 8월 24일 18시 오픈
     note: Until August 31
     note_ko: 8월 31일까지
     primary: true
