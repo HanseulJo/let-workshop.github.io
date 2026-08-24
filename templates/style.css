@@ -1658,7 +1658,8 @@ a.spk-card {
    stepping through sessions slid the ribbon and the arrows up and down under
    the cursor. Pinning the bottom edge holds the footer still and lets the top
    edge do the moving, which is the half nobody is aiming at. */
-#event-modal {
+#event-modal,
+#speaker-modal {
   width: min(660px, calc(100% - 32px));
   max-height: min(86vh, 760px);
   margin: auto auto 0;
@@ -1669,7 +1670,8 @@ a.spk-card {
   box-shadow: 0 -12px 60px rgba(20, 33, 61, 0.28);
   overflow: hidden;
 }
-#event-modal::backdrop {
+#event-modal::backdrop,
+#speaker-modal::backdrop {
   background: rgba(20, 33, 61, 0.45);
 }
 /* The two-day ribbon above the dialog's head. Sits flush to the top edge and
@@ -1781,10 +1783,17 @@ a.spk-card {
   color: var(--ink);
   margin: 6px 20px 2px;
 }
-#modal-body {
+#modal-body,
+#speaker-body {
   padding: 4px 20px 6px;
   overflow-y: auto;
   max-height: 52vh;
+}
+/* The speaker sheet has no footer under it — no ribbon, no arrows — so its
+   body ends at the window's edge and needs the room the footer was giving. */
+#speaker-body {
+  padding-bottom: 20px;
+  max-height: 72vh;
 }
 .sp {
   display: flex;
@@ -3160,7 +3169,8 @@ footer a:hover {
     display: inline-block;
     margin: 0 0 0 10px;
   }
-  #event-modal {
+  #event-modal,
+  #speaker-modal {
     /* No padding. It is a leftover from when the dialog laid its own content
        out; the head, the body and the footer each carry their own padding now,
        and 18px here inset all three from the card edge — so the day ribbon
@@ -3462,12 +3472,14 @@ footer a:hover {
     min-height: 300px;
   }
 
-  #event-modal {
+  #event-modal,
+  #speaker-modal {
     width: 100%;
     max-width: 100%;
     max-height: 92vh;
   }
-  #modal-body {
+  #modal-body,
+  #speaker-body {
     max-height: 58vh;
   }
   .modal-nav .pill {

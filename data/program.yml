@@ -137,7 +137,36 @@ days:
             name_ko: 이남훈
             photo: namhoon-lee.jpg
             affil: POSTECH
-            note: replaced Sejun Park (Korea)
+            talk: "FRESCO: A Novel Consistency Control for Asynchronous Pipeline Parallel Training"
+            abstract: >-
+              Asynchronous pipeline parallelism can accelerate distributed model training,
+              but suffers from instability caused by inconsistent gradient computations.
+              We identify a fundamental source of this inconsistency: error signals are
+              coupled to forward-time features, not just parameter states. This means that
+              parameters may evolve as long as they preserve forward-equivalence.
+              Leveraging this insight, we introduce FRESCO, which frames asynchronous
+              updates as a constrained optimization problem: it finds the minimal update
+              modification that acts trivially on the activation subspace. Thus, it serves
+              as a principled generalization beyond the usual synchronous--asynchronous
+              dichotomy: subspace-level protection preserves gradient validity without
+              synchronization stalls, unconstrained-asynchrony instability, or memory
+              overhead that works against pipeline scaling. We demonstrate that FRESCO
+              consistently outperforms representative asynchronous baselines in LLM
+              pre-training, with the gains most pronounced under deep pipelines and high
+              inconsistency levels. Moving beyond the current limitations, FRESCO
+              establishes a new foundation for high-utilization pipeline parallel
+              training, providing a scalable path for large-model development on diverse,
+              resource-constrained systems.
+            bio: >-
+              Namhoon Lee is an Associate Professor of CSE and AI at POSTECH where he
+              leads the Computational Optimization Lab. His research is focused on
+              large-scale machine learning, which includes training and running
+              large-scale foundation models. Previously he was a visiting researcher at
+              Google, ISTA, EPFL, and ANU, and has received his PhD from Oxford
+              University.
+            note: >-
+              replaced Sejun Park (Korea). Form (8/21): free Day 1 all three sessions and
+              Day 2 morning.
             home: https://namhoonlee.github.io/
 
       - type: break
@@ -158,8 +187,16 @@ days:
             name_ko: 손지용
             photo: jy-yong-sohn.jpg
             affil: Yonsei
+            talk: "Theory and Algorithms for In-Context Learning: Weight-Space and Activation-Space Perspectives"
+            bio: >-
+              Jy-yong Sohn is an Associate Professor in the Department of Statistics &
+              Data Science at Yonsei University, where he leads the Information Theory and
+              Machine Learning (ITML) Lab. His research explains what foundation models
+              are doing, and turns that understanding into better algorithms.
+            note: >-
+              Prefers Day 1 afternoon (not strict). Form (8/22): free Day 1 all three
+              sessions and Day 2 first two.
             topic: in-context learning
-            note: Prefers Day 1 afternoon (not strict) — satisfied here.
             home: https://sites.google.com/view/jsohn
           - name: Seong Joon Oh
             role: Prof.
@@ -189,6 +226,17 @@ days:
             name_ko: 이주호
             photo: juho-lee.jpg
             affil: KAIST
+            talk: Predictive Bayes with large language models
+            bio: >-
+              Juho Lee is an Associate Professor in the Kim Jaechul Graduate School of AI
+              at KAIST, where he leads the Statistical Inference and Machine Learning
+              (SIML) Lab. His research focuses on Bayesian deep learning, uncertainty
+              modeling, and statistical machine learning, with broader interests in
+              foundation models and reasoning in large language models. Before joining
+              KAIST, he worked as a Research Scientist at AITRICS, received his Ph.D. from
+              POSTECH and completed a postdoctoral fellowship at the University of Oxford.
+            note: >-
+              Form (8/24): free in every session on both days.
             topic: martingale posterior
             home: https://juho-lee.github.io/
           - name: Sangdon Park
@@ -197,8 +245,21 @@ days:
             name_ko: 박상돈
             photo: sangdon-park.jpg
             affil: POSTECH
+            talk: Online Conformal Abstention Under Adversarial Bandit Feedback
+            bio: >-
+              Sangdon Park is an assistant professor at POSTECH GSAI/CSE. His research
+              interest focuses on the foundation of trustworthy machine learning for
+              safety-critical real-world AI, including agentic and physical AI by
+              developing principled learning algorithms for trustworthy adaptation in the
+              real world. He serves on the program committees of premium machine learning
+              conferences, including NeurIPS, ICLR, and ICML. Prior to joining POSTECH, he
+              was a postdoctoral researcher at the Georgia Institute of Technology. He
+              holds a Ph.D. in Computer and Information Science from the University of
+              Pennsylvania in 2021.
+            note: >-
+              Wednesday only. Form (8/23): free Day 1 all three sessions, nothing on Day
+              2.
             topic: conformal/selective
-            note: Wednesday only — satisfied here.
             home: https://sangdon.github.io/
 
       # Two things in the same hours, in the two halves of the day's column.
@@ -315,6 +376,35 @@ days:
             role_ko: 박사
             name_ko: 이종영
             affil: KIST
+            talk: "Toward Simple Best-of-Both-Worlds Algorithms: Insights from Follow-the-Perturbed-Leader"
+            abstract: >-
+              In online learning, a best-of-both-worlds (BOBW) policy provides strong
+              performance guarantees in both stochastic and adversarial environments.
+              While much of the existing literature has established such guarantees within
+              the follow-the-regularized-leader framework, Follow-the-Perturbed-Leader
+              (FTPL) offers a conceptually simple and often computationally attractive
+              alternative based on randomized decision rules.
+
+
+              In this talk, I will review our recent progress on establishing BOBW
+              guarantees for FTPL across several online learning problems, with particular
+              emphasis on multi-armed bandits and structured feedback settings. I will
+              discuss the main ideas behind these results, including adaptive learning
+              rates, surrogate probabilities, perturbation-based stability analysis, and
+              efficient loss estimation. Rather than focusing on a single result, the talk
+              will discuss broader insights gained from this line of work, including how
+              simple randomized decision rules can achieve strong theoretical guarantees
+              while maintaining computational efficiency.
+            bio: >-
+              Jongyeong Lee is a postdoctoral researcher at KIST. His research focuses on
+              statistical learning theory, with a particular focus on sequential
+              decision-making, bandit algorithms, and online learning. A central goal of
+              his research is to develop simple and computationally efficient learning
+              algorithms with strong theoretical guarantees. He received his Ph.D. in
+              Computer Science from The University of Tokyo under the supervision of Prof.
+              Masashi Sugiyama.
+            note: >-
+              Form (8/22): free in every session on both days.
             home: https://jongyeong.github.io
 
       - type: break
@@ -342,9 +432,18 @@ days:
             name_ko: 홍기혁
             photo: kihyuk-hong.jpg
             affil: KAIST
+            talk: Offline Constrained Reinforcement Learning under Partial Data Coverage
+            bio: >-
+              Kihyuk Hong is an Assistant Professor in the Department of Industrial and
+              Systems Engineering at KAIST. His research focuses on the theory of
+              reinforcement learning and machine learning, particularly offline
+              reinforcement learning and the design of computationally efficient learning
+              algorithms with provable guarantees. He received his Ph.D. in Statistics
+              from the University of Michigan.
+            note: >-
+              Thursday only (teaching). Form (8/23): free Day 2 first three sessions.
             home: https://www.kihyukhong.com
             topic: offline RL
-            note: Thursday only (teaching) — satisfied here.
 
       - type: break
         title: Coffee Break (15 min)

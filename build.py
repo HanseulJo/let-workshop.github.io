@@ -918,6 +918,31 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
         for day in program["days"]
         for e in day["events"]
     ]
+    # The same people again, in card order, with their prose rendered — what
+    # the panel behind a card shows. It is not the roster itself: a card is a
+    # name and a face, and this is the paragraph behind it, so the page carries
+    # the heavy half once rather than in every card.
+    #
+    # `topic` is deliberately dropped. It is the session's subject rather than
+    # the talk's — "conformal/selective", not a title — and printed under a
+    # name in a detail panel it reads as the talk, which is the thing that is
+    # not settled yet. Whoever has no title gets the panel's own "to be
+    # announced" instead.
+    people = [
+        {
+            "nameHtml": str(bilingual(s["name"], s.get("name_ko"))),
+            "affilHtml": str(bilingual(s.get("affil") or "", s.get("affil_ko"))),
+            "affil": s.get("affil"),
+            "topic": None,
+            "talk": s.get("talk"),
+            "abstract": md.markdown(s["abstract"]) if s.get("abstract") else None,
+            "bio": md.markdown(s["bio"]) if s.get("bio") else None,
+            "photo": s.get("photo"),
+            "slides": s.get("slides"),
+            "home": s.get("home"),
+        }
+        for s in roster
+    ]
     html = env.get_template("main.html.j2").render(
         variant=variant,
         variant_name=name,
@@ -934,6 +959,7 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
         detail=detail,
         formulas=formula_manifest(),
         roster=roster,
+        people=people,
     )
     return html, ics
 

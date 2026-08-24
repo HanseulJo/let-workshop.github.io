@@ -421,17 +421,15 @@
         </h2>
         <div class="spk-grid">
           {% for s in roster %}
-          <!-- The card goes to the speaker's own page. It used to open their
-               session, which was worth a click while the grid named sessions
-               and said who was in them; it says "Invited talk · TBD" now, so
-               the click led from a person to a box with no person in it.
-               Whoever has no page keeps the session link — better a thin
-               destination than a card that looks clickable and is not. -->
-          {% if s.home %}
-          <a class="spk-card" style="--ko-order: {{ s.ko_order }}" href="{{ s.home }}" target="_blank" rel="noopener">
-          {% else %}
-          <button class="spk-card" style="--ko-order: {{ s.ko_order }}" onclick="openEvent('{{ s.event_id }}')">
-          {% endif %}
+          <!-- The card opens the person: their talk, their abstract, their
+               bio. It has been two other things — the session they are in,
+               which became a box reading "Invited talk · TBD", and then their
+               own homepage, which is a different question than the one a face
+               and a name invite. Both are still reachable from inside the
+               panel; neither is what the click is for. And nothing here points
+               at the timetable while the timetable does not say who is when. -->
+          <button class="spk-card" style="--ko-order: {{ s.ko_order }}"
+                  onclick="openSpeaker({{ loop.index0 }})">
             {% if s.photo %}
             <img class="spk-face" src="{{ s.photo }}" alt="" loading="lazy" width="256" height="256" />
             {% else %}
@@ -450,7 +448,7 @@
                  question the programme beside it refuses. It comes back with
                  the rest when `simple` goes off. -->
             {% if not program.simple %}<div class="spk-topic">{{ s.track }}</div>{% endif %}
-          {% if s.home %}</a>{% else %}</button>{% endif %}
+          </button>
           {% endfor %}
         </div>
       </div>
@@ -1069,6 +1067,22 @@
         <span id="modal-count"></span>
         <button class="pill" id="modal-next">Next &rarr;</button>
       </div>
+    </dialog>
+
+    <!-- One person. Deliberately without the session ribbon and the previous/
+         next arrows the sheet above it has: those step through a timetable,
+         and this panel is not on the timetable — it is who somebody is and
+         what they are giving. When the schedule names its speakers, a line
+         pointing at their session belongs here; until then it would point at
+         a box saying TBD. -->
+    <dialog id="speaker-modal" aria-label="Speaker detail">
+      <div class="modal-head">
+        <div>
+          <span class="badge"><span class="t-en">Speaker</span><span class="t-ko">연사</span></span>
+        </div>
+        <form method="dialog"><button class="modal-x" aria-label="Close">&times;</button></form>
+      </div>
+      <div id="speaker-body"></div>
     </dialog>
 
 
@@ -2147,6 +2161,24 @@
         addEventListener("pointerup", stop);
         addEventListener("blur", stop);
       })();
+
+      // Card order, not id: the cards are written in one order and rearranged
+      // by CSS for the Korean view, so an index into the list they were
+      // written from survives the rearranging. speakerHtml is the same
+      // function the session sheet uses — a person is rendered one way on this
+      // page, whichever window they turn up in.
+      var PEOPLE = {{ people | tojson }};
+      var SPEAKER_MODAL = document.getElementById("speaker-modal");
+      function openSpeaker(i) {
+        var s = PEOPLE[i];
+        if (!s) return;
+        document.getElementById("speaker-body").innerHTML = speakerHtml(s);
+        SPEAKER_MODAL.showModal();
+      }
+      // Clicking the backdrop closes it, as on the session sheet.
+      SPEAKER_MODAL.addEventListener("click", function (ev) {
+        if (ev.target === SPEAKER_MODAL) SPEAKER_MODAL.close();
+      });
 
       function openEvent(id) {
         var found = EVENTS.findIndex(function (e) {
