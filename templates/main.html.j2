@@ -290,7 +290,21 @@
         {% if site.hero_actions %}
         <div class="hero-actions">
           {% for a in site.hero_actions %}
-          {% if a.href %}
+          {% if a.opens_at_ms and not a.is_open %}
+          <!-- Both states, and the clock below picks. The live one is the same
+               markup the third branch renders and the shut one the same as the
+               second; only which is hidden differs. -->
+          <span class="btn-note{{ ' is-primary' if a.primary }}"
+                data-opens-at="{{ a.opens_at_ms }}" hidden>
+            <a class="btn{{ ' btn-primary' if a.primary }}" href="{{ a.href }}"
+               {% if a.href.startswith('http') %}target="_blank" rel="noopener"{% endif %}>{{ t(a.label, a.label_ko) }}</a>
+            {% if a.note %}<small>{{ t(a.note, a.note_ko) }}</small>{% endif %}
+          </span>
+          <span class="btn-wait{{ ' is-primary' if a.primary }}" data-shut-until="{{ a.opens_at_ms }}">
+            <button class="btn{{ ' btn-primary' if a.primary }}" disabled>{{ t(a.label, a.label_ko) }}</button>
+            {% if a.shut_note %}<small>{{ t(a.shut_note, a.shut_note_ko) }}</small>{% endif %}
+          </span>
+          {% elif a.href %}
           <!-- A live button can carry a note too, but not by borrowing the
                waiting one's box: that one dims its button and gives it a
                not-allowed cursor, which is exactly wrong on a link that works. -->
@@ -306,6 +320,25 @@
           </span>
           {% endif %}
           {% endfor %}
+          <script>
+            // Which of the two the reader gets. Inline and right here, so it
+            // has run before the row is painted: a flash of a shut button on a
+            // page loaded after the hour would be worse than no button at all.
+            (function () {
+              var live = document.querySelector("[data-opens-at]");
+              if (!live) return;
+              var shut = document.querySelector("[data-shut-until]"),
+                  at = +live.getAttribute("data-opens-at");
+              (function tick() {
+                var left = at - Date.now();
+                if (left <= 0) { shut.hidden = true; live.hidden = false; return; }
+                // Half a minute at a time rather than one long timer: a device
+                // that sleeps through the hour wakes with a stale timeout, and
+                // this is never more than thirty seconds out.
+                setTimeout(tick, Math.min(left, 30000));
+              })();
+            })();
+          </script>
           {% if site.sponsors and site.sponsors.logos %}
           <!-- The two institutions, at the far end of the row the buttons are
                in. Small, and the small files: the section at the foot draws

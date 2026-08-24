@@ -463,9 +463,24 @@ def fill_defaults(bundle: dict) -> None:
         item.setdefault("label_ko", None)
     bundle["site"].setdefault("hero_actions", [])
     for act in bundle["site"]["hero_actions"]:
-        for key in ("label_ko", "href", "note", "note_ko"):
+        for key in ("label_ko", "href", "note", "note_ko",
+                    "shut_note", "shut_note_ko", "opens_at"):
             act.setdefault(key, None)
         act.setdefault("primary", False)
+        # An hour the button starts working, turned into the one number a
+        # browser can compare against its own clock. Both states go into the
+        # page and the clock picks, so the site opens on time without anyone
+        # being awake to push a build — and a build that happens after the hour
+        # simply renders the live one, with nothing left to switch.
+        act["opens_at_ms"] = None
+        act["is_open"] = bool(act["href"])
+        if act["opens_at"]:
+            when = datetime.fromisoformat(str(act["opens_at"]))
+            if when.tzinfo is None:
+                raise SystemExit("hero_actions: opens_at needs a UTC offset — "
+                                 f"got {act['opens_at']!r}")
+            act["opens_at_ms"] = int(when.timestamp() * 1000)
+            act["is_open"] = datetime.now(timezone.utc) >= when
     for cell in bundle["site"]["infobar"]:
         cell.setdefault("note", None)
         # A cell with no Korean sibling shows its one form in both languages,

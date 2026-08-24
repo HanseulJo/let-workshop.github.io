@@ -1065,6 +1065,14 @@ body {
   flex-direction: column;
   gap: 6px;
 }
+/* Said again, because it has to outrank the line above it. `hidden` is a rule
+   in the browser's own sheet, and any author rule setting `display` beats it —
+   so the state the clock hides would have gone on standing there next to the
+   one it showed. */
+.btn-wait[hidden],
+.btn-note[hidden] {
+  display: none;
+}
 /* Both boxes: the button keeps its own width and the note centres on it. A
    column flex child stretches by default, so the note's width was the
    button's — "Registration" came out as wide as "Opens August 24" and read as
