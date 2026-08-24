@@ -1804,6 +1804,27 @@ a.spk-card {
   padding-bottom: 20px;
 }
 
+/* One person, not a list of them. .sp-photo is 46px because the session sheet
+   stacks several people and the picture there is an identifier beside a line
+   of text. In a window about one person the picture is half of what the window
+   is for, and 46px of it read as a thumbnail someone forgot to enlarge. */
+#speaker-body .sp {
+  gap: 16px;
+  padding-top: 2px;
+}
+#speaker-body .sp-photo {
+  width: 108px;
+  height: 108px;
+  flex: 0 0 108px;
+  border-radius: 16px;
+}
+/* And the name with it: at the list's size it sat under a picture more than
+   twice its height and read as the caption of one. */
+#speaker-body .sp-name {
+  margin-bottom: 5px;
+  font-size: 1.12rem;
+}
+
 /* The talk, as a door rather than as more prose. The speaker window answers
    who this is; what they are giving is a second question, and an abstract
    standing under a bio made the bio read as the first paragraph of it. */
@@ -3277,6 +3298,11 @@ footer a:hover {
   .sp {
     grid-template-columns: 1fr;
   }
+  #speaker-body .sp-photo {
+    width: 92px;
+    height: 92px;
+    flex-basis: 92px;
+  }
   .sp-photo {
     width: 46px;
     height: 46px;
@@ -3587,6 +3613,11 @@ footer a:hover {
     margin-left: 0;
     margin-top: 2px;
     font-size: 0.86em;
+  }
+  #speaker-body .sp-photo {
+    width: 84px;
+    height: 84px;
+    flex-basis: 84px;
   }
   .sp-photo {
     width: 44px;
