@@ -260,15 +260,6 @@ getting_here_notes: []
 # says otherwise. No rates here on purpose: they move, and a stale price on a
 # programme page is worse than no price.
 accommodation:
-  # Off the page. A list of hotels under the workshop's own name reads as a
-  # list the workshop arranged — a rate negotiated, a block held, someone to
-  # complain to — and none of that is true; they are three places near the
-  # campus that anyone would find on a map. The information is still worth
-  # sending, just not worth publishing: it goes in the mail to participants and
-  # in the registration form, where it is plainly one organiser passing on what
-  # they know. Everything below is kept for that. Set this true and the card
-  # gets its Accommodation block back exactly as it was.
-  published: false
   title: Accommodation
   title_ko: 숙소
   # Beside the heading, in the small type Transport uses for the same job: what
@@ -279,12 +270,14 @@ accommodation:
   # on the campus, which is not a hotel.
   note: hotel recommendations
   note_ko: 추천 숙소
-  # Where the speakers are put up. It is a sentence about the event, not an
-  # entry in the list: the guest house was sitting in the list wearing the same
-  # shape as the hotels, under a heading that says these are places to book,
-  # and the one thing it is not is a place a reader can book.
-  nearby_note: Speakers and project researchers are hosted at the POSCO International Center, on campus.
-  nearby_note_ko: 연사와 과제참여연구원은 캠퍼스 내 포스코국제관에 모십니다.
+  # The guest house is not on this page at all. Its rooms go to the project's
+  # researchers and the invited speakers, so it is not somewhere a reader can
+  # book — and saying so under a heading that means "places to book" put the
+  # workshop's own arrangements in front of people they do not concern. Those
+  # who it does concern are told directly. The hotels below are unaffected:
+  # they are what this list is for.
+  nearby_note: ~
+  nearby_note_ko: ~
   # Two facts per place, not a table: how long by car, and the bus if there is
   # one. 207 is the route that matters here — it runs the seafront to POSTECH —
   # and every one of these is on it.

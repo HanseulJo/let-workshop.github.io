@@ -765,7 +765,7 @@
             </ul>
             {% endif %}
 
-            {% if venue.accommodation and venue.accommodation.published %}
+            {% if venue.accommodation %}
             <h4 class="venue-h">{{ t(venue.accommodation.title, venue.accommodation.title_ko) }}
               {% if venue.accommodation.note %}
               <span class="venue-h-note">{{ t(venue.accommodation.note, venue.accommodation.note_ko) }}</span>{% endif %}

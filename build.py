@@ -456,10 +456,6 @@ def fill_defaults(bundle: dict) -> None:
         acc = bundle["venue"]["accommodation"]
         for key in ("title_ko", "nearby_note", "nearby_note_ko", "note", "note_ko"):
             acc.setdefault(key, None)
-        # Whether the block is shown at all — see data/venue.yml. Kept as a
-        # flag rather than by deleting the data, because the data is still
-        # wanted, only somewhere other than the page.
-        acc.setdefault("published", True)
         acc.setdefault("first_come", None)
         if acc["first_come"]:
             for key in ("name_ko", "note", "note_ko"):
