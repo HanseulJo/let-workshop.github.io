@@ -2880,8 +2880,13 @@ h2 .note {
   font-size: 0.86rem;
   line-height: 1.45;
 }
+/* The line is an element inside the row, never the row itself: the <a> where
+   there is somewhere to go, a plain span where there is not. The row used to
+   be its own flex line when it had no link, and that held until a row without
+   a link needed a sub-line under it — the sub-line then became a third thing
+   on the line, standing beside the figure instead of below both. */
 .fact > a,
-.fact:not(.is-link) {
+.fact > .fact-line {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -2918,6 +2923,11 @@ h2 .note {
   white-space: nowrap;
 }
 /* Whatever did not fit on the line, under it and quieter still. */
+/* On a row that is a link the flex line is the <a>, and the sub-line is a
+   sibling of it — so it falls below on its own. On a row that is not, the <li>
+   itself is the line and the sub-line became a third thing on it, standing
+   beside the figure. Full-basis puts it back under, and the wrap is what lets
+   it go there; only rows without a link ever wrap. */
 .fact-sub {
   display: block;
   margin-top: 2px;

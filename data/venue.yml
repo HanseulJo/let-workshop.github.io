@@ -283,16 +283,18 @@ accommodation:
   # one. 207 is the route that matters here — it runs the seafront to POSTECH —
   # and every one of these is on it.
   nearby:
-    # On the campus, so it leads the list — the only one of these you can walk
-    # to the venue from.
+    # On the campus, so it leads the list — but not one of the places a reader
+    # can book. The rooms there go to the project's researchers and the invited
+    # speakers, and it says so on the line rather than being left off the list:
+    # it is the building the workshop is in, and anyone who found it themselves
+    # would go looking. No map link for the same reason — nothing to act on.
     - name: POSCO International Center
       name_ko: 포스코국제관
       icon: "🏫"
       travel: on campus
       travel_ko: 교내
-      transit: the venue itself
-      transit_ko: 워크숍이 열리는 건물
-      map: https://map.naver.com/p/search/포스코국제관
+      transit: project researchers and invited speakers
+      transit_ko: 과제참여연구원 및 연사
     - name: Hotel Yeongildae
       icon: "🏨"
       name_ko: 호텔영일대

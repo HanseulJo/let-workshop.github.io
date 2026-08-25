@@ -723,8 +723,10 @@
             <ul class="facts">
               {% for room in venue.rooms %}
               <li class="fact">
-                <span class="fact-name">{% if room.icon %}<span class="fact-icon" aria-hidden="true">{{ room.icon }}</span>{% endif %}{{ room.name }}</span>
-                <span class="fact-figure">{{ room.detail }}</span>
+                <span class="fact-line">
+                  <span class="fact-name">{% if room.icon %}<span class="fact-icon" aria-hidden="true">{{ room.icon }}</span>{% endif %}{{ room.name }}</span>
+                  <span class="fact-figure">{{ room.detail }}</span>
+                </span>
               </li>
               {% endfor %}
             </ul>
@@ -747,8 +749,10 @@
               {% endfor %}
               {% for note in venue.getting_here_notes %}
               <li class="fact">
-                <span class="fact-name">{{ t(note.label, note.label_ko) }}</span>
-                <span class="fact-figure">{{ t(note.detail, note.detail_ko) }}</span>
+                <span class="fact-line">
+                  <span class="fact-name">{{ t(note.label, note.label_ko) }}</span>
+                  <span class="fact-figure">{{ t(note.detail, note.detail_ko) }}</span>
+                </span>
               </li>
               {% endfor %}
             </ul>
@@ -762,10 +766,10 @@
             <ul class="facts">
               {% for place in venue.accommodation.nearby %}
               <li class="fact{{ ' is-link' if place.map }}">
-                {% if place.map %}<a href="{{ place.map }}" target="_blank" rel="noopener">{% endif %}
+                {% if place.map %}<a href="{{ place.map }}" target="_blank" rel="noopener">{% else %}<span class="fact-line">{% endif %}
                 <span class="fact-name">{% if place.icon %}<span class="fact-icon" aria-hidden="true">{{ place.icon }}</span>{% endif %}{{ t(place.name, place.name_ko) }}</span>
                 <span class="fact-figure">{{ t(place.travel, place.travel_ko) }}</span>
-                {% if place.map %}</a>{% endif %}
+                {% if place.map %}</a>{% else %}</span>{% endif %}
                 {% if place.transit %}
                 <span class="fact-sub">{{ t(place.transit, place.transit_ko) }}</span>
                 {% endif %}
