@@ -260,6 +260,15 @@ getting_here_notes: []
 # says otherwise. No rates here on purpose: they move, and a stale price on a
 # programme page is worse than no price.
 accommodation:
+  # Off the page. A list of hotels under the workshop's own name reads as a
+  # list the workshop arranged — a rate negotiated, a block held, someone to
+  # complain to — and none of that is true; they are three places near the
+  # campus that anyone would find on a map. The information is still worth
+  # sending, just not worth publishing: it goes in the mail to participants and
+  # in the registration form, where it is plainly one organiser passing on what
+  # they know. Everything below is kept for that. Set this true and the card
+  # gets its Accommodation block back exactly as it was.
+  published: false
   title: Accommodation
   title_ko: 숙소
   # Beside the heading, in the small type Transport uses for the same job: what
