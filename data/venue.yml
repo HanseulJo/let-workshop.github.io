@@ -270,31 +270,16 @@ accommodation:
   # on the campus, which is not a hotel.
   note: hotel recommendations
   note_ko: 추천 숙소
-  # No block of rooms is held any more. `first_come` used to say one was, and
-  # deleting it is the whole of the change: the guest house is now simply the
-  # nearest of the places you can book, and it is listed as one.
-  #
-  # And no line telling anybody to book direct. With nothing held there is
-  # nothing else it could mean — a list of hotels under the word Accommodation
-  # is already a list of places to book. Give this a value and it comes back.
-  nearby_note: ~
-  nearby_note_ko: ~
+  # Where the speakers are put up. It is a sentence about the event, not an
+  # entry in the list: the guest house was sitting in the list wearing the same
+  # shape as the hotels, under a heading that says these are places to book,
+  # and the one thing it is not is a place a reader can book.
+  nearby_note: Speakers and project researchers are hosted at the POSCO International Center, on campus.
+  nearby_note_ko: 연사와 과제참여연구원은 캠퍼스 내 포스코국제관에 모십니다.
   # Two facts per place, not a table: how long by car, and the bus if there is
   # one. 207 is the route that matters here — it runs the seafront to POSTECH —
   # and every one of these is on it.
   nearby:
-    # On the campus, so it leads the list — but not one of the places a reader
-    # can book. The rooms there go to the project's researchers and the invited
-    # speakers, and it says so on the line rather than being left off the list:
-    # it is the building the workshop is in, and anyone who found it themselves
-    # would go looking. No map link for the same reason — nothing to act on.
-    - name: POSCO International Center
-      name_ko: 포스코국제관
-      icon: "🏫"
-      travel: on campus
-      travel_ko: 교내
-      transit: project researchers and invited speakers
-      transit_ko: 과제참여연구원 및 연사
     - name: Hotel Yeongildae
       icon: "🏨"
       name_ko: 호텔영일대

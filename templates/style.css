@@ -2928,6 +2928,18 @@ h2 .note {
    itself is the line and the sub-line became a third thing on it, standing
    beside the figure. Full-basis puts it back under, and the wrap is what lets
    it go there; only rows without a link ever wrap. */
+/* A sentence about the event rather than another row. It says who is already
+   housed, which is a different kind of fact from "here is a hotel you can
+   book" — and while it wore the row shape under a heading that means the
+   second thing, it was read as the second thing. No mark, no figure column,
+   no rule: nothing that makes it look like a line of the list beneath it. */
+.facts-note {
+  margin: 0 0 9px;
+  font-size: 0.79rem;
+  line-height: 1.55;
+  color: var(--muted);
+  word-break: keep-all;
+}
 .fact-sub {
   display: block;
   margin-top: 2px;

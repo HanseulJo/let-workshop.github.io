@@ -763,6 +763,9 @@
               {% if venue.accommodation.note %}
               <span class="venue-h-note">{{ t(venue.accommodation.note, venue.accommodation.note_ko) }}</span>{% endif %}
             </h4>
+            {% if venue.accommodation.nearby_note %}
+            <p class="facts-note">{{ t(venue.accommodation.nearby_note, venue.accommodation.nearby_note_ko) }}</p>
+            {% endif %}
             <ul class="facts">
               {% for place in venue.accommodation.nearby %}
               <li class="fact{{ ' is-link' if place.map }}">
