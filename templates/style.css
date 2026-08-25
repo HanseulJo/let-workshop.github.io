@@ -2612,10 +2612,22 @@ h2 .note {
    it takes the prose face rather than the mono the field tag uses. */
 .spk-talk {
   margin-top: 7px;
-  font-size: 0.78rem;
-  line-height: 1.4;
+  font-size: 0.72rem;
+  line-height: 1.45;
   color: var(--prose);
   word-break: keep-all;
+  /* Four lines, then an ellipsis. A conference title can run to ninety
+     characters, and one of those beside a card with none made the whole row
+     as tall as its longest title — a grid row takes the height of the tallest
+     card in it, so one title was costing fifteen cards their proportions.
+     Four is where measuring put it: at 1440 every card comes out the same
+     height and one title of sixteen is cut, at three lines five were. And
+     nothing is lost by cutting: the card opens on the title in full. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
 }
 .spk-topic {
   margin-top: auto;

@@ -211,7 +211,7 @@ days:
       # Fifteen rather than twenty, and the afternoon starts five minutes
       # earlier, which is where the room for the fourth session comes from.
       - type: break
-        title: Coffee Break (15 min) · put your poster up
+        title: Coffee Break (15 min)
         start: "14:50"
         end: "15:05"
         bare: true
@@ -265,8 +265,10 @@ days:
             home: https://sangdon.github.io/
 
       # Two things in the same hours, in the two halves of the day's column.
+      # The poster line sits on the break that runs into the poster session
+      # rather than on the one two hours before it.
       - type: break
-        title: Coffee Break (15 min)
+        title: Coffee Break (15 min) · put your poster up
         start: "16:25"
         end: "16:40"
         bare: true
@@ -296,8 +298,7 @@ days:
               Form (8/25): free Day 1 in all four sessions and Day 2 morning — this slot
               among them. Abstract given as TBA.
             topic: minimax optimization
-            # No `home` yet — the form did not ask for one and a guessed URL is
-            # worse than none, since the card links the name straight to it.
+            home: https://mathsci.kaist.ac.kr/~donghwankim/
 
       - type: poster
         title: Poster Session
@@ -319,7 +320,8 @@ days:
       # Ten minutes is two grid rows, and the label did not fit in them —
       # tiny is the size the other ten-minute slots on this grid are set at.
       - type: break
-        title: Break (10 min)
+        title: Break (10 min) · take your poster off
+        emoji: "🧘"
         start: "18:20"
         end: "18:30"
         density: tiny
@@ -494,8 +496,10 @@ days:
             home: https://www.kihyukhong.com
             topic: offline RL
 
+      # The poster line sits on the break that runs into the poster session
+      # rather than on the one two hours before it.
       - type: break
-        title: Coffee Break (15 min)
+        title: Coffee Break (15 min) · put your poster up
         start: "16:25"
         end: "16:40"
         bare: true
