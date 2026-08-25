@@ -208,17 +208,19 @@ days:
             note: Verbal yes via Chulhee Yun; no formal confirmation yet.
             home: https://coallaoh.github.io/
 
+      # Fifteen rather than twenty, and the afternoon starts five minutes
+      # earlier, which is where the room for the fourth session comes from.
       - type: break
-        title: Coffee Break (20 min) · put your poster up
+        title: Coffee Break (15 min) · put your poster up
         start: "14:50"
-        end: "15:10"
+        end: "15:05"
         bare: true
 
       - type: block
         title: UQ in LLMs
         chair: TBD
-        start: "15:10"
-        end: "16:30"
+        start: "15:05"
+        end: "16:25"
         speakers:
           - name: Juho Lee
             role: Prof.
@@ -263,28 +265,74 @@ days:
             home: https://sangdon.github.io/
 
       # Two things in the same hours, in the two halves of the day's column.
+      - type: break
+        title: Coffee Break (15 min)
+        start: "16:25"
+        end: "16:40"
+        bare: true
+
+      # The afternoon's fourth session, and the reason the banquet moves. One
+      # talk rather than two: it is what the hour between the last pair and the
+      # posters holds, and it is the slot Donghwan Kim ticked.
+      - type: block
+        title: Optimization
+        chair: TBD
+        start: "16:40"
+        end: "17:20"
+        speakers:
+          - name: Donghwan Kim
+            role: Prof.
+            role_ko: 교수
+            name_ko: 김동환
+            photo: donghwan-kim.jpg
+            affil: KAIST
+            talk: Edge of Stability Occurs in Minimax Optimization
+            bio: >-
+              Donghwan Kim is an Associate Professor in the Department of Mathematical
+              Sciences and an affiliated faculty member of the Graduate School of AI for
+              Math at KAIST. His research focuses on optimization and learning theory for
+              deep learning and generative models.
+            note: >-
+              Form (8/25): free Day 1 in all four sessions and Day 2 morning — this slot
+              among them. Abstract given as TBA.
+            topic: minimax optimization
+            # No `home` yet — the form did not ask for one and a guessed URL is
+            # worse than none, since the card links the name straight to it.
+
       - type: poster
         title: Poster Session
         track: 1
-        start: "16:30"
-        end: "18:00"
+        start: "17:20"
+        end: "18:20"
 
       - type: internal
         title: NRF Project Internal Meeting
         emoji: "🧩"
-        start: "16:30"
-        end: "18:00"
+        start: "17:20"
+        end: "18:20"
         track: 2
         density: compact
         notes:
           - Project members only
         calendar: false
 
+      # Ten minutes is two grid rows, and the label did not fit in them —
+      # tiny is the size the other ten-minute slots on this grid are set at.
+      - type: break
+        title: Break (10 min)
+        start: "18:20"
+        end: "18:30"
+        density: tiny
+        bare: true
+
+      # Half an hour later than it was: the fourth session and the poster hour
+      # after it push everything back, and the banquet is the thing with the
+      # give in it.
       - type: social
         title: Grand Banquet [Provided]
-        start: "18:00"
+        start: "18:30"
         end: "20:30"
-        time_label: from 18:00
+        time_label: from 18:30
 
   # ═══════════════ DAY 2 ═══════════════
   - label: Day 2 · Oct 8 (Thu)

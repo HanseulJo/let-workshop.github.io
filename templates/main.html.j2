@@ -441,6 +441,13 @@
               {%- if s.role %}<span class="t-ko role-beside"> <span class="role">{{ s.role_ko or s.role }}</span></span>{% endif -%}
               <span class="affil">{{ t(s.affil, s.affil_ko) }}</span>
             </div>
+            <!-- What they are giving, under who they are. It is the one thing
+                 a reader is looking for on a card that is otherwise a face and
+                 a name, and it is the thing behind the card as well. Nobody
+                 gets a placeholder: a card with no title yet is a card with a
+                 name on it, which is finished-looking, and a row of "to be
+                 announced" is not. -->
+            {% if s.talk %}<div class="spk-talk">{{ s.talk }}</div>{% endif %}
             <!-- The session's subject, not the talk's — "Bandits" rather than
                  "heavy-tailed". Held back while the schedule is: it is read off
                  the session a speaker is in, and the grid is not saying which

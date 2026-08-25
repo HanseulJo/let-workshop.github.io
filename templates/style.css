@@ -2607,6 +2607,16 @@ h2 .note {
    as a tag rather than a second line of the name. Only some speakers have one,
    so it must look deliberate on the cards that do and leave no gap on the
    cards that don't. */
+/* The talk under the name. Quieter than the name and heavier than the affil,
+   because it is the second thing read and not the third — and it is prose, so
+   it takes the prose face rather than the mono the field tag uses. */
+.spk-talk {
+  margin-top: 7px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--prose);
+  word-break: keep-all;
+}
 .spk-topic {
   margin-top: auto;
   /* The rule belongs to the tag under it, and 9px put the tag almost on the

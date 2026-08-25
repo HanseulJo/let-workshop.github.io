@@ -13,7 +13,6 @@ people:
   - { name: Ilmun Kim, affil: KAIST, topic: TBD }
   - { name: Albert No, affil: Yonsei, topic: Masked diffusion }
   - { name: Minwoo Chae, affil: POSTECH, topic: One-pass Bayesian online learning }
-  - { name: Donghwan Kim, affil: KAIST, topic: Minimax optimization }
   - { name: Dohyun Kwon, affil: Yonsei, topic: Bilevel optimization }
   - { name: Dabeen Lee, affil: SNU, topic: contextual queueing bandits }
   - { name: Hyung-Chan An, affil: Yonsei, topic: Learning-augmented algorithms }
