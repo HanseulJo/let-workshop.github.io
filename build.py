@@ -26,11 +26,50 @@ from urllib.parse import quote, quote_plus
 
 try:
     import markdown as md
+    import pyphen
     import yaml
     from jinja2 import Environment, FileSystemLoader, StrictUndefined
     from markupsafe import Markup, escape
 except ModuleNotFoundError as exc:  # pragma: no cover - setup hint
     sys.exit(f"missing dependency '{exc.name}'\n  pip install -r requirements.txt")
+
+# Where an English word may be broken, so a title can be set in a column
+# narrower than the words in it. left/right keep three letters on each side of
+# a break: "Re-" and "-ment" are hyphenations, "R-" and "-t" are typos.
+HYPHENS = pyphen.Pyphen(lang="en_US", left=3, right=3)
+SHY = "\u00ad"
+
+
+def soft_break(text: str | None) -> str | None:
+    """Mark a title's syllable breaks with soft hyphens.
+
+    `hyphens: auto` in CSS says the same thing and is what a browser with a
+    hyphenation dictionary will do anyway — but whether it has one is not
+    something the page can find out, and headless Chrome here does not. A soft
+    hyphen is a character: it is in the markup, it can be counted, and it
+    breaks the line in every engine that has ever shipped. It is invisible
+    unless the break actually happens there.
+
+    Only the long words, and never one in capitals — FRESCO is an acronym and
+    LLM is three letters, and neither has syllables to find.
+    """
+    if not text:
+        return text
+
+    def piece(part: str) -> str:
+        core = part.strip(".,:;()[]")
+        if len(core) < 9 or core.isupper() or any(c.isdigit() for c in core):
+            return part
+        return HYPHENS.inserted(part, hyphen=SHY)
+
+    # Split on the hyphens already in the word and hyphenate each side alone.
+    # Handed "Weight-Space" whole, the dictionary counts three letters in from
+    # the start of the token and offers "Weight-S-pace"; handed "Best-of-Both-
+    # Worlds" it puts a soft hyphen against a real one, which breaks as two.
+    # A real hyphen is already a place a line may break, so nothing needs to be
+    # added beside it.
+    return " ".join("-".join(piece(p) for p in w.split("-")) for w in text.split(" "))
+
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -814,6 +853,12 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
                             "event_id": e["id"],
                             "photo": f"speakers/{s['photo']}" if s.get("photo") else None,
                             "initials": "".join(p[0] for p in s["name"].split()[:2]).upper(),
+                            # The card's copy of the title, with its break
+                            # points marked. The plain one goes everywhere
+                            # else: a soft hyphen is invisible but it is still
+                            # a character, and a title someone copies out of
+                            # the panel should not carry them.
+                            "talk_card": soft_break(s.get("talk")),
                         }
                     )
         # Subjects keep programme order — Day 1 before Day 2 — because that is

@@ -447,7 +447,7 @@
                  gets a placeholder: a card with no title yet is a card with a
                  name on it, which is finished-looking, and a row of "to be
                  announced" is not. -->
-            {% if s.talk %}<div class="spk-talk">{{ s.talk }}</div>{% endif %}
+            {% if s.talk %}<div class="spk-talk" lang="en">{{ s.talk_card }}</div>{% endif %}
             <!-- The session's subject, not the talk's — "Bandits" rather than
                  "heavy-tailed". Held back while the schedule is: it is read off
                  the session a speaker is in, and the grid is not saying which

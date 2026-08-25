@@ -2615,7 +2615,17 @@ h2 .note {
   font-size: 0.72rem;
   line-height: 1.45;
   color: var(--prose);
-  word-break: keep-all;
+  /* Broken at syllables, with a hyphen. A card is about 145px wide and the
+     words in a title are long — Reinforcement, Perturbed-Leader — so whole-word
+     breaking left a hole at the end of most lines and pushed the rest of the
+     title down a line it did not need. The titles are English whatever the page
+     is set to, which is why the element says so: hyphenation is per-language
+     and the browser will not attempt it without being told which.
+     No keep-all here, unlike the rest of the card. That rule exists to stop
+     Hangul breaking mid-word, and on an English line it is what forbids the
+     break this wants. */
+  hyphens: auto;
+  -webkit-hyphens: auto;
   /* Four lines, then an ellipsis. A conference title can run to ninety
      characters, and one of those beside a card with none made the whole row
      as tall as its longest title — a grid row takes the height of the tallest
