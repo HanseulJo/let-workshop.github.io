@@ -85,8 +85,8 @@ hero_actions:
     # opens_at: 2026-08-24T18:00:00+09:00
     # shut_note: Opens August 24, 18:00
     # shut_note_ko: 8월 24일 18시 오픈
-    note: Until August 31
-    note_ko: 8월 31일까지
+    note: Until September 1
+    note_ko: 9월 1일까지
     primary: true
   - label: See speakers
     label_ko: 연사 보기
