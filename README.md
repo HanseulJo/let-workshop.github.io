@@ -1,33 +1,30 @@
-# KOLT 2026
+# LeT (Learning Theory) Workshop
 
-**Korean workshop On Learning Theory** — 1st edition
-**October 7–8, 2026 (Wed–Thu) · POSTECH, Pohang, South Korea**
+📍 When/Where: **October 7–8, 2026 (Wed–Thu) · POSTECH, Pohang, South Korea**
 
-Live: <https://kolt-workshop.github.io/2026/>
+Live: <https://let-workshop.github.io/>
 Staging: <https://dongyeoplee2.github.io/kolt-page-test-private/2026/>
 
-2026 theme: **Bandits & Deep Learning Theory**
+Despite the explosive growth of AI, the research community in machine learning
+(ML) and AI theory remains small and geographically and institutionally
+dispersed. In Korea, ML/AI theory researchers, especially graduate students,
+often find themselves isolated within their own labs, with limited opportunities
+to interact with researchers from other groups.
 
-KOLT exists to build a community for machine learning theory in Korea.
+LeT Workshop aims to promote exchange and collaboration among ML/AI theory
+researchers across Korea, while providing a venue for sharing their latest
+research.
 
-Despite the explosive growth of AI, theoretical research in the field has become
-relatively small, particularly in Korea. Researchers and graduate students often
-find themselves isolated within their own labs, with few opportunities to connect
-with colleagues from neighboring groups. KOLT is an annual gathering that brings
-these researchers together to showcase their work, discuss the unique challenges
-of theoretical research, and initiate collaborations.
-
-KOLT는 국내 기계학습 이론 연구자들의 커뮤니티를 만들기 위한 워크샵입니다.
-국내 이론 연구자들이 1년에 한 번 한자리에 모여 서로의 연구를 접하고, 이론
-연구자로서의 고민을 나누며, 공동연구의 계기를 만드는 자리를 마련하고자 합니다.
+LeT Workshop은 국내 기계학습·인공지능 이론 연구자 간 교류와 공동 연구를 촉진하고
+각자의 최신 연구 성과를 공유하기 위한 워크숍입니다.
 
 ## At a glance
 
-|          |                                             |
-| -------- | ------------------------------------------- |
-| Date     | October 7–8, 2026 (2 days, Wed–Thu)         |
-| Location | POSTECH, Pohang, South Korea                |
-| Language | Korean                                      |
+|          |                                                    |
+| -------- | -------------------------------------------------- |
+| Date     | October 7–8, 2026 (2 days, Wed–Thu)                |
+| Location | POSTECH, Pohang, South Korea                       |
+| Language | Korean                                             |
 | Format   | Talks · Tutorials · Posters, no formal peer review |
 
 Day 1 covers deep learning theory and uncertainty quantification and closes with
