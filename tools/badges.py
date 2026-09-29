@@ -65,7 +65,7 @@ def chrome(*args):
 
 
 
-def poster_png(work, port, poster_art, ghost, scheme, out_png):
+def poster_png(work, port, poster_art, ghost, scheme, out_png, dpi=600):
     """The poster's background, as a picture, at badge resolution.
 
     Not a crop of the sheet and not a second solve at badge size — the sheet's
@@ -75,9 +75,13 @@ def poster_png(work, port, poster_art, ghost, scheme, out_png):
     falls back to; the photograph under them at the sheet's ghost_alpha; and
     the veil over both. The badge draws that one picture and nothing else.
 
-    It is rendered at 1063 x 1535, which is 90 x 130mm at 300 DPI. Rendering
-    it at the sheet's own 5031px and letting the card shrink it would be the
-    same image and five times the file.
+    Rendered at 600 DPI rather than 300. The formulas are the sheet's, which
+    means a row of them is 0.38mm tall — 4.5 pixels at 300 DPI, where a stroke
+    falls below one pixel and the writing turns to grey. At 600 it is 9, which
+    is the difference between a texture of marks and a texture of smudge. The
+    vector route would be better still and is not available: the sheet's
+    artwork is 190,000 formulas, Chrome re-embeds a vector background once per
+    page, and five cards did not finish printing in ten minutes.
     """
     if out_png.exists():
         return out_png
@@ -89,8 +93,9 @@ def poster_png(work, port, poster_art, ghost, scheme, out_png):
     # Only the type goes. The three background layers are the point of this.
     bare.write_text(page.read_text().replace("</style>", ".wrap{visibility:hidden}</style>"),
                     encoding="utf-8")
-    chrome("--hide-scrollbars", f"--force-device-scale-factor={CARD_PX[0] / 1610:.5f}",
-           "--window-size=1610,2268", "--virtual-time-budget=120000",
+    px = round(90 / 25.4 * dpi)
+    chrome("--hide-scrollbars", f"--force-device-scale-factor={px / 1610:.5f}",
+           "--window-size=1610,2268", "--virtual-time-budget=180000",
            f"--screenshot={out_png}", f"http://localhost:{port}/{bare.name}")
     if not out_png.exists():
         sys.exit("  could not render the poster background")
@@ -162,6 +167,9 @@ def main():
     ap.add_argument("--style", choices=("plate", "open"), default="plate",
                     help="how the name stays legible over the drawing — see "
                          "BADGE_STYLES in poster.py. The file is named after it.")
+    ap.add_argument("--dpi", type=int, default=600,
+                    help="what the background picture is baked at (default 600; "
+                         "the formulas are 4.5px a row at 300)")
     ap.add_argument("--chunk", type=int, default=20,
                     help="cards per PDF before they are joined (default 20)")
     ap.add_argument("--out", default=str(Path.home() / "Downloads/let-badges"))
@@ -199,7 +207,8 @@ def main():
                 "--badge-style", args.style,
                 "--roster-blanks", str(blanks), "-o", page, cwd=ROOT)
             png = png or poster_png(work, args.port, args.poster_art,
-                                     args.ghost, args.scheme, work / "poster-bg.png")
+                                     args.ghost, args.scheme,
+                                     work / f"poster-bg-{args.dpi}.png", args.dpi)
             page = with_raster_art(page, png)
             pdf = work / f"badges-{n}.pdf"
             pdf.unlink(missing_ok=True)

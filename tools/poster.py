@@ -1127,16 +1127,19 @@ BANNER = """<!doctype html>
      looks at the banner twice.
      What made a block necessary was that the drawing and the type were at the
      same strength wherever they met. The gradient does that job instead: the
-     picture is held to a fifth across the left, where the name and the credit
-     line are, and comes up to full from 74% — past 3891mm, which is where the
-     type ends. So it is one picture across the whole cloth, quiet where it is
+     picture is held to an eighth across the left, where the name and the
+     credit line are, and comes up to three quarters from 71% — 4260mm,
+     which clears 3891mm where the type ends, and puts the clock tower at
+     4210mm just inside the rise rather than halfway down it. Three quarters rather than full: the
+     drawing is a ground for a banner, and at full strength it stopped being
+     behind the thing and started being the thing. So it is one picture across the whole cloth, quiet where it is
      read over and loud where it is not. */
   .stage {{
     position:absolute; inset:0; overflow:hidden;
-    -webkit-mask-image:linear-gradient(to right, rgba(0,0,0,.20) 0,
-      rgba(0,0,0,.20) 62%, #000 74%, #000 100%);
-    mask-image:linear-gradient(to right, rgba(0,0,0,.20) 0,
-      rgba(0,0,0,.20) 62%, #000 74%, #000 100%);
+    -webkit-mask-image:linear-gradient(to right, rgba(0,0,0,.13) 0,
+      rgba(0,0,0,.13) 66%, rgba(0,0,0,.76) 71%, rgba(0,0,0,.76) 100%);
+    mask-image:linear-gradient(to right, rgba(0,0,0,.13) 0,
+      rgba(0,0,0,.13) 66%, rgba(0,0,0,.76) 71%, rgba(0,0,0,.76) 100%);
   }}
   .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:.3; }}
   .art {{ position:absolute; inset:0; overflow:hidden; }}
@@ -1653,7 +1656,12 @@ BADGE = """<!doctype html>
      of the drawing that used to be under the veil's heavy end. */
   .veil {{ position:absolute; inset:0; background:{badge_veil}; }}
   .pad {{ position:absolute; inset:0; padding:9mm 8mm 8mm; display:flex; flex-direction:column; }}
-  .top {{ display:flex; align-items:baseline; justify-content:space-between; gap:4mm; }}
+  /* The name of the thing, and under it what the name stands for. The long
+     name used to sit at the foot and the dates beside the mark — which put the
+     workshop's two halves at opposite ends of the card and gave the mark a
+     column of small type to share its line with. Together at the top they read
+     as one block: what this is, then what that means. */
+  .top {{ display:block; }}
   /* 9mm and unbreakable. At 11 the mark measured 53mm of the 74mm the card
      has, the date column took the rest, and the mark wrapped onto two lines —
      a wordmark split across a line break stops being a wordmark. */
@@ -1662,9 +1670,13 @@ BADGE = """<!doctype html>
     line-height:1; color:{ink}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
+  /* When and where, at the foot on the left, a line each. Ranged left rather
+     than right: it is now the start of the foot's line rather than the end of
+     the top's, and it is read, not glanced at. */
   .when {{
     font-family:"JetBrains Mono",monospace; font-size:2.8mm; letter-spacing:.1em;
-    text-transform:uppercase; color:{ink}; opacity:.5; text-align:right; line-height:1.5;
+    text-transform:uppercase; color:{ink}; opacity:.62; text-align:left;
+    line-height:1.6; margin:0;
   }}
   /* The name sits above centre, not on it: a lanyard holder curls forward at
      the bottom and a card worn on a chest is read from above.
@@ -1709,7 +1721,14 @@ BADGE = """<!doctype html>
     font-family:"JetBrains Mono",monospace; font-size:2.7mm; letter-spacing:.1em;
     text-transform:uppercase; color:{ink}; opacity:.55;
   }}
-  .foot .longname {{ margin:0; max-width:44mm; line-height:1.5; }}
+  /* Under the mark, at the mark's own left edge. Not uppercase-tracked into a
+     second wordmark: it is the expansion of the one above it, so it is set
+     quietly and lets the mark stay the loud thing. */
+  .top .longname {{
+    font-family:"JetBrains Mono",monospace; font-size:2.6mm; letter-spacing:.1em;
+    text-transform:uppercase; color:{ink}; opacity:.55;
+    margin:2.4mm 0 0; line-height:1.5; max-width:60mm;
+  }}
   .qr-plate {{ width:16mm; height:16mm; background:{art_ink}; padding:.8mm; box-sizing:border-box; flex:none; }}
   .qr-plate svg {{ display:block; width:100%; height:100%; }}
 </style></head><body>
@@ -2425,10 +2444,10 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             '<div class="card"><div class="ghost"></div><div class="art"></div>'
             '<div class="veil"></div><div class="pad">'
             f'<div class="top"><h1 class="mark">{esc(mark)} <span>{esc(year)}</span></h1>'
-            f'<div class="when">{esc(short_dates)}<br>{esc(site["venue"])}, {esc(site["city"])}</div></div>'
+            f'<p class="longname">{esc(site["full_name"].upper())}</p></div>'
             f'<div class="who"><span class="role{"" if hot else " plain"}">{esc(role)}</span>{who}</div>'
             '<div class="foot">'
-            f'<p class="longname">{esc(site["full_name"].upper())}</p>'
+            f'<div class="when">{esc(short_dates)}<br>{esc(site["venue"])}, {esc(site["city"])}</div>'
             f'<div class="qr-plate">{qr_svg(site["url"], dark=PALETTE["ground2"], light=None)}</div>'
             "</div></div></div>")
 

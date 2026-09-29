@@ -504,6 +504,9 @@
             {% for day in program.days %}
             <button data-day="{{ loop.index0 }}" data-date="{{ day.date }}" onclick="setDay('{{ loop.index0 }}')">{{ day.short }}</button>
             {% endfor %}
+            <!-- Not a day: the thirteen posters all sit in one hour of Day 1,
+                 and reading them is a different errand from reading the day. -->
+            <button data-day="posters" onclick="setDay('posters')">Posters</button>
           </div>
 
           <div class="sched-links">
@@ -1818,13 +1821,36 @@
 
       // ---- Day filter (list view; the grid always shows every day side by side)
       function setDay(day) {
+        var posters = day === "posters";
         document.querySelectorAll("#day-pills button").forEach(function (b) {
           b.classList.toggle("active", b.dataset.day === day);
         });
+        // Abstracts: talks and posters are rows of one list, told apart by
+        // data-kind. A day means the talks of that day; Posters means the
+        // posters and nothing else.
+        document.querySelectorAll(".abs[data-kind]").forEach(function (row) {
+          row.classList.toggle(
+            "hidden",
+            posters ? row.dataset.kind !== "poster" : row.dataset.kind === "poster"
+          );
+        });
+        // List: the posters are one event rather than thirteen rows, so that
+        // event is what the chip leaves standing.
+        document.querySelectorAll(".agenda-row").forEach(function (row) {
+          row.classList.toggle("hidden", posters && !row.classList.contains("wash-poster"));
+        });
         // Both linear views carry the same data-day, and the pills are shown
         // for both — filtering only the list left the abstracts ignoring them.
+        // A block the filter has emptied goes too, so no heading stands over
+        // nothing.
         document.querySelectorAll(".agenda, .abs-day").forEach(function (block) {
-          block.classList.toggle("hidden", day !== "all" && block.dataset.day !== day);
+          var wrongDay = !posters && day !== "all" && block.dataset.day !== day;
+          var empty =
+            posters &&
+            !block.querySelector(
+              '.abs[data-kind="poster"], .agenda-row.wash-poster'
+            );
+          block.classList.toggle("hidden", wrongDay || empty);
         });
       }
 
