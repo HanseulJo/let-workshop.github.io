@@ -418,37 +418,141 @@ days:
         # Speakers section is built from that key, and fifteen poster authors
         # in it would say the workshop has thirty-one invited talks.
         posters:
+          - name: Changmin Kang
+            name_ko: 강창민
+            affil: KAIST AI
+            title: >-
+              The Implicit Bias of Steepest Descent on Multiclass Nonseparable Data
+            abstract: >-
+              We study steepest descent for linear multiclass classification with
+              softmax cross-entropy on nonseparable data. Unlike binary nonseparable
+              logistic regression, where the data split into separable and nonseparable
+              examples, a multiclass example induces multiple pairwise margin
+              constraints that may differ in separability. We therefore introduce a
+              norm-dependent parameter-space decomposition: one component remains
+              constant throughout the descent, an escaping component that maximizes the
+              margin in the separable subspace, and a bounded component that converges
+              to a finite optimum in the nonseparable subspace. We derive convergence
+              rates of the risk to its infimum and of the normalized margin of the
+              escaping component to the norm-dependent optimum. We also characterize
+              directional convergence. When the norm is strictly convex, the max-margin
+              direction is unique and the escaping component converges to it
+              directionally. Without strict convexity, we find that this can fail: we
+              construct a linear classification problem and an optimization norm for
+              which the normalized escaping component has multiple distinct max-margin
+              accumulation points, even with separable training data.
           - name: Kyuwon Kim
             name_ko: 김규원
             affil: KAIST MAS
             title: >-
               Understanding Prediction Target, Time Sampling, and Model Capacity in
               Diffusion Models
+            abstract: >-
+              Denoising diffusion models require several coupled design choices: what
+              the network predicts, how timesteps are sampled during training, and how
+              much capacity the architecture provides. Three recent empirical findings
+              shed light on how to make these choices: (i) clean data prediction can
+              have higher generation quality than standard noise or velocity prediction;
+              (ii) sampling timesteps from a logit-normal distribution can outperform
+              uniform sampling; and (iii) generation quality can peak at an intermediate
+              model capacity. However, a theoretical understanding of these observations
+              and of how the three choices interact remains limited. In this paper, we
+              show that theoretical counterparts of all three observations already arise
+              in a tractable linear model with Gaussian data and a time-gated predictor.
+              Specifically, our spectral analysis reveals how the three choices jointly
+              determine spectral components of the data are represented by the model
+              and, in turn, the generated distribution. This analysis further shows that
+              optimal design choices vary with the spectral structure of the data. We
+              provide empirical support for our theoretical findings on synthetic and
+              real data.
           - name: Junsoo Oh
             name_ko: 오준수
             affil: KAIST AI
             title: >-
-              Mamba Can Learn Low-Dimensional Targets In-Context via Test-Time
-              Feature Learning
+              Mamba Can Learn Low-Dimensional Targets In-Context via Test-Time Feature
+              Learning
+            abstract: >-
+              Mamba, a recently proposed linear-time sequence model, has attracted
+              significant attention for its computational efficiency and strong
+              empirical performance. However, a rigorous theoretical understanding of
+              its underlying mechanisms remains limited. In this work, we provide a
+              theoretical analysis of Mamba's in-context learning (ICL) capability by
+              focusing on tasks defined by low-dimensional nonlinear target functions.
+              Specifically, we study in-context learning of a single-index model, which
+              depends on only a single relevant direction, referred to as a feature. We
+              prove that Mamba, pretrained by gradient-based methods, can achieve
+              efficient ICL via test-time feature learning, extracting the relevant
+              direction directly from context examples. Consequently, we establish a
+              test-time sample complexity that improves upon linear Transformers —
+              analyzed to behave like kernel methods — and is comparable to nonlinear
+              Transformers, which have been shown to surpass the Correlational
+              Statistical Query (CSQ) lower bound and achieve near information-
+              theoretically optimal rate in previous works. Our analysis reveals the
+              crucial role of the nonlinear gating mechanism in Mamba for feature
+              extraction, highlighting it as the fundamental driver behind Mamba's
+              ability to achieve both computational efficiency and high performance.
           - name: Taewon Koo
             name_ko: 구태원
             affil: KAIST
             title: >-
               Minimax Optimality of Posterior Sampling for Reinforcement Learning
+            abstract: >-
+              Posterior sampling for reinforcement learning (PSRL) has received
+              sustained attention for its algorithmic simplicity and strong empirical
+              performance. Despite this practical success, whether vanilla PSRL attains
+              minimax regret under the general correlated priors accepted by the
+              algorithm has remained unresolved. We close this gap through a Bellman
+              analysis that combines posterior confidence transfer with a residual-
+              corrected variance argument. In time-inhomogeneous tabular MDPs with
+              unknown stochastic rewards, exact vanilla PSRL achieves Bayesian regret of
+              order √(SAH³K) up to logarithmic factors, under an arbitrary joint
+              reward–transition prior. In linear-mixture MDPs, it achieves order
+              dH^{3/2}√K under an arbitrary joint prior over all stage parameters. Both
+              bounds match the corresponding minimax rates without conjugacy, prior
+              factorization, or posterior-consistency assumptions.
           - name: Donggeun Kim
             name_ko: 김동근
             affil: POSTECH IME
             title: >-
               Online Thompson sampling for generalized linear bandits
-          - name: Jinseong Park
-            name_ko: 박진성
-            affil: KIAS
-            # title still to come
+            abstract: >-
+              Applying Thompson sampling (TS) to generalized linear bandits (GLBs) is
+              computationally challenging because exact posterior updates are generally
+              intractable. Existing GLB algorithms with strong regret guarantees
+              typically rely on batch estimators built from accumulated data, while
+              computationally efficient one-pass methods often require hard-to-specify
+              problem-dependent constants. We propose OnlineTS, an online TS algorithm
+              for GLBs based on Bayesian one-pass online learning. Our method uses a
+              Gaussian approximation induced by a local quadratic expansion of the log-
+              likelihood, leading to a recursive posterior update that depends only on
+              the current estimator and the current observation. We show that this
+              Bayesian online one-pass estimator admits a high probability concentration
+              bound in the bandit setting, which yields a frequentist regret bound of
+              order d√T for OnlineTS over horizon T, where d is the dimension of
+              contexts. Thus, OnlineTS combines strong statistical performance with
+              computational efficiency without requiring hard-to-specify theoretical
+              constants for implementation. Through numerical experiments, we
+              demonstrate that OnlineTS consistently outperforms existing GLB methods by
+              a significant margin.
           - name: Minju Hong
             name_ko: 홍민주
             title: >-
               Provably Efficient Regularized Online RLHF with Generalized Bilinear
               Preferences
+            abstract: >-
+              We study regularized best-response max-regret minimization in online RLHF
+              under general preferences and bandit feedback. While regularization
+              robustifies alignment, known polylogarithmic regret guarantees remain
+              heavily KL-specific. To investigate whether these fast rates generalize,
+              we adopt the Generalized Bilinear Preference Model (GBPM), capturing
+              intransitive preferences over multi-dimensional item-wise features via a
+              low-rank skew-symmetric matrix. Using only strong convexity and skew-
+              symmetry, we prove that the dual gap of any greedy policy is bounded by
+              the squared estimation error. Under a feature coverage assumption, we
+              establish a generic polylogarithmic regret bound with Greedy Sampling, and
+              a dimensionally improved bound for well-conditioned arm-sets with Explore-
+              Then-Commit. This demonstrates that fast regrets are not KL-specific, but
+              fundamentally stem from generic strong convex geometry.
           - name: Taehyuk Ha
             name_ko: 하태혁
             affil: POSTECH CES
@@ -459,34 +563,130 @@ days:
             affil: KAIST MAS
             title: >-
               Edge of Stability Occurs in Minimax Optimization
+            abstract: >-
+              The Edge of Stability (EoS) phenomenon is widely observed in minimization,
+              where gradient methods continue to decrease the loss even while remaining
+              near their stability thresholds, a behavior associated with a self-
+              stabilization mechanism. Yet an analogous phenomenon has not been clearly
+              identified in minimax optimization. In this paper, we formulate EoS for
+              minimax optimization, demonstrate that it indeed occurs, and characterize
+              the self-stabilization mechanism underlying it. We first define EoS for
+              minimax optimization in terms of possibly complex dominant Jacobian
+              eigenvalues reaching the boundary of the stability region. Using two-
+              player zero-sum games, we observe minimax EoS for both Extragradient (EG)
+              and Optimistic Gradient Descent Ascent (OGDA). However, when the dominant
+              eigenvalues lie near the real axis, OGDA still exhibits EoS whereas EG
+              does not. Finally, we generalize the self-stabilization mechanism to
+              minimax methods and show how it explains these behaviors.
           - name: Heesang Ahn
             name_ko: 안희상
             affil: SNU DS
             title: >-
-              Generalized Linear Bandits with Memory
+              Block-Sphere Vector Quantization
+            abstract: >-
+              Vector quantization is a fundamental primitive for scalable machine
+              learning systems, enabling memory-efficient storage, fast retrieval, and
+              compressed inference. Recent rotation-based quantizers such as EDEN,
+              RabitQ, and TurboQuant have introduced strong guarantees and empirical
+              performance, but the surrounding comparisons have been difficult to
+              interpret because they rely on different distortion criteria, probability
+              regimes, and implementation assumptions. As our first contribution, we
+              provide a unified theoretical comparison of these methods and show that
+              their relative advantages are criterion-dependent rather than absolute:
+              EDEN and TurboQuant are favorable for MSE distortion, EDEN is also
+              effective for expected inner-product distortion, and RabitQ provides
+              strong high-probability control. This comparison further clarifies that
+              EDEN provides particularly strong guarantees for expected distortion
+              measures. As our second contribution, we introduce Block-Sphere
+              Quantization (BlockQuant), a new rotation-based block quantization
+              algorithm designed around the spherical geometry of randomly rotated
+              vectors. Unlike coordinate-wise quantizers, BlockQuant quantizes blocks on
+              the sphere, preserving the geometry of rotated embeddings more faithfully.
+              We prove that this block-spherical design theoretically improves over the
+              baselines considered in this paper for both reconstruction MSE and
+              expected inner-product distortion. Our experiments on real embedding
+              datasets and long-context LLM inference tasks show practical gains that
+              are consistent with our theoretical improvements.
           - name: Hyunjun Choi
             name_ko: 최현준
             affil: SNU DS
             title: >-
               Topic-Aware Contextual Cascading Bandits
+            abstract: >-
+              We propose a contextual cascading bandit model in which the click
+              probability at each position depends on both the displayed item and the
+              topics of previously shown items. This captures how previously displayed
+              topics affect later click probabilities, allowing different topic orders
+              to induce different user responses. Unlike standard cascading bandits, the
+              optimal cascade is no longer determined only by the selected set of items,
+              since the ordering itself affects the expected reward. To address the
+              resulting planning challenge, we reformulate cascade construction as a
+              Markov decision process whose state summarizes the previously selected
+              topics. Based on this formulation, we develop an optimism-based algorithm
+              and prove a regret upper bound that decreases with the cascade length K, a
+              phenomenon that had not been established even in order-insensitive
+              contextual cascading bandits. We further provide a local regret lower
+              bound showing that this decreasing dependence on K is intrinsic, and
+              validate our theory through experiments with topic-order-dependent click
+              probabilities.
           - name: Heeseong Kim
             name_ko: 김희성
             affil: HYU CS
             title: >-
               Gradient Descent with Large Step Size Restores Symmetry in Deep Linear
               Networks with Multi-Pathway
+            abstract: >-
+              Recent analyses of multi-pathway Deep Linear Networks use Gradient Flow to
+              predict a "winner-takes-all" specialization in which path symmetry breaks
+              and each feature concentrates in a single pathway. In this work, we show
+              that discrete Gradient Descent (GD) with a large step size tells a
+              different story. We prove that single-path solutions are sharp minima,
+              whereas distributing signals across pathways reduces sharpness by a factor
+              that decreases with both the number of pathways and depth. Consequently,
+              while early training reproduces the depth-driven symmetry breaking
+              predicted by GF, oscillations at the Edge of Stability subsequently
+              override this tendency and drive the network into a re-balancing phase,
+              where signals redistribute across pathways. Together, these results
+              clarify how depth shapes pathway competition and explain why large-step GD
+              favors shared representations rather than persistent single-pathway
+              dominance.
           - name: Minsub Shin
             name_ko: 신민섭
             affil: KAIST MAS
             title: >-
               Local Exponential Stability of Mean-Field Langevin Descent–Ascent and
               Associated Particle System
+            abstract: >-
+              In this presentation we prove the local exponential stability of Mean-
+              Field Langevin Descent–Ascent. We answer the positive part of the open
+              problem by Wang and Chizat (COLT 2024). Moreover we present a particle
+              theorem that shows the finite-particle dynamics inherits this stability
+              modulo a finite-particle error floor.
           - name: Taehyun Hwang
             name_ko: 황태현
             affil: SNU DS
             title: >-
-              Linear Ensemble Sampling with Fewer Ensembles
-
+              Linear Ensemble Sampling with Smaller Ensembles
+            abstract: >-
+              Ensemble sampling is a practically attractive approach to randomized
+              exploration, but existing theoretical guarantees for linear bandits
+              require ensembles much larger than what its practical motivation would
+              suggest. In particular, the sharpest existing analysis achieves an
+              ensemble complexity of order d log T, leaving a log T gap from the
+              intrinsic order-d ensemble-size barrier. We aim to narrow this gap by
+              proposing an ensemble sampling algorithm that refreshes the ensemble only
+              when the regularized Gram matrix changes substantially. This mechanism
+              localizes the perturbation analysis to epochs with controlled Gram-matrix
+              drift and reduces the sufficient ensemble size to order d log d + d log
+              log T, while preserving the state-of-the-art regret for ensemble sampling
+              with arbitrary bounded arm sets. We further show that, when the arm set is
+              finite of cardinality K, the proposed algorithm achieves the sharper
+              regret bound of order d√(T log K). To the best of our knowledge, this is
+              the first ensemble-sampling guarantee that simultaneously recovers both
+              canonical regret scalings known for randomized linear bandit algorithms.
+              The algorithm also admits an anytime implementation without resetting past
+              data, and experiments show that it remains competitive with baselines
+              while using substantially smaller ensembles.
       - type: internal
         title: NRF Project Internal Meeting
         emoji: "🧩"

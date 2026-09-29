@@ -2106,6 +2106,14 @@
             return "<li><b>" + p.nameHtml + "</b>" +
                    (p.affil ? ' <em>' + esc(p.affil) + "</em>" : "") +
                    (p.title ? '<div class="poster-title">' + esc(p.title) + "</div>" : "") +
+                   // A native <details>: it opens without script, it is a
+                   // button to a screen reader, and only the one you ask for
+                   // takes up any room.
+                   (p.abstract
+                     ? '<details class="poster-abs"><summary>' +
+                       tbd("Abstract", "초록") + "</summary><p>" +
+                       esc(p.abstract) + "</p></details>"
+                     : "") +
                    "</li>";
           }).join("") + "</ol>";
         }

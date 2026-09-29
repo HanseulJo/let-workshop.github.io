@@ -114,6 +114,8 @@ PALETTE = {
     "scrim5": "rgba(15,24,38,.90)", "scrim6": "rgba(15,24,38,.86)",
     "keyline": "rgba(245,245,247,.34)", "rule_soft": "rgba(245,245,247,.20)",
     "rule_mid": "rgba(245,245,247,.30)", "rule_strong": "rgba(245,245,247,.42)",
+    # The panel the badge sets its name on. See .who in BADGE.
+    "plate": "rgba(15,24,38,.74)",
     "chip": "rgba(255,255,255,.34)",
 }
 
@@ -1119,36 +1121,26 @@ BANNER = """<!doctype html>
      1900mm, and the clock tower is the one thing that survives being made
      small, so the artwork is cropped around the tower rather than scaled down
      from the band. */
+  /* The drawing covers the cloth. It was a 2100mm block on the right, which
+     kept it clear of the type at the cost of leaving two thirds of a
+     six-metre banner as flat ground — and the picture is the reason anyone
+     looks at the banner twice.
+     What made a block necessary was that the drawing and the type were at the
+     same strength wherever they met. The gradient does that job instead: the
+     picture is held to a fifth across the left, where the name and the credit
+     line are, and comes up to full from 74% — past 3891mm, which is where the
+     type ends. So it is one picture across the whole cloth, quiet where it is
+     read over and loud where it is not. */
   .stage {{
-    position:absolute; top:0; right:0; bottom:0; width:2100mm; overflow:hidden;
-    /* The whole photograph, at full strength, in the space the type leaves.
-       Two things were wrong before and they pulled against each other. The
-       crop took the middle 74% of the frame, throwing away the observatory
-       dome and the trees on the left to centre the tower — and the block was
-       then widened to 3000mm to get that width back, which only bought picture
-       the fade had to hide again, because the credit line runs to 3891mm and a
-       drawing behind it is a drawing nobody looks at under type nobody can
-       read. Measured, the block's first third came out at ink 4 to 9 against
-       50 for the part that shows: a third of it was there and invisible.
-       So: nothing cropped off either end of the frame, and the block starts
-       where the type ends. Every millimetre of it is a millimetre someone can
-       see. The fade is 12% now, 252mm, which is an edge treatment rather than
-       a way of hiding a third of the picture. */
-    -webkit-mask-image:linear-gradient(to right, transparent 0, #000 12%, #000 100%);
-    mask-image:linear-gradient(to right, transparent 0, #000 12%, #000 100%);
+    position:absolute; inset:0; overflow:hidden;
+    -webkit-mask-image:linear-gradient(to right, rgba(0,0,0,.20) 0,
+      rgba(0,0,0,.20) 62%, #000 74%, #000 100%);
+    mask-image:linear-gradient(to right, rgba(0,0,0,.20) 0,
+      rgba(0,0,0,.20) 62%, #000 74%, #000 100%);
   }}
   .ghost {{ position:absolute; inset:0; overflow:hidden; opacity:.3; }}
   .art {{ position:absolute; inset:0; overflow:hidden; }}
   .art svg, .ghost svg {{ position:absolute; inset:0; width:100%; height:100%; display:block; }}
-  /* A banner is hung, and the top and bottom 60mm go into the hem or round a
-     pole. Nothing that has to be read lives there. */
-  /* The same keyline the X-banner and the square set carry, inset to the line
-     the type is set to. It is what stops a dark field dissolving into whatever
-     wall or crowd is behind it. */
-  .frame {{
-    position:absolute; inset:56mm; border:1.4mm solid {keyline};
-    pointer-events:none;
-  }}
   /* Everything the banner says is set against the left edge, in one column:
      the name, then the credit line under it. The right of the cloth is left to
      the drawing, because that is where the clock tower falls and a banner with
@@ -1217,7 +1209,6 @@ BANNER = """<!doctype html>
 </style></head><body>
 <div class="sheet">
   <div class="stage">{ghost}<div class="art">{art}</div></div>
-  <div class="frame"></div>
   <div class="wrap">
     <div class="lead">
       <h1 class="mark">{mark} <span>{year}</span></h1>
@@ -1644,16 +1635,23 @@ BADGE = """<!doctype html>
      would not finish printing it; as one data URI behind a background-image it
      is stored once and painted twenty-one times.
 
-     Held right down either way. It is why the badge belongs to this workshop
-     and not another, and it is the one thing on the card that must not compete
-     with a name read across a handshake. */
+     It is why the badge belongs to this workshop and not another, and it must
+     not compete with a name read across a handshake. It used to be held down
+     everywhere to manage that — the drawing at a third, the photograph at a
+     sixth, and a veil over the whole card running to 92% across the half where
+     the name sits. Between them the picture was gone exactly where there was
+     room to see it.
+     The name has its own panel now (see .who), so the two jobs are separated:
+     the plate keeps the type legible and the picture is free to be a picture
+     everywhere else. */
   .art, .ghost {{ position:absolute; inset:0; background-position:center;
                   background-size:cover; background-repeat:no-repeat; }}
-  .art {{ background-image:url("{art_url}"); opacity:.34; }}
-  .ghost {{ background-image:url("{ghost_url}"); opacity:.16; }}
-  .veil {{ position:absolute; inset:0;
-    background:linear-gradient(180deg,
-      {scrim1} 0%, {scrim5} 46%, {scrim4} 100%); }}
+  .art {{ background-image:url("{art_url}"); opacity:{badge_art_op}; }}
+  .ghost {{ background-image:url("{ghost_url}"); opacity:{badge_ghost_op}; }}
+  /* A wash rather than a lid. It still settles the card top to bottom so the
+     mark and the date have somewhere to sit, but it no longer hides the half
+     of the drawing that used to be under the veil's heavy end. */
+  .veil {{ position:absolute; inset:0; background:{badge_veil}; }}
   .pad {{ position:absolute; inset:0; padding:9mm 8mm 8mm; display:flex; flex-direction:column; }}
   .top {{ display:flex; align-items:baseline; justify-content:space-between; gap:4mm; }}
   /* 9mm and unbreakable. At 11 the mark measured 53mm of the 74mm the card
@@ -1669,8 +1667,14 @@ BADGE = """<!doctype html>
     text-transform:uppercase; color:{ink}; opacity:.5; text-align:right; line-height:1.5;
   }}
   /* The name sits above centre, not on it: a lanyard holder curls forward at
-     the bottom and a card worn on a chest is read from above. */
-  .who {{ margin-top:13mm; }}
+     the bottom and a card worn on a chest is read from above.
+     On its own panel, because the drawing behind it is no longer held down to
+     nothing. Translucent rather than opaque — the picture still shows through
+     it, which is the point of putting the badge on a drawing at all — and
+     rounded, so it reads as something laid on the card rather than a hole cut
+     in it. The colour is the card's own ground, not white: white on the dark
+     scheme would be a different design. */
+  .who {{ {badge_who} }}
   .role {{
     display:inline-block; font-family:"JetBrains Mono",monospace; font-size:2.9mm;
     font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:{hot};
@@ -2051,6 +2055,34 @@ def festival_bits(program, organizers, site):
     return "".join(bill), "".join(sess), orgs, days
 
 
+# Two ways of keeping a name legible over a drawing, and the badge prints
+# either. They are a real choice rather than a setting with a right answer.
+#
+#   plate  The picture runs at strength across the whole card and the name sits
+#          on a translucent panel of the card's own ground. The drawing stays a
+#          drawing everywhere; the panel is a visible object on top of it.
+#   open   No panel. The veil does the work instead, as it always did — a wash
+#          that thickens towards the foot until the lower half is nearly solid
+#          ground. Nothing is laid over the card, and the price is that the
+#          half of the picture behind the name is mostly gone.
+#
+# `open` is the badge as it was, with the drawing lifted a little because it
+# was being held further down than the veil needed it to be.
+BADGE_STYLES = {
+    "plate": {
+        "badge_art_op": ".52", "badge_ghost_op": ".30",
+        "badge_veil": "linear-gradient(180deg,{scrim2} 0%,{scrim2} 52%,{scrim6} 100%)",
+        "badge_who": ("margin-top:9mm; background:{plate}; border-radius:3.2mm; "
+                      "padding:5mm 5mm 5.6mm; margin-left:-1mm; margin-right:-1mm;"),
+    },
+    "open": {
+        "badge_art_op": ".44", "badge_ghost_op": ".22",
+        "badge_veil": "linear-gradient(180deg,{scrim1} 0%,{scrim5} 46%,{scrim4} 100%)",
+        "badge_who": "margin-top:13mm;",
+    },
+}
+
+
 # The pixel size the photographic layers are generated at, per layout. Not the
 # print size — this is the raster the duotone is computed on, and it only has to
 # match the shape of the piece so nothing is cropped into or stretched across.
@@ -2067,7 +2099,7 @@ GHOST_SIZE = {
     "civic": (1700, 820),
     "listing": (1700, 1520),
     "bauhaus": (1000, 1360),
-    "banner": (1700, 729),      # the 2100 x 900mm block on the right, not the cloth
+    "banner": (3400, 510),      # the whole cloth, 6000 x 900mm
     "xbanner": (900, 2700),     # 600 x 1800mm
     "social": (1400, 1400),     # 1080 x 1080 square
     "badge": (900, 1300),       # 90 x 130mm
@@ -2136,6 +2168,7 @@ SCHEMES = {
         "scrim5": "rgba(203,224,242,.80)", "scrim6": "rgba(203,224,242,.72)",
         "keyline": "rgba(13,33,55,.30)", "rule_soft": "rgba(13,33,55,.18)",
         "rule_mid": "rgba(13,33,55,.26)", "rule_strong": "rgba(13,33,55,.36)",
+        "plate": "rgba(255,255,255,.76)",
     },
 }
 
@@ -2161,7 +2194,7 @@ def on_paper():
 
 def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None,
          ghost=None, silhouette=None, roster_path=None, roster_sort="role",
-         roster_blanks=6):
+         roster_blanks=6, badge_style="plate"):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
@@ -2547,6 +2580,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
             for w in site["full_name"].split())),
         reg_note=esc((site["hero_actions"][0].get("note") or "Opens soon")),
         badges=badges,
+        **{k: v.format(**PALETTE) for k, v in BADGE_STYLES[badge_style].items()},
         art_url=art_url,
         ghost_url=ghost_url,
         blurb=esc(site.get("blurb", "")),
@@ -2598,6 +2632,10 @@ if __name__ == "__main__":
                          "or the order the file is already in")
     ap.add_argument("--roster-blanks", type=int, default=6,
                     help="spare unnamed badges at the end (default 6)")
+    ap.add_argument("--badge-style", choices=sorted(BADGE_STYLES), default="plate",
+                    help="how the badge keeps a name legible over the drawing: "
+                         "`plate` puts it on a translucent panel, `open` leans on "
+                         "the veil as the card always did")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
                     choices=("stack", "listing", "festival", "academic", "civic",
@@ -2621,4 +2659,5 @@ if __name__ == "__main__":
                                .replace(OLD_ART_INK, override["art_ink"]), encoding="utf-8")
             args.art = str(patched)
     main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone,
-         args.ghost, args.silhouette, args.roster, args.roster_sort, args.roster_blanks)
+         args.ghost, args.silhouette, args.roster, args.roster_sort,
+         args.roster_blanks, args.badge_style)

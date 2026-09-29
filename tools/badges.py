@@ -115,6 +115,9 @@ def main():
     ap.add_argument("--roster", default=str(ROOT / "data/roster.tsv"))
     ap.add_argument("--sort", choices=("role", "name"), default="role")
     ap.add_argument("--blanks", type=int, default=6)
+    ap.add_argument("--style", choices=("plate", "open"), default="plate",
+                    help="how the name stays legible over the drawing — see "
+                         "BADGE_STYLES in poster.py. The file is named after it.")
     ap.add_argument("--chunk", type=int, default=20,
                     help="cards per PDF before they are joined (default 20)")
     ap.add_argument("--out", default=str(Path.home() / "Downloads/let-badges"))
@@ -149,6 +152,7 @@ def main():
             run(sys.executable, ROOT / "tools/poster.py", "--art", args.art,
                 "--ghost", args.ghost, "--layout", "badge", "--scheme", args.scheme,
                 "--roster", tsv, "--roster-sort", "file",   # the order was chosen above
+                "--badge-style", args.style,
                 "--roster-blanks", str(blanks), "-o", page, cwd=ROOT)
             png = png or rasterise_art(work, args.port, page)
             page = with_raster_art(page, png)
@@ -164,7 +168,7 @@ def main():
     finally:
         server.terminate()
 
-    merged = out / "let-2026-badges.pdf"
+    merged = out / f"let-2026-badges-{args.style}.pdf"
     writer = PdfWriter()
     for pdf in pdfs:
         writer.append(str(pdf))

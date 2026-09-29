@@ -1035,6 +1035,10 @@ def build(name: str, variant: dict, bundle: dict, env: Environment) -> tuple[str
                     "nameHtml": str(bilingual(p["name"], p.get("name_ko"))),
                     "affil": p.get("affil"),
                     "title": p.get("title"),
+                    # Folded away behind a disclosure in the sheet: thirteen
+                    # abstracts at once is a wall, and one at a time is what
+                    # somebody deciding which poster to walk to needs.
+                    "abstract": p.get("abstract"),
                 }
                 for p in (e.get("posters") or [])
             ] if not variant["anonymize"] else [],

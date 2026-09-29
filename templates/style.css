@@ -2256,6 +2256,50 @@ button.sp-talk-link:focus-visible {
   margin-top: 1px;
   color: var(--prose);
 }
+/* The abstract, folded. Closed it is a word; open it is a paragraph, and the
+   sheet scrolls, so thirteen of them cost nothing until one is asked for. */
+.poster-abs {
+  margin-top: 3px;
+}
+.poster-abs > summary {
+  display: inline-block;
+  padding: 1px 0;
+  font-size: 0.78em;
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--label);
+  cursor: pointer;
+  list-style: none;
+}
+.poster-abs > summary::-webkit-details-marker {
+  display: none;
+}
+/* The caret is the whole affordance, so it says which way this goes. */
+.poster-abs > summary::after {
+  content: " \25B8";
+  display: inline-block;
+  margin-left: 4px;
+  transition: transform 0.15s ease;
+}
+.poster-abs[open] > summary::after {
+  transform: rotate(90deg);
+}
+.poster-abs > summary:hover,
+.poster-abs > summary:focus-visible {
+  color: var(--accent);
+}
+.poster-abs .t-ko {
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+.poster-abs p {
+  margin: 4px 0 2px;
+  font-size: 0.94em;
+  line-height: 1.6;
+  color: var(--prose);
+  word-break: keep-all;
+}
 
 /* Shown when the sheet is open on one talk: the way to the other one. Quiet,
    and at the foot, because it is an offer rather than the point of the sheet. */
