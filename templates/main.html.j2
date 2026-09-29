@@ -1615,6 +1615,12 @@
           document.getElementById("view-btn-" + name).classList.toggle("active", on);
         });
         document.getElementById("day-pills").classList.toggle("hidden", view === "grid" || view === "now");
+        // The list has no poster rows to filter — the posters are one event
+        // there — so the chip only means something among the abstracts. If it
+        // was the live filter when the view changed, the days take over again.
+        var posterPill = document.querySelector('#day-pills button[data-day="posters"]');
+        posterPill.classList.toggle("hidden", view !== "abstracts");
+        if (view !== "abstracts" && posterPill.classList.contains("active")) setDay("all");
         if (view === "now") renderNow();
         try {
           localStorage.setItem("kolt-view", view);
@@ -1834,22 +1840,13 @@
             posters ? row.dataset.kind !== "poster" : row.dataset.kind === "poster"
           );
         });
-        // List: the posters are one event rather than thirteen rows, so that
-        // event is what the chip leaves standing.
-        document.querySelectorAll(".agenda-row").forEach(function (row) {
-          row.classList.toggle("hidden", posters && !row.classList.contains("wash-poster"));
-        });
         // Both linear views carry the same data-day, and the pills are shown
         // for both — filtering only the list left the abstracts ignoring them.
         // A block the filter has emptied goes too, so no heading stands over
         // nothing.
         document.querySelectorAll(".agenda, .abs-day").forEach(function (block) {
           var wrongDay = !posters && day !== "all" && block.dataset.day !== day;
-          var empty =
-            posters &&
-            !block.querySelector(
-              '.abs[data-kind="poster"], .agenda-row.wash-poster'
-            );
+          var empty = posters && !block.querySelector('.abs[data-kind="poster"]');
           block.classList.toggle("hidden", wrongDay || empty);
         });
       }
