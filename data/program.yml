@@ -81,8 +81,8 @@ instructions:
         value_ko: A0 세로 — 841 × 1189 mm
       - label: Printing
         label_ko: 인쇄
-        value: Print it yourself and bring it with you.
-        value_ko: 각자 인쇄해서 가져오시면 됩니다.
+        value: Print it yourself and bring it with you — portrait, not landscape.
+        value_ko: 각자 인쇄해서 가져오시면 됩니다. 가로가 아닌 세로로 뽑아 주세요.
       - label: Boards and fixings
         label_ko: 거치·고정
         value: Provided. Stands and clips are here, so bring the sheet and nothing else.
