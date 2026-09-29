@@ -1681,7 +1681,13 @@ BADGE = """<!doctype html>
     font-family:"Satoshi",sans-serif; font-weight:700; font-size:11mm;
     line-height:1.12; letter-spacing:-.016em; color:{ink}; margin:0;
   }}
-  .name-ko {{
+  /* The line under the name. It used to be the Korean one, under a romanised
+     name; it is the romanised one now, under the Korean. Everyone at this
+     workshop has a Korean name and only the speakers and organisers have a
+     romanised one on file, so leading with the Korean is the only rule that
+     gives every badge the same shape — and it is the name the desk is looking
+     someone up under, because the list on the desk is Korean. */
+  .name-sub {{
     font-family:"Satoshi",sans-serif; font-weight:500; font-size:5.4mm;
     color:{ink}; opacity:.62; margin:1.6mm 0 0;
   }}
@@ -2377,9 +2383,9 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
     art_url = as_url(art)
     ghost_url = as_url(ghost_layer[len('<div class="ghost">'):-len("</div>")]) if ghost_layer else ""
 
-    def badge_card(role, hot, name="", name_ko="", affil=""):
+    def badge_card(role, hot, name="", sub="", affil=""):
         who = (f'<p class="name">{esc(name)}</p>'
-               + (f'<p class="name-ko">{esc(name_ko)}</p>' if name_ko else "")
+               + (f'<p class="name-sub">{esc(sub)}</p>' if sub else "")
                + (f'<p class="affil">{esc(affil)}</p>' if affil else "")) if name else (
                '<div class="write"><i></i><i></i></div>')
         return (
@@ -2402,13 +2408,15 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
                     continue
                 speaker_names.add(person["name"])
                 badge_cards.append(badge_card(
-                    "Speaker", True, person["name"],
-                    person.get("name_ko", ""), person.get("affil", "")))
+                    "Speaker", True, person.get("name_ko") or person["name"],
+                    person["name"] if person.get("name_ko") else "",
+                    person.get("affil", "")))
     for mbr in organizers["members"]:
         if mbr["name"] in speaker_names:
             continue
         badge_cards.append(badge_card(
-            "Organiser", True, mbr["name"], mbr.get("name_ko", ""), mbr.get("affil", "")))
+            "Organiser", True, mbr.get("name_ko") or mbr["name"],
+            mbr["name"] if mbr.get("name_ko") else "", mbr.get("affil", "")))
     badge_cards += [badge_card("Participant", False) for _ in range(4)]
 
     # With a roster, the sheet is the people who registered rather than the
@@ -2421,7 +2429,7 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         import roster as roster_mod
         people = roster_mod.ordered(roster_mod.read(roster_path), roster_sort)
         badge_cards = [badge_card(p2["role"], p2["role"] in roster_mod.HOT,
-                                  p2["name"], p2["name_ko"], p2["affil"])
+                                  p2["name"], p2["name_sub"], p2["affil"])
                        for p2 in people]
         # Spares, because someone always turns up who did not register and a
         # blank badge with a pen beats no badge at all.

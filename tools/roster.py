@@ -173,13 +173,17 @@ def read(path=None):
         else:
             role = "Attendee"
 
-        latin = romanised.get(ko, "")
         people.append({
             "role": role,
-            # The romanised name leads where there is one, with the Korean
-            # under it; otherwise the Korean name is the name.
-            "name": latin or ko,
-            "name_ko": ko if latin else "",
+            # The Korean name leads, always, and the romanised one goes under
+            # it where there is one. It was the other way round, and that gave
+            # the two dozen people the site already names a different-shaped
+            # badge from everyone else — and put the smaller line on the name
+            # the registration desk actually searches, since the list on the
+            # desk is Korean. Someone who wrote a Latin name in the form has
+            # that as their name and no subtitle.
+            "name": ko,
+            "name_sub": romanised.get(ko, ""),
             "affil": _tidy(row.get(col["affil"])),
             "position": _tidy(row.get(col["position"])),
             "email": email,
@@ -201,7 +205,7 @@ def write(path, people):
         w = csv.writer(fh, delimiter="\t", lineterminator="\n")
         w.writerow(head)
         for p2 in people:
-            w.writerow(["", p2["email"], p2["name_ko"] or p2["name"],
+            w.writerow(["", p2["email"], p2["name"],
                         flags.get(p2["role"], "아니오"),
                         p2["affil"], p2["position"], ""])
 
@@ -209,8 +213,8 @@ def write(path, people):
 def ordered(people, sort="role"):
     """Print order: four bundles, one alphabetical run, or the file's own.
 
-    Within a bundle, by the name the desk will be looking the person up under —
-    the Korean one where there is one, because the list on the desk is Korean.
+    Within a bundle, by the name on the card, which is the Korean one — the
+    list on the desk is Korean and that is what gets searched.
 
     `file` leaves them alone, which is what a caller that has already decided
     the order wants. tools/badges.py cuts the sorted roster into chunks and
@@ -220,7 +224,7 @@ def ordered(people, sort="role"):
     """
     if sort == "file":
         return list(people)
-    key = lambda p: (p["name_ko"] or p["name"], p["affil"])
+    key = lambda p: (p["name"], p["affil"])
     if sort == "name":
         return sorted(people, key=key)
     return sorted(people, key=lambda p: (ROLES.index(p["role"]), key(p)))
@@ -236,8 +240,8 @@ def main():
     people = ordered(read(args.roster), args.sort)
     width = max(len(p["name"]) for p in people)
     for i, p in enumerate(people, 1):
-        ko = f'  {p["name_ko"]}' if p["name_ko"] else ""
-        print(f'  {i:3d}  {p["role"]:9} {p["name"]:{width}}{ko:8}  {p["affil"]}')
+        sub = f'  {p["name_sub"]}' if p["name_sub"] else ""
+        print(f'  {i:3d}  {p["role"]:9} {p["name"]:{width}}{sub:18}  {p["affil"]}')
     print()
     for r in ROLES:
         n = sum(1 for p in people if p["role"] == r)

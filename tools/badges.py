@@ -172,7 +172,7 @@ def main():
         writer.write(fh)
 
     lines = [f'{i:3d}  {p["role"]:9} {p["name"]}'
-             + (f'  ({p["name_ko"]})' if p["name_ko"] else "")
+             + (f'  ({p["name_sub"]})' if p["name_sub"] else "")
              + (f'  — {p["affil"]}' if p["affil"] else "")
              for i, p in enumerate(people, 1)]
     (out / "roster.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
