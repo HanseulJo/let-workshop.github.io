@@ -568,7 +568,7 @@
                are the same row, in the hour they happen. #}
             {% for t in e.talks + e.poster_entries %}
             <article class="abs" data-kind="{{ 'poster' if loop.index0 >= e.talks | length else 'talk' }}">
-              <div class="abs-when">{{ e.start }} – {{ e.end }}<span class="badge badge-{{ e.type }}">{{ types[e.type].short }}</span></div>
+              <div class="abs-when">{% if t.when %}<span class="abs-no">{{ t.when }}</span>{% else %}{{ e.start }} – {{ e.end }}{% endif %}<span class="badge badge-{{ e.type }}">{{ types[e.type].short }}</span></div>
               <div class="abs-main">
                 <div class="abs-who">{{ t.line }}</div>
                 {% if t.talk %}<h4>{{ t.talk }}</h4>{% endif %}

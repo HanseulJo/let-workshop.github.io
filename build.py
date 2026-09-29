@@ -662,6 +662,8 @@ def talk_entries(event: dict, ident: str, notes: bool) -> list[dict]:
     for i, s in enumerate(event["speakers"]):
         talks.append(
             {
+                # Talks are told apart by when they are; see poster_entries.
+                "when": None,
                 "line": speaker_line(s),
                 "talk": s.get("talk"),
                 "abstract": Markup(md.markdown(s["abstract"])) if s.get("abstract") else None,
@@ -682,6 +684,10 @@ def poster_entries(event: dict) -> list[dict]:
     """
     return [
         {
+            # A poster does not happen at a time — they all happen in the same
+            # hour — so what tells one from another in a list is its number,
+            # which is also the number on the sheet you walk in with.
+            "when": f"#{i + 1}",
             "line": Markup("<b>%s</b>%s")
             % (
                 bilingual(p["name"], p.get("name_ko")),
@@ -694,7 +700,7 @@ def poster_entries(event: dict) -> list[dict]:
             "slides": None,
             "note": None,
         }
-        for p in (event.get("posters") or [])
+        for i, p in enumerate(event.get("posters") or [])
     ]
 
 

@@ -1661,13 +1661,16 @@ BADGE = """<!doctype html>
      workshop's two halves at opposite ends of the card and gave the mark a
      column of small type to share its line with. Together at the top they read
      as one block: what this is, then what that means. */
-  .top {{ display:block; }}
+  .top {{ display:block; {badge_top} }}
   /* 9mm and unbreakable. At 11 the mark measured 53mm of the 74mm the card
      has, the date column took the rest, and the mark wrapped onto two lines —
      a wordmark split across a line break stops being a wordmark. */
+  /* The accent, as on the sheet and the banner. It was the ink here, which
+     made the badge the one piece whose name was not the colour the workshop's
+     name is — and the badge is where the name is read closest. */
   .mark {{
     font-family:"Jost",sans-serif; font-weight:700; font-size:9mm; white-space:nowrap;
-    line-height:1; color:{ink}; letter-spacing:-.02em; margin:0;
+    line-height:1; color:{hot}; letter-spacing:-.02em; margin:0;
   }}
   .mark span {{ font-weight:300; }}
   /* When and where, at the foot on the left, a line each. Ranged left rather
@@ -2093,11 +2096,17 @@ BADGE_STYLES = {
         "badge_veil": "linear-gradient(180deg,{scrim2} 0%,{scrim2} 52%,{scrim6} 100%)",
         "badge_who": ("margin-top:9mm; background:{plate}; border-radius:3.2mm; "
                       "padding:5mm 5mm 5.6mm; margin-left:-1mm; margin-right:-1mm;"),
+        # The mark gets the same panel. It is the accent now, and the accent on
+        # the sheet's own background measured 2.84:1 — under the 3:1 that type
+        # this size is held to, because the badge shows that background at full
+        # strength where the poster veils it. On the panel it clears.
+        "badge_top": ("background:{plate}; border-radius:3.2mm; "
+                      "padding:4mm 5mm 4.4mm; margin:-1mm -1mm 0;"),
     },
     "open": {
         "badge_art_op": ".44", "badge_ghost_op": ".22",
         "badge_veil": "linear-gradient(180deg,{scrim1} 0%,{scrim5} 46%,{scrim4} 100%)",
-        "badge_who": "margin-top:13mm;",
+        "badge_who": "margin-top:13mm;", "badge_top": "",
     },
 }
 

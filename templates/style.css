@@ -3024,6 +3024,13 @@ button.sp-talk-link:focus-visible {
   margin-top: 8px;
   width: fit-content;
 }
+/* Where a talk has a time, a poster has its number — the same number the
+   session sheet counts off, so the two lists agree about which one is which. */
+.abs-no {
+  font-family: var(--mono);
+  font-size: 1.05em;
+  color: var(--label);
+}
 .abs-who {
   color: var(--who);
 }
