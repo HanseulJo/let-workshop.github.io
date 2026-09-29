@@ -1252,7 +1252,8 @@ section {
 .band .org-card,
 .band .spk-card,
 .band .cand,
-.band .now-lead {
+.band .now-lead,
+.band .guide {
   background: var(--band-alt);
 }
 .band-alt .card,
@@ -1264,7 +1265,8 @@ section {
 .band-alt .org-card,
 .band-alt .spk-card,
 .band-alt .cand,
-.band-alt .now-lead {
+.band-alt .now-lead,
+.band-alt .guide {
   background: var(--band);
 }
 h2 {
@@ -2646,31 +2648,33 @@ button.sp-talk-link:focus-visible {
   color: var(--break-ink);
 }
 
-/* What to bring, under the timetable. A card rather than a paragraph: four
-   answers to four questions, and the labels are what somebody scanning for
-   "what size" is looking for. */
-.poster-guide {
+/* One piece of standing advice. A card rather than a paragraph: a handful of
+   answers to a handful of questions, and the labels are what somebody scanning
+   for "what size" is looking for. */
+.guide {
   margin-top: 22px;
   padding: 18px 20px 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
 }
-.poster-guide h3 {
+.guide + .guide {
+  margin-top: 14px;
+}
+.guide h3 {
   margin: 0 0 10px;
   font-size: 1rem;
   color: var(--ink);
 }
-.poster-guide dl {
+.guide dl {
   margin: 0;
   display: grid;
   grid-template-columns: max-content 1fr;
   column-gap: 18px;
 }
-.poster-guide dl > div {
+.guide dl > div {
   display: contents;
 }
-.poster-guide dt {
+.guide dt {
   padding: 5px 0;
   font-family: var(--mono);
   font-size: 0.68rem;
@@ -2679,10 +2683,10 @@ button.sp-talk-link:focus-visible {
   color: var(--label);
   white-space: nowrap;
 }
-.poster-guide dt .t-ko {
+.guide dt .t-ko {
   letter-spacing: 0.02em;
 }
-.poster-guide dd {
+.guide dd {
   margin: 0;
   padding: 5px 0;
   font-size: 0.9rem;
@@ -2693,13 +2697,13 @@ button.sp-talk-link:focus-visible {
 /* Two lines on a phone: a label column wide enough for "Boards and fixings"
    leaves the sentence beside it a sliver. */
 @media (max-width: 620px) {
-  .poster-guide dl {
+  .guide dl {
     grid-template-columns: 1fr;
   }
-  .poster-guide dt {
+  .guide dt {
     padding-bottom: 0;
   }
-  .poster-guide dd {
+  .guide dd {
     padding-top: 1px;
     margin-bottom: 4px;
   }

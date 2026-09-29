@@ -449,12 +449,14 @@ def fill_defaults(bundle: dict) -> None:
     bundle["about"].setdefault("subtitle", None)
     bundle["about"].setdefault("subtitle_ko", None)
     program = bundle["program"]
-    program.setdefault("poster_guide", None)
-    if program["poster_guide"]:
-        program["poster_guide"].setdefault("title_ko", None)
-        for line in program["poster_guide"].setdefault("lines", []):
-            line.setdefault("label_ko", None)
-            line.setdefault("value_ko", None)
+    program.setdefault("instructions", None)
+    if program["instructions"]:
+        program["instructions"].setdefault("title_ko", None)
+        for block in program["instructions"].setdefault("blocks", []):
+            block.setdefault("title_ko", None)
+            for line in block.setdefault("lines", []):
+                line.setdefault("label_ko", None)
+                line.setdefault("value_ko", None)
     bundle["venue"].setdefault("title_ko", None)
     # No accommodation block is a legitimate page; the card simply omits it.
     for room in bundle["venue"].get("rooms", []):

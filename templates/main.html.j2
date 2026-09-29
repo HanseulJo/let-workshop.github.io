@@ -626,14 +626,22 @@
           </div>
         </div>
 
-        {% if program.poster_guide %}
-        <!-- Under the timetable, because a poster presenter reads the
-             timetable and because the answer to "what size?" should not be in
-             a mail somebody has to find again. -->
-        <div id="posters" class="poster-guide">
-          <h3>{{ t(program.poster_guide.title, program.poster_guide.title_ko) }}</h3>
+      </div>
+    </section>
+    {% if program.instructions %}
+    <!-- ===== INSTRUCTIONS =====
+         What somebody has to be told that is not a time or a room. After the
+         programme, because that is what they are instructions about, and its
+         own section because the answer to "what size?" should not live in a
+         mail anybody has to find again. -->
+    <section id="instructions" class="band band-alt">
+      <div class="wrap">
+        <h2>{{ t(program.instructions.title, program.instructions.title_ko) }}</h2>
+        {% for block in program.instructions.blocks %}
+        <div class="guide">
+          <h3>{{ t(block.title, block.title_ko) }}</h3>
           <dl>
-            {% for line in program.poster_guide.lines %}
+            {% for line in block.lines %}
             <div>
               <dt>{{ t(line.label, line.label_ko) }}</dt>
               <dd>{{ t(line.value, line.value_ko) }}</dd>
@@ -641,11 +649,12 @@
             {% endfor %}
           </dl>
         </div>
-        {% endif %}
+        {% endfor %}
       </div>
     </section>
+    {% endif %}
     <!-- ===== ORGANIZERS ===== -->
-    <section id="organizers" class="band band-alt">
+    <section id="organizers" class="band">
       <div class="wrap">
         <h2><span class="t-en">Organizers</span><span class="t-ko">조직위원회</span></h2>
         <div class="org-grid">
@@ -687,7 +696,7 @@
          tone — which is how you show a mark you are obliged to show. Given a
          band of their own and their own colours they read as the institutions
          behind the thing. -->
-    <section id="sponsors" class="band">
+    <section id="sponsors" class="band band-alt">
       <div class="wrap">
         <h2>{{ t(site.sponsors.title, site.sponsors.title_ko) }}</h2>
         <div class="sponsors-row">
@@ -708,7 +717,7 @@
     {% endif %}
 
     <!-- ===== VENUE ===== -->
-    <section id="venue" class="band band-alt">
+    <section id="venue" class="band">
       <div class="wrap">
         <h2>{{ t(venue.title, venue.title_ko) }}</h2>
         {% if venue.subtitle %}
@@ -832,7 +841,7 @@
          said everything the poster says, so it is here as a thing to take away
          rather than as a thing to read. It links to the full-size file instead
          of shipping the 48MB print PDF into the repository. -->
-    <section id="poster" class="band">
+    <section id="poster" class="band band-alt">
       <div class="wrap">
         <h2>{{ t(site.poster.title, site.poster.title_ko) }}{% if site.poster.title_note %}
           <span class="h2-note">({{ t(site.poster.title_note, site.poster.title_note_ko) }})</span>{% endif %}</h2>
