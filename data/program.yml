@@ -70,7 +70,7 @@ utc_offset: "+09:00"
 # `blocks` is a list so the next one is an entry, not a redesign.
 instructions:
   title: Instructions
-  title_ko: 참가 안내
+  title_ko: 안내사항
   blocks:
   - title: Poster session
     title_ko: 포스터 발표
