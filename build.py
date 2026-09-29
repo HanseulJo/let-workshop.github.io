@@ -673,6 +673,31 @@ def talk_entries(event: dict, ident: str, notes: bool) -> list[dict]:
     return talks
 
 
+def poster_entries(event: dict) -> list[dict]:
+    """The same shape as a talk row, so the Abstracts view can print both.
+
+    A poster is not a talk and must never reach the roster, but in the
+    Abstracts view it is the same thing to read: somebody, a title, and the
+    paragraph that says whether to walk over.
+    """
+    return [
+        {
+            "line": Markup("<b>%s</b>%s")
+            % (
+                bilingual(p["name"], p.get("name_ko")),
+                Markup(" <em>%s</em>") % p["affil"] if p.get("affil") else "",
+            ),
+            "talk": p.get("title"),
+            "abstract": Markup(md.markdown(p["abstract"])) if p.get("abstract") else None,
+            # A talk row has these; StrictUndefined means the template cannot
+            # ask a poster for them unless they are here to say no.
+            "slides": None,
+            "note": None,
+        }
+        for p in (event.get("posters") or [])
+    ]
+
+
 def place_events(program: dict, anonymize: bool, notes: bool = False) -> None:
     """Resolve every event's CSS grid row/span and its rendered text lines."""
     grid = program["grid"]
@@ -712,10 +737,12 @@ def place_events(program: dict, anonymize: bool, notes: bool = False) -> None:
                 line = anon_line(e)
                 e["lines"] = [line] if line else []
                 e["talks"] = []
+                e["poster_entries"] = []
             else:
                 e["lines"] = [speaker_line(s) for s in e["speakers"]]
                 e["lines"] += [note_line(n) for n in e["notes"]]
                 e["talks"] = talk_entries(e, e["id"], notes)
+                e["poster_entries"] = poster_entries(e)
 
 
 # ---------------------------------------------------------------- calendar

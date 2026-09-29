@@ -64,6 +64,39 @@ def chrome(*args):
                    capture_output=True, text=True)
 
 
+
+def poster_png(work, port, poster_art, ghost, scheme, out_png):
+    """The poster's background, as a picture, at badge resolution.
+
+    Not a crop of the sheet and not a second solve at badge size — the sheet's
+    own background, made smaller. Everything that makes the poster look like
+    the poster is already in it and comes along: the formulas at the sheet's
+    density, drawn in art_ink rather than the black a CSS background-image
+    falls back to; the photograph under them at the sheet's ghost_alpha; and
+    the veil over both. The badge draws that one picture and nothing else.
+
+    It is rendered at 1063 x 1535, which is 90 x 130mm at 300 DPI. Rendering
+    it at the sheet's own 5031px and letting the card shrink it would be the
+    same image and five times the file.
+    """
+    if out_png.exists():
+        return out_png
+    page = work / "poster.html"
+    run(sys.executable, ROOT / "tools/poster.py", "--art", poster_art,
+        "--ghost", ghost, "--layout", "festival", "--scheme", scheme,
+        "-o", page, cwd=ROOT)
+    bare = work / "poster-bg.html"
+    # Only the type goes. The three background layers are the point of this.
+    bare.write_text(page.read_text().replace("</style>", ".wrap{visibility:hidden}</style>"),
+                    encoding="utf-8")
+    chrome("--hide-scrollbars", f"--force-device-scale-factor={CARD_PX[0] / 1610:.5f}",
+           "--window-size=1610,2268", "--virtual-time-budget=120000",
+           f"--screenshot={out_png}", f"http://localhost:{port}/{bare.name}")
+    if not out_png.exists():
+        sys.exit("  could not render the poster background")
+    return out_png
+
+
 def rasterise_art(work, port, page):
     """The drawing as it is actually drawn, once, as a PNG.
 
@@ -95,13 +128,20 @@ def rasterise_art(work, port, page):
 
 
 def with_raster_art(page, png):
-    """The same page, with the vector background swapped for the raster one."""
+    """The badge's three background layers replaced by the poster's picture.
+
+    `.ghost` and `.veil` go with them: the picture already has the photograph
+    and the veil in it, because it is a photograph of the sheet that has them.
+    Drawing either again would be the same layer twice.
+    """
     url = "data:image/png;base64," + base64.b64encode(png.read_bytes()).decode("ascii")
     out = page.with_name(page.stem + "-r.html")
     text, n = re.subn(ART_RE, '.art { background-image:url("%s")' % url,
                       page.read_text(), count=1)
     if not n:
         sys.exit("  the badge page has no .art background to replace")
+    text = text.replace("</style>",
+                        ".art{opacity:1}.ghost{display:none}.veil{display:none}</style>")
     out.write_text(text, encoding="utf-8")
     return out
 
@@ -109,7 +149,11 @@ def with_raster_art(page, png):
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--art", required=True, help="the badge-shaped formula art SVG")
+    ap.add_argument("--art", required=True,
+                    help="any badge-shaped art; only its slot is used, since the "
+                         "background comes from --poster-art")
+    ap.add_argument("--poster-art", required=True,
+                    help="the A2 art SVG — the badge's background is the sheet's")
     ap.add_argument("--ghost", default=str(ROOT / "art/campus.jpg"))
     ap.add_argument("--scheme", default="light")
     ap.add_argument("--roster", default=str(ROOT / "data/roster.tsv"))
@@ -154,7 +198,8 @@ def main():
                 "--roster", tsv, "--roster-sort", "file",   # the order was chosen above
                 "--badge-style", args.style,
                 "--roster-blanks", str(blanks), "-o", page, cwd=ROOT)
-            png = png or rasterise_art(work, args.port, page)
+            png = png or poster_png(work, args.port, args.poster_art,
+                                     args.ghost, args.scheme, work / "poster-bg.png")
             page = with_raster_art(page, png)
             pdf = work / f"badges-{n}.pdf"
             pdf.unlink(missing_ok=True)

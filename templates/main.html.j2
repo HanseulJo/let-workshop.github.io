@@ -560,8 +560,11 @@
           <div class="abs-day" data-day="{{ loop.index0 }}">
             <h3>{{ day.label }}{% if day.theme %} <span>{{ day.theme }}</span>{% endif %}</h3>
             {% for e in day.events %}
-            {% for t in e.talks %}
-            <article class="abs">
+            {# A poster reads the same way a talk does here — somebody, a title
+               and the paragraph that decides whether to walk over — so the two
+               are the same row, in the hour they happen. #}
+            {% for t in e.talks + e.poster_entries %}
+            <article class="abs" data-kind="{{ 'poster' if loop.index0 >= e.talks | length else 'talk' }}">
               <div class="abs-when">{{ e.start }} – {{ e.end }}<span class="badge badge-{{ e.type }}">{{ types[e.type].short }}</span></div>
               <div class="abs-main">
                 <div class="abs-who">{{ t.line }}</div>
