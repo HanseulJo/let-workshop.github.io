@@ -79,18 +79,20 @@ instructions:
         label_ko: 크기
         value: A0 portrait — 841 × 1189 mm
         value_ko: A0 세로 — 841 × 1189 mm
+      # The orientation belongs on the Size line and nowhere else — it was on
+      # this one too, and a rule stated twice is a rule somebody argues with.
       - label: Printing
         label_ko: 인쇄
-        value: Print it yourself and bring it with you — portrait, not landscape.
-        value_ko: 각자 인쇄해서 가져오시면 됩니다. 가로가 아닌 세로로 뽑아 주세요.
+        value: Printed and brought by each presenter.
+        value_ko: 각자 인쇄하여 지참
       - label: Boards and fixings
         label_ko: 거치·고정
-        value: Provided. Stands and clips are here, so bring the sheet and nothing else.
-        value_ko: 받침대와 고정 장비 등 설치에 필요한 것은 준비되어 있습니다. 포스터만 가져오시면 됩니다.
+        value: Stands, clips and everything else needed for mounting are provided.
+        value_ko: 받침대와 고정 장비 등 설치에 필요한 물품 제공
       - label: When
         label_ko: 시간
-        value: Day 1, 17:20–18:20. Put it up at the 16:25 break and take it down straight after.
-        value_ko: 1일차 17:20–18:20. 16:25 쉬는 시간에 붙이고, 끝난 뒤 바로 떼어 주세요.
+        value: Day 1, 17:20–18:20. Mounted at the 16:25 break, removed immediately afterwards.
+        value_ko: 1일차 17:20–18:20. 16:25 휴식 시간에 부착, 종료 직후 철거
 
 # Grid geometry. slot = one CSS grid row.
 grid:
