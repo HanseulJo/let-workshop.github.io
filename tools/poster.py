@@ -2585,8 +2585,9 @@ if __name__ == "__main__":
     ap.add_argument("--roster", metavar="TSV", nargs="?", const=str(DATA / "roster.tsv"),
                     help="build the badge sheet from a registration export "
                          "rather than from the programme; see tools/roster.py")
-    ap.add_argument("--roster-sort", choices=("role", "name"), default="role",
-                    help="four bundles (default) or one alphabetical run")
+    ap.add_argument("--roster-sort", choices=("role", "name", "file"), default="role",
+                    help="four bundles (default), one alphabetical run, "
+                         "or the order the file is already in")
     ap.add_argument("--roster-blanks", type=int, default=6,
                     help="spare unnamed badges at the end (default 6)")
     ap.add_argument("-o", "--out", required=True)

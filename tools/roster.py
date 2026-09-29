@@ -187,12 +187,39 @@ def read(path=None):
     return people
 
 
+
+def write(path, people):
+    """A roster TSV holding just these people, for re-reading by the badge tool.
+
+    Round-tripped through the form's own wording rather than a private format,
+    so a chunk is read back by exactly the code that read the export.
+    """
+    flags = {"Speaker": "예 (초청 연사)", "Staff": "예 (현장 요원)"}
+    head = ["Timestamp", "Email Address", "이름", "연사/현장요원 여부",
+            "소속", "현재 신분", "불참여부"]
+    with Path(path).open("w", encoding="utf-8", newline="") as fh:
+        w = csv.writer(fh, delimiter="\t", lineterminator="\n")
+        w.writerow(head)
+        for p2 in people:
+            w.writerow(["", p2["email"], p2["name_ko"] or p2["name"],
+                        flags.get(p2["role"], "아니오"),
+                        p2["affil"], p2["position"], ""])
+
+
 def ordered(people, sort="role"):
-    """Print order: four bundles, or one alphabetical run.
+    """Print order: four bundles, one alphabetical run, or the file's own.
 
     Within a bundle, by the name the desk will be looking the person up under —
     the Korean one where there is one, because the list on the desk is Korean.
+
+    `file` leaves them alone, which is what a caller that has already decided
+    the order wants. tools/badges.py cuts the sorted roster into chunks and
+    hands each to poster.py; without this, poster.py would sort each chunk
+    again and the order chosen for the whole would survive only inside the
+    twenty cards that happened to be printed together.
     """
+    if sort == "file":
+        return list(people)
     key = lambda p: (p["name_ko"] or p["name"], p["affil"])
     if sort == "name":
         return sorted(people, key=key)
@@ -203,7 +230,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--roster", help="a roster TSV (default: data/roster.tsv)")
-    ap.add_argument("--sort", choices=("role", "name"), default="role")
+    ap.add_argument("--sort", choices=("role", "name", "file"), default="role")
     args = ap.parse_args()
 
     people = ordered(read(args.roster), args.sort)
