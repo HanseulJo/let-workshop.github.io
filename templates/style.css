@@ -2646,6 +2646,65 @@ button.sp-talk-link:focus-visible {
   color: var(--break-ink);
 }
 
+/* What to bring, under the timetable. A card rather than a paragraph: four
+   answers to four questions, and the labels are what somebody scanning for
+   "what size" is looking for. */
+.poster-guide {
+  margin-top: 22px;
+  padding: 18px 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.poster-guide h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.poster-guide dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 18px;
+}
+.poster-guide dl > div {
+  display: contents;
+}
+.poster-guide dt {
+  padding: 5px 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--label);
+  white-space: nowrap;
+}
+.poster-guide dt .t-ko {
+  letter-spacing: 0.02em;
+}
+.poster-guide dd {
+  margin: 0;
+  padding: 5px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--prose);
+  word-break: keep-all;
+}
+/* Two lines on a phone: a label column wide enough for "Boards and fixings"
+   leaves the sentence beside it a sliver. */
+@media (max-width: 620px) {
+  .poster-guide dl {
+    grid-template-columns: 1fr;
+  }
+  .poster-guide dt {
+    padding-bottom: 0;
+  }
+  .poster-guide dd {
+    padding-top: 1px;
+    margin-bottom: 4px;
+  }
+}
+
 /* Candidates */
 .cand-grid {
   display: grid;

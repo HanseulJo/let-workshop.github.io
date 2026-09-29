@@ -625,6 +625,23 @@
             {% endfor %}
           </div>
         </div>
+
+        {% if program.poster_guide %}
+        <!-- Under the timetable, because a poster presenter reads the
+             timetable and because the answer to "what size?" should not be in
+             a mail somebody has to find again. -->
+        <div id="posters" class="poster-guide">
+          <h3>{{ t(program.poster_guide.title, program.poster_guide.title_ko) }}</h3>
+          <dl>
+            {% for line in program.poster_guide.lines %}
+            <div>
+              <dt>{{ t(line.label, line.label_ko) }}</dt>
+              <dd>{{ t(line.value, line.value_ko) }}</dd>
+            </div>
+            {% endfor %}
+          </dl>
+        </div>
+        {% endif %}
       </div>
     </section>
     <!-- ===== ORGANIZERS ===== -->

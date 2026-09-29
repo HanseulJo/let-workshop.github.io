@@ -62,6 +62,30 @@ subtitle_anon: >-
 timezone: Asia/Seoul
 utc_offset: "+09:00"
 
+# What a poster presenter needs to know before they get on the train, shown
+# under the timetable rather than mailed: a mail is read once by whoever opened
+# it, and the first question back was what size to print.
+poster_guide:
+  title: Bringing a poster
+  title_ko: 포스터 발표 안내
+  lines:
+    - label: Size
+      label_ko: 크기
+      value: A0 portrait — 841 × 1189 mm
+      value_ko: A0 세로 — 841 × 1189 mm
+    - label: Printing
+      label_ko: 인쇄
+      value: Print it yourself and bring it with you.
+      value_ko: 각자 인쇄해서 가져오시면 됩니다.
+    - label: Boards and fixings
+      label_ko: 거치·고정
+      value: Provided. Stands and clips are here, so bring the sheet and nothing else.
+      value_ko: 받침대와 고정 장비 등 설치에 필요한 것은 준비되어 있습니다. 포스터만 가져오시면 됩니다.
+    - label: When
+      label_ko: 시간
+      value: Day 1, 17:20–18:20. Put it up at the 16:25 break and take it down straight after.
+      value_ko: 1일차 17:20–18:20. 16:25 쉬는 시간에 붙이고, 끝난 뒤 바로 떼어 주세요.
+
 # Grid geometry. slot = one CSS grid row.
 grid:
   slot_minutes: 5

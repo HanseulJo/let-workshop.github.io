@@ -31,6 +31,7 @@ try:
 except ModuleNotFoundError as exc:  # pragma: no cover
     sys.exit(f"missing dependency '{exc.name}'\n  pip install pyyaml segno")
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 
@@ -2153,7 +2154,8 @@ def on_paper():
 
 
 def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=None,
-         ghost=None, silhouette=None):
+         ghost=None, silhouette=None, roster_path=None, roster_sort="role",
+         roster_blanks=6):
     site = yaml.safe_load((DATA / "site.yml").read_text(encoding="utf-8"))
     program = yaml.safe_load((DATA / "program.yml").read_text(encoding="utf-8"))
     venue = yaml.safe_load((DATA / "venue.yml").read_text(encoding="utf-8"))
@@ -2408,6 +2410,27 @@ def main(art_path, out_path, layout="stack", photo=None, cutout=None, duotone=No
         badge_cards.append(badge_card(
             "Organiser", True, mbr["name"], mbr.get("name_ko", ""), mbr.get("affil", "")))
     badge_cards += [badge_card("Participant", False) for _ in range(4)]
+
+    # With a roster, the sheet is the people who registered rather than the
+    # people on the programme. The two are not the same list and never were:
+    # the programme knows sixteen speakers and six organisers, and a hundred
+    # and three people are coming. Everyone gets a badge with their name
+    # already on it, which is the difference between a registration desk that
+    # hands over an envelope and one that writes while a queue forms.
+    if roster_path:
+        import roster as roster_mod
+        people = roster_mod.ordered(roster_mod.read(roster_path), roster_sort)
+        badge_cards = [badge_card(p2["role"], p2["role"] in roster_mod.HOT,
+                                  p2["name"], p2["name_ko"], p2["affil"])
+                       for p2 in people]
+        # Spares, because someone always turns up who did not register and a
+        # blank badge with a pen beats no badge at all.
+        badge_cards += [badge_card("Attendee", False) for _ in range(roster_blanks)]
+        print(f"  {len(people)} on the roster"
+              + ", ".join("")
+              + "".join(f"  {r} {sum(1 for x in people if x['role'] == r)}"
+                        for r in roster_mod.ROLES)
+              + f"  + {roster_blanks} blank")
     badges = "".join(badge_cards)
 
     # A room is its name and, quieter, where in the building it is and how
@@ -2559,6 +2582,13 @@ if __name__ == "__main__":
     ap.add_argument("--palette", metavar="JSON",
                     help="override palette entries, e.g. '{\"ground\":\"#101010\"}'. "
                          "The artwork's own ink is recoloured to match art_ink.")
+    ap.add_argument("--roster", metavar="TSV", nargs="?", const=str(DATA / "roster.tsv"),
+                    help="build the badge sheet from a registration export "
+                         "rather than from the programme; see tools/roster.py")
+    ap.add_argument("--roster-sort", choices=("role", "name"), default="role",
+                    help="four bundles (default) or one alphabetical run")
+    ap.add_argument("--roster-blanks", type=int, default=6,
+                    help="spare unnamed badges at the end (default 6)")
     ap.add_argument("-o", "--out", required=True)
     ap.add_argument("--layout",
                     choices=("stack", "listing", "festival", "academic", "civic",
@@ -2582,4 +2612,4 @@ if __name__ == "__main__":
                                .replace(OLD_ART_INK, override["art_ink"]), encoding="utf-8")
             args.art = str(patched)
     main(args.art, args.out, args.layout, args.photo, args.cutout, args.duotone,
-         args.ghost, args.silhouette)
+         args.ghost, args.silhouette, args.roster, args.roster_sort, args.roster_blanks)
